@@ -27,12 +27,37 @@ import {
   RememberUserLabel,
 } from "../../components/Login/styles";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { validateLogin } from "../../validations/logins";
+import { axiosLogins } from "../../hooks/logins";
+import { demoSwitAlertLogin, switAlertLogins } from "../../tools/switAlertLogins";
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [login, setLogin] = useState({
+    email: '',
+    password: '',
+    token: '',
+  });
+  const [error, setError] = useState({
+    emailError: '',
+    passwordError: '',
+  });
   const [rememberUser, setRememberUser] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+
+  function handleChanges(e) {
+    const { name, value } = e.target;
+    setLogin({
+      ...login,
+      [name]: value,
+    });
+    setError(
+      validateLogin({
+        ...login,
+        [name]: value,
+      })
+    );
+  }
 
   // Datos de usuario registrados (simulación con localStorage)
   const emailRegisterDataDrive = JSON.parse(
@@ -48,39 +73,33 @@ const Login = () => {
       localStorage.removeItem("rememberedPassword");
     }
   };
-  const handleSubmit = () => {
-    // Comprobar si el correo y la contraseña son correctos
-    if (
-      emailRegisterDataDrive &&
-      email === emailRegisterDataDrive.correo &&
-      password === emailRegisterDataDrive.contrasena
-    ) {
-      // Si son correctos, generar un token aleatorio
-      const token = uuidv4();
+  const {
+    email,
+    password,
+  } = login;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    //* Conexion con el Back-End
+    // const {
+    //   emailError,
+    //   passwordError,
+    // } = error;
+    // axiosLogins(login, setError)
+    // if (emailError || passwordError) {
+    //   switAlertLogins(login, error)
+    // }
+    // switAlertLogins(login, error)
+    // setLogin(login)
+    // navigate('/dashboard')
+    //* Conexion con el Back-End
 
-      // Crear el objeto emailLoginDrive con el token generado y otros datos
-      const emailLoginDrive = {
-        correo: email,
-        contrasena: password,
-        token: token, // Agregar el token al objeto
-      };
-
-      // Guardar el objeto emailLoginDrive en localStorage u otra lógica de autenticación necesaria
-      Swal.fire({
-        icon: "success",
-        title: "Inicio de sesión exitoso",
-        showConfirmButton: false, // Ocultar botón de confirmación
-        timer: 2000, // Duración en milisegundos (en este caso, 2 segundos)
-      });
+    //! DATOS RANDOM
+    if (email && password) {
+      demoSwitAlertLogin(email, password);
       navigate("/dashboard");
-    } else {
-      // Si son incorrectos, mostrar un mensaje de error o realizar alguna otra acción
-      Swal.fire({
-        icon: "error",
-        title: "Error en el inicio de sesión",
-        text: "Credenciales incorrectas.",
-      });
     }
+    demoSwitAlertLogin(email, password);
+    //! DATOS RANDOM
   };
 
   // Función para mostrar cambiar de type='password' a type='text'
@@ -95,12 +114,13 @@ const Login = () => {
       </ImageContainer>
       <Line />
       <ContainerForm>
-        <Form>
+        <Form onSubmit={(e) => handleSubmit(e)} >
           <InputContainer>
             <Input
               type="email"
+              name="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => handleChanges(e)}
               placeholder="Ingresa tu correo"
             />
             <ShowIcon>
@@ -110,9 +130,10 @@ const Login = () => {
           <InputContainer>
             <Input
               type={showPassword ? "text" : "password"}
+              name="password"
               placeholder="Ingresa tu contraseña"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => handleChanges(e)}
             />
             <ShowIcon onClick={toggleShowPassword}>
               <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash} />

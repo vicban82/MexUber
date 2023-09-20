@@ -22,7 +22,7 @@ const Dashboard = () => {
         {/* Contenedor del contenido */}
         <ContentContainer>
           {/* Outlet para mostrar las rutas anidadas */}
-          {/* <Outlet /> */}
+          <Outlet />
         </ContentContainer>
       </Container>
     </>
