@@ -15,11 +15,11 @@ export default function MainRoutes() {
         <Route path="/" element={<Login />} />
         {/* <Route path="/register" element={<Register />} /> */}
         <Route path="/dashboard" element={<Dashboard />}>
-          <Route path="main" element={<MainDashboard />} />
+          <Route path="home" element={<MainDashboard />} />
           <Route path="admins" element={<Admins />} />
           <Route path="drivers" element={<Admins />} />
-          <Route path="client" element={<Admins />} />
           <Route path="cars" element={<Admins />} />
+          <Route path="clients" element={<Admins />} />
           <Route path="trips" element={<Admins />} />
         </Route>
       </Routes>

@@ -21,18 +21,33 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       <SidebarWrapper isOpen={isOpen}>
         <SidebarContent>
           <SidebarItem>
-            <SidebarLink href="/dashboard" onClick={handleMenuItemClick}>
-              Opción 1
+            <SidebarLink href="/dashboard/home" onClick={handleMenuItemClick}>
+              Home
             </SidebarLink>
           </SidebarItem>
           <SidebarItem>
-            <SidebarLink href="/dashboard/opcion2" onClick={handleMenuItemClick}>
-              Opción 2
+            <SidebarLink href="/dashboard/admins" onClick={handleMenuItemClick}>
+              Administradores
             </SidebarLink>
           </SidebarItem>
           <SidebarItem>
-            <SidebarLink href="/dashboard/opcion3" onClick={handleMenuItemClick}>
-              Opción 3
+            <SidebarLink href="/dashboard/drivers" onClick={handleMenuItemClick}>
+              Conductores
+            </SidebarLink>
+          </SidebarItem>
+          <SidebarItem>
+            <SidebarLink href="/dashboard/cars" onClick={handleMenuItemClick}>
+              Vehículos
+            </SidebarLink>
+          </SidebarItem>
+          <SidebarItem>
+            <SidebarLink href="/dashboard/clients" onClick={handleMenuItemClick}>
+              Clientes
+            </SidebarLink>
+          </SidebarItem>
+          <SidebarItem>
+            <SidebarLink href="/dashboard/trips" onClick={handleMenuItemClick}>
+              Viajes
             </SidebarLink>
           </SidebarItem>
           <MenuIcon onClick={() => setIsOpen(!isOpen)}>

@@ -16,22 +16,34 @@ const MainDashboard = () => {
         <Link to="/dashboard/home">Home</Link>
       </Button>
       <Button
-        onClick={() => handleIconClick("option1")}
-        className={selectedIcon === "option1" ? "active" : ""}
+        onClick={() => handleIconClick("admins")}
+        className={selectedIcon === "admins" ? "active" : ""}
       >
-        <Link to="/dashboard/option1">Option 1</Link>
+        <Link to="/dashboard/admins">Administradores</Link>
       </Button>
       <Button
-        onClick={() => handleIconClick("option2")}
-        className={selectedIcon === "option2" ? "active" : ""}
+        onClick={() => handleIconClick("drivers")}
+        className={selectedIcon === "drivers" ? "active" : ""}
       >
-        <Link to="/dashboard/option2">Option 2</Link>
+        <Link to="/dashboard/drivers">Conductores</Link>
       </Button>
       <Button
-        onClick={() => handleIconClick("option3")}
-        className={selectedIcon === "option3" ? "active" : ""}
+        onClick={() => handleIconClick("cars")}
+        className={selectedIcon === "cars" ? "active" : ""}
       >
-        <Link to="/dashboard/option3">Option 3</Link>
+        <Link to="/dashboard/cars">Vehículos</Link>
+      </Button>
+      <Button
+        onClick={() => handleIconClick("clients")}
+        className={selectedIcon === "clients" ? "active" : ""}
+      >
+        <Link to="/dashboard/clients">Clientes</Link>
+      </Button>
+      <Button
+        onClick={() => handleIconClick("trips")}
+        className={selectedIcon === "trips" ? "active" : ""}
+      >
+        <Link to="/dashboard/trips">Viajes</Link>
       </Button>
     </div>
   );
