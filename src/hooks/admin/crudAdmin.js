@@ -11,3 +11,16 @@ export async function axiosGetAdmins(setTBody, setTError) {
     console.log('ERROR:', error);
   }
 }
+
+export async function axiosPostAdmin(admin, setError) {
+  console.log('POST:', admin);
+  try {
+    const { data } = (await axios.post('/api/admin', admin));
+    console.log('DATA:', data);
+    // setTBody(data);
+  } catch (err) {
+    const { error } = err.response.data;
+    setError(error)
+    console.log('ERROR:', error);
+  }
+}

@@ -1,6 +1,6 @@
 
  export const Table = ({ tHeader, tBody, setTBody, error, setTError }) => {
-  console.log("BODY EMPLOY:", tBody)
+  // console.log("BODY EMPLOY:", tBody)
   return (
     <>
       <div>
