@@ -80,25 +80,25 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     //* Conexion con el Back-End
-    // const {
-    //   emailError,
-    //   passwordError,
-    // } = error;
-    // axiosLogins(login, setError)
-    // if (emailError || passwordError) {
-    //   switAlertLogins(login, error)
-    // }
-    // switAlertLogins(login, error)
-    // setLogin(login)
-    // navigate('/dashboard')
+    const {
+      emailError,
+      passwordError,
+    } = error;
+    axiosLogins(login, setError)
+    if (emailError || passwordError) {
+      switAlertLogins(login, error)
+    }
+    switAlertLogins(login, error)
+    setLogin(login)
+    navigate('/dashboard')
     //* Conexion con el Back-End
 
     //! DATOS RANDOM
-    if (email && password) {
-      demoSwitAlertLogin(email, password);
-      navigate("/dashboard");
-    }
-    demoSwitAlertLogin(email, password);
+    // if (email && password) {
+    //   demoSwitAlertLogin(email, password);
+    //   navigate("/dashboard");
+    // }
+    // demoSwitAlertLogin(email, password);
     //! DATOS RANDOM
   };
 
