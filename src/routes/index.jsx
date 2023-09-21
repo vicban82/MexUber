@@ -5,6 +5,7 @@ import Header from "../components/reusable/Header";
 import Login from "../views/Login/Login";
 import Dashboard from "../views/Dashboard";
 import MainDashboard from "../views/Dashboard/Main";
+import Admins from "../views/Dashboard/admin";
 
 export default function MainRoutes() {
   return (
@@ -15,6 +16,11 @@ export default function MainRoutes() {
         {/* <Route path="/register" element={<Register />} /> */}
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="main" element={<MainDashboard />} />
+          <Route path="admins" element={<Admins />} />
+          <Route path="drivers" element={<Admins />} />
+          <Route path="client" element={<Admins />} />
+          <Route path="cars" element={<Admins />} />
+          <Route path="trips" element={<Admins />} />
         </Route>
       </Routes>
     </Router>

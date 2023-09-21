@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import styled, { StyleSheetManager } from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "./Sidebar";
+import { modelAdmins } from "../../../data/routeTitles";
 
 const NavbarContainer = styled.div`
   display: flex;
@@ -35,13 +36,32 @@ const SearchIcon = styled.div`
   cursor: pointer;
 `;
 
-const UserProfileButton = styled.button`
+// * Lista desplegable
+const UserProfileButton = styled.div`
+  position: relative;
+  display: inline-block;
+`;
+
+const Button = styled.button`
   display: flex;
   align-items: center;
   background: none;
   border: none;
   color: inherit;
   cursor: pointer;
+`;
+
+const Dropdown = styled.div`
+  display: ${(props) => (props.isOpen === "true" ? "block" : "none")};
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #f0f0f0;
+  color: black;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  min-width: 150px;
 `;
 
 const UserProfileImage = styled.img`
@@ -54,6 +74,16 @@ const UserProfileImage = styled.img`
 const UserProfileText = styled.span`
   /* Estilos para el texto del perfil, puedes personalizar según tu diseño */
 `;
+
+const ListItem = styled.div`
+  padding: 8px 12px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #ff0000;
+  }
+`;
+// * Lista desplegable
 const MenuIcon = styled.div`
   cursor: pointer;
   display: block; /* El ícono de menú está oculto por defecto en pantallas grandes */
@@ -84,37 +114,43 @@ const Navbar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const fullName = `${modelAdmins[0].name} ${modelAdmins[0].lastName}`;
+  const gmail = modelAdmins[0].email;
+  
   return (
-    <NavbarContainer>
-      {/* Agrega el icono de menú de hamburguesa */}
-      <MenuIcon onClick={toggleSidebar}>
-        <FontAwesomeIcon icon={faBars} />
-      </MenuIcon>
-      {/* Agrega el componente Sidebar con el contenido */}
-      <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-      <SearchContainer>
-        <SearchInput type="text" placeholder="Buscar..." />
-        <SearchIcon>
-          <FontAwesomeIcon icon={faSearch} />
-        </SearchIcon>
-      </SearchContainer>
-      <UserProfileButton onClick={toggleProfile}>
-        <UserProfileImage
-          src="URL_DE_LA_IMAGEN" // Reemplaza con la URL de la imagen del usuario
-          alt="User Profile"
-        />
-        <UserProfileText>
-          Nombre de Usuario <br />
-          Correo Electrónico
-        </UserProfileText>
-
-        {isProfileOpen ? (
-          <div>
+    <StyleSheetManager shouldForwardProp={(prop) => !["isOpen"].includes(prop)}>
+      <NavbarContainer>
+        {/* Agrega el icono de menú de hamburguesa */}
+        <MenuIcon onClick={toggleSidebar}>
+          <FontAwesomeIcon icon={faBars} />
+        </MenuIcon>
+        {/* Agrega el componente Sidebar con el contenido */}
+        <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+        <SearchContainer>
+          <SearchInput type="text" placeholder="Buscar..." />
+          <SearchIcon>
+            <FontAwesomeIcon icon={faSearch} />
+          </SearchIcon>
+        </SearchContainer>
+        <UserProfileButton>
+        <Button onClick={toggleProfile}>
+          <UserProfileImage
+            src="URL_DE_LA_IMAGEN" // Reemplaza con la URL de la imagen del usuario
+            alt="User Profile"
+          />
+          <UserProfileText>
+            {fullName} <br />
+            {gmail}
+          </UserProfileText>
+        </Button>
+        <Dropdown isOpen={isProfileOpen.toString()}>
+          <ListItem>
             <span>Cerrar sesión</span>
-          </div>
-        ) : null}
+          </ListItem>
+        </Dropdown>
       </UserProfileButton>
-    </NavbarContainer>
+      </NavbarContainer>
+    </StyleSheetManager>
   );
 };
 

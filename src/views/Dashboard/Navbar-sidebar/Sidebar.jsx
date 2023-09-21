@@ -8,6 +8,7 @@ import {
   SidebarLink,
   SidebarWrapper,
 } from "../../../components/Dashboard/Navbar/sidebarStyles";
+import { StyleSheetManager } from "styled-components";
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
   const handleMenuItemClick = () => {
@@ -16,28 +17,30 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   };
 
   return (
-    <SidebarWrapper isOpen={isOpen}>
-      <SidebarContent>
-        <SidebarItem>
-          <SidebarLink href="/dashboard" onClick={handleMenuItemClick}>
-            Opción 1
-          </SidebarLink>
-        </SidebarItem>
-        <SidebarItem>
-          <SidebarLink href="/dashboard/opcion2" onClick={handleMenuItemClick}>
-            Opción 2
-          </SidebarLink>
-        </SidebarItem>
-        <SidebarItem>
-          <SidebarLink href="/dashboard/opcion3" onClick={handleMenuItemClick}>
-            Opción 3
-          </SidebarLink>
-        </SidebarItem>
-        <MenuIcon onClick={() => setIsOpen(!isOpen)}>
-          <FontAwesomeIcon icon={faBars} />
-        </MenuIcon>
-      </SidebarContent>
-    </SidebarWrapper>
+    <StyleSheetManager shouldForwardProp={(prop) => !["isOpen"].includes(prop)}>
+      <SidebarWrapper isOpen={isOpen.toString()}>
+        <SidebarContent>
+          <SidebarItem>
+            <SidebarLink href="/dashboard" onClick={handleMenuItemClick}>
+              Opción 1
+            </SidebarLink>
+          </SidebarItem>
+          <SidebarItem>
+            <SidebarLink href="/dashboard/opcion2" onClick={handleMenuItemClick}>
+              Opción 2
+            </SidebarLink>
+          </SidebarItem>
+          <SidebarItem>
+            <SidebarLink href="/dashboard/opcion3" onClick={handleMenuItemClick}>
+              Opción 3
+            </SidebarLink>
+          </SidebarItem>
+          <MenuIcon onClick={() => setIsOpen(!isOpen)}>
+            <FontAwesomeIcon icon={faBars} />
+          </MenuIcon>
+        </SidebarContent>
+      </SidebarWrapper>
+    </StyleSheetManager>
   );
 };
 
