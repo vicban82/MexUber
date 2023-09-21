@@ -18,7 +18,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
   return (
     <StyleSheetManager shouldForwardProp={(prop) => !["isOpen"].includes(prop)}>
-      <SidebarWrapper isOpen={isOpen.toString()}>
+      <SidebarWrapper isOpen={isOpen}>
         <SidebarContent>
           <SidebarItem>
             <SidebarLink href="/dashboard" onClick={handleMenuItemClick}>

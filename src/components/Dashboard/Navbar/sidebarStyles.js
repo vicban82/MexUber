@@ -6,7 +6,7 @@ export const SidebarWrapper = styled.div`
   width: 250px;
   height: 100%;
   position: fixed;
-  left: ${(props) => (props.isOpen === "true" ? "0" : "-250px")};
+  left: ${(props) => (props.isOpen === true ? "0" : "-250px")};
   top: 0;
   transition: left 0.3s ease-in-out;
   z-index: 1000;

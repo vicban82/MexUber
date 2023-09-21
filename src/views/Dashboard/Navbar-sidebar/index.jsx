@@ -52,7 +52,7 @@ const Button = styled.button`
 `;
 
 const Dropdown = styled.div`
-  display: ${(props) => (props.isOpen === "true" ? "block" : "none")};
+  display: ${(props) => (props.isOpen === true ? "block" : "none")};
   position: absolute;
   top: 100%;
   left: 0;
@@ -143,7 +143,7 @@ const Navbar = () => {
             {gmail}
           </UserProfileText>
         </Button>
-        <Dropdown isOpen={isProfileOpen.toString()}>
+        <Dropdown isOpen={isProfileOpen}>
           <ListItem>
             <span>Cerrar sesión</span>
           </ListItem>
