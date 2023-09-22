@@ -13,7 +13,6 @@ export const validateAdmin = (admin) => {
     isActive,
   } = admin;
   const error = {};
-  console.log('password:', password);
   
   error.nameError = validationName(name);
   
@@ -22,9 +21,8 @@ export const validateAdmin = (admin) => {
   error.emailError = validationEmail(email);
   
   error.passwordError = validationPassword(password);
-  console.log('passwordError:', error.passwordError);
 
-  if (validationPassword(password) !== repeatPassword) {
+  if (password !== repeatPassword) {
     error.repeatPasswordError = 'El password no coincide';
   }
 

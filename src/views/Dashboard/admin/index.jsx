@@ -12,11 +12,6 @@ const Admins = () => {
   useEffect(() => {
     axiosGetAdmins(setTBody, setTError);
   }, []);
-  
-  // function handleClick(e) {
-  //   e.preventDefault();
-  //   axiosGetAdmins(setTBody, setTError);
-  // }
 
   return (
     <section>
@@ -33,11 +28,6 @@ const Admins = () => {
         tHeader={tableHeader}
         setTError={setTError}
       />
-      {/* <div>
-        <button onClick={(e) => handleClick(e)} >
-          CARGAR INFORMACION
-        </button>
-      </div> */}
     </section>
   );
 };

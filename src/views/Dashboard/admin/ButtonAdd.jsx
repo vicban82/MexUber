@@ -14,7 +14,9 @@ export const ButtonAdd = ({ tBody, tHeader }) => {
     email: "",
     password: "",
     repeatPassword: "",
-    isActive: false, // Cambié el valor por defecto a false para checkbox
+    // isActive: false ? 0 : 1, // Cambié el valor por defecto a false para checkbox
+    // isActive: 0 ? false : 1, // Cambié el valor por defecto a false para checkbox
+    isActive: !0 && !false ? (1 && true) : false, // Cambié el valor por defecto a false para checkbox
   });
 
   const [error, setError] = useState({
@@ -23,14 +25,18 @@ export const ButtonAdd = ({ tBody, tHeader }) => {
     emailError: "",
     passwordError: "",
     repeatPasswordError: "",
-    isActiveError: false, // Cambié el valor por defecto a false para checkbox
+    // isActiveError: false ? 0 : 1, // Cambié el valor por defecto a false para checkbox
+    isActiveError: 0 ? false : 1, // Cambié el valor por defecto a false para checkbox
   });
 
   function handleChange(e) {
     const { name, value, type, checked } = e.target;
 
-    // Manejar cambios para checkbox
-    const newValue = type === "checkbox" ? checked : value;
+    // Manejar cambios para checkbox y convertir 1 (true) o 0 (false)
+    const newValue = type === "checkbox" ? !admin[name] : value;
+
+    // // Manejar cambios para checkbox
+    // const newValue = type === "checkbox" ? checked : value;
 
     setAdmin({
       ...admin,
@@ -47,7 +53,7 @@ export const ButtonAdd = ({ tBody, tHeader }) => {
   function handleSubmit(e) {
     e.preventDefault();
     // Aquí puedes realizar las acciones de guardar tus datos, por ejemplo, enviarlos a través de una API
-    // console.log("Admin data:", admin);
+    console.log("Admin data:", admin);
     const {
       nameError,
       lastNameError,
@@ -101,6 +107,8 @@ export const ButtonAdd = ({ tBody, tHeader }) => {
                     checked={admin[key]}
                     onChange={handleChange}
                     type="checkbox"
+                    // value={admin[key] ? "1" : "0"} // 1 como true y 0 como false
+                    value={admin[key] ? 1 : 0} // 1 como true y 0 como false
                   />
                 )}
               </div>
@@ -115,82 +123,3 @@ export const ButtonAdd = ({ tBody, tHeader }) => {
     </div>
   );
 };
-
-// import React, { useState } from "react";
-
-// export const ButtonAdd = ({ tBody, tHeader }) => {
-  
-//   const [admin, setAdmin] = useState({
-//     name: '',
-//     lastName: '',
-//     email: '',
-//     password: '',
-//     repeatPassword: '',
-//     isActive: '',
-//   });
-  
-//   function handleChange(e) {
-//     const { name, value } = e.target.value;
-//     setAdmin({
-//       ...admin,
-//       [name]: value,
-//     });
-//   }
-
-//   function handleSubmit(e) {
-//     e.preventDefault();
-//   }
-//   return (
-//     <div>
-//       <div>
-//         <div>
-//           <h3>Agregar</h3>
-//           <div>
-//             {tBody &&
-//               tHeader.map((item, i) => {
-//                 if (i !== 2) {
-//                   return (
-//                     <div key={i}>
-//                       <label htmlFor={`input-${i}`}>
-//                         {item}
-//                       </label>
-//                       <input
-//                         id={`input-${i}`}
-//                         value={admin[i] || ""}
-//                         onChange={(e) => handleChange(i, e)}
-//                         type="text"
-//                       />
-//                     </div>
-//                   );
-//                 } else {
-//                   return (
-//                     <div key={i}>
-//                       <label htmlFor={`input-${i}`}>
-//                         {item}
-//                       </label>
-//                       <input
-//                         id={`input-${i}`}
-//                         value={admin[i] || ""}
-//                         onChange={(e) => handleChange(i, e)}
-//                         type="checkbox"
-//                       />
-//                     </div>
-//                   );
-//                 }
-//               })}
-//           </div>
-//           <div>
-//             <label>
-//               Cancelar
-//             </label>
-//             <label
-//               onClick={handleSubmit}
-//             >
-//               Guardar
-//             </label>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };

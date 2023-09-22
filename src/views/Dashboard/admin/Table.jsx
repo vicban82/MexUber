@@ -12,9 +12,6 @@
                   return (
                     <th key={i}>
                       <p>{item}</p>
-                      <p>{item}</p>
-                      <p>{item}</p>
-                      <p>{item}</p>
                     </th>
                   );
                 })}
@@ -49,18 +46,16 @@
                       setTError={setTError}
                     /> */}
                   </tr>
-                )
+                );
               })
             ) : (
               <tr>
-                {/* <td colSpan={tHeader.length + 1} > */}
-                <td>
+                <td colSpan={tHeader.length + 1} >
                   <p>
                     {error ? error : "No hay información disponible"}
                   </p>
                 </td >
               </tr >
-
             )}
           </tbody>
         </table>

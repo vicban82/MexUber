@@ -4,6 +4,8 @@ import { styled } from "styled-components";
 export const Container = styled.div`
   display: flex;
   height: 100vh;
+  border: solid red 3px;
+  margin: 12rem 0 46rem 24rem;
 `;
 
 export const SidebarContainer = styled.div`
