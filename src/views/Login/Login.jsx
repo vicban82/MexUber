@@ -30,13 +30,13 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { validateLogin } from "../../validations/logins";
 import { axiosLogins } from "../../hooks/logins";
-import { demoSwitAlertLogin, switAlertLogins } from "../../tools/switAlertLogins";
+import { demoSwitAlertLogin, errorLogins, successLogins } from "../../tools/switAlertLogins";
 const Login = () => {
   const [login, setLogin] = useState({
     email: '',
     password: '',
-    token: '',
   });
+  console.log("LOGIN:", login);
   const [error, setError] = useState({
     emailError: '',
     passwordError: '',
@@ -84,13 +84,19 @@ const Login = () => {
       emailError,
       passwordError,
     } = error;
-    axiosLogins(login, setError)
-    if (emailError || passwordError) {
-      switAlertLogins(login, error)
+    if (!email || !password) {
+      errorLogins(login, error)
+    } else if (emailError || passwordError) {
+      errorLogins(login, error)
+    } else {
+      axiosLogins(login, setError)
+      successLogins(login)
+      setLogin(login)
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+      navigate('/dashboard')
     }
-    switAlertLogins(login, error)
-    setLogin(login)
-    navigate('/dashboard')
     //* Conexion con el Back-End
 
     //! DATOS RANDOM

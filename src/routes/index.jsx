@@ -13,7 +13,6 @@ export default function MainRoutes() {
       <Header />
       <Routes>
         <Route path="/" element={<Login />} />
-        {/* <Route path="/register" element={<Register />} /> */}
         <Route path="/dashboard" element={<Dashboard />}>
           <Route path="home" element={<MainDashboard />} />
           <Route path="admins" element={<Admins />} />

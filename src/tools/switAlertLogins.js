@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 
 //* Esta funcion es para la conexion con el Back-End
-export function switAlertLogins(login, error) {
+export function errorLogins(login, error) {
   const {
     email,
     password,
@@ -17,7 +17,7 @@ export function switAlertLogins(login, error) {
       icon: "error",
       text: "Credenciales incorrectas.",
       html: `
-        <p>${"Todos los campos son requeridos" || ""}</p>
+        <p>${"Es necesario ingresar el usuario y/o contraseña para poder continuar." || ""}</p>
       `,
     });
   } else if (emailError || passwordError) {
@@ -26,11 +26,19 @@ export function switAlertLogins(login, error) {
       icon: "error",
       text: "Credenciales incorrectas.",
       html: `
-        <p>${emailError || ""}</p>
-        <p>${passwordError || ""}</p>
+        <p>${"El usuario y/o contraseña son incorrectos. <br/>Verifica e intenta de nuevo." || ""}</p>
       `,
     });
-  } else {
+  }
+}
+
+export function successLogins(login) {
+  const {
+    email,
+    password,
+  } = login;
+  
+  if (email && password) {
     Swal.fire({
       icon: "success",
       title: "Inicio de sesión exitoso",

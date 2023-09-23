@@ -6,11 +6,12 @@ import {
   SidebarContent,
   SidebarItem,
   SidebarLink,
+  SidebarSession,
   SidebarWrapper,
 } from "../../../components/Dashboard/Navbar/sidebarStyles";
 import { StyleSheetManager } from "styled-components";
 
-const Sidebar = ({ isOpen, setIsOpen }) => {
+const Sidebar = ({ isOpen, setIsOpen, sesion }) => {
   const handleMenuItemClick = () => {
     // Cierra el Sidebar cuando se hace clic en un elemento del menú
     setIsOpen(false);
@@ -49,6 +50,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             <SidebarLink href="/dashboard/trips" onClick={handleMenuItemClick}>
               Viajes
             </SidebarLink>
+          </SidebarItem>
+          <SidebarItem>
+            <SidebarSession onClick={sesion}>
+              Cerrar sesión
+            </SidebarSession>
           </SidebarItem>
           <MenuIcon onClick={() => setIsOpen(!isOpen)}>
             <FontAwesomeIcon icon={faBars} />

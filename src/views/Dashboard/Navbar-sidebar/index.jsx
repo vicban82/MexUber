@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "./Sidebar";
 import { modelAdmins } from "../../../data/routeTitles";
+import { cerrarSesion } from "../../../tools/switAlertSesion";
 
 const NavbarContainer = styled.div`
   display: flex;
@@ -116,6 +117,11 @@ const Navbar = () => {
 
   const fullName = `${modelAdmins[0].name} ${modelAdmins[0].lastName}`;
   const gmail = modelAdmins[0].email;
+
+  const handleCerrarSesion = async () => {
+    await cerrarSesion();
+    localStorage.removeItem("tokenAdmin");
+  };
   
   return (
     <StyleSheetManager shouldForwardProp={(prop) => !["isOpen"].includes(prop)}>
@@ -125,7 +131,7 @@ const Navbar = () => {
           <FontAwesomeIcon icon={faBars} />
         </MenuIcon>
         {/* Agrega el componente Sidebar con el contenido */}
-        <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+        <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} sesion={handleCerrarSesion} />
         <SearchContainer>
           <SearchInput type="text" placeholder="Buscar..." />
           <SearchIcon>
@@ -144,7 +150,7 @@ const Navbar = () => {
           </UserProfileText>
         </Button>
         <Dropdown isOpen={isProfileOpen}>
-          <ListItem>
+          <ListItem onClick={handleCerrarSesion}>
             <span>Cerrar sesión</span>
           </ListItem>
         </Dropdown>

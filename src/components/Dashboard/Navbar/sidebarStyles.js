@@ -33,6 +33,16 @@ export const SidebarLink = styled.a`
     color: #ff5733;
   }
 `;
+export const SidebarSession = styled.div`
+  text-decoration: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+
+  &:hover {
+    color: #ff5733;
+  }
+`;
 
 export const MenuIcon = styled.div`
   cursor: pointer;
