@@ -144,12 +144,12 @@ const Navbar = () => {
             src="URL_DE_LA_IMAGEN" // Reemplaza con la URL de la imagen del usuario
             alt="User Profile"
           />
+        </Button>
+        <Dropdown isOpen={isProfileOpen}>
           <UserProfileText>
             {fullName} <br />
             {gmail}
           </UserProfileText>
-        </Button>
-        <Dropdown isOpen={isProfileOpen}>
           <ListItem onClick={handleCerrarSesion}>
             <span>Cerrar sesión</span>
           </ListItem>

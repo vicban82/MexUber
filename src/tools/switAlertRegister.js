@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 
 //* Esta funcion es para la conexion con el Back-End
-export function switAlertRegister(admin, error) {
+export function errorRegister(admin, error) {
   const {
     name,
     lastName,
@@ -42,10 +42,23 @@ export function switAlertRegister(admin, error) {
         <p>${isActiveError || ""}</p>
       `,
     });
-  } else {
+  }
+}
+
+export function successRegister(admin) {
+  const {
+    name,
+    lastName,
+    email,
+    password,
+    repeatPassword,
+    isActive,
+  } = admin;
+
+  if (name && lastName && email && password && repeatPassword && isActive) {
     Swal.fire({
       icon: "success",
-      title: "Registro exitoso",
+      title: "Admin registrado con exito",
       showConfirmButton: false,
       timer: 2000,
     });

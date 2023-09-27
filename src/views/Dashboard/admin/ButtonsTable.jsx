@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import editIcon from "../../../assets/img/editIcon.png";
+import deleteIcon from "../../../assets/img/deleteIcon.png";
 import Modal from "react-modal";
 import { validateAdmin } from "../../../validations/admins";
-import { errorRegister, successRegister } from "../../../tools/switAlertRegister";
-import { axiosPostAdmin } from "../../../hooks/admin/crudAdmin";
-Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
+Modal.setAppElement("#root");
 
-export const ButtonAdd = ({ tBody, tHeader }) => {
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+export function ButtonsTable({ id, tBody, setTBody, setTError }) {
 
   const [admin, setAdmin] = useState({
     name: "",
@@ -14,7 +13,7 @@ export const ButtonAdd = ({ tBody, tHeader }) => {
     email: "",
     password: "",
     repeatPassword: "",
-    isActive: false, // Cambié el valor por defecto a false para checkbox
+    isActive: 0,
   });
 
   const [error, setError] = useState({
@@ -25,6 +24,20 @@ export const ButtonAdd = ({ tBody, tHeader }) => {
     repeatPasswordError: "",
     isActiveError: "",
   });
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
+  const handleDelete = async (id) => {
+    1
+  };
 
   function handleChange(e) {
     const { name, value, type, checked } = e.target;
@@ -47,45 +60,26 @@ export const ButtonAdd = ({ tBody, tHeader }) => {
       })
     )
   }
-  const {
-    name,
-    lastName,
-    email,
-    password,
-    repeatPassword,
-    isActive,
-  } = admin;
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    // Aquí puedes realizar las acciones de guardar tus datos, por ejemplo, enviarlos a través de una API
-    console.log("Admin data:", admin);
-    const {
-      nameError,
-      lastNameError,
-      emailError,
-      passwordError,
-      repeatPasswordError,
-      isActiveError,
-    } = error
-    if (!name || !lastName || !email || !password || !repeatPassword || !isActive) {
-      errorRegister(admin, error);
-    } else if (nameError || lastNameError || emailError || passwordError || repeatPasswordError || isActiveError) {
-      errorRegister(admin, error);
-    } else {
-      successRegister(admin);
-      axiosPostAdmin(admin, setError);
+  const editItem = (id) => {
+    // Tu lógica para guardar los cambios aquí
+    closeModal(); // Cierra el modal después de guardar
+  };
   
-      // Cierra el modal después de guardar
-      setModalIsOpen(false);
-    }
-  }
-
   return (
-    <div>
-      <button onClick={() => setModalIsOpen(true)}>Agregar</button>
-      <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
-        <form onSubmit={handleSubmit}>
+    <td>
+      {/* The button to open modal */}
+      <button onClick={openModal}>
+        <img src={editIcon} alt="Edición" />
+      </button>
+
+      {/* Modal */}
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Editar elemento"
+      >
+        <form onSubmit={''}>
           <br />
           {Object.keys(admin).map((key) => {
             return (
@@ -124,11 +118,18 @@ export const ButtonAdd = ({ tBody, tHeader }) => {
             );
           })}
           <div>
-            <button onClick={() => setModalIsOpen(false)}>Cancelar</button>
-            <button type="submit">Guardar</button>
+            <button onClick={closeModal}>Cancelar</button>
+            <button onClick={() => editItem(id)}>Guardar</button>
           </div>
         </form>
       </Modal>
-    </div>
+
+      <button onClick={() => handleDelete(id)}>
+        <img
+          src={deleteIcon}
+          alt="Delete"
+        />
+      </button>
+    </td>
   );
-};
+}

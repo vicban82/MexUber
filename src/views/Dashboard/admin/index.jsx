@@ -4,7 +4,7 @@ import { Table } from "./Table";
 import { ButtonAdd } from "./ButtonAdd";
 
 const Admins = () => {
-  const tableHeader = ["Nombre completo", "Email", "Activo"];
+  const tableHeader = ["Nombres", "Apellidos", "Email", "Activo"];
 
   const [tBody, setTBody] = useState([]);
   const [error, setTError] = useState("");
