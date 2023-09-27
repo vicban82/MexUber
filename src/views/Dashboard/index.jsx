@@ -1,14 +1,41 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
-
+import React, { useState } from "react";
+import { Link, Outlet } from "react-router-dom";
+import {
+  Button,
+  ContentContainer,
+} from "../../components/Dashboard/styles";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+import Navbar from "./Navbar-sidebar";
+import { Container } from "../../components/reusable/global";
 const Dashboard = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+  const tokenAdmin = localStorage.getItem("tokenAdmin");
+  console.log("tokenAdmin:", tokenAdmin);
+
   return (
-    <div>
-      {/* Contenido del dashboard */}
-      <h1>Welcome to the Dashboard!</h1>
-      {/* Outlet para mostrar las rutas anidadas */}
-      <Outlet />
-    </div>
+    <>
+      {tokenAdmin === null ? (
+        <Container>
+          <h2>Acceso denegado</h2>
+        </Container>
+      ) : (
+        <div>
+          <Navbar />
+          <Container>
+            {/* Contenedor del contenido */}
+            <ContentContainer>
+              {/* Outlet para mostrar las rutas anidadas */}
+              <Outlet />
+            </ContentContainer>
+          </Container>
+        </div>
+      )}
+    </>
   );
 };
 
