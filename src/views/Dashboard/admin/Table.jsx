@@ -28,8 +28,7 @@ const StyledTd = styled.td`
   text-align: center; /* Centra el contenido de los td */
 `;
 
-
- export const Table = ({ tHeader, tBody, setTBody, error, setTError }) => {
+export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, setErrorForm }) => {
   // console.log("BODY EMPLOY:", tBody)
   return (
     <>
@@ -59,6 +58,39 @@ const StyledTd = styled.td`
                 return (
                   <tr key={i}>
                     {Object.values(data).map((item, subI) => {
+                      // console.log("TABLE-ITEMS:", item)
+                      // SE IGNORA EL "ID" Y EL "PASSWORD"
+                      if (subI !== 0 && subI !== 5) {
+                        // Agregar un campo de tipo "checkbox"
+                        if (subI === 4) {
+                          return (
+                            <StyledTd key={subI}>
+                              <div>
+                                <input
+                                  type="checkbox"
+                                  checked={item}
+                                  onChange={(e) => {
+                                    const updatedTBody = [...tBody];
+                                    // updatedTBody[i].isCheckbox = e.target.checked;
+                                    updatedTBody.isCheckbox = e.target.checked;
+                                    setTBody(updatedTBody);
+                                  }}
+                                />
+                              </div>
+                            </StyledTd>
+                          );
+                        } else {
+                          return (
+                            <StyledTd key={subI}>
+                              <div>
+                                <p>{item}</p>
+                              </div>
+                            </StyledTd>
+                          );
+                        }
+                      }
+                    })}
+                    {/* {Object.values(data).map((item, subI) => {
                       // console.log("TABLE-ITEMS:", item, "INDEX:", subI)
                       if (subI !== 0) {
                         return (
@@ -71,12 +103,14 @@ const StyledTd = styled.td`
                           </StyledTd>
                         );
                       }
-                    })}
+                    })} */}
                     <ButtonsTable
                       id={data.id}
                       tBody={tBody}
                       setTBody={setTBody}
                       setTError={setTError}
+                      errorForm={errorForm}
+                      setErrorForm={setErrorForm}
                     />
                   </tr>
                 );

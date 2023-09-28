@@ -8,18 +8,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "./Navbar-sidebar";
 import { Container } from "../../components/reusable/global";
+import { headers } from "../../tools/accessToken";
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
-  const tokenAdmin = localStorage.getItem("tokenAdmin");
-  console.log("tokenAdmin:", tokenAdmin);
 
   return (
     <>
-      {tokenAdmin === null ? (
+      {headers === null ? (
         <Container>
           <h2>Acceso denegado</h2>
         </Container>

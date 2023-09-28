@@ -2,15 +2,24 @@ import React, { useEffect, useState } from "react";
 import { axiosGetAdmins } from "../../../hooks/admin/crudAdmin";
 import { Table } from "./Table";
 import { ButtonAdd } from "./ButtonAdd";
+import { headers } from "../../../tools/accessToken";
 
 const Admins = () => {
   const tableHeader = ["Nombres", "Apellidos", "Email", "Activo"];
 
   const [tBody, setTBody] = useState([]);
   const [error, setTError] = useState("");
+  const [errorForm, setErrorForm] = useState({
+    nameError: "",
+    lastNameError: "",
+    emailError: "",
+    passwordError: "",
+    repeatPasswordError: "",
+    isActiveError: "",
+  });
 
   useEffect(() => {
-    axiosGetAdmins(setTBody, setTError);
+    axiosGetAdmins(setTBody, setTError, headers);
   }, []);
 
   return (
@@ -21,6 +30,8 @@ const Admins = () => {
         setTBody={setTBody}
         error={error}
         setTError={setTError}
+        errorForm={errorForm}
+        setErrorForm={setErrorForm}
       />
       <ButtonAdd
         tBody={tBody}

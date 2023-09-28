@@ -5,6 +5,7 @@ import { faBars, faSearch } from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "./Sidebar";
 import { modelAdmins } from "../../../data/routeTitles";
 import { cerrarSesion } from "../../../tools/switAlertSesion";
+import { loginAdmin } from "../../../tools/accessToken";
 
 const NavbarContainer = styled.div`
   display: flex;
@@ -115,8 +116,8 @@ const Navbar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const fullName = `${modelAdmins[0].name} ${modelAdmins[0].lastName}`;
-  const gmail = modelAdmins[0].email;
+  const fullName = `${loginAdmin.name || ''} ${loginAdmin.lastName || ''}`;
+  const gmail = loginAdmin.email;
 
   const handleCerrarSesion = async () => {
     await cerrarSesion();

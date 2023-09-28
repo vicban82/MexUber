@@ -1,12 +1,10 @@
 import axios from "axios";
-import { modelAdmins } from "../data/routeTitles";
 
 export async function axiosLogins(login, setError) {
   try {
-    const { data } = await axios.post('/api/login-admin', login);
-    // const { data } = await axios.post(modelAdmins, login);
+    const { data } = await axios.post('/api/logins', login);
     // console.log('DATA:', data);
-    localStorage.setItem("tokenAdmin", data.token)
+    localStorage.setItem("loginAdmin", JSON.stringify(data))
   } catch (err) {
     const { error } = err.response.data;
     setError(error)

@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import { validateAdmin } from "../../../validations/admins";
 import { errorRegister, successRegister } from "../../../tools/switAlertRegister";
 import { axiosPostAdmin } from "../../../hooks/admin/crudAdmin";
+import { headers } from "../../../tools/accessToken";
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
 export const ButtonAdd = ({ tBody, tHeader }) => {
@@ -14,7 +15,8 @@ export const ButtonAdd = ({ tBody, tHeader }) => {
     email: "",
     password: "",
     repeatPassword: "",
-    isActive: false, // Cambié el valor por defecto a false para checkbox
+    // isActive: 0 || false ? 0 : 1, // Cambié el valor por defecto a false para checkbox
+    isActive: 0 || 1, // Cambié el valor por defecto a false para checkbox
   });
 
   const [error, setError] = useState({
@@ -30,11 +32,7 @@ export const ButtonAdd = ({ tBody, tHeader }) => {
     const { name, value, type, checked } = e.target;
 
     // Manejar cambios para checkbox y convertir 1 (true) o 0 (false)
-  const newValue = type === "checkbox" ? (value === "1" ? true : false) : value;
-    // const newValue = type === "checkbox" ? !admin[name] : value;
-
-    // // Manejar cambios para checkbox
-    // const newValue = type === "checkbox" ? checked : value;
+    const newValue = type === "checkbox" ? !admin[name] : value;
 
     setAdmin({
       ...admin,
@@ -68,13 +66,13 @@ export const ButtonAdd = ({ tBody, tHeader }) => {
       repeatPasswordError,
       isActiveError,
     } = error
-    if (!name || !lastName || !email || !password || !repeatPassword || !isActive) {
+    if (!name || !lastName || !email || !password || !repeatPassword) {
       errorRegister(admin, error);
-    } else if (nameError || lastNameError || emailError || passwordError || repeatPasswordError || isActiveError) {
+    } else if (nameError || lastNameError || emailError || passwordError || repeatPasswordError) {
       errorRegister(admin, error);
     } else {
       successRegister(admin);
-      axiosPostAdmin(admin, setError);
+      axiosPostAdmin(admin, setError, headers);
   
       // Cierra el modal después de guardar
       setModalIsOpen(false);
@@ -116,8 +114,7 @@ export const ButtonAdd = ({ tBody, tHeader }) => {
                     checked={admin[key]}
                     onChange={handleChange}
                     type="checkbox"
-                    value={admin[key] ? "1" : "0"} // 1 como true y 0 como false
-                    // value={admin[key] ? 1 : 0} // 1 como true y 0 como false
+                    value={admin[key] ? 1 : 0} // 1 como true y 0 como false
                   />
                 )}
               </div>
