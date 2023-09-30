@@ -61,7 +61,7 @@ export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, s
                       // console.log("TABLE-ITEMS:", item, "IDX:", subI)
                       // SE IGNORA EL "ID" Y EL "PASSWORD"
                       //! PENDIENTE CAMBIAR EL 5 POR EL 4 
-                      if (subI !== 0 && subI !== 5) {
+                      if (subI !== 0) {
                         // Agregar un campo de tipo "checkbox"
                         //! PENDIENTE CAMBIAR EL 4 POR EL 5 
                         if (subI === 4) {
