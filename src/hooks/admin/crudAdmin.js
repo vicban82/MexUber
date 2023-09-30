@@ -12,6 +12,20 @@ export async function axiosGetAdmins(setTBody, setTError, headers) {
   }
 }
 
+export async function axiosSearchAdmins(search, setTBody, setTError, headers) {
+  try {
+    if (search) {
+      const { data } = await axios.get(`/api/admins?search=${search}`, { headers });
+      console.log("DATA:", data);
+      setTBody(data);
+    }
+  } catch (err) {
+    const { error } = err.response.data;
+    setTError(error)
+    console.log('ERROR:', error);
+  }
+}
+
 export async function axiosPostAdmin(admin, setErrorForm, headers) {
   try {
     const { data } = (await axios.post('/api/admin', admin, { headers }));

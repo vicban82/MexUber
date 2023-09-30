@@ -29,7 +29,7 @@ const StyledTd = styled.td`
 `;
 
 export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, setErrorForm }) => {
-  // console.log("tBODY:", tBody)
+  // console.log("tBody:", tBody)
   return (
     <>
       <div>

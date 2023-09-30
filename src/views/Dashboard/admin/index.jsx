@@ -3,6 +3,7 @@ import { axiosGetAdmins } from "../../../hooks/admin/crudAdmin";
 import { Table } from "./Table";
 import { ButtonAdd } from "./ButtonAdd";
 import { headers } from "../../../tools/accessToken";
+import { Search } from "./Search";
 
 const Admins = () => {
   const tableHeader = ["Nombres", "Apellidos", "Email", "Activo"];
@@ -24,6 +25,7 @@ const Admins = () => {
 
   return (
     <section>
+      <Search setTBody={setTBody} setTError={setTError} />
       <Table
         tHeader={tableHeader}
         tBody={tBody}
