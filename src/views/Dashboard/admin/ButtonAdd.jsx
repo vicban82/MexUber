@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import { validateAdmin } from "../../../validations/admins";
-import { errorRegister, successRegister } from "../../../tools/switAlertRegister";
+import { errorRegister, successRegister } from "../../../tools/adminAlerts/register";
 import { axiosPostAdmin } from "../../../hooks/admin/crudAdmin";
 import { headers } from "../../../tools/accessToken";
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación

@@ -4,8 +4,9 @@ import deleteIcon from "../../../assets/img/deleteIcon.png";
 import Modal from "react-modal";
 import { validateAdmin } from "../../../validations/admins";
 import { headers } from "../../../tools/accessToken";
-import { axiosDeleteAdmin, axiosPutAdmin } from "../../../hooks/admin/crudAdmin";
-import { errorRegister, successRegister } from "../../../tools/switAlertRegister";
+import { axiosPutAdmin } from "../../../hooks/admin/crudAdmin";
+import { errorRegister, successRegister } from "../../../tools/adminAlerts/register";
+import { deleteAlert } from "../../../tools/adminAlerts/delete";
 Modal.setAppElement("#root");
 
 export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErrorForm }) {
@@ -56,12 +57,9 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
     setModalIsOpen(false);
   };
 
-  // console.log("ID - 1:", id)
   const handleDelete = async (id) => {
-    // console.log("ID - 2:", id)
-    await axiosDeleteAdmin(id, headers, setTError);
-    const filterById = tBody.filter(el => el._id !== id)
-    setTBody(prev => [...filterById]);
+    const deleteAdmin = tBody.find(el => el._id === id)
+    deleteAlert(deleteAdmin, id, tBody, setTBody, setTError)
   };
 
   function handleChange(e) {
