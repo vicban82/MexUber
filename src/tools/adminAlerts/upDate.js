@@ -1,23 +1,19 @@
 import Swal from "sweetalert2";
 
 //* Esta funcion es para la conexion con el Back-End
-export function errorRegister(admin, error) {
+export function errorUpDate(admin, errorForm) {
   const {
     name,
     lastName,
     email,
-    password,
-    repeatPassword,
   } = admin;
   const {
     nameError,
     lastNameError,
     emailError,
-    passwordError,
-    repeatPasswordError,
-  } = error;
+  } = errorForm;
 
-  if (!name && !lastName && !email && !password && !repeatPassword) {
+  if (!name && !lastName && !email) {
     Swal.fire({
       title: "Error",
       icon: "error",
@@ -26,36 +22,31 @@ export function errorRegister(admin, error) {
         <p>${"Todos los campos son requeridos" || ""}</p>
       `,
     });
-  } else if (nameError || lastNameError || emailError || passwordError || repeatPasswordError) {
+  } else if (nameError || lastNameError || emailError) {
     Swal.fire({
-      title: "Error",
+      title: "Error en la actualización",
       icon: "error",
       text: "Credenciales incorrectas.",
       html: `
         <p>${nameError || ""}</p>
         <p>${lastNameError || ""}</p>
         <p>${emailError || ""}</p>
-        <p>${passwordError || ""}</p>
-        <p>${repeatPasswordError || ""}</p>
       `,
     });
   }
 }
 
-export function successRegister(admin) {
+export function successUpDate(admin) {
   const {
     name,
     lastName,
     email,
-    password,
-    repeatPassword,
-    isActive,
   } = admin;
 
-  if (name && lastName && email && password && repeatPassword && isActive) {
+  if (name && lastName && email) {
     Swal.fire({
       icon: "success",
-      title: "Admin registrado con exito",
+      title: "Admin actualizado con exito",
       showConfirmButton: false,
       timer: 2000,
     });

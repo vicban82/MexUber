@@ -36,8 +36,8 @@ const Admins = () => {
       <ButtonAdd
         tBody={tBody}
         setTBody={setTBody}
-        tHeader={tableHeader}
-        setTError={setTError}
+        errorForm={errorForm}
+        setErrorForm={setErrorForm}
       />
     </section>
   );

@@ -6,7 +6,7 @@ import { axiosPostAdmin } from "../../../hooks/admin/crudAdmin";
 import { headers } from "../../../tools/accessToken";
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
-export const ButtonAdd = ({ tBody, setTBody }) => {
+export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const [admin, setAdmin] = useState({
@@ -19,15 +19,6 @@ export const ButtonAdd = ({ tBody, setTBody }) => {
     isActive: 0 || 1, // Cambié el valor por defecto a false para checkbox
   });
 
-  const [error, setError] = useState({
-    nameError: "",
-    lastNameError: "",
-    emailError: "",
-    passwordError: "",
-    repeatPasswordError: "",
-    isActiveError: "",
-  });
-
   function handleChange(e) {
     const { name, value, type, checked } = e.target;
 
@@ -38,7 +29,7 @@ export const ButtonAdd = ({ tBody, setTBody }) => {
       ...admin,
       [name]: newValue,
     });
-    setError(
+    setErrorForm(
       validateAdmin({
         ...admin,
         [name]: newValue,
@@ -64,16 +55,15 @@ export const ButtonAdd = ({ tBody, setTBody }) => {
       emailError,
       passwordError,
       repeatPasswordError,
-      isActiveError,
-    } = error
+    } = errorForm
     if (!name || !lastName || !email || !password || !repeatPassword) {
-      errorRegister(admin, error);
+      errorRegister(admin, errorForm);
     } else if (nameError || lastNameError || emailError || passwordError || repeatPasswordError) {
-      errorRegister(admin, error);
+      errorRegister(admin, errorForm);
     } else {
       try {
         successRegister(admin);
-        const newAdmin = await axiosPostAdmin(admin, setError, headers);
+        const newAdmin = await axiosPostAdmin(admin, setErrorForm, headers);
         setTBody([...tBody, newAdmin]);
     
         // Cierra el modal después de guardar

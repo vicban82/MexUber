@@ -5,8 +5,8 @@ import Modal from "react-modal";
 import { validateAdmin } from "../../../validations/admins";
 import { headers } from "../../../tools/accessToken";
 import { axiosPutAdmin } from "../../../hooks/admin/crudAdmin";
-import { errorRegister, successRegister } from "../../../tools/adminAlerts/register";
 import { deleteAlert } from "../../../tools/adminAlerts/delete";
+import { errorUpDate, successUpDate } from "../../../tools/adminAlerts/upDate";
 Modal.setAppElement("#root");
 
 export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErrorForm }) {
@@ -38,15 +38,6 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
     }
   }, [id, tBody]);
 
-  // const [error, setError] = useState({
-  //   nameError: "",
-  //   lastNameError: "",
-  //   emailError: "",
-  //   passwordError: "",
-  //   repeatPasswordError: "",
-  //   isActiveError: "",
-  // });
-
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const openModal = () => {
@@ -66,11 +57,7 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
     const { name, value, type, checked } = e.target;
 
     // Manejar cambios para checkbox y convertir 1 (true) o 0 (false)
-  // const newValue = type === "checkbox" ? (value === "1" ? true : false) : value;
     const newValue = type === "checkbox" ? !admin[name] : value;
-
-    // // Manejar cambios para checkbox
-    // const newValue = type === "checkbox" ? checked : value;
 
     setAdmin({
       ...admin,
@@ -99,17 +86,14 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
       nameError,
       lastNameError,
       emailError,
-      passwordError,
-      repeatPasswordError,
-      isActiveError,
     } = errorForm;
     if (!name || !lastName || !email) {
-      errorRegister(admin, errorForm);
+      errorUpDate(admin, errorForm);
     } else if (nameError || lastNameError || emailError) {
-      errorRegister(admin, errorForm);
+      errorUpDate(admin, errorForm);
     } else {
       try {
-        successRegister(admin);
+        successUpDate(admin);
         // Envia la solicitud de actualización al backend
         const currentAdmin = await axiosPutAdmin(id, admin, headers, setErrorForm);
         

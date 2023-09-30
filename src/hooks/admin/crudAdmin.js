@@ -12,14 +12,14 @@ export async function axiosGetAdmins(setTBody, setTError, headers) {
   }
 }
 
-export async function axiosPostAdmin(admin, setError, headers) {
+export async function axiosPostAdmin(admin, setErrorForm, headers) {
   try {
     const { data } = (await axios.post('/api/admin', admin, { headers }));
     console.log('POST:', data);
     return data;
   } catch (err) {
     const { error } = err.response.data;
-    setError(error)
+    setErrorForm(error)
     console.log('ERROR:', error);
   }
 }
