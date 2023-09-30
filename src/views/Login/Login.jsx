@@ -36,7 +36,7 @@ const Login = () => {
     email: '',
     password: '',
   });
-  console.log("LOGIN:", login);
+  // console.log("LOGIN:", login);
   const [error, setError] = useState({
     emailError: '',
     passwordError: '',

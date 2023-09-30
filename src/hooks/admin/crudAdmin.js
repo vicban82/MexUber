@@ -16,6 +16,7 @@ export async function axiosPostAdmin(admin, setError, headers) {
   try {
     const { data } = (await axios.post('/api/admin', admin, { headers }));
     console.log('POST:', data);
+    return data;
   } catch (err) {
     const { error } = err.response.data;
     setError(error)
@@ -27,6 +28,7 @@ export async function axiosPutAdmin(id, admin, headers, setErrorForm) {
   try {
     const { data } = (await axios.put(`/api/admin/${id}`, admin, { headers }));
     console.log('PUT:', data);
+    return data;
   } catch (err) {
     const { error } = err.response.data;
     setErrorForm(error)

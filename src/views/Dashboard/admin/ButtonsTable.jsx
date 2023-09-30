@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import editIcon from "../../../assets/img/editIcon.png";
 import deleteIcon from "../../../assets/img/deleteIcon.png";
 import Modal from "react-modal";
@@ -19,6 +19,24 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
     isActive: 0 || 1,
   });
 
+  useEffect(() => {
+    // Actualiza el estado del admin cuando se cambia el ID para que coincida con el objeto correspondiente en tBody
+    const currentAdmin = tBody.find(item => item._id === id);
+    const update = {
+      name: currentAdmin.name,
+      lastName: currentAdmin.lastName,
+      email: currentAdmin.email,
+      // password: currentAdmin.password,
+      password: "",
+      // repeatPassword: currentAdmin.password,
+      repeatPassword: "",
+      isActive: 0 || 1,
+    }
+    if (update) {
+      setAdmin(update);
+    }
+  }, [id, tBody]);
+
   // const [error, setError] = useState({
   //   nameError: "",
   //   lastNameError: "",
@@ -29,10 +47,6 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
   // });
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  // console.log("tBody:", tBody)
-  // console.log("ID:", id)
-  const findAdmin = tBody.find(el => el.id === id)
-  // console.log("findAdmin:", findAdmin)
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -42,8 +56,12 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
     setModalIsOpen(false);
   };
 
-  const handleDelete = async () => {
-    await axiosDeleteAdmin(id, headers);
+  // console.log("ID - 1:", id)
+  const handleDelete = async (id) => {
+    // console.log("ID - 2:", id)
+    await axiosDeleteAdmin(id, headers, setTError);
+    const filterById = tBody.filter(el => el._id !== id)
+    setTBody(prev => [...filterById]);
   };
 
   function handleChange(e) {
@@ -77,7 +95,7 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
     isActive,
   } = admin;
   
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const {
       nameError,
@@ -87,16 +105,28 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
       repeatPasswordError,
       isActiveError,
     } = errorForm;
-    if (!name || !lastName || !email || !password || !repeatPassword) {
+    if (!name || !lastName || !email) {
       errorRegister(admin, errorForm);
-    } else if (nameError || lastNameError || emailError || passwordError || repeatPasswordError) {
+    } else if (nameError || lastNameError || emailError) {
       errorRegister(admin, errorForm);
     } else {
-      successRegister(admin);
-      axiosPutAdmin(id, admin, headers, setErrorForm);
+      try {
+        successRegister(admin);
+        // Envia la solicitud de actualización al backend
+        const currentAdmin = await axiosPutAdmin(id, admin, headers, setErrorForm);
+        
+        // Actualiza la lista en el frontend
+        setTBody(prev => {
+          // Reemplaza el admin editado en la lista por el nuevo admin devuelto por el backend
+          const updatedTBody = prev.map(item => (item._id === id ? currentAdmin : item));
+          return updatedTBody;
+        });
   
-      // Cierra el modal después de guardar
-      setModalIsOpen(false);
+        // Cierra el modal después de guardar
+        setModalIsOpen(false);
+      } catch (error) {
+        console.error("Error al guardar el admin:", error);
+      }
     }
   }
   
@@ -117,7 +147,6 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
           <br />
           {
             Object.keys(admin).map((item, subI) => {
-              // console.log("findAdmin:", findAdmin)
               return (
                 <div key={subI}>
                   <label htmlFor={`input-${item}`}>{item}: </label>
@@ -127,7 +156,6 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
                           id={`input-${item}`}
                           name={item}
                           value={admin[item] || ""}
-                          // placeholder={findAdmin[item]}
                           onChange={handleChange}
                           type="password"
                         />
@@ -136,7 +164,6 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
                         id={`input-${item}`}
                         name={item}
                         value={admin[item] || ""}
-                        // placeholder={findAdmin[item]}
                         onChange={handleChange}
                         type="text"
                       />
@@ -148,7 +175,6 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
                       checked={admin[item]}
                       onChange={handleChange}
                       type="checkbox"
-                      // value={admin[item] ? "1" : "0"} // 1 como true y 0 como false
                       value={admin[item] ? 1 : 0} // 1 como true y 0 como false
                     />
                   )}

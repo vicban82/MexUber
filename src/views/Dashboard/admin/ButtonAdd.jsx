@@ -6,7 +6,7 @@ import { axiosPostAdmin } from "../../../hooks/admin/crudAdmin";
 import { headers } from "../../../tools/accessToken";
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
-export const ButtonAdd = ({ tBody, tHeader }) => {
+export const ButtonAdd = ({ tBody, setTBody }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const [admin, setAdmin] = useState({
@@ -54,10 +54,10 @@ export const ButtonAdd = ({ tBody, tHeader }) => {
     isActive,
   } = admin;
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     // Aquí puedes realizar las acciones de guardar tus datos, por ejemplo, enviarlos a través de una API
-    console.log("Admin data:", admin);
+    // console.log("Admin data:", admin);
     const {
       nameError,
       lastNameError,
@@ -71,11 +71,16 @@ export const ButtonAdd = ({ tBody, tHeader }) => {
     } else if (nameError || lastNameError || emailError || passwordError || repeatPasswordError) {
       errorRegister(admin, error);
     } else {
-      successRegister(admin);
-      axiosPostAdmin(admin, setError, headers);
-  
-      // Cierra el modal después de guardar
-      setModalIsOpen(false);
+      try {
+        successRegister(admin);
+        const newAdmin = await axiosPostAdmin(admin, setError, headers);
+        setTBody([...tBody, newAdmin]);
+    
+        // Cierra el modal después de guardar
+        setModalIsOpen(false);
+      } catch (error) {
+        console.error("Error al guardar el admin:", error);
+      }
     }
   }
 

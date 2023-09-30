@@ -29,7 +29,7 @@ const StyledTd = styled.td`
 `;
 
 export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, setErrorForm }) => {
-  // console.log("BODY EMPLOY:", tBody)
+  // console.log("tBODY:", tBody)
   return (
     <>
       <div>
@@ -58,21 +58,26 @@ export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, s
                 return (
                   <tr key={i}>
                     {Object.values(data).map((item, subI) => {
-                      // console.log("TABLE-ITEMS:", item)
+                      // console.log("TABLE-ITEMS:", item, "IDX:", subI)
                       // SE IGNORA EL "ID" Y EL "PASSWORD"
+                      //! PENDIENTE CAMBIAR EL 5 POR EL 4 
                       if (subI !== 0 && subI !== 5) {
                         // Agregar un campo de tipo "checkbox"
+                        //! PENDIENTE CAMBIAR EL 4 POR EL 5 
                         if (subI === 4) {
                           return (
                             <StyledTd key={subI}>
                               <div>
                                 <input
                                   type="checkbox"
-                                  checked={item}
+                                  checked={item === 1}
                                   onChange={(e) => {
                                     const updatedTBody = [...tBody];
-                                    // updatedTBody[i].isCheckbox = e.target.checked;
-                                    updatedTBody.isCheckbox = e.target.checked;
+                                    console.log("Estado actual del checkbox:", e.target.checked);
+                                    console.log("Valor actual de item:", item);
+                                    updatedTBody[i].isActive = e.target.checked ? 1 : 0;
+                                    console.log("Nuevo valor de isActive:", updatedTBody[i].isActive);
+                                    console.log("OBJETO ACTUALIZADO:", updatedTBody);
                                     setTBody(updatedTBody);
                                   }}
                                 />
@@ -90,22 +95,8 @@ export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, s
                         }
                       }
                     })}
-                    {/* {Object.values(data).map((item, subI) => {
-                      // console.log("TABLE-ITEMS:", item, "INDEX:", subI)
-                      if (subI !== 0) {
-                        return (
-                          <StyledTd key={subI}>
-                            <div>
-                              <p>
-                                {item}
-                              </p>
-                            </div>
-                          </StyledTd>
-                        );
-                      }
-                    })} */}
                     <ButtonsTable
-                      id={data.id}
+                      id={data._id}
                       tBody={tBody}
                       setTBody={setTBody}
                       setTError={setTError}

@@ -19,7 +19,7 @@ export function errorRegister(admin, error) {
     isActiveError,
   } = error;
 
-  if (!name && !lastName && !email && !password && !repeatPassword && !isActive) {
+  if (!name && !lastName && !email && !password && !repeatPassword) {
     Swal.fire({
       title: "Error en el inicio de sesión",
       icon: "error",
@@ -28,7 +28,7 @@ export function errorRegister(admin, error) {
         <p>${"Todos los campos son requeridos" || ""}</p>
       `,
     });
-  } else if (nameError || lastNameError || emailError || passwordError || repeatPasswordError || isActiveError) {
+  } else if (nameError || lastNameError || emailError || passwordError || repeatPasswordError) {
     Swal.fire({
       title: "Error en el inicio de sesión",
       icon: "error",
@@ -39,7 +39,6 @@ export function errorRegister(admin, error) {
         <p>${emailError || ""}</p>
         <p>${passwordError || ""}</p>
         <p>${repeatPasswordError || ""}</p>
-        <p>${isActiveError || ""}</p>
       `,
     });
   }
