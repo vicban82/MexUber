@@ -13,6 +13,7 @@ import {
   InputContainer,
   Line,
   ShowIcon,
+  ContainerLogin,
 } from "../../components/reusable/global";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -20,7 +21,7 @@ import {
   faEye,
   faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
-import logo from "../../assets/img/moveItLogo2.png";
+import logo from "../../assets/img/moveItLogo3.png";
 import {
   RememberUserCheckbox,
   RememberUserContainer,
@@ -80,7 +81,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     //* Conexion con el Back-End
-    const {
+    /*const {
       emailError,
       passwordError,
     } = error;
@@ -96,15 +97,15 @@ const Login = () => {
         window.location.reload();
       }, 1000);
       navigate('/dashboard')
-    }
+    }*/
     //* Conexion con el Back-End
 
     //! DATOS RANDOM
-    // if (email && password) {
-    //   demoSwitAlertLogin(email, password);
-    //   navigate("/dashboard");
-    // }
-    // demoSwitAlertLogin(email, password);
+     if (email && password) {
+       demoSwitAlertLogin(email, password);
+       navigate("/dashboard/home");
+      }
+     demoSwitAlertLogin(email, password);
     //! DATOS RANDOM
   };
 
@@ -114,6 +115,7 @@ const Login = () => {
   };
   return (
     <Container>
+      <ContainerLogin>
       <Checkbox type="checkbox" id="check" />
       <ImageContainer>
         <Image src={logo} alt="Logo" />
@@ -162,6 +164,7 @@ const Login = () => {
           <InputButton type="submit" value="Iniciar sesión" />
         </Form>
       </ContainerForm>
+      </ContainerLogin>
     </Container>
   );
 };

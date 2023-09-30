@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import {
-  Button,
   ContentContainer,
 } from "../../components/Dashboard/styles";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "./Navbar-sidebar";
 import { Container } from "../../components/reusable/global";
 const Dashboard = () => {
@@ -19,7 +16,7 @@ const Dashboard = () => {
 
   return (
     <>
-      {tokenAdmin === null ? (
+      {tokenAdmin != null ? (
         <Container>
           <h2>Acceso denegado</h2>
         </Container>

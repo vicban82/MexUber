@@ -22,25 +22,32 @@ const NavbarContainer = styled.div`
 const SearchContainer = styled.div`
   display: flex;
   align-items: center;
+  
 `;
 
 const SearchInput = styled.input`
-  width: 200px;
+  width: 145px;
   padding: 5px;
   margin-right: 10px;
+  padding-left: 15px;
+  padding-right: 20%;
   border: none;
   background-color: #555;
   color: #fff;
+  border-radius: 32px;
+  height: 20px;
 `;
 
 const SearchIcon = styled.div`
   cursor: pointer;
+  margin-left: -34px;
 `;
 
 // * Lista desplegable
 const UserProfileButton = styled.div`
   position: relative;
-  display: inline-block;
+  display: flex;
+  
 `;
 
 const Button = styled.button`
@@ -50,6 +57,7 @@ const Button = styled.button`
   border: none;
   color: inherit;
   cursor: pointer;
+  margin-right: 12px;
 `;
 
 const Dropdown = styled.div`
@@ -88,9 +96,9 @@ const ListItem = styled.div`
 const MenuIcon = styled.div`
   cursor: pointer;
   display: block; /* El ícono de menú está oculto por defecto en pantallas grandes */
-
+  font-size: 24px;
   @media (max-width: 768px) {
-    /* Mostrar el ícono de menú en pantallas pequeñas (como dispositivos móviles) */
+     //Mostrar el ícono de menú en pantallas pequeñas (como dispositivos móviles) 
     display: block;
     font-size: 24px;
   }
@@ -132,13 +140,16 @@ const Navbar = () => {
         </MenuIcon>
         {/* Agrega el componente Sidebar con el contenido */}
         <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} sesion={handleCerrarSesion} />
+{
+/* -----------------------------------Buscar--------------------------------------- */}
         <SearchContainer>
           <SearchInput type="text" placeholder="Buscar..." />
           <SearchIcon>
             <FontAwesomeIcon icon={faSearch} />
           </SearchIcon>
         </SearchContainer>
-        <UserProfileButton>
+{/* -------------------------------Perfil de Usuario------------------------------ */}
+      <UserProfileButton>
         <Button onClick={toggleProfile}>
           <UserProfileImage
             src="URL_DE_LA_IMAGEN" // Reemplaza con la URL de la imagen del usuario

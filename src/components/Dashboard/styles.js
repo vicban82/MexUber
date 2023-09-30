@@ -15,17 +15,29 @@ export const SidebarContainer = styled.div`
 `;
 
 export const ContentContainer = styled.div`
-  flex: 1;
-  transition: margin-left 0.3s ease;
-  margin-left: ${(props) => (props.sidebarOpen ? "250px" : "0")};
+  display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+  margin-top: 160px;
 `;
 
 export const Button = styled.button`
-  background-color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: space-between;
+  padding-top: 2rem;
+  background-color: #3d3e47;
   color: white;
   border: none;
-  padding: 10px;
   cursor: pointer;
+  width: 170px;
+  height: 10rem;
+  border-radius: 20px;
+ 
 `;
 
 export const HamburgerButton = styled.div`
@@ -79,4 +91,46 @@ export const NavButton = styled(Link)`
   &:hover {
     background-color: #555;
   }
+`;
+
+export const ContainerCard = styled.div`
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	align-content: space-around;
+  gap: 30px;
+  margin-left: 100px;
+  margin-right: 90px;
+  max-width: 760px;
+`;
+
+export const Card = styled.div`
+  display: flex;
+  flex: auto;
+  justify-content: center;
+  flex-grow: 4;
+  flex-direction: column;
+  border-radius: 5px 5px 5px 5px;
+  padding: 2px 16px;
+  padding-top: 15px;
+  min-width: 5rem;
+  min-height: 5rem;
+  max-width: 10rem;
+  max-height: 10rem;
+  /* Add shadows to create the "card" effect */
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  background-color: darkmagenta;
+  /* On mouse-over, add a deeper shadow */
+  .card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
+`;
+
+export const TextCard = styled.div`
+  display: flex;
+  flex: auto;
+  align-items: center;
+  flex-direction: row;
 `;
