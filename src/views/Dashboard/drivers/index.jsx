@@ -81,6 +81,7 @@ export const Drivers = () => {
         tDriver={tDriver}
         setTDriver={setTDriver}
         driver={driver}
+        setDriver={setDriver}
         errorForm={errorForm}
         setErrorForm={setErrorForm}
       />

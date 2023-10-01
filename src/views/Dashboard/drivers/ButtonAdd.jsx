@@ -1,13 +1,24 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Modal from "react-modal";
 import { validateAdmin } from "../../../validations/admins";
 import { headers } from "../../../tools/accessToken";
 import { axiosPostDriver } from "../../../hooks/drivers/crudDrivers";
-import { errorRegister } from "../../../tools/driverAlerts/register";
+import { errorRegister, successRegister } from "../../../tools/driverAlerts/register";
+import { axiosGetSepomex } from "../../../hooks/db/info";
+import { useDropzone } from 'react-dropzone';
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
-export const ButtonAdd = ({ tDriver, setTDriver, driver, errorForm, setErrorForm }) => {
+const dropzoneStyles = {
+  border: '2px dashed #cccccc',
+  borderRadius: '4px',
+  textAlign: 'center',
+  padding: '20px',
+  cursor: 'pointer',
+};
+
+export const ButtonAdd = ({ tDriver, setTDriver, driver, setDriver, errorForm, setErrorForm }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [sepomex, setSepomex] = useState([]);
   
   const {
     name,
@@ -42,7 +53,7 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, errorForm, setErrorForm
     // Manejar cambios para checkbox y convertir 1 (true) o 0 (false)
     const newValue = type === "checkbox" ? !driver[name] : value;
 
-    setAdmin({
+    setDriver({
       ...driver,
       [name]: newValue,
     });
@@ -78,6 +89,30 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, errorForm, setErrorForm
     servicesError,
   } = errorForm;
 
+  useEffect(() => {
+    axiosGetSepomex(setSepomex);
+  }, []);
+
+  // const listSepomex = sepomex.map(el => {
+  //   return (
+  //     <option key={el._id} >
+  //       {el.neighborhood}
+  //     </option>
+  //   );
+  // });
+  // console.log("listSepomex:", listSepomex)
+  // const onDrop = useCallback((acceptedFiles) => {
+  //   // Aquí puedes manejar los archivos aceptados, como enviarlos al servidor.
+  //   console.log(acceptedFiles);
+  // }, []);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    // onDrop,
+    accept: {
+      'image/*': ['.jpg', '.png'],
+    },
+  });
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -102,8 +137,7 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, errorForm, setErrorForm
       !repeatPassword ||
       !isActive ||
       !messageReasonInActive ||
-      !services ||
-      !car
+      !services
     ) {
       errorRegister(driver, errorForm);
     } else if (
@@ -132,7 +166,7 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, errorForm, setErrorForm
       errorRegister(driver, errorForm);
     } else {
       try {
-        // successRegister(driver);
+        successRegister(driver);
         const newDriver = await axiosPostDriver(driver, headers);
         setTDriver([...tDriver, newDriver]);
     
@@ -151,7 +185,7 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, errorForm, setErrorForm
         <form onSubmit={handleSubmit}>
           <br />
           {Object.keys(driver).map((el, idx) => {
-            console.log("EL:", el, ",IDX:", idx)
+            // console.log("EL:", el, ",IDX:", idx)
             if (idx === 3 || idx === 4 || idx === 5 || idx === 12 || idx === 13) {
               // SELECT = ESTADO 3, CIUDAD 4, COLONIA 5, ESTADO LICENCIA 12, TIPO LICENCIA 13
               return (
@@ -161,15 +195,18 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, errorForm, setErrorForm
                     <option>
                       Selecciona
                     </option>
+                    {/* {listSepomex} */}
                   </select>
                 </div>
               );
             } else if (idx === 9 || idx === 14 || idx === 15) {
               // DROP = FOTO CONDUCTOR 9, FOTO LICENCIA 14 - 15
               return (
-                <div key={idx}>
-                  <label htmlFor={`input-${el}`}>{el}: </label>
-                  <img src="img" alt="img" />
+                <div key={idx} >
+                  <div {...getRootProps()} style={dropzoneStyles}>
+                    <input {...getInputProps()} />
+                    <p>Arrastra una imagen aquí o haz clic para seleccionar una.</p>
+                  </div>
                 </div>
               );
             } else if (idx === 11) {
@@ -186,13 +223,41 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, errorForm, setErrorForm
                 return (
                   <div key={idx}>
                     <label htmlFor={`input-${el}`}>{el}: </label>
-                    <input type="checkbox" />
+                    <input
+                      id={`input-${el}`}
+                      name={el}
+                      checked={driver[el]}
+                      onChange={handleChange}
+                      type="checkbox"
+                      value={driver[el] ? 1 : 0}
+                    />
                   </div>
                 );
               }
               return (
                 <div key={idx}>
-                  <label htmlFor={`input-${el}`}>{el}: </label>
+                  <label>{el}: </label>
+                  {/* <input
+                    name={el}
+                    checked={driver[el]}
+                    onChange={handleChange}
+                    type="checkbox"
+                    value={driver[el] ? 1 : 0}
+                  />TODOS
+                  <input
+                    name={el}
+                    checked={driver[el]}
+                    onChange={handleChange}
+                    type="checkbox"
+                    value={driver[el] ? 1 : 0}
+                  />LGBTQ+
+                  <input
+                    name={el}
+                    checked={driver[el]}
+                    onChange={handleChange}
+                    type="checkbox"
+                    value={driver[el] ? 1 : 0}
+                  />MUJERES */}
                   <input type="checkbox" />TODOS
                   <input type="checkbox" />LGBTQ+
                   <input type="checkbox" />MUJERES
