@@ -15,6 +15,7 @@ export const Drivers = () => {
     "Vehículo",
   ];
   const [tDriver, setTDriver] = useState([]);
+  // ESTADO DEL FORMULARIO
   const [driver, setDriver] = useState({
     name: "",
     lastName: "",
@@ -75,6 +76,8 @@ export const Drivers = () => {
         tHeader={tableHeader}
         tDriver={tDriver}
         setTDriver={setTDriver}
+        driver={driver}
+        setDriver={setDriver}
         errorForm={errorForm}
         setErrorForm={setErrorForm}
       />

@@ -38,25 +38,25 @@ export async function axiosPostDriver(driver, headers) {
   }
 }
 
-export async function axiosPutAdmin(id, admin, headers, setErrorForm) {
+export async function axiosPutDriver(id, driver, headers) {
   try {
-    const { data } = (await axios.put(`/api/admin/${id}`, admin, { headers }));
+    const { data } = (await axios.put(`/api/driver/${id}`, driver, { headers }));
     console.log('PUT:', data);
     return data;
   } catch (err) {
     const { error } = err.response.data;
-    setErrorForm(error)
+    // setErrorForm(error)
     console.log('ERROR:', error);
   }
 }
 
-export async function axiosDeleteAdmin(id, headers, setError) {
+export async function axiosDeleteDriver(id, headers) {
   try {
-    const { data } = (await axios.delete(`/api/admin/${id}`, { headers }));
+    const { data } = (await axios.delete(`/api/driver/${id}`, { headers }));
     console.log('DELETE:', data);
   } catch (err) {
     const { error } = err.response.data;
-    setError(error)
+    // setError(error)
     console.log('ERROR:', error);
   }
 }

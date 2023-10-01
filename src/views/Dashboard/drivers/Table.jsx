@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { ButtonsTable } from './ButtonsTable';
 // import { ButtonsTable } from './ButtonsTable';
 
 const StyledTable = styled.table`
@@ -28,7 +29,7 @@ const StyledTd = styled.td`
   text-align: center; /* Centra el contenido de los td */
 `;
 
-export const Table = ({ tHeader, tDriver, setTDriver, errorForm, setErrorForm }) => {
+export const Table = ({ tHeader, tDriver, setTDriver, driver, setDriver, errorForm, setErrorForm }) => {
   // console.log("tDriver:", tDriver)
   return (
     <>
@@ -62,7 +63,7 @@ export const Table = ({ tHeader, tDriver, setTDriver, errorForm, setErrorForm })
                       // SE IGNORA EL "ID"
                       if (subI !== 0) {
                         // Agregar un campo de tipo "checkbox"
-                        if (subI === 5) {
+                        if (subI === 5 || subI === 6) {
                           return (
                             <StyledTd key={subI}>
                               <div>
@@ -93,14 +94,17 @@ export const Table = ({ tHeader, tDriver, setTDriver, errorForm, setErrorForm })
                         }
                       }
                     })}
-                    {/* <ButtonsTable
+                    <ButtonsTable
                       id={data._id}
                       tDriver={tDriver}
                       setTDriver={setTDriver}
-                      setTError={setTError}
+                      // ESTADO DEL FORMULARIO
+                      driver={driver}
+                      setDriver={setDriver}
+                      // ESTADO DEL FORMULARIO
                       errorForm={errorForm}
                       setErrorForm={setErrorForm}
-                    /> */}
+                    />
                   </tr>
                 );
               })

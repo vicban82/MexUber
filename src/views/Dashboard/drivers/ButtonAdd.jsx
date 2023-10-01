@@ -237,27 +237,6 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, setDriver, errorForm, s
               return (
                 <div key={idx}>
                   <label>{el}: </label>
-                  {/* <input
-                    name={el}
-                    checked={driver[el]}
-                    onChange={handleChange}
-                    type="checkbox"
-                    value={driver[el] ? 1 : 0}
-                  />TODOS
-                  <input
-                    name={el}
-                    checked={driver[el]}
-                    onChange={handleChange}
-                    type="checkbox"
-                    value={driver[el] ? 1 : 0}
-                  />LGBTQ+
-                  <input
-                    name={el}
-                    checked={driver[el]}
-                    onChange={handleChange}
-                    type="checkbox"
-                    value={driver[el] ? 1 : 0}
-                  />MUJERES */}
                   <input type="checkbox" />TODOS
                   <input type="checkbox" />LGBTQ+
                   <input type="checkbox" />MUJERES
