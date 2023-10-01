@@ -3,6 +3,7 @@ import { axiosGetDrivers } from "../../../hooks/drivers/crudDrivers";
 import { headers } from "../../../tools/accessToken";
 import { Table } from "./Table";
 import { ButtonAdd } from "./ButtonAdd";
+import { Search } from "./Search";
 
 export const Drivers = () => {
   const tableHeader = [
@@ -69,7 +70,7 @@ export const Drivers = () => {
 
   return (
     <section>
-      {/* <Search setTBody={setTBody} setTError={setTError} /> */}
+      <Search setTDriver={setTDriver} />
       <Table
         tHeader={tableHeader}
         tDriver={tDriver}

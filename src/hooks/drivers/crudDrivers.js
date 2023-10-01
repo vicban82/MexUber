@@ -12,16 +12,16 @@ export async function axiosGetDrivers(setTDriver, headers) {
   }
 }
 
-export async function axiosSearchAdmins(search, setTBody, setTError, headers) {
+export async function axiosSearchDrivers(search, setTDriver, headers) {
   try {
     if (search) {
-      const { data } = await axios.get(`/api/admins?search=${search}`, { headers });
-      console.log("DATA:", data);
-      setTBody(data);
+      const { data } = await axios.get(`/api/drivers?search=${search}`, { headers });
+      // console.log("DATA:", data);
+      setTDriver(data);
     }
   } catch (err) {
     const { error } = err.response.data;
-    setTError(error)
+    // setTError(error)
     console.log('ERROR:', error);
   }
 }
