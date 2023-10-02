@@ -8,6 +8,7 @@ import { axiosPutAdmin } from "../../../hooks/admin/crudAdmin";
 import { deleteAlert } from "../../../tools/adminAlerts/delete";
 import { errorUpDate, successUpDate } from "../../../tools/adminAlerts/upDate";
 import styled from 'styled-components';
+import { props } from "./props";
 Modal.setAppElement("#root");
 
 const StyledTd = styled.td`
@@ -134,39 +135,43 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
           <br />
           {
             Object.keys(admin).map((item, subI) => {
-              return (
-                <div key={subI}>
-                  <label htmlFor={`input-${item}`}>{item}: </label>
-                  {item !== "isActive" ? (
-                    item === "password" || item === "repeatPassword" ? (
+              for (const esp in props) {
+                if (item === esp) {
+                  return (
+                    <div key={subI}>
+                      <label htmlFor={`input-${item}`}>{props[esp]}: </label>
+                      {item !== "isActive" ? (
+                        item === "password" || item === "repeatPassword" ? (
+                            <input
+                              id={`input-${item}`}
+                              name={item}
+                              value={admin[item] || ""}
+                              onChange={handleChange}
+                              type="password"
+                            />
+                        ) : (
+                          <input
+                            id={`input-${item}`}
+                            name={item}
+                            value={admin[item] || ""}
+                            onChange={handleChange}
+                            type="text"
+                          />
+                        )
+                      ) : (
                         <input
                           id={`input-${item}`}
                           name={item}
-                          value={admin[item] || ""}
+                          checked={admin[item]}
                           onChange={handleChange}
-                          type="password"
+                          type="checkbox"
+                          value={admin[item] ? 1 : 0} // 1 como true y 0 como false
                         />
-                    ) : (
-                      <input
-                        id={`input-${item}`}
-                        name={item}
-                        value={admin[item] || ""}
-                        onChange={handleChange}
-                        type="text"
-                      />
-                    )
-                  ) : (
-                    <input
-                      id={`input-${item}`}
-                      name={item}
-                      checked={admin[item]}
-                      onChange={handleChange}
-                      type="checkbox"
-                      value={admin[item] ? 1 : 0} // 1 como true y 0 como false
-                    />
-                  )}
-                </div>
-              );
+                      )}
+                    </div>
+                  );
+                }
+              }
             })
           }
           <div>
