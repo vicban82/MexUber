@@ -5,8 +5,8 @@ export const Container = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  max-width: 430px;
-  width: 100%;
+  // max-width: 430px;
+  // width: 100%;
   background: #fff;
   border-radius: 7px;
 `;

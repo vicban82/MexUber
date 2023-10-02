@@ -8,6 +8,16 @@ import { axiosGetSepomex } from "../../../hooks/db/info";
 import { useDropzone } from 'react-dropzone';
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
+const dropzoneContainerStyles = {
+  width: '200px', // Establece el ancho del contenedor
+  height: '200px', // Establece la altura del contenedor
+  border: '2px dashed #cccccc',
+  borderRadius: '4px',
+  textAlign: 'center',
+  padding: '20px',
+  cursor: 'pointer',
+};
+
 const dropzoneStyles = {
   border: '2px dashed #cccccc',
   borderRadius: '4px',
@@ -186,12 +196,21 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, setDriver, errorForm, s
           <br />
           {Object.keys(driver).map((el, idx) => {
             // console.log("EL:", el, ",IDX:", idx)
-            if (idx === 3 || idx === 4 || idx === 5 || idx === 12 || idx === 13) {
-              // SELECT = ESTADO 3, CIUDAD 4, COLONIA 5, ESTADO LICENCIA 12, TIPO LICENCIA 13
+            if (idx === 3 || idx === 4 || idx === 5 || idx === 11 || idx === 12 || idx === 20) {
+              // SELECT = ESTADO 3, CIUDAD 4, COLONIA 5, ESTADO LICENCIA 11, TIPO LICENCIA 12
+              // MOTIVO DE BLOQUEO = 20
+              if (idx === 20) {
+                return (
+                  <div key={idx}>
+                    <label>{el}: </label>
+                    <input type="text" disabled={true} />
+                  </div>
+                );
+              }
               return (
                 <div key={idx}>
                   <label htmlFor={`input-${el}`}>{el}: </label>
-                  <select name={el} >
+                  <select disabled={true} >
                     <option>
                       Selecciona
                     </option>
@@ -201,25 +220,37 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, setDriver, errorForm, s
               );
             } else if (idx === 9 || idx === 14 || idx === 15) {
               // DROP = FOTO CONDUCTOR 9, FOTO LICENCIA 14 - 15
+              if (idx === 9) {
+                return (
+                  <div key={idx}>
+                    <label>{el}: </label>
+                    <div {...getRootProps()} style={dropzoneContainerStyles}>
+                      <input {...getInputProps()} />
+                    </div>
+                    <p>Frente</p>
+                  </div>
+                );
+              }
               return (
                 <div key={idx} >
-                  <div {...getRootProps()} style={dropzoneStyles}>
+                  <label>{el}: </label>
+                  <div {...getRootProps()} style={dropzoneContainerStyles}>
                     <input {...getInputProps()} />
-                    <p>Arrastra una imagen aquí o haz clic para seleccionar una.</p>
                   </div>
+                  <p>Licencia</p>
                 </div>
               );
-            } else if (idx === 11) {
-              // DATE-FECHA = VIGENCIA DE LA LICENCIA 11
+            } else if (idx === 13) {
+              // DATE-FECHA = VIGENCIA DE LA LICENCIA 13
               return (
                 <div key={idx}>
                   <label htmlFor={`input-${el}`}>{el}: </label>
                   <input type="date" />
                 </div>
               );
-            } else if (idx === 18 || idx === 22) {
-              // CHECKBOX = SERVICIOS(TODOS - MUJERES - LGBT), ACTIVO
-              if (idx === 18) {
+            } else if (idx === 16 || idx === 19) {
+              // CHECKBOX = SERVICIOS(TODOS - MUJERES - LGBT) 16, ACTIVO 19
+              if (idx === 19) {
                 return (
                   <div key={idx}>
                     <label htmlFor={`input-${el}`}>{el}: </label>
@@ -237,13 +268,19 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, setDriver, errorForm, s
               return (
                 <div key={idx}>
                   <label>{el}: </label>
-                  <input type="checkbox" />TODOS
+                  <input 
+                    name={el}
+                    type="checkbox"
+                    checked={driver[el]} 
+                    onChange={handleChange}
+                    value={driver[el] ? 1 : 0} 
+                  />TODOS
                   <input type="checkbox" />LGBTQ+
                   <input type="checkbox" />MUJERES
                 </div>
               );
-            } else if (idx === 16 || idx === 17) {
-              // PASSWORD = 16 - 17
+            } else if (idx === 17 || idx === 18) {
+              // PASSWORD = 17 - 18
               return (
                 <div key={idx}>
                   <label htmlFor={`input-${el}`}>{el}: </label>

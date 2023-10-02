@@ -45,11 +45,11 @@ export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, s
                   );
                 })}
               <StyledTh>
-                <p>Editar</p>
+                <p>Editar / Eliminar</p>
               </StyledTh>
-              <StyledTh>
+              {/* <StyledTh>
                 <p>Eliminar</p>
-              </StyledTh>
+              </StyledTh> */}
             </tr>
           </StyledThead>
           <StyledTbody>

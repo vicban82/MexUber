@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { ButtonsTable } from './ButtonsTable';
-// import { ButtonsTable } from './ButtonsTable';
 
 const StyledTable = styled.table`
   width: 100%;
@@ -46,11 +45,11 @@ export const Table = ({ tHeader, tDriver, setTDriver, driver, setDriver, errorFo
                   );
                 })}
               <StyledTh>
-                <p>Editar</p>
+                <p>Editar / Eliminar</p>
               </StyledTh>
-              <StyledTh>
+              {/* <StyledTh>
                 <p>Eliminar</p>
-              </StyledTh>
+              </StyledTh> */}
             </tr>
           </StyledThead>
           <StyledTbody>

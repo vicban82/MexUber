@@ -7,7 +7,12 @@ import { headers } from "../../../tools/accessToken";
 import { axiosPutAdmin } from "../../../hooks/admin/crudAdmin";
 import { deleteAlert } from "../../../tools/adminAlerts/delete";
 import { errorUpDate, successUpDate } from "../../../tools/adminAlerts/upDate";
+import styled from 'styled-components';
 Modal.setAppElement("#root");
+
+const StyledTd = styled.td`
+  display: flex;
+`;
 
 export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErrorForm }) {
 
@@ -113,7 +118,7 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
   }
   
   return (
-    <td>
+    <StyledTd>
       {/* The button to open modal */}
       <button onClick={openModal}>
         <img src={editIcon} alt="Edición" />
@@ -177,6 +182,6 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
           alt="Delete"
         />
       </button>
-    </td>
+    </StyledTd>
   );
 }

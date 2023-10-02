@@ -27,20 +27,24 @@ export const Drivers = () => {
     contact: "", // NUMERO DE CONTACTO DEL CONDUCTOR
     email: "",
     driverPicture: "", //* FOTO DEL CONDUCTOR
+    //! DATOS DE LA LICENCIA DE CONDUCCION
     driverLicenseNumber: "", //* NUMERO LICENCIA DEL CONDUCTOR
-    dateLicense: "", // FECHA - VIGENCIA DE LA LICENCIA
     stateLicense: "", // ESTADO DE LA LICENCIA
     typeLicense: "", // TIPO LICENCIA
+    dateLicense: "", // FECHA - VIGENCIA DE LA LICENCIA
     frontLicensePicture: "", //* FOTO FRONTAL DE LA LICENCIA
     backLicensePicture: "", //* FOTO REVERSO DE LA LICENCIA
+    //! DATOS DE LA LICENCIA DE CONDUCCION
+    //! AJUSTES DE LA APLICACION
+    services: "", // TODOS - LGBQT+ - MUJERES
+    //! AJUSTES DE LA APLICACION
+    //! ACCESO A LA APLICACION
     password: "",
     repeatPassword: "",
     isActive: 0 || 1,
     messageReasonInActive: "", // MENSAJE RASON INACTIVO
-    tokenNotification: "", //? OPCIONAL
-    typePhone: "", //? OPCIONAL iOS || Android
-    services: "", // TODOS - LGBQT+ - MUJERES
-    car: "" || null,
+    //! ACCESO A LA APLICACION
+    // car: "" || null,
   });
   const [errorForm, setErrorForm] = useState({
     nameError: "",

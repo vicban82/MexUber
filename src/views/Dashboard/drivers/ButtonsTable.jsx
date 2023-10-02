@@ -4,12 +4,26 @@ import deleteIcon from "../../../assets/img/deleteIcon.png";
 import Modal from "react-modal";
 import { validateAdmin } from "../../../validations/admins";
 import { headers } from "../../../tools/accessToken";
-import { axiosPutAdmin } from "../../../hooks/admin/crudAdmin";
 import { deleteAlert } from "../../../tools/driverAlerts/delete";
 import { errorUpDate, successUpDate } from "../../../tools/adminAlerts/upDate";
 import { useDropzone } from "react-dropzone";
 import { axiosPutDriver } from "../../../hooks/drivers/crudDrivers";
+import styled from 'styled-components';
 Modal.setAppElement("#root");
+
+const StyledTd = styled.td`
+  display: flex;
+`;
+
+const dropzoneContainerStyles = {
+  width: '200px', // Establece el ancho del contenedor
+  height: '200px', // Establece la altura del contenedor
+  border: '2px dashed #cccccc',
+  borderRadius: '4px',
+  textAlign: 'center',
+  padding: '20px',
+  cursor: 'pointer',
+};
 
 const dropzoneStyles = {
   border: '2px dashed #cccccc',
@@ -21,36 +35,36 @@ const dropzoneStyles = {
 
 export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, errorForm, setErrorForm, }) {
 
-  useEffect(() => {
-    // Actualiza el estado del driver cuando se cambia el ID para que coincida con el objeto correspondiente en tDriver
-    const currentDriver = tDriver.find(item => item._id === id);
-    const update = {
-      name: currentDriver.name,
-      lastName: currentDriver.lastName,
-      zipCode: currentDriver.zipCode,
-      state: currentDriver.state,
-      city: currentDriver.city,
-      colonia: currentDriver.colonia,
-      address: currentDriver.address,
-      contact: currentDriver.contact,
-      email: currentDriver.email,
-      driverPicture: currentDriver.driverPicture,
-      driverLicenseNumber: currentDriver.driverLicenseNumber,
-      dateLicense: currentDriver.dateLicense,
-      stateLicense: currentDriver.stateLicense,
-      typeLicense: currentDriver.typeLicense,
-      frontLicensePicture: currentDriver.frontLicensePicture,
-      backLicensePicture: currentDriver.backLicensePicture,
-      password: "",
-      repeatPassword: "",
-      isActive: 0 || 1,
-      messageReasonInActive: "",
-      services: 0 || 1,
-    }
-    if (update) {
-      setDriver(update);
-    }
-  }, [id, tDriver]);
+  // useEffect(() => {
+  //   // Actualiza el estado del driver cuando se cambia el ID para que coincida con el objeto correspondiente en tDriver
+  //   const currentDriver = tDriver.find(item => item._id === id);
+  //   const update = {
+  //     name: currentDriver.name,
+  //     lastName: currentDriver.lastName,
+  //     zipCode: currentDriver.zipCode,
+  //     state: currentDriver.state,
+  //     city: currentDriver.city,
+  //     colonia: currentDriver.colonia,
+  //     address: currentDriver.address,
+  //     contact: currentDriver.contact,
+  //     email: currentDriver.email,
+  //     driverPicture: currentDriver.driverPicture,
+  //     driverLicenseNumber: currentDriver.driverLicenseNumber,
+  //     dateLicense: currentDriver.dateLicense,
+  //     stateLicense: currentDriver.stateLicense,
+  //     typeLicense: currentDriver.typeLicense,
+  //     frontLicensePicture: currentDriver.frontLicensePicture,
+  //     backLicensePicture: currentDriver.backLicensePicture,
+  //     password: "",
+  //     repeatPassword: "",
+  //     isActive: 0 || 1,
+  //     messageReasonInActive: "",
+  //     services: 0 || 1,
+  //   }
+  //   if (update) {
+  //     setDriver(update);
+  //   }
+  // }, [id, tDriver]);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -62,9 +76,7 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
     setModalIsOpen(false);
   };
 
-  // console.log("ID - 1:", id)
   const handleDelete = async (id) => {
-    // console.log("ID - 2:", id)
     const deleteDriver = tDriver.find(el => el._id === id)
     deleteAlert(deleteDriver, id, tDriver, setTDriver)
   };
@@ -169,7 +181,7 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
   }
   
   return (
-    <td>
+    <StyledTd>
       {/* The button to open modal */}
       <button onClick={openModal}>
         <img src={editIcon} alt="Edición" />
@@ -186,12 +198,21 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
           {
             Object.keys(driver).map((el, idx) => {
               // console.log("EL:", el, ",IDX:", idx)
-              if (idx === 3 || idx === 4 || idx === 5 || idx === 12 || idx === 13) {
-                // SELECT = ESTADO 3, CIUDAD 4, COLONIA 5, ESTADO LICENCIA 12, TIPO LICENCIA 13
+              if (idx === 3 || idx === 4 || idx === 5 || idx === 11 || idx === 12 || idx === 20) {
+                // SELECT = ESTADO 3, CIUDAD 4, COLONIA 5, ESTADO LICENCIA 11, TIPO LICENCIA 12
+                // MOTIVO DE BLOQUEO = 20
+                if (idx === 20) {
+                  return (
+                    <div key={idx}>
+                      <label>{el}: </label>
+                      <input type="text" disabled={true} />
+                    </div>
+                  );
+                }
                 return (
                   <div key={idx}>
                     <label htmlFor={`input-${el}`}>{el}: </label>
-                    <select name={el} >
+                    <select disabled={true} >
                       <option>
                         Selecciona
                       </option>
@@ -201,25 +222,37 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
                 );
               } else if (idx === 9 || idx === 14 || idx === 15) {
                 // DROP = FOTO CONDUCTOR 9, FOTO LICENCIA 14 - 15
+                if (idx === 9) {
+                  return (
+                    <div key={idx}>
+                      <label>{el}: </label>
+                      <div {...getRootProps()} style={dropzoneContainerStyles}>
+                        <input {...getInputProps()} />
+                      </div>
+                      <p>Frente</p>
+                    </div>
+                  );
+                }
                 return (
                   <div key={idx} >
-                    <div {...getRootProps()} style={dropzoneStyles}>
+                    <label>{el}: </label>
+                    <div {...getRootProps()} style={dropzoneContainerStyles}>
                       <input {...getInputProps()} />
-                      <p>Arrastra una imagen aquí o haz clic para seleccionar una.</p>
                     </div>
+                    <p>Licencia</p>
                   </div>
                 );
-              } else if (idx === 11) {
-                // DATE-FECHA = VIGENCIA DE LA LICENCIA 11
+              } else if (idx === 13) {
+                // DATE-FECHA = VIGENCIA DE LA LICENCIA 13
                 return (
                   <div key={idx}>
                     <label htmlFor={`input-${el}`}>{el}: </label>
                     <input type="date" />
                   </div>
                 );
-              } else if (idx === 18 || idx === 20) {
-                // CHECKBOX = SERVICIOS(TODOS - MUJERES - LGBT), ACTIVO
-                if (idx === 18) {
+              } else if (idx === 16 || idx === 19) {
+                // CHECKBOX = SERVICIOS(TODOS - MUJERES - LGBT) 16, ACTIVO 19
+                if (idx === 19) {
                   return (
                     <div key={idx}>
                       <label htmlFor={`input-${el}`}>{el}: </label>
@@ -237,13 +270,17 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
                 return (
                   <div key={idx}>
                     <label>{el}: </label>
-                    <input type="checkbox" />TODOS
+                    <input 
+                      type="checkbox"
+                      checked={driver[el]} 
+                      onChange={handleChange} 
+                    />TODOS
                     <input type="checkbox" />LGBTQ+
                     <input type="checkbox" />MUJERES
                   </div>
                 );
-              } else if (idx === 16 || idx === 17) {
-                // PASSWORD = 16 - 17
+              } else if (idx === 17 || idx === 18) {
+                // PASSWORD = 17 - 18
                 return (
                   <div key={idx}>
                     <label htmlFor={`input-${el}`}>{el}: </label>
@@ -273,6 +310,6 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
           alt="Delete"
         />
       </button>
-    </td>
+    </StyledTd>
   );
 }
