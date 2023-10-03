@@ -27,6 +27,10 @@ const dropzoneStyles = {
   cursor: 'pointer',
 };
 
+const pictureLicence = {
+  display: 'flex',
+}
+
 export const ButtonAdd = ({ tDriver, setTDriver, driver, setDriver, errorForm, setErrorForm }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [sepomex, setSepomex] = useState([]);
@@ -104,14 +108,36 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, setDriver, errorForm, s
     axiosGetSepomex(setSepomex);
   }, []);
 
-  // const listSepomex = sepomex.map(el => {
+  const allZipCode = [...new Set(sepomex.map(el => el.zipCode))]; //* 31434
+  // console.log("allZipCode:", allZipCode)
+
+  const allState = [...new Set(sepomex.map(el => el.nameState))]; //* 32
+  const listState = allState.map((state, idx) => {
+    return (
+      <option key={idx} >
+        {state}
+      </option>
+    );
+  });
+  
+  const allCity = [...new Set(sepomex.map(el => el.city))]; //* 2320
+  const listCity = allCity.map((city, idx) => {
+    return (
+      <option key={idx} >
+        {city}
+      </option>
+    );
+  });
+  
+  // const allColonia = [...new Set(sepomex.map(el => el.neighborhood))]; //* 75752
+  // const listColonia = allColonia.map((colonia, idx) => {
   //   return (
-  //     <option key={el._id} >
-  //       {el.neighborhood}
+  //     <option key={idx} >
+  //       {colonia}
   //     </option>
   //   );
   // });
-  // console.log("listSepomex:", listSepomex)
+  
   // const onDrop = useCallback((acceptedFiles) => {
   //   // Aquí puedes manejar los archivos aceptados, como enviarlos al servidor.
   //   console.log(acceptedFiles);
@@ -195,113 +221,139 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, setDriver, errorForm, s
       <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
         <form onSubmit={handleSubmit}>
           <br />
-          {Object.keys(driver).map((el, idx) => {
-            // console.log("EL:", el, ",IDX:", idx)
-            for (const esp in props) {
-              if (el === esp) {
-                if (idx === 3 || idx === 4 || idx === 5 || idx === 11 || idx === 12 || idx === 20) {
-                  // SELECT = ESTADO 3, CIUDAD 4, COLONIA 5, ESTADO LICENCIA 11, TIPO LICENCIA 12
-                  // MOTIVO DE BLOQUEO = 20
-                  if (idx === 20) {
-                    return (
-                      <div key={idx}>
-                        <label>{props[esp]}: </label>
-                        <input type="text" disabled={true} />
-                      </div>
-                    );
-                  }
-                  return (
-                    <div key={idx}>
-                      <label htmlFor={`input-${el}`}>{props[esp]}: </label>
-                      <select disabled={true} >
-                        <option>
-                          Selecciona
-                        </option>
-                        {/* {listSepomex} */}
-                      </select>
-                    </div>
-                  );
-                } else if (idx === 9 || idx === 14 || idx === 15) {
-                  // DROP = FOTO CONDUCTOR 9, FOTO LICENCIA 14 - 15
-                  if (idx === 9) {
-                    return (
-                      <div key={idx}>
-                        <label>{props[esp]}: </label>
-                        <div {...getRootProps()} style={dropzoneContainerStyles}>
-                          <input {...getInputProps()} />
-                        </div>
-                        <p>Frente</p>
-                      </div>
-                    );
-                  }
-                  return (
-                    <div key={idx} >
-                      <label>{props[esp]}: </label>
-                      <div {...getRootProps()} style={dropzoneContainerStyles}>
-                        <input {...getInputProps()} />
-                      </div>
-                      <p>Licencia</p>
-                    </div>
-                  );
-                } else if (idx === 13) {
-                  // DATE-FECHA = VIGENCIA DE LA LICENCIA 13
-                  return (
-                    <div key={idx}>
-                      <label htmlFor={`input-${el}`}>{props[esp]}: </label>
-                      <input type="date" />
-                    </div>
-                  );
-                } else if (idx === 16 || idx === 19) {
-                  // CHECKBOX = SERVICIOS(TODOS - MUJERES - LGBT) 16, ACTIVO 19
-                  if (idx === 19) {
-                    return (
-                      <div key={idx}>
-                        <label htmlFor={`input-${el}`}>{props[esp]}: </label>
-                        <input
-                          id={`input-${el}`}
-                          name={el}
-                          checked={driver[el]}
-                          onChange={handleChange}
-                          type="checkbox"
-                          value={driver[el] ? 1 : 0}
-                        />
-                      </div>
-                    );
-                  }
-                  return (
-                    <div key={idx}>
-                      <label>{props[esp]}: </label>
-                      <input 
-                        name={el}
-                        type="checkbox"
-                        checked={driver[el]} 
-                        onChange={handleChange}
-                        value={driver[el] ? 1 : 0} 
-                      />TODOS
-                      <input type="checkbox" />LGBTQ+
-                      <input type="checkbox" />MUJERES
-                    </div>
-                  );
-                } else if (idx === 17 || idx === 18) {
-                  // PASSWORD = 17 - 18
-                  return (
-                    <div key={idx}>
-                      <label htmlFor={`input-${el}`}>{props[esp]}: </label>
-                      <input type="password" />
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div key={idx}>
-                      <label htmlFor={`input-${el}`}>{props[esp]}: </label>
-                      <input type="text" />
-                    </div>
-                  );
-                }
-
-              }
-            }
-          })}
+          <div>
+            <label>{props.name}: </label>
+            <input type="text" name={"name"} value={name} onChange={handleChange} />
+          </div>
+          <div>
+            <label>{props.lastName}: </label>
+            <input type="text" name={"lastName"} value={lastName} onChange={handleChange} />
+          </div>
+          <div>
+            <label>{props.zipCode}: </label>
+            <input type="text" name={"zipCode"} value={zipCode} onChange={handleChange} />
+          </div>
+          <div>
+            <label>{props.state}: </label>
+            <select disabled={false} name={"state"} value={state} onChange={handleChange} >
+              <option>
+                Selecciona
+              </option>
+              {listState}
+            </select>
+          </div>
+          <div>
+            <label>{props.city}: </label>
+            <select disabled={false} name={"city"} value={city} onChange={handleChange} >
+              <option>
+                Selecciona
+              </option>
+              {listCity}
+            </select>
+          </div>
+          {/* <div>
+            <label>{props.colonia}: </label>
+            <select disabled={true} >
+              <option>
+                Selecciona
+              </option>
+              {listColonia}
+            </select>
+          </div> */}
+          <div>
+            <label>{props.address}: </label>
+            <input type="text" name={"address"} value={address} onChange={handleChange} />
+          </div>
+          <div>
+            <label>{props.contact}: </label>
+            <input type="text" name={"contact"} value={contact} onChange={handleChange} />
+          </div>
+          <div>
+            <label>{props.email}: </label>
+            <input type="text" name={"email"} value={email} onChange={handleChange} />
+          </div>
+          <div>
+            <label>{props.driverPicture}: </label>
+            <div {...getRootProps()} style={dropzoneContainerStyles}>
+              <input {...getInputProps()} name={"driverPicture"} value={driverPicture} onChange={handleChange}  />
+            <p>Frente</p>
+            </div>
+          </div>
+          <h2>Licencia de conducir</h2>
+          <hr />
+          <div>
+            <label>{props.driverLicenseNumber}: </label>
+            <input type="text" name={"driverLicenseNumber"} value={driverLicenseNumber} onChange={handleChange} />
+          </div>
+          <div>
+            <label>{props.stateLicense}: </label>
+            <select disabled={false} name={"stateLicense"} value={stateLicense} onChange={handleChange} >
+              <option>
+                Selecciona
+              </option>
+              {listState}
+            </select>
+          </div>
+          <div>
+            <label>{props.typeLicense}: </label>
+            <select disabled={false} name={"typeLicense"} value={typeLicense} onChange={handleChange} >
+              <option>
+                Selecciona
+              </option>
+              {/* {listState} */}
+            </select>
+          </div>
+          <div>
+            <label>{props.dateLicense}: </label>
+            <input type="date" name={"dateLicense"} value={dateLicense} onChange={handleChange} />
+          </div>
+          <div>
+            <div style={pictureLicence}>
+              {/* <label>{props.frontLicensePicture}: </label> */}
+              <label>Fotos licencia: </label>
+              <br />
+              <div {...getRootProps()} style={dropzoneContainerStyles}>
+                <input {...getInputProps()} name={"frontLicensePicture"} value={frontLicensePicture} onChange={handleChange} />
+              <p>Frente</p>
+              </div>
+              {/* <label>{props.backLicensePicture}: </label> */}
+              <div {...getRootProps()} style={dropzoneContainerStyles}>
+                <input {...getInputProps()} name={"backLicensePicture"} value={backLicensePicture} onChange={handleChange} />
+              <p>Atrás</p>
+              </div>
+            </div>
+          </div>
+          <h2>Ajustes en la aplicación</h2>
+          <hr />
+          <div>
+            <label>{props.services}: </label>
+            <input type="checkbox" name={"services"} value={services} onChange={handleChange} checked={services} />TODOS
+            <input type="checkbox" name={"services"} value={services} onChange={handleChange} />LGBTQ+
+            <input type="checkbox" name={"services"} value={services} onChange={handleChange} />MUJERES
+          </div>
+          <h2>Acceso a la aplicación</h2>
+          <hr />
+          <div>
+            <label>{props.password}: </label>
+            <input type="password" name={"password"} value={password} onChange={handleChange} />
+          </div>
+          <div>
+            <label>{props.repeatPassword}: </label>
+            <input type="password" name={"repeatPassword"} value={repeatPassword} onChange={handleChange} />
+          </div>
+          <div>
+            <label>{props.isActive}: </label>
+            <input
+              type="checkbox" name={"isActive"} value={isActive} onChange={handleChange} checked={isActive}
+            />
+          </div>
+          <div>
+            <label>{props.messageReasonInActive}: </label>
+            <input
+              type="text" name={"messageReasonInActive"} value={messageReasonInActive} onChange={handleChange}
+            />
+          </div>
+          
           <div>
             <button onClick={() => setModalIsOpen(false)}>Cancelar</button>
             <button type="submit">Guardar</button>
