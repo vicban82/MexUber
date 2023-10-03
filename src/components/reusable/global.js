@@ -1,15 +1,14 @@
 import { styled } from "styled-components";
 
 export const Container = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  // max-width: 430px;
-  // width: 100%;
-  background: #fff;
-  border-radius: 7px;
+  display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
 `;
+
 export const Checkbox = styled.input`
   display: none;
 `;
@@ -17,19 +16,20 @@ export const ImageContainer = styled.div`
   display: flex;
   justify-content: center;
   background: transparent;
-  margin: 0 auto;
   padding: 0 auto;
+  margin-top: 100px;
 `;
 
 export const Image = styled.img`
   width: 150px; /* Ajusta el tamaño de la imagen según tus necesidades */
   height: auto;
-  margin-top: 50px;
-  @media (min-width: 768px) {
-    width: 150px; /* Ajusta el tamaño de la imagen según tus necesidades */
+  margin-top: 10px;
+  visibility: ${(props) => (props.isOpen === true ? "hidden" : "visible")};
+  /* @media (min-width: 768px) {
+    width: 150px;  Ajusta el tamaño de la imagen según tus necesidades 
     height: auto;
     margin-top: 10px;
-  }
+  } */
 `;
 export const CenteredContainer = styled.div`
   display: flex;
@@ -63,7 +63,7 @@ export const Input = styled.input`
   font-size: 17px;
   margin-bottom: 1.3rem;
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: 12px;
   outline: none;
   &::placeholder {
     font-size: 16px; /* Tamaño de fuente del placeholder */
@@ -78,11 +78,13 @@ export const Input = styled.input`
 export const ShowIcon = styled.span`
   position: absolute;
   top: 40%;
-  right: -10%; /* Colocar el ícono 10px a la derecha del borde derecho del Input */
+  right: 3%; /* Colocar el ícono 10px a la derecha del borde derecho del Input */
   transform: translateY(-50%); /* Centrar verticalmente el ícono */
   cursor: pointer;
 `;
 export const InputContainer = styled.div`
+  display: flex;
+  align-items: center;
   position: relative;
   margin: 0 auto;
 `;
@@ -106,4 +108,34 @@ export const InputButton = styled.input`
   &:hover {
     background: #006653;
   }
+`;
+
+export const ContainerLogoSidebar = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-left: 20px;
+
+`;
+
+export const ContainerItenSidebar = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: top;
+  background: transparent;
+  margin: 0 auto;
+  padding: 0 auto;
+  margin-top: 0px;
+  min-height: 10px;
+  margin-bottom: 30px;
+  
+`;
+
+export const ContainerLogin = styled.div`
+
+  background-color: transparent;
+  margin-top: 10px;
+
 `;
