@@ -13,4 +13,7 @@ export const fullName = /^[a-zA-ZáéíóúÁÉÍÓÚüÜ]{3,}(?:\s|-)[a-zA-Zá�
 export const data = /^(0[1-9]|[12]\d|3[01])-(0[1-9]|1[0-2])-\d{4}$/;
 
 // VERIFICACION NUMERO DE CONTACTO
-export const regexPhone = /^\+(?:\d{1,3}-)?\d{6,14}$/;
+export const regexPhone = /^\d{10}$/;
+
+// VERIFICACION CODIGO POSTAL MANUALMENTE
+export const regexZipCode = /^\d{5}$/;

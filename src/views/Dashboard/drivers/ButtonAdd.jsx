@@ -1,40 +1,55 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Modal from "react-modal";
-import { validateAdmin } from "../../../validations/admins";
+import { validateDriver } from "../../../validations/drivers";
 import { headers } from "../../../tools/accessToken";
 import { axiosPostDriver } from "../../../hooks/drivers/crudDrivers";
-import { errorRegister, successRegister } from "../../../tools/driverAlerts/register";
-import { axiosGetSepomex } from "../../../hooks/db/info";
-import { useDropzone } from 'react-dropzone';
+import {
+  errorRegister,
+  successRegister,
+} from "../../../tools/driverAlerts/register";
+import { axiosGetLicencias, axiosGetSepomex } from "../../../hooks/db/info";
+import { useDropzone } from "react-dropzone";
 import { props } from "./props";
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
 const dropzoneContainerStyles = {
-  width: '200px', // Establece el ancho del contenedor
-  height: '200px', // Establece la altura del contenedor
-  border: '2px dashed #cccccc',
-  borderRadius: '4px',
-  textAlign: 'center',
-  padding: '20px',
-  cursor: 'pointer',
+  width: "200px", // Establece el ancho del contenedor
+  height: "200px", // Establece la altura del contenedor
+  border: "2px dashed #cccccc",
+  borderRadius: "4px",
+  textAlign: "center",
+  padding: "20px",
+  cursor: "pointer",
 };
 
 const dropzoneStyles = {
-  border: '2px dashed #cccccc',
-  borderRadius: '4px',
-  textAlign: 'center',
-  padding: '20px',
-  cursor: 'pointer',
+  border: "2px dashed #cccccc",
+  borderRadius: "4px",
+  textAlign: "center",
+  padding: "20px",
+  cursor: "pointer",
 };
 
 const pictureLicence = {
-  display: 'flex',
-}
+  display: "flex",
+};
 
-export const ButtonAdd = ({ tDriver, setTDriver, driver, setDriver, errorForm, setErrorForm }) => {
+export const ButtonAdd = ({
+  tDriver,
+  setTDriver,
+  driver,
+  setDriver,
+  errorForm,
+  setErrorForm,
+}) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [sepomex, setSepomex] = useState([]);
-  
+  const [licencias, setLicencias] = useState([]);
+  const [codigosPostales, setZipcode] = useState([]);
+  const [estados, setEstados] = useState([]);
+  const [ciudades, setCiudades] = useState([]);
+  const [colonias, setColonias] = useState([]);
+
   const {
     name,
     lastName,
@@ -61,23 +76,48 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, setDriver, errorForm, s
     services, // TODOS - LGBQT+ - MUJERES
     car,
   } = driver;
-
+  // console.log("driver:", driver)
+  
   function handleChange(e) {
     const { name, value, type, checked } = e.target;
-
+    
     // Manejar cambios para checkbox y convertir 1 (true) o 0 (false)
     const newValue = type === "checkbox" ? !driver[name] : value;
+    
+    const filterProps = sepomex.filter(el => {
+      return el.codigoPostal.includes(value)
+    });
+    
+    const filterLicences = licencias.filter(el => {
+      return el.state.includes(value)
+    });
+    
+    // Crea arreglos separados para estados, ciudades y colonias
+    const allZipCode = [...new Set(filterProps.map((el) => el.codigoPostal))];
+    const estados = [...new Set(filterProps.map((el) => el.estado))];
+    const ciudades = [...new Set(filterProps.map((el) => el.ciudad))];
+    const colonias = [...new Set(filterProps.map((el) => el.colonia))];
+    
+    const licences = [...new Set(filterLicences.map((el) => el.typeLicence))];
+    console.log("licences:", licences)
+    
+    setZipcode(allZipCode);
+    setEstados(estados);
+    setCiudades(ciudades);
+    setColonias(colonias);
+
+    setLicencias(licences);
 
     setDriver({
       ...driver,
       [name]: newValue,
     });
     setErrorForm(
-      validateAdmin({
+      validateDriver({
         ...driver,
         [name]: newValue,
-      })
-    )
+      }, allZipCode, colonias)
+    );
   }
 
   const {
@@ -103,40 +143,12 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, setDriver, errorForm, s
     messageReasonInActiveError,
     servicesError,
   } = errorForm;
+  // console.log("errorForm:", errorForm)
 
   useEffect(() => {
     axiosGetSepomex(setSepomex);
+    axiosGetLicencias(setLicencias);
   }, []);
-
-  const allZipCode = [...new Set(sepomex.map(el => el.zipCode))]; //* 31434
-  // console.log("allZipCode:", allZipCode)
-
-  const allState = [...new Set(sepomex.map(el => el.nameState))]; //* 32
-  const listState = allState.map((state, idx) => {
-    return (
-      <option key={idx} >
-        {state}
-      </option>
-    );
-  });
-  
-  const allCity = [...new Set(sepomex.map(el => el.city))]; //* 2320
-  const listCity = allCity.map((city, idx) => {
-    return (
-      <option key={idx} >
-        {city}
-      </option>
-    );
-  });
-  
-  // const allColonia = [...new Set(sepomex.map(el => el.neighborhood))]; //* 75752
-  // const listColonia = allColonia.map((colonia, idx) => {
-  //   return (
-  //     <option key={idx} >
-  //       {colonia}
-  //     </option>
-  //   );
-  // });
   
   // const onDrop = useCallback((acceptedFiles) => {
   //   // Aquí puedes manejar los archivos aceptados, como enviarlos al servidor.
@@ -146,7 +158,7 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, setDriver, errorForm, s
   const { getRootProps, getInputProps } = useDropzone({
     // onDrop,
     accept: {
-      'image/*': ['.jpg', '.png'],
+      "image/*": [".jpg", ".png"],
     },
   });
 
@@ -206,7 +218,7 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, setDriver, errorForm, s
         successRegister(driver);
         const newDriver = await axiosPostDriver(driver, headers);
         setTDriver([...tDriver, newDriver]);
-    
+
         // Cierra el modal después de guardar
         setModalIsOpen(false);
       } catch (error) {
@@ -223,89 +235,154 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, setDriver, errorForm, s
           <br />
           <div>
             <label>{props.name}: </label>
-            <input type="text" name={"name"} value={name} onChange={handleChange} />
+            <input
+              type="text"
+              name={"name"}
+              value={name}
+              onChange={handleChange}
+            />
           </div>
           <div>
             <label>{props.lastName}: </label>
-            <input type="text" name={"lastName"} value={lastName} onChange={handleChange} />
+            <input
+              type="text"
+              name={"lastName"}
+              value={lastName}
+              onChange={handleChange}
+            />
           </div>
+
           <div>
             <label>{props.zipCode}: </label>
-            <input type="text" name={"zipCode"} value={zipCode} onChange={handleChange} />
+            <input
+              type="text"
+              name={"zipCode"}
+              value={zipCode}
+              onChange={handleChange}
+            />
           </div>
           <div>
             <label>{props.state}: </label>
-            <select disabled={false} name={"state"} value={state} onChange={handleChange} >
-              <option>
-                Selecciona
-              </option>
-              {listState}
+            <select
+              disabled={true}
+              name={"state"}
+              value={state}
+              onChange={handleChange}
+            >
+              <option>{estados[0] || "Selecciona"}</option>
             </select>
           </div>
           <div>
             <label>{props.city}: </label>
-            <select disabled={false} name={"city"} value={city} onChange={handleChange} >
-              <option>
-                Selecciona
-              </option>
-              {listCity}
+            <select
+              disabled={true}
+              name={"city"}
+              value={city}
+              onChange={handleChange}
+            >
+              <option>{ciudades[0] || "Selecciona"}</option>
             </select>
           </div>
-          {/* <div>
+          <div>
             <label>{props.colonia}: </label>
-            <select disabled={true} >
+            <select disabled={!zipCode.length || !codigosPostales.includes(zipCode) ? true : false} >
               <option>
                 Selecciona
               </option>
-              {listColonia}
+              {colonias.map((colonia) => (
+                <option key={colonia} value={colonia}>
+                  {colonia}
+                </option>
+              ))}
             </select>
-          </div> */}
+          </div>
           <div>
             <label>{props.address}: </label>
-            <input type="text" name={"address"} value={address} onChange={handleChange} />
+            <input
+              type="text"
+              name={"address"}
+              value={address}
+              onChange={handleChange}
+            />
           </div>
           <div>
             <label>{props.contact}: </label>
-            <input type="text" name={"contact"} value={contact} onChange={handleChange} />
+            <input
+              type="text"
+              name={"contact"}
+              value={contact}
+              onChange={handleChange}
+            />
           </div>
           <div>
             <label>{props.email}: </label>
-            <input type="text" name={"email"} value={email} onChange={handleChange} />
+            <input
+              type="text"
+              name={"email"}
+              value={email}
+              onChange={handleChange}
+            />
           </div>
           <div>
             <label>{props.driverPicture}: </label>
             <div {...getRootProps()} style={dropzoneContainerStyles}>
-              <input {...getInputProps()} name={"driverPicture"} value={driverPicture} onChange={handleChange}  />
-            <p>Frente</p>
+              <input
+                {...getInputProps()}
+                name={"driverPicture"}
+                value={driverPicture}
+                onChange={handleChange}
+              />
+              <p>Frente</p>
             </div>
           </div>
           <h2>Licencia de conducir</h2>
           <hr />
           <div>
             <label>{props.driverLicenseNumber}: </label>
-            <input type="text" name={"driverLicenseNumber"} value={driverLicenseNumber} onChange={handleChange} />
+            <input
+              type="text"
+              name={"driverLicenseNumber"}
+              value={driverLicenseNumber}
+              onChange={handleChange}
+            />
           </div>
           <div>
             <label>{props.stateLicense}: </label>
-            <select disabled={false} name={"stateLicense"} value={stateLicense} onChange={handleChange} >
-              <option>
-                Selecciona
-              </option>
-              {listState}
+            <select
+              disabled={driverLicenseNumber ? false : true}
+              name={"stateLicense"}
+              value={stateLicense}
+              onChange={handleChange}
+            >
+              <option>Selecciona</option>
+              {estados}
             </select>
           </div>
           <div>
             <label>{props.typeLicense}: </label>
-            <select disabled={false} name={"typeLicense"} value={typeLicense} onChange={handleChange} >
-              <option>
-                Selecciona
-              </option>
-              {/* {listState} */}
+            <select
+              disabled={driverLicenseNumber ? false : true}
+              name={"typeLicense"}
+              value={typeLicense}
+              onChange={handleChange}
+            >
+              <option>Selecciona</option>
+              {/* {licencias.map((licencia, idx) => (
+                <option key={idx} value={licencia}>
+                  {licencia}
+                </option>
+              ))} */}
             </select>
           </div>
           <div>
             <label>{props.dateLicense}: </label>
-            <input type="date" name={"dateLicense"} value={dateLicense} onChange={handleChange} />
+            <input
+              disabled={true}
+              type="date"
+              name={"dateLicense"}
+              value={dateLicense}
+              onChange={handleChange}
+            />
           </div>
           <div>
             <div style={pictureLicence}>
@@ -313,13 +390,25 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, setDriver, errorForm, s
               <label>Fotos licencia: </label>
               <br />
               <div {...getRootProps()} style={dropzoneContainerStyles}>
-                <input {...getInputProps()} name={"frontLicensePicture"} value={frontLicensePicture} onChange={handleChange} />
-              <p>Frente</p>
+                <input
+                  {...getInputProps()}
+                  name={"frontLicensePicture"}
+                  value={frontLicensePicture}
+                  onChange={handleChange}
+                  disabled={true}
+                />
+                <p>Frente</p>
               </div>
               {/* <label>{props.backLicensePicture}: </label> */}
               <div {...getRootProps()} style={dropzoneContainerStyles}>
-                <input {...getInputProps()} name={"backLicensePicture"} value={backLicensePicture} onChange={handleChange} />
-              <p>Atrás</p>
+                <input
+                  {...getInputProps()}
+                  name={"backLicensePicture"}
+                  value={backLicensePicture}
+                  onChange={handleChange}
+                  disabled={true}
+                />
+                <p>Atrás</p>
               </div>
             </div>
           </div>
@@ -327,33 +416,70 @@ export const ButtonAdd = ({ tDriver, setTDriver, driver, setDriver, errorForm, s
           <hr />
           <div>
             <label>{props.services}: </label>
-            <input type="checkbox" name={"services"} value={services} onChange={handleChange} checked={services} />TODOS
-            <input type="checkbox" name={"services"} value={services} onChange={handleChange} />LGBTQ+
-            <input type="checkbox" name={"services"} value={services} onChange={handleChange} />MUJERES
+            <input
+              type="checkbox"
+              name={"services"}
+              value={services}
+              onChange={handleChange}
+              checked={services}
+            />
+            TODOS
+            <input
+              type="checkbox"
+              name={"services"}
+              value={services}
+              onChange={handleChange}
+            />
+            LGBTQ+
+            <input
+              type="checkbox"
+              name={"services"}
+              value={services}
+              onChange={handleChange}
+            />
+            MUJERES
           </div>
           <h2>Acceso a la aplicación</h2>
           <hr />
           <div>
             <label>{props.password}: </label>
-            <input type="password" name={"password"} value={password} onChange={handleChange} />
+            <input
+              type="password"
+              name={"password"}
+              value={password}
+              onChange={handleChange}
+            />
           </div>
           <div>
             <label>{props.repeatPassword}: </label>
-            <input type="password" name={"repeatPassword"} value={repeatPassword} onChange={handleChange} />
+            <input
+              type="password"
+              name={"repeatPassword"}
+              value={repeatPassword}
+              onChange={handleChange}
+            />
           </div>
           <div>
             <label>{props.isActive}: </label>
             <input
-              type="checkbox" name={"isActive"} value={isActive} onChange={handleChange} checked={isActive}
+              type="checkbox"
+              name={"isActive"}
+              value={isActive}
+              onChange={handleChange}
+              checked={isActive}
             />
           </div>
           <div>
             <label>{props.messageReasonInActive}: </label>
             <input
-              type="text" name={"messageReasonInActive"} value={messageReasonInActive} onChange={handleChange}
+              type="text"
+              name={"messageReasonInActive"}
+              value={messageReasonInActive}
+              onChange={handleChange}
+              disabled={true}
             />
           </div>
-          
+
           <div>
             <button onClick={() => setModalIsOpen(false)}>Cancelar</button>
             <button type="submit">Guardar</button>
