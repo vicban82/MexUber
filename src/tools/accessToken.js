@@ -2,6 +2,6 @@
 export const loginAdmin = JSON.parse(localStorage.getItem("loginAdmin"));
 // console.log('loginAdmin:', loginAdmin);
 
- export const headers = {
-  Authorization: `Bearer ${loginAdmin.token}`, // Agrega el token en la cabecera
+export const headers = {
+  Authorization: `Bearer ${loginAdmin?.token}`, // Agrega el token en la cabecera
 };

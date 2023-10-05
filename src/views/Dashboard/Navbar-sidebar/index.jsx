@@ -124,12 +124,12 @@ const Navbar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const fullName = `${loginAdmin.name || ''} ${loginAdmin.lastName || ''}`;
-  const gmail = loginAdmin.email;
+  const fullName = `${loginAdmin?.name || ''} ${loginAdmin?.lastName || ''}`;
+  const gmail = loginAdmin?.email;
 
   const handleCerrarSesion = async () => {
     await cerrarSesion();
-    localStorage.removeItem("tokenAdmin");
+    localStorage.removeItem("loginAdmin");
   };
   
   return (

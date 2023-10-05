@@ -5,7 +5,7 @@ import {
 } from "../../components/Dashboard/styles";
 import Navbar from "./Navbar-sidebar";
 import { Container } from "../../components/reusable/global";
-import { headers } from "../../tools/accessToken";
+import { headers, loginAdmin } from "../../tools/accessToken";
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -15,7 +15,7 @@ const Dashboard = () => {
 
   return (
     <>
-      {headers === null ? (
+      {loginAdmin === null || loginAdmin.token === null ? (
         <Container>
           <h2>Acceso denegado</h2>
         </Container>
