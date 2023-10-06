@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CenteredContainer,
   Checkbox,
@@ -30,8 +30,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { validateLogin } from "../../validations/logins";
-import { axiosLogins } from "../../hooks/logins";
+import { axiosLogins, axiosVerifyAdmin } from "../../hooks/logins";
 import { demoSwitAlertLogin, errorLogins, successLogins } from "../../tools/switAlertLogins";
+import { axiosGetAdmins } from "../../hooks/admin/crudAdmin";
 const Login = () => {
   const [login, setLogin] = useState({
     email: '',
@@ -43,6 +44,8 @@ const Login = () => {
     passwordError: '',
   });
   const [rememberUser, setRememberUser] = useState(false);
+  const [verifyAdmin, setVerifyAdmin] = useState([]);
+  // console.log('verifyAdmin:', verifyAdmin);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
@@ -78,25 +81,32 @@ const Login = () => {
     email,
     password,
   } = login;
+  useEffect(() => {
+    axiosVerifyAdmin(setVerifyAdmin)
+  }, []);
   const handleSubmit = (e) => {
     e.preventDefault();
     //* Conexion con el Back-End
+    axiosVerifyAdmin(setVerifyAdmin)
+    const accessAdmin = verifyAdmin.find(el => el.email === email);
     const {
       emailError,
       passwordError,
     } = error;
     if (!email || !password) {
-      errorLogins(login, error)
+      errorLogins(login, error, accessAdmin)
     } else if (emailError || passwordError) {
-      errorLogins(login, error)
+      errorLogins(login, error, accessAdmin)
+    } else if (!accessAdmin || accessAdmin.isActive === 0) {
+      errorLogins(login, error, accessAdmin)
     } else {
       axiosLogins(login, setError)
-      successLogins(login)
-      setLogin(login)
+      successLogins(login, accessAdmin)
       setTimeout(() => {
         window.location.reload();
       }, 1000);
       navigate('/dashboard/home')
+      setLogin(login)
     }
     //* Conexion con el Back-End
 

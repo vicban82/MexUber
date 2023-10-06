@@ -5,17 +5,18 @@ import {
 } from "../../components/Dashboard/styles";
 import Navbar from "./Navbar-sidebar";
 import { Container } from "../../components/reusable/global";
-import { headers, loginAdmin } from "../../tools/accessToken";
+import { tokenAdmin } from "../../tools/accessToken";
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+  // console.log('tokenAdmin:', tokenAdmin);
 
   return (
     <>
-      {loginAdmin === null || loginAdmin.token === null ? (
+      {tokenAdmin === null ? (
         <Container>
           <h2>Acceso denegado</h2>
         </Container>

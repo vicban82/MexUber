@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 
 //* Esta funcion es para la conexion con el Back-End
-export function errorLogins(login, error) {
+export function errorLogins(login, error, accessAdmin) {
   const {
     email,
     password,
@@ -29,16 +29,32 @@ export function errorLogins(login, error) {
         <p>${"El usuario y/o contraseña son incorrectos. <br/>Verifica e intenta de nuevo." || ""}</p>
       `,
     });
+  } else if (!accessAdmin) {
+    Swal.fire({
+      title: "ACCESO DENEGADO",
+      icon: "warning",
+      html: `
+        <p>${"NO TIENES ACCESO A ESTA PLATAFORMA!!" || ""}</p>
+      `,
+    });
+  } else if (accessAdmin.isActive === 0) {
+    Swal.fire({
+      title: "ACCESO DENEGADO",
+      icon: "warning",
+      html: `
+        <p>${"ACTUALMENTE TE ENCUENTRAS INACTIVO!!" || ""}</p>
+      `,
+    });
   }
 }
 
-export function successLogins(login) {
+export function successLogins(login, accessAdmin) {
   const {
     email,
     password,
   } = login;
   
-  if (email && password) {
+  if (email && password && accessAdmin) {
     Swal.fire({
       icon: "success",
       title: "Inicio de sesión exitoso",

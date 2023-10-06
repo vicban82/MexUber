@@ -130,6 +130,7 @@ const Navbar = () => {
   const handleCerrarSesion = async () => {
     await cerrarSesion();
     localStorage.removeItem("loginAdmin");
+    localStorage.removeItem("tokenAdmin");
   };
   
   return (

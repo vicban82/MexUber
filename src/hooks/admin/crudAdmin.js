@@ -1,13 +1,12 @@
 import axios from "axios";
 
-export async function axiosGetAdmins(setTBody, setTError, headers) {
+export async function axiosGetAdmins(setTBody) {
   try {
-    const { data } = (await axios.get('/api/admins', { headers }));
+    const { data } = (await axios.get('/api/admins'));
     // console.log('DATA:', data);
     setTBody(data);
   } catch (err) {
     const { error } = err.response.data;
-    setTError(error)
     console.log('ERROR:', error);
   }
 }

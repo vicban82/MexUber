@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { axiosGetAdmins } from "../../../hooks/admin/crudAdmin";
 import { Table } from "./Table";
 import { ButtonAdd } from "./ButtonAdd";
-import { headers } from "../../../tools/accessToken";
 import { Search } from "./Search";
 
 const Admins = () => {
@@ -20,7 +19,7 @@ const Admins = () => {
   });
 
   useEffect(() => {
-    axiosGetAdmins(setTBody, setTError, headers);
+    axiosGetAdmins(setTBody);
   }, []);
 
   return (
