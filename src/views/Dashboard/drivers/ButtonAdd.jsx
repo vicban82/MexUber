@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Modal from "react-modal";
 import { validateDriver } from "../../../validations/drivers";
 import { headers } from "../../../tools/accessToken";
@@ -45,10 +45,15 @@ export const ButtonAdd = ({
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [sepomex, setSepomex] = useState([]);
   const [licencias, setLicencias] = useState([]);
-  const [codigosPostales, setZipcode] = useState([]);
-  const [estados, setEstados] = useState([]);
-  const [ciudades, setCiudades] = useState([]);
+  const [codigoPostal, setZipcode] = useState('');
+  // console.log("ESTADO ZIPCODE:", codigoPostal)
+  const [estados, setEstados] = useState('');
+  // console.log("ESTADO ESTADOS:", estados)
+  const [ciudades, setCiudades] = useState('');
   const [colonias, setColonias] = useState([]);
+  // console.log("ESTADO COLONIAS:", colonias)
+  const [value, setValue] = useState('');
+  // console.log("ESTADO VALUE:", value)
 
   const {
     name,
@@ -77,36 +82,47 @@ export const ButtonAdd = ({
     car,
   } = driver;
   // console.log("driver:", driver)
+
+  const memorySepomes = useMemo(() => sepomex, [sepomex])
+  const memoryLicencias = useMemo(() => licencias, [licencias])
+  // console.log("memoryLicencias:", memoryLicencias)
+  
+  const filteredSepomex = memorySepomes.filter(el => el.codigoPostal === value);
+  // console.log("filteredSepomex:", filteredSepomex)
+
+  const filteredEstado = memoryLicencias.map(el => el.estado);
+  // console.log("filteredEstado:", filteredEstado)
+  const filteredLicencias = memoryLicencias.map(el => {
+    // console.log("EL:", el.estado)
+    // console.log("VALUE:", value)
+    if (el.estado === value) {
+      return el.tipoDeLicencias
+    }
+  }).flat(1).filter(el => el !== undefined);
+  // console.log("filteredLicencias:", filteredLicencias)
+  
+  // ------------------------------------------------------------
+
+  useEffect(() => {
+    const codigoPostal = filteredSepomex.map(el => el.codigoPostal);
+    // console.log("FIND ZIPCODE:", codigoPostal[0])
+    const estado = filteredSepomex.map(el => el.estado);
+    const ciudad = filteredSepomex.map(el => el.ciudad);
+    const allColonias = filteredSepomex.map(el => el.colonias).flat(1);
+    // console.log("FIND COLONIAS:", allColonias)
+
+    setZipcode(codigoPostal[0]);
+    setEstados(estado[0]);
+    setCiudades(ciudad[0]);
+    setColonias(allColonias);
+  }, []);
   
   function handleChange(e) {
     const { name, value, type, checked } = e.target;
     
     // Manejar cambios para checkbox y convertir 1 (true) o 0 (false)
     const newValue = type === "checkbox" ? !driver[name] : value;
-    
-    const filterProps = sepomex.filter(el => {
-      return el.codigoPostal.includes(value)
-    });
-    
-    const filterLicences = licencias.filter(el => {
-      return el.state.includes(value)
-    });
-    
-    // Crea arreglos separados para estados, ciudades y colonias
-    const allZipCode = [...new Set(filterProps.map((el) => el.codigoPostal))];
-    const estados = [...new Set(filterProps.map((el) => el.estado))];
-    const ciudades = [...new Set(filterProps.map((el) => el.ciudad))];
-    const colonias = [...new Set(filterProps.map((el) => el.colonia))];
-    
-    const licences = [...new Set(filterLicences.map((el) => el.typeLicence))];
-    console.log("licences:", licences)
-    
-    setZipcode(allZipCode);
-    setEstados(estados);
-    setCiudades(ciudades);
-    setColonias(colonias);
-
-    setLicencias(licences);
+    setValue(value);
 
     setDriver({
       ...driver,
@@ -116,7 +132,7 @@ export const ButtonAdd = ({
       validateDriver({
         ...driver,
         [name]: newValue,
-      }, allZipCode, colonias)
+      }, codigoPostal, colonias)
     );
   }
 
@@ -269,7 +285,7 @@ export const ButtonAdd = ({
               value={state}
               onChange={handleChange}
             >
-              <option>{estados[0] || "Selecciona"}</option>
+              <option>{estados || "Selecciona"}</option>
             </select>
           </div>
           <div>
@@ -280,20 +296,22 @@ export const ButtonAdd = ({
               value={city}
               onChange={handleChange}
             >
-              <option>{ciudades[0] || "Selecciona"}</option>
+              <option>{ciudades || "Selecciona"}</option>
             </select>
           </div>
           <div>
             <label>{props.colonia}: </label>
-            <select disabled={!zipCode.length || !codigosPostales.includes(zipCode) ? true : false} >
+            <select disabled={zipCode || codigoPostal === zipCode ? false : true} >
               <option>
                 Selecciona
               </option>
-              {colonias.map((colonia) => (
-                <option key={colonia} value={colonia}>
-                  {colonia}
-                </option>
-              ))}
+              {colonias.length >= 1 && colonias.map((colonia, idx) => {
+                return (
+                  <option key={idx} value={colonia}>
+                    {colonia}
+                  </option>
+                );
+              })}
             </select>
           </div>
           <div>
@@ -355,7 +373,14 @@ export const ButtonAdd = ({
               onChange={handleChange}
             >
               <option>Selecciona</option>
-              {estados}
+              {filteredEstado.length >= 1 && filteredEstado.map((estado, idx) => {
+                // console.log("EL ESTADOS:", estado)
+                return (
+                  <option key={idx} value={estado}>
+                    {estado}
+                  </option>
+                );
+              })}
             </select>
           </div>
           <div>
@@ -367,11 +392,14 @@ export const ButtonAdd = ({
               onChange={handleChange}
             >
               <option>Selecciona</option>
-              {/* {licencias.map((licencia, idx) => (
-                <option key={idx} value={licencia}>
-                  {licencia}
-                </option>
-              ))} */}
+              {filteredLicencias.length >= 1 && filteredLicencias.map((licencia, idx) => {
+                // console.log("EL LICENCIAS:", licencia)
+                return (
+                  <option key={idx} value={licencia}>
+                    {licencia}
+                  </option>
+                );
+              })}
             </select>
           </div>
           <div>

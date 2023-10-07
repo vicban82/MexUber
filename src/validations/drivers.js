@@ -5,7 +5,7 @@ import { validationPassword } from "./items/password";
 import { regexZipCode } from "../tools/regex";
 // import { regexPhone } from "../tools/regex";
 
-export const validateDriver = (driver, allZipCode, colonias) => {
+export const validateDriver = (driver, codigoPostal, colonias) => {
   const {
     name,
     lastName,
@@ -35,7 +35,7 @@ export const validateDriver = (driver, allZipCode, colonias) => {
   
   error.lastNameError = validationLastName(lastName);
 
-  if (!regexZipCode.test(zipCode) || !allZipCode.includes(zipCode)) {
+  if (!regexZipCode.test(zipCode) || codigoPostal === zipCode) {
     error.zipCodeError = 'Código postal invalido';
   }
   
