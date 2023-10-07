@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled, { StyleSheetManager } from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faSearch, faSignIn, faUserCheck, faEnvelopeOpen } from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "./Sidebar";
 import { modelAdmins } from "../../../data/routeTitles";
 import { cerrarSesion } from "../../../tools/switAlertSesion";
@@ -12,11 +12,12 @@ const NavbarContainer = styled.div`
   align-items: center;
   background-color: #333;
   color: #fff;
-  padding: 10px 20px;
+  padding: 10px 0px;
   width: 100%;
   position: fixed; /* Fijar el Navbar en la parte superior de la pantalla */
   top: 0; /* Colocar el Navbar en la parte superior de la pantalla */
   z-index: 1000; /* Asegurarse de que esté por encima de otros elementos */
+  
 `;
 
 const SearchContainer = styled.div`
@@ -26,7 +27,7 @@ const SearchContainer = styled.div`
 `;
 
 const SearchInput = styled.input`
-  width: 145px;
+  width: 100%;
   padding: 5px;
   margin-right: 10px;
   padding-left: 15px;
@@ -45,9 +46,16 @@ const SearchIcon = styled.div`
 
 // * Lista desplegable
 const UserProfileButton = styled.div`
-  position: relative;
   display: flex;
-  
+  position: relative;
+  //background-color: aqua;
+  width: 33.33%;
+  justify-content: flex-end;
+  UserProfileButton:focus-visible {
+  //border: 0px dashed crimson;
+  outline: 0px;
+
+}
 `;
 
 const Button = styled.button`
@@ -60,33 +68,56 @@ const Button = styled.button`
   margin-right: 12px;
 `;
 
+const ButtonPerfil = styled(Button)`
+  outline: none;
+  //background-color: black;
+`;
+
 const Dropdown = styled.div`
-  display: ${(props) => (props.isOpen === true ? "block" : "none")};
+  display: ${(props) => (props.isOpen === true ? "flex" : "none")};
+  flex-direction: column;
   position: absolute;
-  top: 100%;
-  left: 0;
   background-color: #f0f0f0;
   color: black;
   border: 1px solid #ccc;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   z-index: 1;
-  min-width: 150px;
+  margin-top: 56px;
+  padding: 10px;
+  margin-right: 25px;
+  border-radius: 10px;
+  height: 130px;
+
 `;
 
 const UserProfileImage = styled.img`
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
-  margin-right: 10px;
+  //margin-right: 10px;
+  object-fit: cover;
+  border: outset;
 `;
 
-const UserProfileText = styled.span`
+const UserProfileText = styled.div`
   /* Estilos para el texto del perfil, puedes personalizar según tu diseño */
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  white-space: break-word;
+  font-size: small;
+  text-overflow: clip;
+  align-items: center;
+  height: 70px;
+  justify-content: space-between;;
 `;
 
 const ListItem = styled.div`
+  display: flex;
   padding: 8px 12px;
   cursor: pointer;
+  justify-content: space-around;
+  margin-top: 20px;
+  border-radius: 15px;
 
   &:hover {
     background-color: #ff0000;
@@ -97,6 +128,7 @@ const MenuIcon = styled.div`
   cursor: pointer;
   display: block; /* El ícono de menú está oculto por defecto en pantallas grandes */
   font-size: 24px;
+  width: 33.33%;
   @media (max-width: 768px) {
      //Mostrar el ícono de menú en pantallas pequeñas (como dispositivos móviles) 
     display: block;
@@ -112,6 +144,14 @@ const LogoutButton = styled.button`
   margin-top: 10px;
   cursor: pointer;
 `;
+
+const CartPresent = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+
 const Navbar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -150,18 +190,28 @@ const Navbar = () => {
         </SearchContainer>
 {/* -------------------------------Perfil de Usuario------------------------------ */}
       <UserProfileButton>
-        <Button onClick={toggleProfile}>
+        <ButtonPerfil onClick={toggleProfile}>
           <UserProfileImage
-            src="URL_DE_LA_IMAGEN" // Reemplaza con la URL de la imagen del usuario
-            alt="User Profile"
+            src="/../../../src/assets/img/photo_perfil.avif"  //"URL_DE_LA_IMAGEN" // Reemplaza con la URL de la imagen del usuario
+            alt="IMG"
           />
-        </Button>
+        </ButtonPerfil>
         <Dropdown isOpen={isProfileOpen}>
-          <UserProfileText>
-            {fullName} <br />
-            {gmail}
-          </UserProfileText>
+            <UserProfileText>
+              <div>
+                <FontAwesomeIcon icon={faUserCheck} />
+              </div>
+              <div>{fullName}</div>
+              <div>
+                <FontAwesomeIcon icon={faEnvelopeOpen} />
+              </div>
+              <div>{gmail}<hr /></div>
+            </UserProfileText>
+            
           <ListItem onClick={handleCerrarSesion}>
+            <div>
+              <FontAwesomeIcon icon={faSignIn} />
+            </div>
             <span>Cerrar sesión</span>
           </ListItem>
         </Dropdown>

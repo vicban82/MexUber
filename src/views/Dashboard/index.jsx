@@ -16,7 +16,7 @@ const Dashboard = () => {
 
   return (
     <>
-      {tokenAdmin = null ? (
+      {tokenAdmin != null ? (
         <Container>
           <h2>Acceso denegado</h2>
         </Container>

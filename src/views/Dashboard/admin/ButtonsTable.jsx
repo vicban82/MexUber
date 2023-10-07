@@ -1,8 +1,15 @@
+import styled from 'styled-components';
 import { useState } from "react";
 import editIcon from "../../../assets/img/editIcon.png";
 import deleteIcon from "../../../assets/img/deleteIcon.png";
 import Modal from "react-modal";
 import { validateAdmin } from "../../../validations/admins";
+import {ContainerModal} from "../../../components/reusable/global";
+
+const Img = styled.img`
+  height: 32px;
+`;
+
 Modal.setAppElement("#root");
 
 export function ButtonsTable({ id, tBody, setTBody, setTError }) {
@@ -67,14 +74,16 @@ export function ButtonsTable({ id, tBody, setTBody, setTError }) {
   };
   
   return (
+  <>
+    {/* -------------------Boton Editar-------------------------------- */}
     <td>
       {/* The button to open modal */}
       <button onClick={openModal}>
-        <img src={editIcon} alt="Edición" />
+        <Img src={editIcon} alt="Edición" />
       </button>
 
       {/* Modal */}
-      <Modal
+      <ContainerModal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         contentLabel="Editar elemento"
@@ -122,14 +131,20 @@ export function ButtonsTable({ id, tBody, setTBody, setTError }) {
             <button onClick={() => editItem(id)}>Guardar</button>
           </div>
         </form>
-      </Modal>
+      </ContainerModal>
+  </td>
 
+{/* -------------------Boton Eliminar----------------------- */}
+
+    <td>
       <button onClick={() => handleDelete(id)}>
-        <img
+        <Img
           src={deleteIcon}
           alt="Delete"
         />
       </button>
     </td>
+ </>
+
   );
 }

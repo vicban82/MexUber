@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 export const SidebarWrapper = styled.div`
   background-color: #333;
@@ -10,7 +11,6 @@ export const SidebarWrapper = styled.div`
   top: 0px;
   transition: width 0.1s ease-in-out;
   z-index: 1000;
-  margin-left: -20px
 `;
 
 
@@ -31,12 +31,13 @@ export const SidebarItem = styled.li`
   max-height: 27px;
 `;
 
-export const SidebarLink = styled.a`
+export const SidebarLink = styled(Link)`
   text-decoration: none;
   color: #fff;
   font-size: 18px;
-  margin-left: 5px;
+  margin-left: 20px;
   visibility: ${(props) => (props.isOpen === true ? "hidden" : "visible")};
+  color: ${(props) => (props.isOpen === true ? "#ff0000" : "#fff")};
   &:hover {
     color: #ff5733;
   }
@@ -50,7 +51,6 @@ export const SidebarSession = styled.div`
   color: #fff;
   font-size: 18px;
   cursor: pointer;
-
   &:hover {
     color: #ff5733;
   }

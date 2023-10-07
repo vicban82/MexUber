@@ -15,17 +15,17 @@ const Admins = () => {
 
   return (
     <section>
+      <ButtonAdd
+        tBody={tBody}
+        setTBody={setTBody}
+        tHeader={tableHeader}
+        setTError={setTError}
+      />
       <Table
         tHeader={tableHeader}
         tBody={tBody}
         setTBody={setTBody}
         error={error}
-        setTError={setTError}
-      />
-      <ButtonAdd
-        tBody={tBody}
-        setTBody={setTBody}
-        tHeader={tableHeader}
         setTError={setTError}
       />
     </section>

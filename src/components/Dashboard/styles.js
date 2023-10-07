@@ -37,6 +37,9 @@ export const Button = styled.button`
   width: 170px;
   height: 10rem;
   border-radius: 20px;
+  &:hover {
+    background-color: #11121a;
+  }
  
 `;
 

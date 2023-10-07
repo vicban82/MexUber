@@ -1,4 +1,5 @@
 import { styled } from "styled-components";
+import Modal from "react-modal";
 
 export const Container = styled.div`
   display: flex;
@@ -7,6 +8,7 @@ export const Container = styled.div`
 	justify-content: center;
 	align-items: center;
 	align-content: center;
+  margin-left: 50px;
 `;
 
 export const Checkbox = styled.input`
@@ -24,17 +26,16 @@ export const Image = styled.img`
   width: 150px; /* Ajusta el tamaño de la imagen según tus necesidades */
   height: auto;
   margin-top: 10px;
-  visibility: ${(props) => (props.isOpen === true ? "hidden" : "visible")};
-  /* @media (min-width: 768px) {
-    width: 150px;  Ajusta el tamaño de la imagen según tus necesidades 
-    height: auto;
-    margin-top: 10px;
-  } */
+  @media only screen and (max-width:600px) and (max-width:1565px) {
+    visibility: ${(props) => (props.isOpen === true ? "hidden" : "visible")};
+  }
 `;
+
 export const CenteredContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 20px; /* Agrega un margen superior para separar el botón de otros contenidos */
+  
 `;
 export const Line = styled.hr`
   border: none;
@@ -94,7 +95,6 @@ export const ContainerForm = styled.div`
 export const InputButton = styled.input`
   width: 100%;
   color: #fff;
-  //   background: #009579;
   font-size: 1.2rem;
   font-weight: 500;
   letter-spacing: 1px;
@@ -116,6 +116,7 @@ export const ContainerLogoSidebar = styled.div`
   align-items: center;
   margin-bottom: 20px;
   margin-left: 20px;
+  margin-top: 6px;
 
 `;
 
@@ -137,5 +138,17 @@ export const ContainerLogin = styled.div`
 
   background-color: transparent;
   margin-top: 10px;
+
+`;
+
+export const ContainerModal = styled(Modal)`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 75%;
+    justify-content: center;
+    align-content: center;
+    margin: 105px 30px 13% 80px;
+    background: #333333;
 
 `;

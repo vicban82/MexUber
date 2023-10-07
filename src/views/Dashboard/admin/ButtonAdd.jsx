@@ -3,7 +3,18 @@ import Modal from "react-modal";
 import { validateAdmin } from "../../../validations/admins";
 import { errorRegister, successRegister } from "../../../tools/switAlertRegister";
 import { axiosPostAdmin } from "../../../hooks/admin/crudAdmin";
+import styled from 'styled-components';
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
+
+const AdminTitulo = styled.div`
+    display: flex;
+    flex-direction: row;
+    padding: 5px 5px;
+    padding: 15px 7% 1px 7%;
+    justify-content: space-between;
+    margin-top: -75px;
+    height: 50px;
+`;
 
 export const ButtonAdd = ({ tBody, tHeader }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -82,7 +93,8 @@ export const ButtonAdd = ({ tBody, tHeader }) => {
   }
 
   return (
-    <div>
+    <AdminTitulo>
+      <div><h3>Administradores<br /></h3></div>
       <button onClick={() => setModalIsOpen(true)}>Agregar</button>
       <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
         <form onSubmit={handleSubmit}>
@@ -129,6 +141,6 @@ export const ButtonAdd = ({ tBody, tHeader }) => {
           </div>
         </form>
       </Modal>
-    </div>
+    </AdminTitulo>
   );
 };

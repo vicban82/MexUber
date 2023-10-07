@@ -81,7 +81,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     //* Conexion con el Back-End
-    /*const {
+    const {
       emailError,
       passwordError,
     } = error;
@@ -97,7 +97,7 @@ const Login = () => {
         window.location.reload();
       }, 1000);
       navigate('/dashboard')
-    }*/
+    }
     //* Conexion con el Back-End
 
     //! DATOS RANDOM
