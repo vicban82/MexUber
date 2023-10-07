@@ -25,18 +25,18 @@ const Admins = () => {
   return (
     <section>
       <Search setTBody={setTBody} setTError={setTError} />
+      <ButtonAdd
+        tBody={tBody}
+        setTBody={setTBody}
+        errorForm={errorForm}
+        setErrorForm={setErrorForm}
+      />
       <Table
         tHeader={tableHeader}
         tBody={tBody}
         setTBody={setTBody}
         error={error}
         setTError={setTError}
-        errorForm={errorForm}
-        setErrorForm={setErrorForm}
-      />
-      <ButtonAdd
-        tBody={tBody}
-        setTBody={setTBody}
         errorForm={errorForm}
         setErrorForm={setErrorForm}
       />

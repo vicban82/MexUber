@@ -1,10 +1,12 @@
 import axios from "axios";
+import { dataFake } from "../../data/dataFake.js";
 
 export async function axiosGetAdmins(setTBody) {
   try {
     const { data } = (await axios.get('/api/admins'));
-    // console.log('DATA:', data);
+    console.log('DATA:', data);
     setTBody(data);
+    //setTBody(dataFake);
   } catch (err) {
     const { error } = err.response.data;
     console.log('ERROR:', error);

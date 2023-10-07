@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import { useEffect, useState } from "react";
 import editIcon from "../../../assets/img/editIcon.png";
 import deleteIcon from "../../../assets/img/deleteIcon.png";
@@ -7,8 +8,13 @@ import { headers } from "../../../tools/accessToken";
 import { axiosPutAdmin } from "../../../hooks/admin/crudAdmin";
 import { deleteAlert } from "../../../tools/adminAlerts/delete";
 import { errorUpDate, successUpDate } from "../../../tools/adminAlerts/upDate";
-import styled from 'styled-components';
 import { props } from "./props";
+import {ContainerModal} from "../../../components/reusable/global";
+
+const Img = styled.img`
+  height: 32px;
+`;
+
 Modal.setAppElement("#root");
 
 const StyledTd = styled.td`
@@ -119,74 +125,81 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
   }
   
   return (
-    <StyledTd>
-      {/* The button to open modal */}
-      <button onClick={openModal}>
-        <img src={editIcon} alt="Edición" />
-      </button>
+    <>
+      {/* -------------------Boton Editar-------------------------------- */}
+      <td>
+        {/* The button to open modal */}
+        <button onClick={openModal}>
+          <Img src={editIcon} alt="Edición" />
+        </button>
 
-      {/* Modal */}
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Editar elemento"
-      >
-        <form onSubmit={handleSubmit}>
-          <br />
-          {
-            Object.keys(admin).map((item, subI) => {
-              for (const esp in props) {
-                if (item === esp) {
-                  return (
-                    <div key={subI}>
-                      <label htmlFor={`input-${item}`}>{props[esp]}: </label>
-                      {item !== "isActive" ? (
-                        item === "password" || item === "repeatPassword" ? (
+        {/* Modal */}
+        <ContainerModal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          contentLabel="Editar elemento"
+        >
+          <form onSubmit={handleSubmit}>
+            <br />
+            {
+              Object.keys(admin).map((item, subI) => {
+                for (const esp in props) {
+                  if (item === esp) {
+                    return (
+                      <div key={subI}>
+                        <label htmlFor={`input-${item}`}>{props[esp]}: </label>
+                        {item !== "isActive" ? (
+                          item === "password" || item === "repeatPassword" ? (
+                              <input
+                                id={`input-${item}`}
+                                name={item}
+                                value={admin[item] || ""}
+                                onChange={handleChange}
+                                type="password"
+                              />
+                          ) : (
                             <input
                               id={`input-${item}`}
                               name={item}
                               value={admin[item] || ""}
                               onChange={handleChange}
-                              type="password"
+                              type="text"
                             />
+                          )
                         ) : (
                           <input
                             id={`input-${item}`}
                             name={item}
-                            value={admin[item] || ""}
+                            checked={admin[item]}
                             onChange={handleChange}
-                            type="text"
+                            type="checkbox"
+                            value={admin[item] ? 1 : 0} // 1 como true y 0 como false
                           />
-                        )
-                      ) : (
-                        <input
-                          id={`input-${item}`}
-                          name={item}
-                          checked={admin[item]}
-                          onChange={handleChange}
-                          type="checkbox"
-                          value={admin[item] ? 1 : 0} // 1 como true y 0 como false
-                        />
-                      )}
-                    </div>
-                  );
+                        )}
+                      </div>
+                    );
+                  }
                 }
-              }
-            })
-          }
-          <div>
-            <button onClick={closeModal}>Cancelar</button>
-            <button>Guardar</button>
-          </div>
-        </form>
-      </Modal>
+              })
+            }
+            <div>
+              <button onClick={closeModal}>Cancelar</button>
+              <button>Guardar</button>
+            </div>
+          </form>
+        </ContainerModal>
+      </td>
 
-      <button onClick={() => handleDelete(id)}>
-        <img
-          src={deleteIcon}
-          alt="Delete"
-        />
-      </button>
-    </StyledTd>
+      {/* -------------------Boton Eliminar----------------------- */}
+
+      <td>
+        <button onClick={() => handleDelete(id)}>
+          <Img
+            src={deleteIcon}
+            alt="Delete"
+          />
+        </button>
+      </td>
+    </>
   );
 }

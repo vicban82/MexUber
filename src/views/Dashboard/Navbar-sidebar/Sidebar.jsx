@@ -1,7 +1,8 @@
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { Link } from "react-router-dom";
 
 import {
   MenuIcon,
@@ -23,17 +24,27 @@ import { faCarRear, faHome, faCog, faCreditCard, faUserCheck, faPaperPlane, faSi
 import { StyleSheetManager } from "styled-components";
 import logo from "../../../assets/img/moveItLogo3.png";
 
+const pathActivo = () => {
+  let url = window.location.href;
+  const arr = url.split('/')
+  let ruta = arr[arr.length - 1];
+  return ruta;
+};
 
 const Sidebar = ({ isOpen, setIsOpen, sesion }) => {
   const handleMenuItemClick = () => {
     // Cierra el Sidebar cuando se hace clic en un elemento del menú
-    setIsOpen(false);
+    setIsOpen(true);
   };
   
+  //para cerrar el Sidebar cuando se actualize la pagina
   useEffect(() => {
-    setIsOpen(true)
+    setIsOpen(true);
+    setActive('Home');
   }, []);
-
+  
+  const [isActive, setActive] = useState();
+  
   return (
     <StyleSheetManager shouldForwardProp={(prop) => !["isOpen"].includes(prop)}>
       <SidebarWrapper  isOpen={isOpen} >
@@ -49,49 +60,49 @@ const Sidebar = ({ isOpen, setIsOpen, sesion }) => {
 
           <SidebarItem>
             <div>
-              <FontAwesomeIcon icon={faHome} />
+              <FontAwesomeIcon icon={faHome} color= {pathActivo()=="home" ? "#8a2be2" : "white"}/> 
             </div>
-            <SidebarLink href="/dashboard/home" onClick={handleMenuItemClick} isOpen={isOpen}>
+            <SidebarLink to="/dashboard/home"  onClick={handleMenuItemClick} isOpen={isOpen}>
               Home
             </SidebarLink>
           </SidebarItem>
           <SidebarItem>
             <div>
-              <FontAwesomeIcon icon={faCog} /> 
+              <FontAwesomeIcon icon={faCog} color= {pathActivo()=="admins" ? "#8a2be2" : "white"}/> 
             </div>
-            <SidebarLink href="/dashboard/admins" onClick={handleMenuItemClick} isOpen={isOpen}>
+            <SidebarLink to="/dashboard/admins" onClick={handleMenuItemClick} isOpen={isOpen} >
               Administradores
-            </SidebarLink>
+            </SidebarLink> 
           </SidebarItem>
           <SidebarItem>
             <div>
-              <FontAwesomeIcon icon={faCreditCard} />
+              <FontAwesomeIcon icon={faCreditCard} color= {pathActivo()=="drivers" ? "#8a2be2" : "white"}/>
             </div>
-            <SidebarLink href="/dashboard/drivers" onClick={handleMenuItemClick} isOpen={isOpen}>
+            <SidebarLink to="/dashboard/drivers" onClick={handleMenuItemClick} isOpen={isOpen}>
               Conductores
             </SidebarLink>
           </SidebarItem>
           <SidebarItem>
             <div>
-              <FontAwesomeIcon icon={faCarRear} /> 
+              <FontAwesomeIcon icon={faCarRear} color= {pathActivo()=="cars" ? "#8a2be2" : "white"}/> 
             </div>
-            <SidebarLink href="/dashboard/cars" onClick={handleMenuItemClick} isOpen={isOpen}>
+            <SidebarLink to="/dashboard/cars" onClick={handleMenuItemClick} isOpen={isOpen}>
               Vehículos
             </SidebarLink>
           </SidebarItem>
           <SidebarItem>
             <div>
-              <FontAwesomeIcon icon={faUserCheck} />
+              <FontAwesomeIcon icon={faUserCheck} color= {pathActivo()=="clients" ? "#8a2be2" : "white"}/>
             </div>
-            <SidebarLink href="/dashboard/clients" onClick={handleMenuItemClick} isOpen={isOpen}>
+            <SidebarLink to="/dashboard/clients" onClick={handleMenuItemClick} isOpen={isOpen}>
               Clientes
             </SidebarLink>
           </SidebarItem>
           <SidebarItem>
             <div>
-              <FontAwesomeIcon icon={faPaperPlane} />
+              <FontAwesomeIcon icon={faPaperPlane} color= {pathActivo()=="trips" ? "#8a2be2" : "white"}/>
             </div>
-            <SidebarLink href="/dashboard/trips" onClick={handleMenuItemClick} isOpen={isOpen}>
+            <SidebarLink to="/dashboard/trips" onClick={handleMenuItemClick} isOpen={isOpen}>
               Viajes
             </SidebarLink>
           </SidebarItem>

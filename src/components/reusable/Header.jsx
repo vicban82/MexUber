@@ -9,7 +9,7 @@ import { routeToTitle } from "../../data/routeTitles";
 function Header() {
   const location = useLocation();
 
-  // Función para obtener el título de la página actual
+// Función para obtener el título de la página actual
   const getPageTitle = () => {
     const title = routeToTitle[location.pathname];
     return title ? title : "Move it drive"; // Usar el título correspondiente o el predeterminado

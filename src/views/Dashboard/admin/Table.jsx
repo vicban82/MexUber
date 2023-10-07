@@ -1,55 +1,118 @@
 import styled from 'styled-components';
 import { ButtonsTable } from './ButtonsTable';
 
+const ContainerTabla = styled.div`
+  display: flex;
+  flex-direction: row;
+  padding: 5px 5px;
+  padding: 15px 65px 15px 65px;
+  justify-content: center;
+`;
+
 const StyledTable = styled.table`
-  width: 100%;
+  width: 95%;
+  table-layout: fixed;
   border-collapse: collapse;
+  background-color: #b8860b;
+  
+  th { 
+    text-decoration: underline; 
+    display: flex;
+    justify-content: center;
+  }
+
+  th, td {
+    text-align: left;
+    display: flex;
+    justify-content: center;
+    
+  }
+  
+  td:nth-child(1), th:nth-child(1) { min-width: 16%; }
+  td:nth-child(2), th:nth-child(2) { min-width: 16%; }
+  td:nth-child(3), th:nth-child(3) { width: 16%; }
+
+  thead {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    background-color: #333;
+    color: #FDFDFD;
+    height: 40px;
+    tr {
+      display: flex;
+      width: 100%;
+      height: 40px;
+      justify-content: space-around;
+      align-items: center;
+      text-align: center;
+    }
+  }
+  tbody {
+    display: flex;
+    overflow: auto;
+    width: 100%;
+    height: 300px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    tr {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      text-align: center;
+    }
+    tr:nth-child(even) {
+      background-color: #5f5a5a;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      text-align: center;
+    }
+  }
+
 `;
 
 const StyledThead = styled.thead`
-  background-color: #f0f0f0; /* Cambia esto al color que desees */
-  border: solid red 3px;
+
 `;
 
 const StyledTbody = styled.tbody`
   /* Agrega aquí los estilos que desees para el tbody */
-  border: solid green 3px;
+
 `;
 
 const StyledTh = styled.th`
-  padding: 10px;
-  border: solid red 3px;
 `;
 
 const StyledTd = styled.td`
-  padding: 10px;
-  border: solid green 3px;
-  min-width: 150px; /* Ajusta el valor según tus necesidades */
-  text-align: center; /* Centra el contenido de los td */
+
 `;
 
 export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, setErrorForm }) => {
   // console.log("tBody:", tBody)
   return (
     <>
-      <div>
+      <ContainerTabla>
         <StyledTable>
-          <StyledThead>
+          <StyledThead> 
             <tr>
               {tHeader.length >= 1 &&
                 tHeader.map((item, i) => {
                   return (
                     <StyledTh  key={i}>
-                      <p>{item}</p>
+                      {item}
                     </StyledTh>
                   );
                 })}
               <StyledTh>
-                <p>Editar / Eliminar</p>
+                Editar
               </StyledTh>
-              {/* <StyledTh>
-                <p>Eliminar</p>
-              </StyledTh> */}
+              <StyledTh>
+                Eliminar
+              </StyledTh>
             </tr>
           </StyledThead>
           <StyledTbody>
@@ -117,7 +180,7 @@ export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, s
             )}
           </StyledTbody>
         </StyledTable>
-      </div>
+      </ContainerTabla>
     </>
   );
 }
