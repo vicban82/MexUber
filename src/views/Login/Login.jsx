@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {
-  CenteredContainer,
   Checkbox,
   Container,
   ContainerForm,
   Form,
-  Header,
   Image,
   ImageContainer,
   Input,
@@ -28,11 +26,9 @@ import {
   RememberUserLabel,
 } from "../../components/Login/styles";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
 import { validateLogin } from "../../validations/logins";
 import { axiosLogins, axiosVerifyAdmin } from "../../hooks/logins";
 import { demoSwitAlertLogin, errorLogins, successLogins } from "../../tools/switAlertLogins";
-import { axiosGetAdmins } from "../../hooks/admin/crudAdmin";
 const Login = () => {
   const [login, setLogin] = useState({
     email: '',
@@ -45,7 +41,6 @@ const Login = () => {
   });
   const [rememberUser, setRememberUser] = useState(false);
   const [verifyAdmin, setVerifyAdmin] = useState([]);
-  // console.log('verifyAdmin:', verifyAdmin);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
@@ -87,6 +82,15 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     //* Conexion con el Back-End
+    const firstLogin = {};
+    if (!verifyAdmin.length) {
+      firstLogin.name = "root principal";
+      firstLogin.lastName = "last principal";
+      firstLogin.email = email;
+      firstLogin.password = password;
+      firstLogin.isActive = 1;
+      verifyAdmin.push(firstLogin);
+    }
     axiosVerifyAdmin(setVerifyAdmin)
     const accessAdmin = verifyAdmin.find(el => el.email === email);
     const {
@@ -100,13 +104,16 @@ const Login = () => {
     } else if (!accessAdmin || accessAdmin.isActive === 0) {
       errorLogins(login, error, accessAdmin)
     } else {
-      axiosLogins(login, setError)
+      axiosLogins(login);
       successLogins(login, accessAdmin)
       setTimeout(() => {
         window.location.reload();
       }, 1000);
       navigate('/dashboard/home')
-      setLogin(login)
+      setLogin({
+        email: '',
+        password: '',
+      })
     }
     //* Conexion con el Back-End
 

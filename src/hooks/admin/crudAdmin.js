@@ -4,7 +4,7 @@ import { dataFake } from "../../data/dataFake.js";
 export async function axiosGetAdmins(setTBody) {
   try {
     const { data } = (await axios.get('/api/admins'));
-    console.log('DATA:', data);
+    // console.log('DATA:', data);
     setTBody(data);
     //setTBody(dataFake);
   } catch (err) {
@@ -17,7 +17,7 @@ export async function axiosSearchAdmins(search, setTBody, setTError, headers) {
   try {
     if (search) {
       const { data } = await axios.get(`/api/admins?search=${search}`, { headers });
-      console.log("DATA:", data);
+      // console.log("DATA:", data);
       setTBody(data);
     }
   } catch (err) {
