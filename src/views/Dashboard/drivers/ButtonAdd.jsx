@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Modal from "react-modal";
 import { validateDriver } from "../../../validations/drivers";
 import { headers } from "../../../tools/accessToken";
@@ -45,13 +45,20 @@ export const ButtonAdd = ({
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [sepomex, setSepomex] = useState([]);
   const [licencias, setLicencias] = useState([]);
+  //* INFORMACION DEL CONDUCTOR
   const [codigoPostal, setZipcode] = useState('');
   // console.log("ESTADO ZIPCODE:", codigoPostal)
-  const [estados, setEstados] = useState('');
-  // console.log("ESTADO ESTADOS:", estados)
-  const [ciudades, setCiudades] = useState('');
+  const [estado, setEstado] = useState('');
+  // console.log("ESTADO ESTADOS:", estado)
+  const [ciudad, setCiudad] = useState('');
   const [colonias, setColonias] = useState([]);
   // console.log("ESTADO COLONIAS:", colonias)
+  //* INFORMACION DEL CONDUCTOR
+
+  //* LICENCIA DE CONDUCIR
+  const [estados, setEstados] = useState([]);
+  const [licences, setLicences] = useState([]);
+  //* LICENCIA DE CONDUCIR
   const [value, setValue] = useState('');
   // console.log("ESTADO VALUE:", value)
 
@@ -81,48 +88,46 @@ export const ButtonAdd = ({
     services, // TODOS - LGBQT+ - MUJERES
     car,
   } = driver;
-  // console.log("driver:", driver)
+  // console.log("form driver:", driver)
 
   const memorySepomes = useMemo(() => sepomex, [sepomex])
   const memoryLicencias = useMemo(() => licencias, [licencias])
-  // console.log("memoryLicencias:", memoryLicencias)
-  
-  const filteredSepomex = memorySepomes.filter(el => el.codigoPostal === value);
-  // console.log("filteredSepomex:", filteredSepomex)
-
-  const filteredEstado = memoryLicencias.map(el => el.estado);
-  // console.log("filteredEstado:", filteredEstado)
-  const filteredLicencias = memoryLicencias.map(el => {
-    // console.log("EL:", el.estado)
-    // console.log("VALUE:", value)
-    if (el.estado === value) {
-      return el.tipoDeLicencias
-    }
-  }).flat(1).filter(el => el !== undefined);
-  // console.log("filteredLicencias:", filteredLicencias)
-  
-  // ------------------------------------------------------------
-
-  useEffect(() => {
-    const codigoPostal = filteredSepomex.map(el => el.codigoPostal);
-    // console.log("FIND ZIPCODE:", codigoPostal[0])
-    const estado = filteredSepomex.map(el => el.estado);
-    const ciudad = filteredSepomex.map(el => el.ciudad);
-    const allColonias = filteredSepomex.map(el => el.colonias).flat(1);
-    // console.log("FIND COLONIAS:", allColonias)
-
-    setZipcode(codigoPostal[0]);
-    setEstados(estado[0]);
-    setCiudades(ciudad[0]);
-    setColonias(allColonias);
-  }, []);
   
   function handleChange(e) {
     const { name, value, type, checked } = e.target;
     
     // Manejar cambios para checkbox y convertir 1 (true) o 0 (false)
     const newValue = type === "checkbox" ? !driver[name] : value;
-    setValue(value);
+    // setValue(value);
+    
+    if (name === "zipCode") {
+      // Lógica para autocompletar los campos y habilitar el select de colonias
+      const sepomexData = memorySepomes.find(el => el.codigoPostal === value);
+      // console.log("sepomexData:", sepomexData)
+      if (sepomexData) {
+        setZipcode(sepomexData.codigoPostal);
+        setEstado(sepomexData.estado);
+        setCiudad(sepomexData.ciudad);
+        setColonias(sepomexData.colonias);
+      }
+    }
+
+    if (name === "driverLicenseNumber") {
+      // Lógica para habilitar el select de estados y las licencias
+      // console.log("name:", name)
+      const filteredEstado = memoryLicencias.map(el => el.estado);
+      setEstados(filteredEstado);
+    }
+
+    if (name === "stateLicense") {
+      const filteredLicencias = memoryLicencias.map(el => {
+        if (el.estado === value) {
+          return el.tipoDeLicencias
+        }
+      }).flat(1).filter(el => el !== undefined);
+      // console.log("filteredLicencias:", filteredLicencias)
+      setLicences(filteredLicencias);
+    }
 
     setDriver({
       ...driver,
@@ -165,11 +170,6 @@ export const ButtonAdd = ({
     axiosGetSepomex(setSepomex);
     axiosGetLicencias(setLicencias);
   }, []);
-  
-  // const onDrop = useCallback((acceptedFiles) => {
-  //   // Aquí puedes manejar los archivos aceptados, como enviarlos al servidor.
-  //   console.log(acceptedFiles);
-  // }, []);
 
   const { getRootProps, getInputProps } = useDropzone({
     // onDrop,
@@ -279,6 +279,7 @@ export const ButtonAdd = ({
       <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
         <form onSubmit={handleSubmit}>
           <br />
+          {/*//* INFORMACION DEL CONDUCTOR */}
           <div>
             <label>{props.name}: </label>
             <input
@@ -315,7 +316,7 @@ export const ButtonAdd = ({
               value={state}
               onChange={handleChange}
             >
-              <option>{estados || "Selecciona"}</option>
+              <option>{estado || "Selecciona"}</option>
             </select>
           </div>
           <div>
@@ -326,7 +327,7 @@ export const ButtonAdd = ({
               value={city}
               onChange={handleChange}
             >
-              <option>{ciudades || "Selecciona"}</option>
+              <option>{ciudad || "Selecciona"}</option>
             </select>
           </div>
           <div>
@@ -403,7 +404,7 @@ export const ButtonAdd = ({
               onChange={handleChange}
             >
               <option>Selecciona</option>
-              {filteredEstado.length >= 1 && filteredEstado.map((estado, idx) => {
+              {estados.length >= 1 && estados.map((estado, idx) => {
                 // console.log("EL ESTADOS:", estado)
                 return (
                   <option key={idx} value={estado}>
@@ -422,7 +423,7 @@ export const ButtonAdd = ({
               onChange={handleChange}
             >
               <option>Selecciona</option>
-              {filteredLicencias.length >= 1 && filteredLicencias.map((licencia, idx) => {
+              {licences.length >= 1 && licences.map((licencia, idx) => {
                 // console.log("EL LICENCIAS:", licencia)
                 return (
                   <option key={idx} value={licencia}>
