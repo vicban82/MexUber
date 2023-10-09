@@ -81,6 +81,15 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm }) => {
     
         // Cierra el modal después de guardar
         setModalIsOpen(false);
+        setAdmin({
+          name: "",
+          lastName: "",
+          email: "",
+          password: "",
+          repeatPassword: "",
+          // isActive: 0 || false ? 0 : 1, // Cambié el valor por defecto a false para checkbox
+          isActive: 0 || 1, // Cambié el valor por defecto a false para checkbox
+        })
       } catch (error) {
         console.error("Error al guardar el admin:", error);
       }

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import React from "react";
+import { Outlet } from "react-router-dom";
 import {
   ContentContainer,
 } from "../../components/Dashboard/styles";
@@ -7,11 +7,6 @@ import Navbar from "./Navbar-sidebar";
 import { Container } from "../../components/reusable/global";
 import { tokenAdmin } from "../../tools/accessToken";
 const Dashboard = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
   // console.log('tokenAdmin:', tokenAdmin);
 
   return (
