@@ -14,6 +14,7 @@ const StyledTable = styled.table`
   table-layout: fixed;
   border-collapse: collapse;
   background-color: #b8860b;
+  min-width: 740px;
   
   th { 
     text-decoration: underline; 
@@ -52,7 +53,8 @@ const StyledTable = styled.table`
     display: flex;
     overflow: auto;
     width: 100%;
-    height: 300px;
+    //height: 300px;
+    //max-height: 300px;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;

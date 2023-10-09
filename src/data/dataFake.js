@@ -13,7 +13,7 @@ export const dataFake = [
         email: "admin_Main@gmail.com",
         activo: 1,
     },
-    {
+    /* {
         id: 3,
         nombre: "Jose",
         apellidos: "Perez Ramirez",
@@ -40,5 +40,5 @@ export const dataFake = [
         apellidos: "Perez Ramirez",
         email: "admin_Main@gmail.com",
         activo: 1,
-    },
+    }, */
   ];
