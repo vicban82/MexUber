@@ -237,6 +237,36 @@ export const ButtonAdd = ({
 
         // Cierra el modal después de guardar
         setModalIsOpen(false);
+        setDriver({
+          name: "",
+          lastName: "",
+          zipCode: "", // CODIGO POSTAL
+          state: "", // ESTADO DE MEXICO
+          city: "",
+          colonia: "",
+          address: "",
+          contact: "", // NUMERO DE CONTACTO DEL CONDUCTOR
+          email: "",
+          driverPicture: "", //* FOTO DEL CONDUCTOR
+          //! DATOS DE LA LICENCIA DE CONDUCCION
+          driverLicenseNumber: "", //* NUMERO LICENCIA DEL CONDUCTOR
+          stateLicense: "", // ESTADO DE LA LICENCIA
+          typeLicense: "", // TIPO LICENCIA
+          dateLicense: "", // FECHA - VIGENCIA DE LA LICENCIA
+          frontLicensePicture: "", //* FOTO FRONTAL DE LA LICENCIA
+          backLicensePicture: "", //* FOTO REVERSO DE LA LICENCIA
+          //! DATOS DE LA LICENCIA DE CONDUCCION
+          //! AJUSTES DE LA APLICACION
+          services: "", // TODOS - LGBQT+ - MUJERES
+          //! AJUSTES DE LA APLICACION
+          //! ACCESO A LA APLICACION
+          password: "",
+          repeatPassword: "",
+          isActive: 0 || 1,
+          messageReasonInActive: "", // MENSAJE RASON INACTIVO
+          //! ACCESO A LA APLICACION
+          // car: "" || null,
+        });
       } catch (error) {
         console.error("Error al guardar el admin:", error);
       }

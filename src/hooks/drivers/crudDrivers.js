@@ -1,8 +1,8 @@
 import axios from "axios";
 
-export async function axiosGetDrivers(setTDriver, headers) {
+export async function axiosGetDrivers(setTDriver, headers, page, limit) {
   try {
-    const { data } = (await axios.get('/api/drivers', { headers }));
+    const { data } = (await axios.get(`/api/drivers?page=${page}&limit=${limit}`, { headers }));
     // console.log('DATA:', data);
     setTDriver(data);
   } catch (err) {

@@ -4,6 +4,7 @@ import { headers } from "../../../tools/accessToken";
 import { Table } from "./Table";
 import { ButtonAdd } from "./ButtonAdd";
 import { Search } from "./Search";
+import { DivPages } from "../../../components/reusable/global";
 
 export const Drivers = () => {
   const tableHeader = [
@@ -15,6 +16,8 @@ export const Drivers = () => {
     "Vehículo",
   ];
   const [tDriver, setTDriver] = useState([]);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(2);
   // ESTADO DEL FORMULARIO
   const [driver, setDriver] = useState({
     name: "",
@@ -70,8 +73,19 @@ export const Drivers = () => {
     servicesError: "",
   });
   useEffect(() => {
-    axiosGetDrivers(setTDriver, headers);
-  }, []);
+    axiosGetDrivers(setTDriver, headers, page, limit);
+  }, [page, limit]);
+
+  //* Paginado
+  const prev = (e) => {
+    e.preventDefault();
+    setPage(page > 1 ? page - 1 : 1);
+  };
+
+  const next = (e) => {
+    e.preventDefault();
+    setPage(page + 1);
+  };
 
   return (
     <section>
@@ -93,6 +107,15 @@ export const Drivers = () => {
         errorForm={errorForm}
         setErrorForm={setErrorForm}
       />
+      <DivPages>
+        <button onClick={(e) => prev(e)} disabled={page <= 1}>
+          {"<-- PREV"}
+        </button>
+        <p>{`Página: ${page}/${page}`}</p>
+        <button onClick={(e) => next(e)} disabled={tDriver.length < limit}>
+          {"NEXT -->"}
+        </button>
+      </DivPages>
     </section>
   );
 };

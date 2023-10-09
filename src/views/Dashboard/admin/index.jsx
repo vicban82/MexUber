@@ -3,12 +3,7 @@ import { axiosGetAdmins } from "../../../hooks/admin/crudAdmin";
 import { Table } from "./Table";
 import { ButtonAdd } from "./ButtonAdd";
 import { Search } from "./Search";
-import styled from "styled-components";
-
-const DivButtons = styled.div`
-  display: flex;
-  justify-content: center;
-`;
+import { DivPages } from "../../../components/reusable/global";
 
 const Admins = () => {
   const tableHeader = ["Nombres", "Apellidos", "Email", "Activo"];
@@ -59,7 +54,7 @@ const Admins = () => {
         errorForm={errorForm}
         setErrorForm={setErrorForm}
       />
-      <DivButtons>
+      <DivPages>
         <button onClick={(e) => prev(e)} disabled={page <= 1}>
           {"<-- PREV"}
         </button>
@@ -67,7 +62,7 @@ const Admins = () => {
         <button onClick={(e) => next(e)} disabled={tBody.length < limit}>
           {"NEXT -->"}
         </button>
-      </DivButtons>
+      </DivPages>
     </section>
   );
 };
