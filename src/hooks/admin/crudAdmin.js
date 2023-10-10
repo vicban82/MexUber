@@ -1,12 +1,12 @@
 import axios from "axios";
 import { dataFake } from "../../data/dataFake.js";
 
-export async function axiosGetAdmins(setTBody, setTError) {
+export async function axiosGetAdmins(setTBody, page, limit) {
   try {
-  /*const { data } = (await axios.get('/api/admins'));
-    console.log('DATA:', data); */
-    //setTBody(data);
-    setTBody(dataFake);
+    const { data } = (await axios.get('/api/admins'));
+    console.log('DATA:', data);
+    setTBody(data);
+    //setTBody(dataFake);
   } catch (err) {
     const { error } = err.response.data;
     setTError(error)
@@ -14,10 +14,34 @@ export async function axiosGetAdmins(setTBody, setTError) {
   }
 }
 
-export async function axiosPostAdmin(admin, setError) {
+export async function axiosPostAdmin(admin, setErrorForm, headers) {
   try {
-    const { data } = (await axios.post('/api/admin', admin));
+    const { data } = (await axios.post('/api/admin', admin, { headers }));
     console.log('POST:', data);
+    return data;
+  } catch (err) {
+    const { error } = err.response.data;
+    setErrorForm(error)
+    console.log('ERROR:', error);
+  }
+}
+
+export async function axiosPutAdmin(id, admin, headers, setErrorForm) {
+  try {
+    const { data } = (await axios.put(`/api/admin/${id}`, admin, { headers }));
+    console.log('PUT:', data);
+    return data;
+  } catch (err) {
+    const { error } = err.response.data;
+    setErrorForm(error)
+    console.log('ERROR:', error);
+  }
+}
+
+export async function axiosDeleteAdmin(id, headers, setError) {
+  try {
+    const { data } = (await axios.delete(`/api/admin/${id}`, { headers }));
+    console.log('DELETE:', data);
   } catch (err) {
     const { error } = err.response.data;
     setError(error)

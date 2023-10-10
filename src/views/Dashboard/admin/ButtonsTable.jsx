@@ -1,9 +1,14 @@
 import styled from 'styled-components';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import editIcon from "../../../assets/img/editIcon.png";
 import deleteIcon from "../../../assets/img/deleteIcon.png";
 import Modal from "react-modal";
 import { validateAdmin } from "../../../validations/admins";
+import { headers } from "../../../tools/accessToken";
+import { axiosPutAdmin } from "../../../hooks/admin/crudAdmin";
+import { deleteAlert } from "../../../tools/adminAlerts/delete";
+import { errorUpDate, successUpDate } from "../../../tools/adminAlerts/upDate";
+import { props } from "./props";
 
 
 export const ContainerModal = styled(Modal)`
@@ -30,7 +35,11 @@ const FormEdit = styled.form`
 
 Modal.setAppElement("#root");
 
-export function ButtonsTable({ id, tBody, setTBody, setTError }) {
+const StyledTd = styled.td`
+  display: flex;
+`;
+
+export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErrorForm }) {
 
   const [admin, setAdmin] = useState({
     name: "",
@@ -38,17 +47,26 @@ export function ButtonsTable({ id, tBody, setTBody, setTError }) {
     email: "",
     password: "",
     repeatPassword: "",
-    isActive: 0,
+    isActive: 0 || 1,
   });
 
-  const [error, setError] = useState({
-    nameError: "",
-    lastNameError: "",
-    emailError: "",
-    passwordError: "",
-    repeatPasswordError: "",
-    isActiveError: "",
-  });
+  useEffect(() => {
+    // Actualiza el estado del admin cuando se cambia el ID para que coincida con el objeto correspondiente en tBody
+    const currentAdmin = tBody.find(item => item._id === id);
+    const update = {
+      name: currentAdmin.name,
+      lastName: currentAdmin.lastName,
+      email: currentAdmin.email,
+      // password: currentAdmin.password,
+      password: "",
+      // repeatPassword: currentAdmin.password,
+      repeatPassword: "",
+      isActive: 0 || 1,
+    }
+    if (update) {
+      setAdmin(update);
+    }
+  }, [id, tBody]);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -61,24 +79,21 @@ export function ButtonsTable({ id, tBody, setTBody, setTError }) {
   };
 
   const handleDelete = async (id) => {
-    1
+    const deleteAdmin = tBody.find(el => el._id === id)
+    deleteAlert(deleteAdmin, id, tBody, setTBody, setTError)
   };
 
   function handleChange(e) {
     const { name, value, type, checked } = e.target;
 
     // Manejar cambios para checkbox y convertir 1 (true) o 0 (false)
-  const newValue = type === "checkbox" ? (value === "1" ? true : false) : value;
-    // const newValue = type === "checkbox" ? !admin[name] : value;
-
-    // // Manejar cambios para checkbox
-    // const newValue = type === "checkbox" ? checked : value;
+    const newValue = type === "checkbox" ? !admin[name] : value;
 
     setAdmin({
       ...admin,
       [name]: newValue,
     });
-    setError(
+    setErrorForm(
       validateAdmin({
         ...admin,
         [name]: newValue,
@@ -86,19 +101,55 @@ export function ButtonsTable({ id, tBody, setTBody, setTError }) {
     )
   }
 
-  const editItem = (id) => {
-    // Tu lógica para guardar los cambios aquí
-    closeModal(); // Cierra el modal después de guardar
-  };
+  const {
+    name,
+    lastName,
+    email,
+    password,
+    repeatPassword,
+    isActive,
+  } = admin;
+  
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const {
+      nameError,
+      lastNameError,
+      emailError,
+    } = errorForm;
+    if (!name || !lastName || !email) {
+      errorUpDate(admin, errorForm);
+    } else if (nameError || lastNameError || emailError) {
+      errorUpDate(admin, errorForm);
+    } else {
+      try {
+        successUpDate(admin);
+        // Envia la solicitud de actualización al backend
+        const currentAdmin = await axiosPutAdmin(id, admin, headers, setErrorForm);
+        
+        // Actualiza la lista en el frontend
+        setTBody(prev => {
+          // Reemplaza el admin editado en la lista por el nuevo admin devuelto por el backend
+          const updatedTBody = prev.map(item => (item._id === id ? currentAdmin : item));
+          return updatedTBody;
+        });
+  
+        // Cierra el modal después de guardar
+        setModalIsOpen(false);
+      } catch (error) {
+        console.error("Error al guardar el admin:", error);
+      }
+    }
+  }
   
   return (
-  <>
-    {/* -------------------Boton Editar-------------------------------- */}
-    <td>
-      {/* The button to open modal */}
-      <button onClick={openModal}>
-        <Img src={editIcon} alt="Edición" />
-      </button>
+    <>
+      {/* -------------------Boton Editar-------------------------------- */}
+      <td>
+        {/* The button to open modal */}
+        <button onClick={openModal}>
+          <Img src={editIcon} alt="Edición" />
+        </button>
 
       {/* Modal */}
       <ContainerModal
@@ -106,7 +157,7 @@ export function ButtonsTable({ id, tBody, setTBody, setTError }) {
         onRequestClose={closeModal}
         contentLabel="Editar elemento"
       >
-        <FormEdit onSubmit={''}>
+        <form onSubmit={''}>
           <br />
           {Object.keys(admin).map((key) => {
             return (
@@ -148,21 +199,20 @@ export function ButtonsTable({ id, tBody, setTBody, setTError }) {
             <button onClick={closeModal}>Cancelar</button>
             <button onClick={() => editItem(id)}>Guardar</button>
           </div>
-        </FormEdit>
+        </form>
       </ContainerModal>
   </td>
 
-{/* -------------------Boton Eliminar----------------------- */}
+      {/* -------------------Boton Eliminar----------------------- */}
 
-    <td>
-      <button onClick={() => handleDelete(id)}>
-        <Img
-          src={deleteIcon}
-          alt="Delete"
-        />
-      </button>
-    </td>
- </>
-
+      <td>
+        <button onClick={() => handleDelete(id)}>
+          <Img
+            src={deleteIcon}
+            alt="Delete"
+          />
+        </button>
+      </td>
+    </>
   );
 }

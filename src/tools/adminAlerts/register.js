@@ -8,7 +8,6 @@ export function errorRegister(admin, error) {
     email,
     password,
     repeatPassword,
-    isActive,
   } = admin;
   const {
     nameError,
@@ -16,21 +15,20 @@ export function errorRegister(admin, error) {
     emailError,
     passwordError,
     repeatPasswordError,
-    isActiveError,
   } = error;
 
-  if (!name && !lastName && !email && !password && !repeatPassword && !isActive) {
+  if (!name && !lastName && !email && !password && !repeatPassword) {
     Swal.fire({
-      title: "Error en el inicio de sesión",
+      title: "Error",
       icon: "error",
       text: "Credenciales incorrectas.",
       html: `
         <p>${"Todos los campos son requeridos" || ""}</p>
       `,
     });
-  } else if (nameError || lastNameError || emailError || passwordError || repeatPasswordError || isActiveError) {
+  } else if (nameError || lastNameError || emailError || passwordError || repeatPasswordError) {
     Swal.fire({
-      title: "Error en el inicio de sesión",
+      title: "Error",
       icon: "error",
       text: "Credenciales incorrectas.",
       html: `
@@ -39,7 +37,6 @@ export function errorRegister(admin, error) {
         <p>${emailError || ""}</p>
         <p>${passwordError || ""}</p>
         <p>${repeatPasswordError || ""}</p>
-        <p>${isActiveError || ""}</p>
       `,
     });
   }
