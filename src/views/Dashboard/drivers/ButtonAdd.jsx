@@ -198,7 +198,9 @@ export const ButtonAdd = ({
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: 'image/jpeg, image/png',
+    accept: {
+     'image/*': ['.jpg', '.png'],
+    },
     maxFiles: 1
   });
 
