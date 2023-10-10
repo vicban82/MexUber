@@ -4,11 +4,29 @@ import editIcon from "../../../assets/img/editIcon.png";
 import deleteIcon from "../../../assets/img/deleteIcon.png";
 import Modal from "react-modal";
 import { validateAdmin } from "../../../validations/admins";
-import {ContainerModal} from "../../../components/reusable/global";
+
+
+export const ContainerModal = styled(Modal)`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 75%;
+    justify-content: center;
+    align-content: center;
+    margin: 105px 15% 100% 20%;
+    background: #c83737;
+
+`;
 
 const Img = styled.img`
   height: 32px;
 `;
+
+const FormEdit = styled.form`
+  background-color: beige;
+  color: #000000;
+`;
+
 
 Modal.setAppElement("#root");
 
@@ -88,7 +106,7 @@ export function ButtonsTable({ id, tBody, setTBody, setTError }) {
         onRequestClose={closeModal}
         contentLabel="Editar elemento"
       >
-        <form onSubmit={''}>
+        <FormEdit onSubmit={''}>
           <br />
           {Object.keys(admin).map((key) => {
             return (
@@ -130,7 +148,7 @@ export function ButtonsTable({ id, tBody, setTBody, setTError }) {
             <button onClick={closeModal}>Cancelar</button>
             <button onClick={() => editItem(id)}>Guardar</button>
           </div>
-        </form>
+        </FormEdit>
       </ContainerModal>
   </td>
 

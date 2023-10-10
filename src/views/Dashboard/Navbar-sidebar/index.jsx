@@ -126,9 +126,15 @@ const ListItem = styled.div`
     grid-gap: 8px;
 
   &:hover {
-    background-color: #ff0000;
+    background-color: #b7b7b7;
   }
 `;
+
+const CerrarSesion = styled.span`
+    color: #8a2be2;
+    font-weight: 900;
+`;
+
 // * Lista desplegable
 const MenuIcon = styled.div`
   cursor: pointer;
@@ -222,7 +228,7 @@ const Navbar = () => {
             <div>
               <FontAwesomeIcon icon={faSignIn} />
             </div>
-            <span>Cerrar sesión</span>
+            <CerrarSesion>Cerrar sesión</CerrarSesion>
           </ListItem>
         </Dropdown>
       </UserProfileButton>

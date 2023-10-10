@@ -140,15 +140,3 @@ export const ContainerLogin = styled.div`
   margin-top: 10px;
 
 `;
-
-export const ContainerModal = styled(Modal)`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    height: 75%;
-    justify-content: center;
-    align-content: center;
-    margin: 105px 30px 13% 80px;
-    background: #333333;
-
-`;
