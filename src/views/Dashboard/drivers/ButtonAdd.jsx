@@ -47,20 +47,15 @@ export const ButtonAdd = ({
   const [licencias, setLicencias] = useState([]);
   //* INFORMACION DEL CONDUCTOR
   const [codigoPostal, setZipcode] = useState('');
-  // console.log("ESTADO ZIPCODE:", codigoPostal)
   const [estado, setEstado] = useState('');
-  // console.log("ESTADO ESTADOS:", estado)
   const [ciudad, setCiudad] = useState('');
   const [colonias, setColonias] = useState([]);
-  // console.log("ESTADO COLONIAS:", colonias)
   //* INFORMACION DEL CONDUCTOR
 
   //* LICENCIA DE CONDUCIR
   const [estados, setEstados] = useState([]);
   const [licences, setLicences] = useState([]);
   //* LICENCIA DE CONDUCIR
-  const [value, setValue] = useState('');
-  // console.log("ESTADO VALUE:", value)
 
   const {
     name,
@@ -88,22 +83,19 @@ export const ButtonAdd = ({
     services, // TODOS - LGBQT+ - MUJERES
     car,
   } = driver;
-  // console.log("form driver:", driver)
+  console.log("form driver:", driver)
 
   const memorySepomes = useMemo(() => sepomex, [sepomex])
   const memoryLicencias = useMemo(() => licencias, [licencias])
   
   function handleChange(e) {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type } = e.target;
     
     // Manejar cambios para checkbox y convertir 1 (true) o 0 (false)
     const newValue = type === "checkbox" ? !driver[name] : value;
-    // setValue(value);
     
     if (name === "zipCode") {
-      // Lógica para autocompletar los campos y habilitar el select de colonias
       const sepomexData = memorySepomes.find(el => el.codigoPostal === value);
-      // console.log("sepomexData:", sepomexData)
       if (sepomexData) {
         setZipcode(sepomexData.codigoPostal);
         setEstado(sepomexData.estado);
@@ -113,8 +105,6 @@ export const ButtonAdd = ({
     }
 
     if (name === "driverLicenseNumber") {
-      // Lógica para habilitar el select de estados y las licencias
-      // console.log("name:", name)
       const filteredEstado = memoryLicencias.map(el => el.estado);
       setEstados(filteredEstado);
     }
@@ -122,10 +112,9 @@ export const ButtonAdd = ({
     if (name === "stateLicense") {
       const filteredLicencias = memoryLicencias.map(el => {
         if (el.estado === value) {
-          return el.tipoDeLicencias
+          return el.tipoDeLicencias;
         }
       }).flat(1).filter(el => el !== undefined);
-      // console.log("filteredLicencias:", filteredLicencias)
       setLicences(filteredLicencias);
     }
 
@@ -140,6 +129,18 @@ export const ButtonAdd = ({
       }, codigoPostal, colonias)
     );
   }
+
+  useEffect(() => {
+    // Actualizar los valores del formulario cuando estado o ciudad cambien
+    if (estado || ciudad) {
+      // ACTUALIZAMOS EL FORMULARIO CON LOS CAMPOS QUE SE AUTOCOMPLETAN
+      setDriver(prevState => ({
+        ...prevState,
+        state: estado,
+        city: ciudad,
+      }));
+    }
+  }, [estado, ciudad]);
 
   const {
     nameError,
@@ -172,7 +173,6 @@ export const ButtonAdd = ({
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({
-    // onDrop,
     accept: {
       "image/*": [".jpg", ".png"],
     },
@@ -332,7 +332,12 @@ export const ButtonAdd = ({
           </div>
           <div>
             <label>{props.colonia}: </label>
-            <select disabled={zipCode || codigoPostal === zipCode ? false : true} >
+            <select
+              disabled={zipCode || codigoPostal === zipCode ? false : true}
+              name={"colonia"}
+              value={colonia}
+              onChange={handleChange}
+            >
               <option>
                 Selecciona
               </option>
