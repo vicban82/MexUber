@@ -3,18 +3,17 @@ import Modal from "react-modal";
 
 export const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
+	flex-direction: column;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
   margin-left: 50px;
 `;
 
 export const Checkbox = styled.input`
   display: none;
 `;
-
 export const ImageContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -27,7 +26,7 @@ export const Image = styled.img`
   width: 150px; /* Ajusta el tamaño de la imagen según tus necesidades */
   height: auto;
   margin-top: 10px;
-  @media only screen and (max-width: 600px) and (max-width: 1565px) {
+  @media only screen and (max-width:600px) and (max-width:1565px) {
     visibility: ${(props) => (props.isOpen === true ? "hidden" : "visible")};
   }
 `;
@@ -36,15 +35,14 @@ export const CenteredContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 20px; /* Agrega un margen superior para separar el botón de otros contenidos */
+  
 `;
-
 export const Line = styled.hr`
   border: none;
   height: 1px;
   background-color: gray; /* Puedes ajustar el color según tus preferencias */
   margin: 20px 0;
 `;
-
 export const Header = styled.header`
   font-size: 2rem;
   font-weight: 500;
@@ -53,14 +51,12 @@ export const Header = styled.header`
   margin-top: -2.5rem;
   color: #000000;
 `;
-
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
 `;
-
 export const Input = styled.input`
   height: 60px;
   width: 100%;
@@ -80,7 +76,6 @@ export const Input = styled.input`
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
   }
 `;
-
 export const ShowIcon = styled.span`
   position: absolute;
   top: 40%;
@@ -88,18 +83,15 @@ export const ShowIcon = styled.span`
   transform: translateY(-50%); /* Centrar verticalmente el ícono */
   cursor: pointer;
 `;
-
 export const InputContainer = styled.div`
   display: flex;
   align-items: center;
   position: relative;
   margin: 0 auto;
 `;
-
 export const ContainerForm = styled.div`
   padding: 2rem;
 `;
-
 export const InputButton = styled.input`
   width: 100%;
   color: #fff;
@@ -125,6 +117,7 @@ export const ContainerLogoSidebar = styled.div`
   margin-bottom: 20px;
   margin-left: 20px;
   margin-top: 6px;
+
 `;
 
 export const ContainerItenSidebar = styled.div`
@@ -138,26 +131,12 @@ export const ContainerItenSidebar = styled.div`
   margin-top: 0px;
   min-height: 10px;
   margin-bottom: 30px;
+  
 `;
 
 export const ContainerLogin = styled.div`
+
   background-color: transparent;
   margin-top: 10px;
-`;
 
-export const ContainerModal = styled(Modal)`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 75%;
-  justify-content: center;
-  align-content: center;
-  margin: 105px 30px 13% 80px;
-  background: #333333;
-`;
-
-// CONTENEDOR PAGINADO
-export const DivPages = styled.div`
-  display: flex;
-  justify-content: center;
 `;

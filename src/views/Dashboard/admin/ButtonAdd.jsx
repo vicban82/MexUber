@@ -17,6 +17,22 @@ const AdminTitulo = styled.div`
     justify-content: space-between;
     margin-top: -75px;
     height: 50px;
+    align-items: center;
+`;
+
+
+const ButtonV1 = styled.button`
+  color: #646cff;
+
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
 `;
 
 export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm }) => {
@@ -97,9 +113,11 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm }) => {
   }
 
   return (
+  <>
     <AdminTitulo>
-      <div><h3>Administradores<br /></h3></div>
-      <button onClick={() => setModalIsOpen(true)}>Agregar</button>
+      <div><h2>Administradores<br /></h2></div>
+      <ButtonV1 onClick={() => setModalIsOpen(true)}>Agregar</ButtonV1>
+    </AdminTitulo>
       <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
         <form onSubmit={handleSubmit}>
           <br />
@@ -149,6 +167,6 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm }) => {
           </div>
         </form>
       </Modal>
-    </AdminTitulo>
+</>  
   );
 };

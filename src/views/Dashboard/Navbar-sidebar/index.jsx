@@ -7,6 +7,11 @@ import { modelAdmins } from "../../../data/routeTitles";
 import { cerrarSesion } from "../../../tools/switAlertSesion";
 import { loginAdmin } from "../../../tools/accessToken";
 
+const ContFlexRowCenter = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
 const NavbarContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -86,7 +91,7 @@ const Dropdown = styled.div`
   padding: 10px;
   margin-right: 25px;
   border-radius: 10px;
-  height: 130px;
+  height: 114px;
 
 `;
 
@@ -113,17 +118,24 @@ const UserProfileText = styled.div`
 `;
 
 const ListItem = styled.div`
-  display: flex;
-  padding: 8px 12px;
-  cursor: pointer;
-  justify-content: space-around;
-  margin-top: 20px;
-  border-radius: 15px;
+    display: flex;
+    padding: 8px 12px;
+    cursor: pointer;
+    //margin-top: 20px;
+    border-radius: 15px;
+    justify-content: center;
+    grid-gap: 8px;
 
   &:hover {
-    background-color: #ff0000;
+    background-color: #b7b7b7;
   }
 `;
+
+const CerrarSesion = styled.span`
+    color: #8a2be2;
+    font-weight: 900;
+`;
+
 // * Lista desplegable
 const MenuIcon = styled.div`
   cursor: pointer;
@@ -146,10 +158,10 @@ const LogoutButton = styled.button`
   cursor: pointer;
 `;
 
-const CartPresent = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+
+const ContFlexRowCenter01 = styled(ContFlexRowCenter)`
+    grid-gap: 10px;
+
 `;
 
 
@@ -200,21 +212,25 @@ const Navbar = () => {
         </ButtonPerfil>
         <Dropdown isOpen={isProfileOpen}>
             <UserProfileText>
+            <ContFlexRowCenter01>
               <div>
                 <FontAwesomeIcon icon={faUserCheck} />
               </div>
               <div>{fullName}</div>
+            </ContFlexRowCenter01>
+            <ContFlexRowCenter01>
               <div>
                 <FontAwesomeIcon icon={faEnvelopeOpen} />
               </div>
               <div>{gmail}<hr /></div>
+            </ContFlexRowCenter01>
             </UserProfileText>
             
           <ListItem onClick={handleCerrarSesion}>
             <div>
               <FontAwesomeIcon icon={faSignIn} />
             </div>
-            <span>Cerrar sesión</span>
+            <CerrarSesion>Cerrar sesión</CerrarSesion>
           </ListItem>
         </Dropdown>
       </UserProfileButton>

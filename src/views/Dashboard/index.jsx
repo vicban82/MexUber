@@ -7,15 +7,21 @@ import Navbar from "./Navbar-sidebar";
 import { Container } from "../../components/reusable/global";
 import { tokenAdmin } from "../../tools/accessToken";
 const Dashboard = () => {
-  // console.log('tokenAdmin:', tokenAdmin);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+  //const tokenAdmin = localStorage.getItem("tokenAdmin");
+  //console.log("tokenAdmin:", tokenAdmin);
 
   return (
     <>
-      {tokenAdmin === null ? (
+      {/* {tokenAdmin != null ? (
         <Container>
           <h2>Acceso denegado</h2>
         </Container>
-      ) : (
+      ) : ( */}
         <div>
           <Navbar />
           <Container>
@@ -26,9 +32,11 @@ const Dashboard = () => {
             </ContentContainer>
           </Container>
         </div>
-      )}
+      {/* )}
     </>
   );
-};
-
+}; */}
+</>
+)
+}
 export default Dashboard;
