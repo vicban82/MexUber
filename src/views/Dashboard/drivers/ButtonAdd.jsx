@@ -50,9 +50,6 @@ export const ButtonAdd = ({
   const [estado, setEstado] = useState('');
   const [ciudad, setCiudad] = useState('');
   const [colonias, setColonias] = useState([]);
-  const [foto, setFoto] = useState('');
-  const [fotoFront, setFotoFront] = useState('');
-  const [fotoBack, setFotoBack] = useState('');
   //* INFORMACION DEL CONDUCTOR
 
   //* LICENCIA DE CONDUCIR
@@ -144,16 +141,15 @@ export const ButtonAdd = ({
 
   useEffect(() => {
     // Actualizar los valores del formulario cuando estado o ciudad cambien
-    if (estado || ciudad || foto) {
+    if (estado || ciudad) {
       // ACTUALIZAMOS EL FORMULARIO CON LOS CAMPOS QUE SE AUTOCOMPLETAN
       setDriver(prevState => ({
         ...prevState,
         state: estado,
         city: ciudad,
-        driverPicture: foto,
       }));
     }
-  }, [estado, ciudad, foto]);
+  }, [estado, ciudad]);
 
   const {
     nameError,
@@ -185,23 +181,58 @@ export const ButtonAdd = ({
     axiosGetLicencias(setLicencias);
   }, []);
 
-  const onDrop = useCallback((acceptedFiles) => {
+  const onDriverPictureDrop = useCallback(acceptedFiles => {
     const file = acceptedFiles[0];
-    // Convertir la imagen a base64
+    convertAndSetImage(file, "driverPicture");
+  }, []);
+  
+  const onFrontLicensePictureDrop = useCallback(acceptedFiles => {
+    const file = acceptedFiles[0];
+    convertAndSetImage(file, "frontLicensePicture");
+  }, []);
+  
+  const onBackLicensePictureDrop = useCallback(acceptedFiles => {
+    const file = acceptedFiles[0];
+    convertAndSetImage(file, "backLicensePicture");
+  }, []);
+  
+  const convertAndSetImage = (file, fieldName) => {
     const reader = new FileReader();
     reader.onload = () => {
       const base64String = reader.result.split(',')[1];
-      setFoto(base64String)
+      setDriver(prevState => ({
+        ...prevState,
+        [fieldName]: base64String,
+      }));
     };
     reader.readAsDataURL(file);
-  }, []);
+  };
 
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
+  const { getRootProps: getDriverRootProps, getInputProps: getDriverInputProps } = useDropzone({
+    onDrop: onDriverPictureDrop,
+    // FORMATOS DE IMAGEN PERMITIDA
     accept: {
      'image/*': ['.jpg', '.png'],
     },
-    maxFiles: 1
+    maxFiles: 1, // ARCHIVOS PERMITIDOS
+  });
+  
+  const { getRootProps: getFrontLicenseRootProps, getInputProps: getFrontLicenseInputProps } = useDropzone({
+    onDrop: onFrontLicensePictureDrop,
+    // FORMATOS DE IMAGEN PERMITIDA
+    accept: {
+     'image/*': ['.jpg', '.png'],
+    },
+    maxFiles: 1, // ARCHIVOS PERMITIDOS
+  });
+  
+  const { getRootProps: getBackLicenseRootProps, getInputProps: getBackLicenseInputProps } = useDropzone({
+    onDrop: onBackLicensePictureDrop,
+    // FORMATOS DE IMAGEN PERMITIDA
+    accept: {
+     'image/*': ['.jpg', '.png'],
+    },
+    maxFiles: 1, // ARCHIVOS PERMITIDOS
   });
 
   async function handleSubmit(e) {
@@ -405,11 +436,11 @@ export const ButtonAdd = ({
           </div>
           <div>
             <label>{props.driverPicture}: </label>
-            <div {...getRootProps()} style={dropzoneContainerStyles}>
-              <input {...getInputProps()} />
+            <div {...getDriverRootProps()} style={dropzoneContainerStyles}>
+              <input {...getDriverInputProps()} />
               {/* //* SE VISUALIZA LA IMAGEN EN FORMATE BASE 64 */}
-              {foto && <img
-                src={`data:image/png;base64,${foto}`}
+              {driverPicture && <img
+                src={`data:image/png;base64,${driverPicture}`}
                 alt="Foto conductor" 
                 style={{ maxWidth: '100px' }} 
               />}
@@ -468,7 +499,7 @@ export const ButtonAdd = ({
           <div>
             <label>{props.dateLicense}: </label>
             <input
-              disabled={true}
+              disabled={driverLicenseNumber ? false : true}
               type="date"
               name={"dateLicense"}
               value={dateLicense}
@@ -477,30 +508,42 @@ export const ButtonAdd = ({
           </div>
           <div>
             <div style={pictureLicence}>
-              {/* <label>{props.frontLicensePicture}: </label> */}
               <label>Fotos licencia: </label>
               <br />
-              <div {...getRootProps()} style={dropzoneContainerStyles}>
-                <input {...getInputProps()} />
-                {/* //* SE VISUALIZA LA IMAGEN EN FORMATE BASE 64 */}
-                {foto && <img
-                  src={`data:image/png;base64,${foto}`}
-                  alt="Foto conductor" 
-                  style={{ maxWidth: '100px' }} 
-                />}
-                <p>Frente</p>
-              </div>
-              {/* <label>{props.backLicensePicture}: </label> */}
-              <div {...getRootProps()} style={dropzoneContainerStyles}>
-                <input {...getInputProps()} />
-                {/* //* SE VISUALIZA LA IMAGEN EN FORMATE BASE 64 */}
-                {foto && <img
-                  src={`data:image/png;base64,${foto}`}
-                  alt="Foto conductor" 
-                  style={{ maxWidth: '100px' }} 
-                />}
-                <p>Atrás</p>
-              </div>
+              {!driverLicenseNumber ? (
+                <>
+                  <div style={dropzoneContainerStyles} >
+                    <p>Desabilitado</p>
+                  </div>
+                  <div style={dropzoneContainerStyles} >
+                    <p>Desabilitado</p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div {...getFrontLicenseRootProps()} style={dropzoneContainerStyles} >
+                    <input {...getFrontLicenseInputProps()} />
+                    {/* //* SE VISUALIZA LA IMAGEN EN FORMATE BASE 64 */}
+                    {frontLicensePicture && <img
+                      src={`data:image/png;base64,${frontLicensePicture}`}
+                      alt="Foto conductor"
+                      style={{ maxWidth: '100px' }}
+                    />}
+                    <p>Frente</p>
+                  </div>
+                  <div {...getBackLicenseRootProps()} style={dropzoneContainerStyles} >
+                    <input {...getBackLicenseInputProps()} />
+                    {/* //* SE VISUALIZA LA IMAGEN EN FORMATE BASE 64 */}
+                    {backLicensePicture && <img
+                      src={`data:image/png;base64,${backLicensePicture}`}
+                      alt="Foto conductor"
+                      style={{ maxWidth: '100px' }}
+                    />}
+                    <p>Atrás</p>
+                  </div>
+                </>
+              )}
+              
             </div>
           </div>
           <h2>Ajustes en la aplicación</h2>
