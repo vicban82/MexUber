@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { axiosGetDrivers, axiosSearchDrivers } from '../../../hooks/drivers/crudDrivers';
 import { headers } from '../../../tools/accessToken';
 
-export const Search = ({ setTDriver }) => {
+export const Search = ({ setTDriver, page, limit }) => {
   const [search, setSearch] = useState("");
 
   function handleSubmit(e) {

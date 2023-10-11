@@ -83,7 +83,7 @@ export const ButtonAdd = ({
     services, // TODOS - LGBQT+ - MUJERES
     car,
   } = driver;
-  console.log("form driver:", driver)
+  // console.log("form driver:", driver)
 
   const memorySepomes = useMemo(() => sepomex, [sepomex])
   const memoryLicencias = useMemo(() => licencias, [licencias])
@@ -93,10 +93,6 @@ export const ButtonAdd = ({
     
     // Manejar cambios para checkbox y convertir 1 (true) o 0 (false)
     const newValue = type === "checkbox" ? !driver[name] : value;
-    // console.log("name:", name)
-    // console.log("value:", value)
-    // console.log("foto:", foto)
-    // console.log("e.target.value:", e.target.value)
     
     if (name === "zipCode") {
       const sepomexData = memorySepomes.find(el => el.codigoPostal === value);
@@ -107,11 +103,6 @@ export const ButtonAdd = ({
         setColonias(sepomexData.colonias);
       }
     }
-    
-    // Actualiza el estado de la foto si el nombre es driverPicture
-    // if (name === "driverPicture") {
-    //   setFoto(URL.createObjectURL(newValue)); // Crea una URL para mostrar la imagen
-    // }
 
     if (name === "driverLicenseNumber") {
       const filteredEstado = memoryLicencias.map(el => el.estado);
@@ -138,6 +129,15 @@ export const ButtonAdd = ({
       }, codigoPostal, colonias)
     );
   }
+
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+
+    setDriver((prevDriver) => ({
+      ...prevDriver,
+      services: checked ? name : '', // Si está marcado, establece el valor, de lo contrario, deja el campo vacío
+    }));
+  };
 
   useEffect(() => {
     // Actualizar los valores del formulario cuando estado o ciudad cambien
@@ -552,24 +552,23 @@ export const ButtonAdd = ({
             <label>{props.services}: </label>
             <input
               type="checkbox"
-              name={"services"}
-              value={services}
-              onChange={handleChange}
-              checked={services}
+              name="TODOS"
+              checked={services === 'TODOS'}
+              onChange={handleCheckboxChange}
             />
             TODOS
             <input
               type="checkbox"
-              name={"services"}
-              value={services}
-              onChange={handleChange}
+              name="LGBQT+"
+              checked={services === 'LGBQT+'}
+              onChange={handleCheckboxChange}
             />
             LGBTQ+
             <input
               type="checkbox"
-              name={"services"}
-              value={services}
-              onChange={handleChange}
+              name="MUJERES"
+              checked={services === 'MUJERES'}
+              onChange={handleCheckboxChange}
             />
             MUJERES
           </div>

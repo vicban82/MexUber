@@ -8,7 +8,6 @@ export async function axiosGetSepomex(setSepomex) {
     return data;
   } catch (err) {
     const { error } = err.response.data;
-    // setTError(error)
     console.log('ERROR:', error);
   }
 }
@@ -21,7 +20,6 @@ export async function axiosGetLicencias(setLicencias) {
     return data;
   } catch (err) {
     const { error } = err.response.data;
-    // setTError(error)
     console.log('ERROR:', error);
   }
 }
