@@ -68,22 +68,28 @@ export const ButtonAdd = ({
     contact, // NUMERO DE CONTACTO DEL CONDUCTOR
     email,
     driverPicture, //* FOTO DEL CONDUCTOR
+    //! DATOS DE LA LICENCIA DE CONDUCCION
     driverLicenseNumber, //* NUMERO LICENCIA DEL CONDUCTOR
-    dateLicense, // FECHA - VIGENCIA DE LA LICENCIA
     stateLicense, // ESTADO DE LA LICENCIA
     typeLicense, // TIPO LICENCIA
+    dateLicense, // FECHA - VIGENCIA DE LA LICENCIA
     frontLicensePicture, //* FOTO FRONTAL DE LA LICENCIA
     backLicensePicture, //* FOTO REVERSO DE LA LICENCIA
+    //! DATOS DE LA LICENCIA DE CONDUCCION
+    //! AJUSTES DE LA APLICACION
+    allServices, // TODOS
+    servicesLGBQT, // LGBQT+
+    onlyWomenServices, // MUJERES
+    //! AJUSTES DE LA APLICACION
+    //! ACCESO A LA APLICACION
     password,
     repeatPassword,
     isActive,
     messageReasonInActive, // MENSAJE RASON INACTIVO
-    tokenNotification, //? OPCIONAL
-    typePhone, //? OPCIONAL iOS || Android
-    services, // TODOS - LGBQT+ - MUJERES
+    //! ACCESO A LA APLICACION
     car,
   } = driver;
-  // console.log("form driver:", driver)
+  console.log("form driver:", driver)
 
   const memorySepomes = useMemo(() => sepomex, [sepomex])
   const memoryLicencias = useMemo(() => licencias, [licencias])
@@ -132,11 +138,27 @@ export const ButtonAdd = ({
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
+    let updatedDriver = { ...driver };
 
-    setDriver((prevDriver) => ({
-      ...prevDriver,
-      services: checked ? name : '', // Si está marcado, establece el valor, de lo contrario, deja el campo vacío
-    }));
+    if (name === "allServices" && checked) {
+      // Si allServices es seleccionado, desmarca los otros checkboxes
+      updatedDriver = {
+        ...updatedDriver,
+        allServices: 1,
+        servicesLGBQT: 0,
+        onlyWomenServices: 0,
+      };
+    } else {
+      // Si otros checkboxes son seleccionados, actualiza el checkbox correspondiente
+      updatedDriver[name] = checked ? 1 : 0;
+
+      // Si allServices estaba seleccionado, desmárcalo
+      if (updatedDriver.allServices === 1) {
+        updatedDriver.allServices = 0;
+      }
+    }
+
+    setDriver(updatedDriver);
   };
 
   useEffect(() => {
@@ -172,7 +194,9 @@ export const ButtonAdd = ({
     repeatPasswordError,
     isActiveError,
     messageReasonInActiveError,
-    servicesError,
+    allServicesError,
+    servicesLGBQTError,
+    onlyWomenServicesError,
   } = errorForm;
   // console.log("errorForm:", errorForm)
 
@@ -259,7 +283,9 @@ export const ButtonAdd = ({
       !repeatPassword ||
       !isActive ||
       !messageReasonInActive ||
-      !services
+      !allServices ||
+      !servicesLGBQT ||
+      !onlyWomenServices
     ) {
       errorRegister(driver, errorForm);
     } else if (
@@ -283,7 +309,9 @@ export const ButtonAdd = ({
       repeatPasswordError ||
       isActiveError ||
       messageReasonInActiveError ||
-      servicesError
+      allServicesError ||
+      servicesLGBQTError ||
+      onlyWomenServicesError
     ) {
       errorRegister(driver, errorForm);
     } else {
@@ -314,7 +342,9 @@ export const ButtonAdd = ({
           backLicensePicture: "", //* FOTO REVERSO DE LA LICENCIA
           //! DATOS DE LA LICENCIA DE CONDUCCION
           //! AJUSTES DE LA APLICACION
-          services: "", // TODOS - LGBQT+ - MUJERES
+          allServices: 0 || 1, // TODOS
+          servicesLGBQT: 0 || 1, // LGBQT+
+          onlyWomenServices: 0 || 1, // MUJERES
           //! AJUSTES DE LA APLICACION
           //! ACCESO A LA APLICACION
           password: "",
@@ -552,22 +582,24 @@ export const ButtonAdd = ({
             <label>{props.services}: </label>
             <input
               type="checkbox"
-              name="TODOS"
-              checked={services === 'TODOS'}
+              name="allServices"
+              checked={allServices === 1}
               onChange={handleCheckboxChange}
             />
             TODOS
             <input
               type="checkbox"
-              name="LGBQT+"
-              checked={services === 'LGBQT+'}
+              name="servicesLGBQT"
+              checked={servicesLGBQT === 1}
+              disabled={allServices === 1 ? true : false}
               onChange={handleCheckboxChange}
             />
             LGBTQ+
             <input
               type="checkbox"
-              name="MUJERES"
-              checked={services === 'MUJERES'}
+              name="onlyWomenServices"
+              checked={onlyWomenServices === 1}
+              disabled={allServices === 1 ? true : false}
               onChange={handleCheckboxChange}
             />
             MUJERES

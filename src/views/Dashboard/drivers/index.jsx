@@ -32,7 +32,9 @@ export const Drivers = () => {
     backLicensePicture: "", //* FOTO REVERSO DE LA LICENCIA
     //! DATOS DE LA LICENCIA DE CONDUCCION
     //! AJUSTES DE LA APLICACION
-    services: "", // TODOS - LGBQT+ - MUJERES
+    allServices: 0, // TODOS
+    servicesLGBQT: 0, // LGBQT+
+    onlyWomenServices: 0, // MUJERES
     //! AJUSTES DE LA APLICACION
     //! ACCESO A LA APLICACION
     password: "",
@@ -63,7 +65,9 @@ export const Drivers = () => {
     repeatPasswordError: "",
     isActiveError: "",
     messageReasonInActiveError: "",
-    servicesError: "",
+    allServicesError: "",
+    servicesLGBQTError: "",
+    onlyWomenServicesError: "",
   });
   useEffect(() => {
     axiosGetDrivers(setTDriver, headers, page, limit);
