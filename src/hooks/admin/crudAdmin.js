@@ -3,13 +3,23 @@ import { dataFake } from "../../data/dataFake.js";
 
 export async function axiosGetAdmins(setTBody, page, limit) {
   try {
-    const { data } = (await axios.get('/api/admins'));
-    console.log('DATA:', data);
+    const { data } = (await axios.get(`/api/admins?page=${page}&limit=${limit}`));
+    // console.log('DATA:', data);
     setTBody(data);
     //setTBody(dataFake);
   } catch (err) {
     const { error } = err.response.data;
-    setTError(error)
+    console.log('ERROR:', error);
+  }
+}
+
+export async function axiosSearchAdmins(search, setTBody, headers) {
+  try {
+    const { data } = (await axios.get(`/api/admins?search=${search}`, { headers }));
+    // console.log('DATA:', data);
+    setTBody(data);
+  } catch (err) {
+    const { error } = err.response.data;
     console.log('ERROR:', error);
   }
 }

@@ -157,47 +157,50 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
         onRequestClose={closeModal}
         contentLabel="Editar elemento"
       >
-        <form onSubmit={''}>
+        <form onSubmit={handleSubmit}>
           <br />
-          {Object.keys(admin).map((key) => {
-            return (
-              <div key={key}>
-                <label htmlFor={`input-${key}`}>{key}: </label>
-                {key !== "isActive" ? (
-                  key === "password" || key === "repeatPassword" ? (
-                    <input
-                      id={`input-${key}`}
-                      name={key}
-                      value={admin[key] || ""}
-                      onChange={handleChange}
-                      type="password"
-                    />
-                  ) : (
-                    <input
-                      id={`input-${key}`}
-                      name={key}
-                      value={admin[key] || ""}
-                      onChange={handleChange}
-                      type="text"
-                    />
-                  )
-                ) : (
-                  <input
-                    id={`input-${key}`}
-                    name={key}
-                    checked={admin[key]}
-                    onChange={handleChange}
-                    type="checkbox"
-                    value={admin[key] ? "1" : "0"} // 1 como true y 0 como false
-                    // value={admin[key] ? 1 : 0} // 1 como true y 0 como false
-                  />
-                )}
-              </div>
-            );
+          {Object.keys(admin).map((el, idx) => {
+            for (const esp in props) {
+              if (el === esp) {
+                return (
+                  <div key={idx}>
+                    <label htmlFor={`input-${el}`}>{props[esp]}: </label>
+                    {el !== "isActive" ? (
+                      el === "password" || el === "repeatPassword" ? (
+                        <input
+                          id={`input-${el}`}
+                          name={el}
+                          value={admin[el] || ""}
+                          onChange={handleChange}
+                          type="password"
+                        />
+                      ) : (
+                        <input
+                          id={`input-${el}`}
+                          name={el}
+                          value={admin[el] || ""}
+                          onChange={handleChange}
+                          type="text"
+                        />
+                      )
+                    ) : (
+                      <input
+                        id={`input-${el}`}
+                        name={el}
+                        checked={admin[el]}
+                        onChange={handleChange}
+                        type="checkbox"
+                        value={admin[el] ? 1 : 0} // 1 como true y 0 como false
+                      />
+                    )}
+                  </div>
+                );
+              }
+            }
           })}
           <div>
             <button onClick={closeModal}>Cancelar</button>
-            <button onClick={() => editItem(id)}>Guardar</button>
+            <button>Guardar</button>
           </div>
         </form>
       </ContainerModal>

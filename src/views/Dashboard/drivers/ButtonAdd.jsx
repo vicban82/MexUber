@@ -83,7 +83,7 @@ export const ButtonAdd = ({
     services, // TODOS - LGBQT+ - MUJERES
     car,
   } = driver;
-  // console.log("form driver:", driver)
+  console.log("form driver:", driver)
 
   const memorySepomes = useMemo(() => sepomex, [sepomex])
   const memoryLicencias = useMemo(() => licencias, [licencias])
@@ -598,7 +598,7 @@ export const ButtonAdd = ({
             <input
               type="checkbox"
               name={"isActive"}
-              value={isActive}
+              value={isActive ? 1 : 0}
               onChange={handleChange}
               checked={isActive}
             />

@@ -38,7 +38,7 @@ const Admins = () => {
 
   return (
     <section>
-      <Search setTBody={setTBody} setTError={setTError} />
+      <Search setTBody={setTBody} page={page} limit={limit} />
       <ButtonAdd
         tBody={tBody}
         setTBody={setTBody}
@@ -59,7 +59,7 @@ const Admins = () => {
           {"<-- PREV"}
         </button>
         <p>{`Página: ${page}/${page}`}</p>
-        <button onClick={(e) => next(e)} disabled={tBody.length < limit}>
+        <button onClick={(e) => next(e)} disabled={tBody.length < page}>
           {"NEXT -->"}
         </button>
       </DivPages>

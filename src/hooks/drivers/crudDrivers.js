@@ -7,7 +7,6 @@ export async function axiosGetDrivers(setTDriver, headers, page, limit) {
     setTDriver(data);
   } catch (err) {
     const { error } = err.response.data;
-    // setTError(error)
     console.log('ERROR:', error);
   }
 }
@@ -21,7 +20,6 @@ export async function axiosSearchDrivers(search, setTDriver, headers) {
     }
   } catch (err) {
     const { error } = err.response.data;
-    // setTError(error)
     console.log('ERROR:', error);
   }
 }
@@ -33,7 +31,6 @@ export async function axiosPostDriver(driver, headers) {
     return data;
   } catch (err) {
     const { error } = err.response.data;
-    // setErrorForm(error)
     console.log('ERROR:', error);
   }
 }
@@ -45,7 +42,6 @@ export async function axiosPutDriver(id, driver, headers) {
     return data;
   } catch (err) {
     const { error } = err.response.data;
-    // setErrorForm(error)
     console.log('ERROR:', error);
   }
 }
@@ -56,7 +52,6 @@ export async function axiosDeleteDriver(id, headers) {
     console.log('DELETE:', data);
   } catch (err) {
     const { error } = err.response.data;
-    // setError(error)
     console.log('ERROR:', error);
   }
 }
