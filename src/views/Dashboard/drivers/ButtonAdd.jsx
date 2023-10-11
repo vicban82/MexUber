@@ -89,16 +89,13 @@ export const ButtonAdd = ({
     //! ACCESO A LA APLICACION
     car,
   } = driver;
-  console.log("form driver:", driver)
+  // console.log("form driver:", driver)
 
   const memorySepomes = useMemo(() => sepomex, [sepomex])
   const memoryLicencias = useMemo(() => licencias, [licencias])
   
   function handleChange(e) {
     const { name, value, type } = e.target;
-    
-    // Manejar cambios para checkbox y convertir 1 (true) o 0 (false)
-    const newValue = type === "checkbox" ? !driver[name] : value;
     
     if (name === "zipCode") {
       const sepomexData = memorySepomes.find(el => el.codigoPostal === value);
@@ -126,21 +123,28 @@ export const ButtonAdd = ({
 
     setDriver({
       ...driver,
-      [name]: newValue,
+      [name]: value,
     });
     setErrorForm(
       validateDriver({
         ...driver,
-        [name]: newValue,
+        [name]: value,
       }, codigoPostal, colonias)
     );
   }
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
+
     let updatedDriver = { ...driver };
 
-    if (name === "allServices" && checked) {
+    if (name === "isActive") {
+      updatedDriver.isActive = checked ? 1 : 0;
+      // Resetear el campo messageReasonInActive si isActive se vuelve a bloquear
+      if (updatedDriver.isActive === 1) {
+        updatedDriver.messageReasonInActive = "";
+      }
+    } else if (name === "allServices" && checked) {
       // Si allServices es seleccionado, desmarca los otros checkboxes
       updatedDriver = {
         ...updatedDriver,
@@ -629,9 +633,8 @@ export const ButtonAdd = ({
             <input
               type="checkbox"
               name={"isActive"}
-              value={isActive ? 1 : 0}
-              onChange={handleChange}
-              checked={isActive}
+              checked={isActive === 1}
+              onChange={handleCheckboxChange}
             />
           </div>
           <div>
@@ -640,8 +643,8 @@ export const ButtonAdd = ({
               type="text"
               name={"messageReasonInActive"}
               value={messageReasonInActive}
+              disabled={isActive === 1}
               onChange={handleChange}
-              disabled={true}
             />
           </div>
 

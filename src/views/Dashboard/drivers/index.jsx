@@ -32,14 +32,14 @@ export const Drivers = () => {
     backLicensePicture: "", //* FOTO REVERSO DE LA LICENCIA
     //! DATOS DE LA LICENCIA DE CONDUCCION
     //! AJUSTES DE LA APLICACION
-    allServices: 0, // TODOS
+    allServices: 1, // TODOS
     servicesLGBQT: 0, // LGBQT+
     onlyWomenServices: 0, // MUJERES
     //! AJUSTES DE LA APLICACION
     //! ACCESO A LA APLICACION
     password: "",
     repeatPassword: "",
-    isActive: 0 || 1,
+    isActive: 1,
     messageReasonInActive: "", // MENSAJE RASON INACTIVO
     //! ACCESO A LA APLICACION
     // car: "" || null,
