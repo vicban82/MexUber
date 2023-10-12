@@ -129,7 +129,7 @@ export const ButtonAdd = ({
       validateDriver({
         ...driver,
         [name]: value,
-      }, codigoPostal, colonias)
+      }, codigoPostal, estado, ciudad, colonias, licences)
     );
   }
 
@@ -716,6 +716,7 @@ export const ButtonAdd = ({
               type="text"
               name={"messageReasonInActive"}
               value={messageReasonInActive}
+              maxLength={100}
               disabled={isActive === 1}
               onChange={handleChange}
             />

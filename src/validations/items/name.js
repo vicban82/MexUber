@@ -1,9 +1,11 @@
-import { fullName } from "../../tools/regex";
+import { regexLastName, regexName } from "../../tools/regex";
 
 export const validationName = (name) => {
   let nameError = '';
   
-  if (!name.match(fullName)) {
+  if (!name) {
+    nameError = 'Debes colocar tu nombre';
+  } else if (!name.match(regexName)) {
     nameError = 'Debes colocar un nombre valido';
   }
 
@@ -13,7 +15,9 @@ export const validationName = (name) => {
 export const validationLastName = (lastName) => {
   let lastNameError = '';
   
-  if (!lastName.match(fullName)) {
+  if (!lastName) {
+    lastNameError = 'Debes colocar tu apellido';
+  } else if (!lastName.match(regexLastName)) {
     lastNameError = 'Debes colocar un apellido valido';
   }
 

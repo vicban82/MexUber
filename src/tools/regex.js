@@ -6,8 +6,11 @@ export const dominiosPermitidosRegex = new RegExp(`^[a-zA-Z0-9._%+-]+@(${dominio
 // VERIFICACION DEL PASSWORD
 export const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_-])[A-Za-z\d@$!%*?&_-]{8,16}$/;
 
-// VERIFICACION DEL NAME || LASTNAME
-export const fullName = /^[a-zA-ZáéíóúÁÉÍÓÚüÜ]{3,}(?:\s|-)[a-zA-ZáéíóúÁÉÍÓÚüÜ]{3,}$/;
+// VERIFICACION DEL NOMBRE
+export const regexName = /^[a-zA-ZáéíóúÁÉÍÓÚüÜ]{3,}(?:\s|-)[a-zA-ZáéíóúÁÉÍÓÚüÜ]{3,}$/;
+
+// VERIFICACION DEL APELLIDO
+export const regexLastName = /^[a-zA-ZáéíóúÁÉÍÓÚüÜ]{3,}(?:\s|-)[a-zA-ZáéíóúÁÉÍÓÚüÜ]{3,}$/;
 
 // VERIFICACION DE LA FECHA
 export const data = /^(0[1-9]|[12]\d|3[01])-(0[1-9]|1[0-2])-\d{4}$/;
@@ -17,3 +20,12 @@ export const regexPhone = /^\d{10}$/;
 
 // VERIFICACION CODIGO POSTAL MANUALMENTE
 export const regexZipCode = /^\d{5}$/;
+
+// VERIFICACION NUMERO DE LICENCIA
+export const regexLicenceNumber = /^[a-zA-Z0-9]{5,10}$/;
+
+// VERIFICACION VIGENCIA DE LICENCIA
+export const regexDate = /^(0?[1-9]|[12][0-9]|3[01])-(0?[1-9]|1[0-2])-\d{4}$/;
+
+// VERIFICACION FORMATO DE IMAGENES
+export const regexImages = /^(http|https):\/\/\S+\.(jpg|png)$/;

@@ -2,10 +2,14 @@ import { validationLastName, validationName } from "./items/name";
 import { validationContact } from "./items/contact";
 import { validationEmail } from "./items/email";
 import { validationPassword } from "./items/password";
-import { regexZipCode } from "../tools/regex";
+import { regexDate, regexLicenceNumber, regexPhone, regexZipCode } from "../tools/regex";
+import { validationState } from "./items/state";
+import { validationDate } from "./items/date";
+import { validationPicture } from "./items/image";
+import { validationIsActive } from "./items/isActive";
 // import { regexPhone } from "../tools/regex";
 
-export const validateDriver = (driver, codigoPostal, colonias) => {
+export const validateDriver = (driver, codigoPostal, estado, ciudad, colonias, licences) => {
   const {
     name,
     lastName,
@@ -39,13 +43,21 @@ export const validateDriver = (driver, codigoPostal, colonias) => {
     car,
   } = driver;
   const error = {};
+
+  // * VALIDANDO INFORMACION DEL CONDUCTOR
   
   error.nameError = validationName(name);
   
   error.lastNameError = validationLastName(lastName);
-
+  
   if (!regexZipCode.test(zipCode) || codigoPostal === zipCode) {
     error.zipCodeError = 'Código postal invalido';
+  }
+  
+  error.stateError = validationState(estado, state);
+  
+  if (ciudad !== city) {
+    error.cityError = 'Debes seleccionar una Ciudad';
   }
   
   if (!colonia || !colonias.includes(colonia)) {
@@ -60,17 +72,41 @@ export const validateDriver = (driver, codigoPostal, colonias) => {
   
   error.emailError = validationEmail(email);
   
+  error.driverPictureError = validationPicture(driverPicture, frontLicensePicture, backLicensePicture);
+  
+  // * VALIDANDO LICENCIA DEL CONDUCTOR
+  
+  if (!regexLicenceNumber.test(driverLicenseNumber)) {
+    error.driverLicenseNumberError = 'Debes ingresar un número de licencia valido';
+  }
+  
+  error.stateLicenseError = validationState(estado, stateLicense);
+  
+  if (!typeLicense) {
+    error.typeLicenseError = 'Debes de elegir un tipo de licencia'
+  }
+  
+  error.dateLicenseError = validationDate(dateLicense);
+  
+  error.frontLicensePictureError = validationPicture(driverPicture, frontLicensePicture, backLicensePicture);
+  
+  error.backLicensePictureError = validationPicture(driverPicture, frontLicensePicture, backLicensePicture);
+  
+  // * VALIDANDO AJUSTES DE LA APLICACION
+  
+  if (allServices === 0 || servicesLGBQT === 0 || onlyWomenServices === 0) {
+    error.servicesError = 'Debes de elegir al menos un servicio';
+  }
+  
+  // * VALIDANDO ACCESO A LA APLICACION
+
   error.passwordError = validationPassword(password);
   
   if (password !== repeatPassword) {
     error.repeatPasswordError = 'El password no coincide';
   }
 
-  if (!driverPicture) {
-    error.driverPictureError = 'Debes subir una foto tuya';
-  }
-
-  // error.isActiveError = validationIsActive(isActive);
+  error.messageReasonInActiveError = validationIsActive(isActive, messageReasonInActive);
 
   return error;
 }
