@@ -56,18 +56,16 @@ export const Drivers = () => {
     emailError: "",
     driverPictureError: "",
     driverLicenseNumberError: "",
-    dateLicenseError: "",
     stateLicenseError: "",
     typeLicenseError: "",
+    dateLicenseError: "",
     frontLicensePictureError: "",
     backLicensePictureError: "",
+    servicesError: "",
     passwordError: "",
     repeatPasswordError: "",
     isActiveError: "",
     messageReasonInActiveError: "",
-    allServicesError: "",
-    servicesLGBQTError: "",
-    onlyWomenServicesError: "",
   });
   useEffect(() => {
     axiosGetDrivers(setTDriver, headers, page, limit);

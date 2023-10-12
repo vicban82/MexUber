@@ -189,18 +189,16 @@ export const ButtonAdd = ({
     emailError,
     driverPictureError,
     driverLicenseNumberError,
-    dateLicenseError,
     stateLicenseError,
     typeLicenseError,
+    dateLicenseError,
     frontLicensePictureError,
     backLicensePictureError,
+    servicesError,
     passwordError,
     repeatPasswordError,
     isActiveError,
     messageReasonInActiveError,
-    allServicesError,
-    servicesLGBQTError,
-    onlyWomenServicesError,
   } = errorForm;
   // console.log("errorForm:", errorForm)
 
@@ -267,58 +265,30 @@ export const ButtonAdd = ({
     e.preventDefault();
 
     if (
-      !name ||
-      !lastName ||
-      !zipCode ||
-      !state ||
-      !city ||
-      !colonia ||
-      !address ||
-      !contact ||
-      !email ||
-      !driverPicture ||
-      !driverLicenseNumber ||
-      !dateLicense ||
-      !stateLicense ||
-      !typeLicense ||
-      !frontLicensePicture ||
-      !backLicensePicture ||
-      !password ||
-      !repeatPassword ||
-      !isActive ||
-      !messageReasonInActive ||
-      !allServices ||
-      !servicesLGBQT ||
-      !onlyWomenServices
+      name ||
+      lastName ||
+      zipCode ||
+      state ||
+      city ||
+      colonia ||
+      address ||
+      contact ||
+      email ||
+      driverPicture ||
+      driverLicenseNumber ||
+      stateLicense ||
+      typeLicense ||
+      dateLicense ||
+      frontLicensePicture ||
+      backLicensePicture ||
+      allServices ||
+      servicesLGBQT ||
+      onlyWomenServices ||
+      password ||
+      repeatPassword ||
+      isActive ||
+      messageReasonInActive
     ) {
-      errorRegister(driver, errorForm);
-    } else if (
-      nameError ||
-      lastNameError ||
-      zipCodeError ||
-      stateError ||
-      cityError ||
-      coloniaError ||
-      addressError ||
-      contactError ||
-      emailError ||
-      driverPictureError ||
-      driverLicenseNumberError ||
-      dateLicenseError ||
-      stateLicenseError ||
-      typeLicenseError ||
-      frontLicensePictureError ||
-      backLicensePictureError ||
-      passwordError ||
-      repeatPasswordError ||
-      isActiveError ||
-      messageReasonInActiveError ||
-      allServicesError ||
-      servicesLGBQTError ||
-      onlyWomenServicesError
-    ) {
-      errorRegister(driver, errorForm);
-    } else {
       try {
         successRegister(driver);
         const newDriver = await axiosPostDriver(driver, headers);
@@ -346,14 +316,14 @@ export const ButtonAdd = ({
           backLicensePicture: "", //* FOTO REVERSO DE LA LICENCIA
           //! DATOS DE LA LICENCIA DE CONDUCCION
           //! AJUSTES DE LA APLICACION
-          allServices: 0 || 1, // TODOS
-          servicesLGBQT: 0 || 1, // LGBQT+
-          onlyWomenServices: 0 || 1, // MUJERES
+          allServices: 1, // TODOS
+          servicesLGBQT: 0, // LGBQT+
+          onlyWomenServices: 0, // MUJERES
           //! AJUSTES DE LA APLICACION
           //! ACCESO A LA APLICACION
           password: "",
           repeatPassword: "",
-          isActive: 0 || 1,
+          isActive: 1,
           messageReasonInActive: "", // MENSAJE RASON INACTIVO
           //! ACCESO A LA APLICACION
           // car: "" || null,
@@ -361,6 +331,9 @@ export const ButtonAdd = ({
       } catch (error) {
         console.error("Error al guardar el admin:", error);
       }
+    } else  {
+      console.log("form driver:")
+      errorRegister(driver);
     }
   }
 
@@ -379,7 +352,12 @@ export const ButtonAdd = ({
               value={name}
               onChange={handleChange}
             />
+            <br />
+            {nameError && (
+              <span>{nameError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.lastName}: </label>
             <input
@@ -388,6 +366,10 @@ export const ButtonAdd = ({
               value={lastName}
               onChange={handleChange}
             />
+            <br />
+            {lastNameError && (
+              <span>{lastNameError}</span>
+            )}
           </div>
 
           <div>
@@ -398,7 +380,12 @@ export const ButtonAdd = ({
               value={zipCode}
               onChange={handleChange}
             />
+            <br />
+            {zipCodeError && (
+              <span>{zipCodeError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.state}: </label>
             <select
@@ -409,7 +396,12 @@ export const ButtonAdd = ({
             >
               <option>{estado || "Selecciona"}</option>
             </select>
+            <br />
+            {stateError && (
+              <span>{stateError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.city}: </label>
             <select
@@ -420,7 +412,12 @@ export const ButtonAdd = ({
             >
               <option>{ciudad || "Selecciona"}</option>
             </select>
+            <br />
+            {cityError && (
+              <span>{cityError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.colonia}: </label>
             <select
@@ -440,7 +437,12 @@ export const ButtonAdd = ({
                 );
               })}
             </select>
+            <br />
+            {coloniaError && (
+              <span>{coloniaError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.address}: </label>
             <input
@@ -449,7 +451,12 @@ export const ButtonAdd = ({
               value={address}
               onChange={handleChange}
             />
+            <br />
+            {addressError && (
+              <span>{addressError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.contact}: </label>
             <input
@@ -458,7 +465,12 @@ export const ButtonAdd = ({
               value={contact}
               onChange={handleChange}
             />
+            <br />
+            {contactError && (
+              <span>{contactError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.email}: </label>
             <input
@@ -467,7 +479,12 @@ export const ButtonAdd = ({
               value={email}
               onChange={handleChange}
             />
+            <br />
+            {emailError && (
+              <span>{emailError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.driverPicture}: </label>
             <div {...getDriverRootProps()} style={dropzoneContainerStyles}>
@@ -479,19 +496,30 @@ export const ButtonAdd = ({
                 style={{ maxWidth: '100px' }} 
               />}
               <p>Frente</p>
+              <br />
+              {driverPictureError && (
+                <span>{driverPictureError}</span>
+              )}
             </div>
           </div>
+
           <h2>Licencia de conducir</h2>
           <hr />
           <div>
             <label>{props.driverLicenseNumber}: </label>
+            {/* //! DE 5 A 10 CARACTERES Y PUEDE SER ALFANUMERICO */}
             <input
               type="text"
               name={"driverLicenseNumber"}
               value={driverLicenseNumber}
               onChange={handleChange}
             />
+            <br />
+            {driverLicenseNumberError && (
+              <span>{driverLicenseNumberError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.stateLicense}: </label>
             <select
@@ -510,7 +538,12 @@ export const ButtonAdd = ({
                 );
               })}
             </select>
+            <br />
+            {stateLicenseError && (
+              <span>{stateLicenseError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.typeLicense}: </label>
             <select
@@ -529,7 +562,12 @@ export const ButtonAdd = ({
                 );
               })}
             </select>
+            <br />
+            {typeLicenseError && (
+              <span>{typeLicenseError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.dateLicense}: </label>
             <input
@@ -539,7 +577,12 @@ export const ButtonAdd = ({
               value={dateLicense}
               onChange={handleChange}
             />
+            <br />
+            {dateLicenseError && (
+              <span>{dateLicenseError}</span>
+            )}
           </div>
+
           <div>
             <div style={pictureLicence}>
               <label>Fotos licencia: </label>
@@ -564,6 +607,10 @@ export const ButtonAdd = ({
                       style={{ maxWidth: '100px' }}
                     />}
                     <p>Frente</p>
+                    <br />
+                    {frontLicensePictureError && (
+                      <span>{frontLicensePictureError}</span>
+                    )}
                   </div>
                   <div {...getBackLicenseRootProps()} style={dropzoneContainerStyles} >
                     <input {...getBackLicenseInputProps()} />
@@ -574,12 +621,17 @@ export const ButtonAdd = ({
                       style={{ maxWidth: '100px' }}
                     />}
                     <p>Atrás</p>
+                    <br />
+                    {backLicensePictureError && (
+                      <span>{backLicensePictureError}</span>
+                    )}
                   </div>
                 </>
               )}
               
             </div>
           </div>
+
           <h2>Ajustes en la aplicación</h2>
           <hr />
           <div>
@@ -590,7 +642,7 @@ export const ButtonAdd = ({
               checked={allServices === 1}
               onChange={handleCheckboxChange}
             />
-            TODOS
+            Todos
             <input
               type="checkbox"
               name="servicesLGBQT"
@@ -606,8 +658,13 @@ export const ButtonAdd = ({
               disabled={allServices === 1 ? true : false}
               onChange={handleCheckboxChange}
             />
-            MUJERES
+            Sólo mujeres
+            <br />
+            {servicesError && (
+              <span>{servicesError}</span>
+            )}
           </div>
+
           <h2>Acceso a la aplicación</h2>
           <hr />
           <div>
@@ -618,7 +675,12 @@ export const ButtonAdd = ({
               value={password}
               onChange={handleChange}
             />
+            <br />
+            {passwordError && (
+              <span>{passwordError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.repeatPassword}: </label>
             <input
@@ -627,7 +689,12 @@ export const ButtonAdd = ({
               value={repeatPassword}
               onChange={handleChange}
             />
+            <br />
+            {repeatPasswordError && (
+              <span>{repeatPasswordError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.isActive}: </label>
             <input
@@ -636,16 +703,26 @@ export const ButtonAdd = ({
               checked={isActive === 1}
               onChange={handleCheckboxChange}
             />
+            <br />
+            {isActiveError && (
+              <span>{isActiveError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.messageReasonInActive}: </label>
-            <input
+            {/* //! MAXIMO 10 CARACTERES */}
+            <textarea
               type="text"
               name={"messageReasonInActive"}
               value={messageReasonInActive}
               disabled={isActive === 1}
               onChange={handleChange}
             />
+            <br />
+            {messageReasonInActiveError && (
+              <span>{messageReasonInActiveError}</span>
+            )}
           </div>
 
           <div>
