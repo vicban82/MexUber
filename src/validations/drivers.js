@@ -77,22 +77,25 @@ export const validateDriver = (driver, codigoPostal, estado, ciudad, colonias, l
   error.driverPictureError = validationPicture(driverPicture, frontLicensePicture, backLicensePicture);
   
   // * VALIDANDO LICENCIA DEL CONDUCTOR
-  
-  if (!regexLicenceNumber.test(driverLicenseNumber)) {
-    error.driverLicenseNumberError = 'Debes ingresar un número de licencia valido';
+
+  if (driverLicenseNumber) {
+    if (!regexLicenceNumber.test(driverLicenseNumber)) {
+      error.driverLicenseNumberError = 'Debes ingresar un número de licencia valido';
+    }
+    
+    error.stateLicenseError = validationState(estado, stateLicense);
+    
+    if (!typeLicense) {
+      error.typeLicenseError = 'Debes de elegir un tipo de licencia'
+    }
+    
+    error.dateLicenseError = validationDate(dateLicense);
+    
+    error.frontLicensePictureError = validationPicture(driverPicture, frontLicensePicture, backLicensePicture);
+    
+    error.backLicensePictureError = validationPicture(driverPicture, frontLicensePicture, backLicensePicture);
   }
   
-  error.stateLicenseError = validationState(estado, stateLicense);
-  
-  if (!typeLicense) {
-    error.typeLicenseError = 'Debes de elegir un tipo de licencia'
-  }
-  
-  error.dateLicenseError = validationDate(dateLicense);
-  
-  error.frontLicensePictureError = validationPicture(driverPicture, frontLicensePicture, backLicensePicture);
-  
-  error.backLicensePictureError = validationPicture(driverPicture, frontLicensePicture, backLicensePicture);
   
   // * VALIDANDO AJUSTES DE LA APLICACION
   
