@@ -11,7 +11,7 @@ export function errorRegister(admin) {
 
   if (!name || !lastName || !email || !password || !repeatPassword) {
     Swal.fire({
-      title: "Ojo",
+      title: "Advertencia",
       icon: "warning",
       text: "Credenciales incorrectas.",
       html: `
