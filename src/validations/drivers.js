@@ -50,7 +50,9 @@ export const validateDriver = (driver, codigoPostal, estado, ciudad, colonias, l
   
   error.lastNameError = validationLastName(lastName);
   
-  if (!regexZipCode.test(zipCode) || codigoPostal === zipCode) {
+  if (!zipCode) {
+    error.zipCodeError = 'Debe colocar un código postal';
+  } else if (!regexZipCode.test(zipCode) || codigoPostal !== zipCode) {
     error.zipCodeError = 'Código postal invalido';
   }
   

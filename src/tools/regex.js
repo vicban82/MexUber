@@ -7,7 +7,8 @@ export const dominiosPermitidosRegex = new RegExp(`^[a-zA-Z0-9._%+-]+@(${dominio
 export const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_-])[A-Za-z\d@$!%*?&_-]{8,16}$/;
 
 // VERIFICACION DEL NOMBRE
-export const regexName = /^[a-zA-ZáéíóúÁÉÍÓÚüÜ]{3,}(?:\s|-)[a-zA-ZáéíóúÁÉÍÓÚüÜ]{3,}$/;
+// export const regexName = /^[a-zA-ZáéíóúÁÉÍÓÚüÜ]{3,}(?:\s|-)[a-zA-ZáéíóúÁÉÍÓÚüÜ]{3,}$/;
+export const regexName = /^[a-zA-ZáéíóúÁÉÍÓÚüÜ]{3,}(?:[\s-][a-zA-ZáéíóúÁÉÍÓÚüÜ]{3,})?$/;
 
 // VERIFICACION DEL APELLIDO
 export const regexLastName = /^[a-zA-ZáéíóúÁÉÍÓÚüÜ]{3,}(?:\s|-)[a-zA-ZáéíóúÁÉÍÓÚüÜ]{3,}$/;

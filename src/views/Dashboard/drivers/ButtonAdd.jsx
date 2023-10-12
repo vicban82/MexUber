@@ -265,28 +265,28 @@ export const ButtonAdd = ({
     e.preventDefault();
 
     if (
-      name ||
-      lastName ||
-      zipCode ||
-      state ||
-      city ||
-      colonia ||
-      address ||
-      contact ||
-      email ||
-      driverPicture ||
-      driverLicenseNumber ||
-      stateLicense ||
-      typeLicense ||
-      dateLicense ||
-      frontLicensePicture ||
-      backLicensePicture ||
-      allServices ||
-      servicesLGBQT ||
-      onlyWomenServices ||
-      password ||
-      repeatPassword ||
-      isActive ||
+      name &&
+      lastName &&
+      zipCode &&
+      state &&
+      city &&
+      colonia &&
+      address &&
+      contact &&
+      email &&
+      driverPicture &&
+      driverLicenseNumber &&
+      stateLicense &&
+      typeLicense &&
+      dateLicense &&
+      frontLicensePicture &&
+      backLicensePicture &&
+      allServices &&
+      servicesLGBQT &&
+      onlyWomenServices &&
+      password &&
+      repeatPassword &&
+      isActive &&
       messageReasonInActive
     ) {
       try {
@@ -332,7 +332,7 @@ export const ButtonAdd = ({
         console.error("Error al guardar el admin:", error);
       }
     } else  {
-      console.log("form driver:")
+      // console.log("form driver:")
       errorRegister(driver);
     }
   }
