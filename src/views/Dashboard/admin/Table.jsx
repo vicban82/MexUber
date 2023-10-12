@@ -175,7 +175,7 @@ export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, s
               <tr>
                 <StyledTd colSpan={tHeader.length + 1} >
                   <p>
-                    {error ? error : "No hay información disponible"}
+                    {error ? error : "No hay más información disponible"}
                   </p>
                 </StyledTd>
               </tr >

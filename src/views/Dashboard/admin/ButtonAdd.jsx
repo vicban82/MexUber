@@ -44,27 +44,36 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm }) => {
     email: "",
     password: "",
     repeatPassword: "",
-    // isActive: 0 || false ? 0 : 1, // Cambié el valor por defecto a false para checkbox
-    isActive: 0 || 1, // Cambié el valor por defecto a false para checkbox
+    isActive: 1,
   });
 
   function handleChange(e) {
-    const { name, value, type, checked } = e.target;
-
-    // Manejar cambios para checkbox y convertir 1 (true) o 0 (false)
-    const newValue = type === "checkbox" ? !admin[name] : value;
+    const { name, value } = e.target;
 
     setAdmin({
       ...admin,
-      [name]: newValue,
+      [name]: value,
     });
     setErrorForm(
       validateAdmin({
         ...admin,
-        [name]: newValue,
+        [name]: value,
       })
     )
   }
+
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+
+    let updatedAdmin = { ...admin };
+
+    if (name === "isActive") {
+      updatedAdmin.isActive = checked ? 1 : 0;
+    }
+
+    setAdmin(updatedAdmin);
+  };
+
   const {
     name,
     lastName,
@@ -74,22 +83,17 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm }) => {
     isActive,
   } = admin;
 
+  const {
+    nameError,
+    lastNameError,
+    emailError,
+    passwordError,
+    repeatPasswordError,
+  } = errorForm;
+
   async function handleSubmit(e) {
     e.preventDefault();
-    // Aquí puedes realizar las acciones de guardar tus datos, por ejemplo, enviarlos a través de una API
-    // console.log("Admin data:", admin);
-    const {
-      nameError,
-      lastNameError,
-      emailError,
-      passwordError,
-      repeatPasswordError,
-    } = errorForm
-    if (!name || !lastName || !email || !password || !repeatPassword) {
-      errorRegister(admin, errorForm);
-    } else if (nameError || lastNameError || emailError || passwordError || repeatPasswordError) {
-      errorRegister(admin, errorForm);
-    } else {
+    if (name && lastName && email && password && repeatPassword) {
       try {
         successRegister(admin);
         const newAdmin = await axiosPostAdmin(admin, setErrorForm, headers);
@@ -103,12 +107,13 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm }) => {
           email: "",
           password: "",
           repeatPassword: "",
-          // isActive: 0 || false ? 0 : 1, // Cambié el valor por defecto a false para checkbox
-          isActive: 0 || 1, // Cambié el valor por defecto a false para checkbox
+          isActive: 1,
         })
       } catch (error) {
         console.error("Error al guardar el admin:", error);
       }
+    } else {
+      errorRegister(admin);
     }
   }
 
@@ -121,46 +126,86 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm }) => {
       <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
         <form onSubmit={handleSubmit}>
           <br />
-          {Object.keys(admin).map((el, idx) => {
-            for (const esp in props) {
-              if (el === esp) {
-                return (
-                  <div key={idx}>
-                    <label htmlFor={`input-${el}`}>{props[esp]}: </label>
-                    {el !== "isActive" ? (
-                      el === "password" || el === "repeatPassword" ? (
-                        <input
-                          id={`input-${el}`}
-                          name={el}
-                          value={admin[el] || ""}
-                          onChange={handleChange}
-                          type="password"
-                        />
-                      ) : (
-                        <input
-                          id={`input-${el}`}
-                          name={el}
-                          value={admin[el] || ""}
-                          onChange={handleChange}
-                          type="text"
-                        />
-                      )
-                    ) : (
-                      <input
-                        id={`input-${el}`}
-                        name={el}
-                        checked={admin[el]}
-                        onChange={handleChange}
-                        type="checkbox"
-                        value={admin[el] ? 1 : 0} // 1 como true y 0 como false
-                      />
-                    )}
-                  </div>
-                );
+          <div>
+            <label>Nombre: </label>
+            <input
+              type="text"
+              name={"name"}
+              value={name}
+              onChange={handleChange}
+            />
+            <br />
+            {nameError && (
+              <span>{nameError}</span>
+            )}
+          </div>
 
-              }
-            }
-          })}
+          <div>
+            <label>Apellidos: </label>
+            <input
+              type="text"
+              name={"lastName"}
+              value={lastName}
+              onChange={handleChange}
+            />
+            <br />
+            {lastNameError && (
+              <span>{lastNameError}</span>
+            )}
+          </div>
+
+          <div>
+            <label>Correo electrónico: </label>
+            <input
+              type="text"
+              name={"email"}
+              value={email}
+              onChange={handleChange}
+            />
+            <br />
+            {emailError && (
+              <span>{emailError}</span>
+            )}
+          </div>
+          <div>
+            <label>Contraseña: </label>
+            <input
+              type="password"
+              name={"password"}
+              value={password}
+              onChange={handleChange}
+            />
+            <br />
+            {passwordError && (
+              <span>{passwordError}</span>
+            )}
+          </div>
+
+          <div>
+            <label>Repetr contraseña: </label>
+            <input
+              type="password"
+              name={"repeatPassword"}
+              value={repeatPassword}
+              onChange={handleChange}
+            />
+            <br />
+            {repeatPasswordError && (
+              <span>{repeatPasswordError}</span>
+            )}
+          </div>
+
+          <div>
+            <label>Activo: </label>
+            <input
+              type="checkbox"
+              name={"isActive"}
+              checked={isActive === 1}
+              onChange={handleCheckboxChange}
+            />
+            <br />
+          </div>
+
           <div>
             <button onClick={() => setModalIsOpen(false)}>Cancelar</button>
             <button type="submit">Guardar</button>

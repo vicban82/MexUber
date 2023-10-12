@@ -26,7 +26,7 @@ export const validateAdmin = (admin) => {
     error.repeatPasswordError = 'El password no coincide';
   }
 
-  error.isActiveError = validationIsActive(isActive);
+  // error.isActiveError = validationIsActive(isActive);
 
   return error;
 }

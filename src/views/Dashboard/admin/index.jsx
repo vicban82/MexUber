@@ -59,7 +59,7 @@ const Admins = () => {
           {"<-- PREV"}
         </button>
         <p>{`Página: ${page}/${page}`}</p>
-        <button onClick={(e) => next(e)} disabled={tBody.length < page}>
+        <button onClick={(e) => next(e)} disabled={tBody.length <= 1}>
           {"NEXT -->"}
         </button>
       </DivPages>
