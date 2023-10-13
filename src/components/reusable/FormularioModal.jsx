@@ -52,7 +52,7 @@ export const FormHead = styled.div`
 
 export const InputContainer = styled.div`
   position: relative;
-  height: 45px;
+  height: 50px;
   width: 90%;
   margin-bottom: 17px;
 `;
@@ -135,5 +135,14 @@ export const FormEdit = styled.form`
 `;
 
 export const InputCheck = styled.input`
-  margin-top: 20px;
+  margin-top: 12px;
+  width: 18px;
+  height: 18px;
+`;
+
+export const LabelCheck = styled.label`
+    color: black;
+    font-weight: bold;
+    padding-left: 8px;
+    font-size: 18px;
 `;

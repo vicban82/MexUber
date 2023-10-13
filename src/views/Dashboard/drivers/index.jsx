@@ -4,7 +4,7 @@ import { headers } from "../../../tools/accessToken";
 import { Table } from "./Table";
 import { ButtonAdd } from "./ButtonAdd";
 import { Search } from "./Search";
-import { DivPages } from "../../../components/reusable/global";
+import { DivPages, ContentPages, DivButtonPages, PageButton, DivGrupPage } from "../../../components/reusable/DivPages";
 
 export const Drivers = () => {
   const tableHeader = ["Nombres", "Apellidos", "Correo", "Teléfono", "Activo", "Vehículo"];
@@ -84,7 +84,14 @@ export const Drivers = () => {
 
   return (
     <section>
-      <Search setTDriver={setTDriver} page={page} limit={limit} />
+      <ButtonAdd
+        tDriver={tDriver}
+        setTDriver={setTDriver}
+        driver={driver}
+        setDriver={setDriver}
+        errorForm={errorForm}
+        setErrorForm={setErrorForm}
+      />
       <Table
         tHeader={tableHeader}
         tDriver={tDriver}
@@ -94,23 +101,24 @@ export const Drivers = () => {
         errorForm={errorForm}
         setErrorForm={setErrorForm}
       />
-      <ButtonAdd
-        tDriver={tDriver}
-        setTDriver={setTDriver}
-        driver={driver}
-        setDriver={setDriver}
-        errorForm={errorForm}
-        setErrorForm={setErrorForm}
-      />
-      <DivPages>
-        <button onClick={(e) => prev(e)} disabled={page <= 1}>
-          {"<-- PREV"}
-        </button>
-        <p>{`Página: ${page}/${page}`}</p>
-        <button onClick={(e) => next(e)} disabled={tDriver.length < page}>
-          {"NEXT -->"}
-        </button>
-      </DivPages>
+      <ContentPages>
+        <DivGrupPage>
+          <DivButtonPages>
+            <PageButton onClick={(e) => prev(e)} disabled={page <= 1}>
+              {"<-- PREV"}
+            </PageButton>
+          </DivButtonPages>
+          <DivPages>
+            <p>{`Página: ${page}/${page}`}</p>
+          </DivPages>
+          <DivButtonPages>
+            <PageButton onClick={(e) => next(e)} disabled={tDriver.length < page}>
+              {"NEXT -->"}
+            </PageButton>
+          </DivButtonPages>
+        </DivGrupPage>
+      </ContentPages >
+      <Search setTDriver={setTDriver} page={page} limit={limit} />
     </section>
   );
 };

@@ -10,7 +10,7 @@ const ContainerTabla = styled.div`
 `;
 
 const StyledTable = styled.table`
-  width: 95%;
+  width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
   background-color: #b8860b;
@@ -30,9 +30,9 @@ const StyledTable = styled.table`
     min-width: 12%;
   }
   
-  td:nth-child(1), th:nth-child(1) { min-width: 16%; }
-  td:nth-child(2), th:nth-child(2) { min-width: 16%; }
-  td:nth-child(3), th:nth-child(3) { width: 16%; }
+  td:nth-child(1), th:nth-child(1) { min-width: 12.5; }
+  td:nth-child(2), th:nth-child(2) { min-width: 12.5; }
+  td:nth-child(3), th:nth-child(3) { width: 12.5; }
 
   thead {
     display: flex;
@@ -48,15 +48,14 @@ const StyledTable = styled.table`
       justify-content: space-around;
       align-items: center;
       text-align: center;
-      min-width: 12%;
+      //min-width: 12.5;
     }
   }
   tbody {
     display: flex;
     overflow: auto;
     width: 100%;
-    //height: 300px;
-    //max-height: 300px;
+    max-height: 260px;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
@@ -98,7 +97,10 @@ export const Table = ({ tHeader, tDriver, setTDriver, driver, setDriver, errorFo
                   );
                 })}
               <th>
-                <p>Editar / Eliminar</p>
+                Editar
+              </th>
+              <th>
+                Eliminar
               </th>
               {/* <th>
                 <p>Eliminar</p>

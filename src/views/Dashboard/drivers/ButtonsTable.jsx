@@ -20,6 +20,7 @@ import {
   SubmitBtn,
   ButtonContainer,
   InputCheck,
+  LabelCheck,
  } from "../../../components/reusable/FormularioModal";
 
 Modal.setAppElement("#root");
@@ -198,7 +199,9 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
   }
   
   return (
-    <StyledTd>
+    <>
+    {/* ------------------------------Boton Editar-------------------------------- */}
+    <td>
       {/* The button to open modal */}
       <button onClick={openModal}>
         <Img src={editIcon} alt="Edición" />
@@ -210,7 +213,8 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
         onRequestClose={closeModal}
         contentLabel="Editar elemento"
       >
-        <form onSubmit={handleSubmit}>
+        <FormEdit onSubmit={handleSubmit}>
+        <FormHead><h2>Modificar Administrador</h2></FormHead>
           <br />
           {
             Object.keys(driver).map((el, idx) => {
@@ -222,60 +226,60 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
                     // MOTIVO DE BLOQUEO = 20
                     if (idx === 20) {
                       return (
-                        <div key={idx}>
-                          <label>{props[esp]}: </label>
-                          <input type="text" disabled={true} />
-                        </div>
+                        <InputContainer key={idx}>
+                          <Input type="text" disabled={true} />
+                          <Label>{props[esp]}: </Label>
+                        </InputContainer>
                       );
                     }
                     return (
-                      <div key={idx}>
-                        <label htmlFor={`input-${el}`}>{props[esp]}: </label>
+                      <InputContainer key={idx}>
+                        <Label htmlFor={`input-${el}`}>{props[esp]}: </Label>
                         <select disabled={true} >
                           <option>
                             Selecciona
                           </option>
                           {/* {listSepomex} */}
                         </select>
-                      </div>
+                      </InputContainer>
                     );
                   } else if (idx === 9 || idx === 14 || idx === 15) {
                     // DROP = FOTO CONDUCTOR 9, FOTO LICENCIA 14 - 15
                     if (idx === 9) {
                       return (
-                        <div key={idx}>
-                          <label>{props[esp]}: </label>
-                          <div {...getRootProps()} style={dropzoneContainerStyles}>
+                        <InputContainer key={idx}>
+                          <InputContainer {...getRootProps()} style={dropzoneContainerStyles}>
                             <input {...getInputProps()} />
-                          </div>
+                          </InputContainer>
+                          <Label>{props[esp]}: </Label>
                           <p>Frente</p>
-                        </div>
+                        </InputContainer>
                       );
                     }
                     return (
-                      <div key={idx} >
+                      <InputContainer key={idx} >
                         <label>{props[esp]}: </label>
                         <div {...getRootProps()} style={dropzoneContainerStyles}>
                           <input {...getInputProps()} />
                         </div>
                         <p>Licencia</p>
-                      </div>
+                      </InputContainer>
                     );
                   } else if (idx === 13) {
                     // DATE-FECHA = VIGENCIA DE LA LICENCIA 13
                     return (
-                      <div key={idx}>
+                      <InputContainer key={idx}>
                         <label htmlFor={`input-${el}`}>{props[esp]}: </label>
                         <input type="date" />
-                      </div>
+                      </InputContainer>
                     );
                   } else if (idx === 16 || idx === 19) {
                     // CHECKBOX = SERVICIOS(TODOS - MUJERES - LGBT) 16, ACTIVO 19
                     if (idx === 19) {
                       return (
-                        <div key={idx}>
+                        <InputContainer key={idx}>
                           <label htmlFor={`input-${el}`}>{props[esp]}: </label>
-                          <input
+                          <InputCheck
                             id={`input-${el}`}
                             name={el}
                             checked={driver[el]}
@@ -283,35 +287,35 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
                             type="checkbox"
                             value={driver[el] ? 1 : 0}
                           />
-                        </div>
+                        </InputContainer>
                       );
                     }
                     return (
-                      <div key={idx}>
+                      <InputContainer key={idx}>
                         <label>{props[esp]}: </label>
-                        <input 
+                        <InputCheck 
                           type="checkbox"
                           checked={driver[el]} 
                           onChange={handleChange} 
                         />TODOS
-                        <input type="checkbox" />LGBTQ+
-                        <input type="checkbox" />MUJERES
-                      </div>
+                        <InputCheck type="checkbox" />LGBTQ+
+                        <InputCheck type="checkbox" />MUJERES
+                      </InputContainer>
                     );
                   } else if (idx === 17 || idx === 18) {
                     // PASSWORD = 17 - 18
                     return (
-                      <div key={idx}>
-                        <label htmlFor={`input-${el}`}>{props[esp]}: </label>
-                        <input type="password" />
-                      </div>
+                      <InputContainer key={idx}>
+                        <Input type="password" />
+                        <Label htmlFor={`input-${el}`}>{props[esp]}: </Label>
+                      </InputContainer>
                     );
                   } else {
                     return (
-                      <div key={idx}>
+                      <InputContainer key={idx}>
                         <label htmlFor={`input-${el}`}>{props[esp]}: </label>
-                        <input type="text" />
-                      </div>
+                        <Input type="text" />
+                      </InputContainer>
                     );
                   }
 
@@ -319,19 +323,24 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
               }
             })
           }
-          <div>
-            <button onClick={closeModal}>Cancelar</button>
-            <button>Guardar</button>
-          </div>
-        </form>
+          <ButtonContainer>
+            <SubmitBtn onClick={closeModal}>Cancelar</SubmitBtn>
+            <SubmitBtn>Guardar</SubmitBtn>
+          </ButtonContainer>
+        </FormEdit>
       </ContainerModal>
+    </td>
 
-      <button onClick={() => handleDelete(id)}>
-        <Img
-          src={deleteIcon}
-          alt="Delete"
-        />
-      </button>
-    </StyledTd>
+{/* -----------------------------Boton Eliminar------------------------------------------ */}
+
+      <td>
+        <button onClick={() => handleDelete(id)}>
+          <Img
+            src={deleteIcon}
+            alt="Delete"
+          />
+        </button>
+      </td>
+</>
   );
 }

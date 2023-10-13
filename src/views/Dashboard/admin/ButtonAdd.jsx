@@ -5,6 +5,7 @@ import { errorRegister, successRegister } from "../../../tools/adminAlerts/regis
 import { axiosPostAdmin } from "../../../hooks/admin/crudAdmin";
 import { headers } from "../../../tools/accessToken";
 import { props } from "./props";
+import styled from 'styled-components';
 import { 
   ContainerModal,
   FormHead,
@@ -15,10 +16,11 @@ import {
   SubmitBtn,
   ButtonContainer,
   InputCheck,
+  LabelCheck,
  } from "../../../components/reusable/FormularioModal";
+
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
-import styled from 'styled-components';
 
 const AdminTitulo = styled.div`
     display: flex;
@@ -140,92 +142,97 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm }) => {
         <FormEdit onSubmit={handleSubmit}>
           <FormHead><h2>Nuevo Administrador</h2></FormHead>
           <br />
-          <div>
-            <label>Nombre: </label>
-            <input
+          <InputContainer>
+            <Input
               type="text"
               name={"name"}
+              placeholder="a"
               value={name}
               onChange={handleChange}
             />
+            <Label>Nombre: </Label>
             <br />
             {nameError && (
               <span>{nameError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
-            <label>Apellidos: </label>
-            <input
+          <InputContainer>
+            <Input
               type="text"
               name={"lastName"}
+              placeholder="a"
               value={lastName}
               onChange={handleChange}
             />
+            <Label>Apellidos: </Label>
             <br />
             {lastNameError && (
               <span>{lastNameError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
-            <label>Correo electrónico: </label>
-            <input
+          <InputContainer>
+            <Input
               type="text"
               name={"email"}
+              placeholder="a"
               value={email}
               onChange={handleChange}
             />
+            <Label>Correo electrónico: </Label>
             <br />
             {emailError && (
               <span>{emailError}</span>
             )}
-          </div>
-          <div>
-            <label>Contraseña: </label>
-            <input
+          </InputContainer>
+          <InputContainer>
+            <Input
               type="password"
               name={"password"}
+              placeholder="a"
               value={password}
               onChange={handleChange}
             />
+            <Label>Contraseña: </Label>
             <br />
             {passwordError && (
               <span>{passwordError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
-            <label>Repetr contraseña: </label>
-            <input
+          <InputContainer>
+            <Input
               type="password"
               name={"repeatPassword"}
+              placeholder="a"
               value={repeatPassword}
               onChange={handleChange}
             />
+            <Label>Repetr contraseña: </Label>
             <br />
             {repeatPasswordError && (
               <span>{repeatPasswordError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
-            <label>Activo: </label>
-            <input
+          <InputContainer>
+            <InputCheck
               type="checkbox"
               name={"isActive"}
               checked={isActive === 1}
               onChange={handleCheckboxChange}
-            />
+              />
+            <LabelCheck>Activo </LabelCheck>
             <br />
-          </div>
+          </InputContainer>
 
-          <div>
-            <button onClick={() => setModalIsOpen(false)}>Cancelar</button>
-            <button type="submit">Guardar</button>
-          </div>
-        </form>
-      </Modal>
+          <ButtonContainer>
+            <SubmitBtn onClick={() => setModalIsOpen(false)}>Cancelar</SubmitBtn>
+            <SubmitBtn type="submit">Guardar</SubmitBtn>
+          </ButtonContainer>
+        </FormEdit>
+      </ContainerModal>
 </>  
   );
 };

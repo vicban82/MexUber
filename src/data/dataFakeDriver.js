@@ -1,44 +1,74 @@
 export const dataFakeDriver = [
     {
         id: 1,
-        nombres: "Jose",
-        apellidos: "Perez Ramirez",
+        name: "Jose",
+        lastName: "Perez Ramirez",
         email: "admin_Main@gmail.com",
-        activo: 1,
+        contact: 4546545,
+        isActive: 1,
+        driverLicenseNumber: "5454654",
     },
     {
         id: 2,
-        nombres: "Jose",
-        apellidos: "Perez Ramirez",
+        name: "Jose",
+        lastName: "Perez Ramirez",
         email: "admin_Main@gmail.com",
-        activo: 1,
+        contact: 4546545,
+        isActive: 1,
+        driverLicenseNumber: "5454654"
     },
     {
         id: 3,
-        nombre: "Jose",
-        apellidos: "Perez Ramirez",
+        name: "Jose",
+        lastName: "Perez Ramirez",
         email: "admin_Main@gmail.com",
-        activo: 1,
+        contact: 4546545,
+        isActive: 1,
+        driverLicenseNumber: "5454654"
     },
     {
         id: 4,
-        nombre: "Victor",
-        apellidos: "Ricardo Ramirez",
+        name: "Jose",
+        lastName: "Perez Ramirez",
         email: "admin_Main@gmail.com",
-        activo: 1,
+        contact: 4546545,
+        isActive: 1,
+        driverLicenseNumber: "5454654"
     },
     {
         id: 5,
-        nombre: "Jose",
-        apellidos: "Perez Ramirez",
+        name: "Jose",
+        lastName: "Perez Ramirez",
         email: "admin_Main@gmail.com",
-        activo: 1,
+        contact: 4546545,
+        isActive: 1,
+        driverLicenseNumber: "5454654"
     },
     {
         id: 6,
-        nombre: "Jose",
-        apellidos: "Perez Ramirez",
+        name: "Jose",
+        lastName: "Perez Ramirez",
         email: "admin_Main@gmail.com",
-        activo: 1,
+        contact: 4546545,
+        isActive: 1,
+        driverLicenseNumber: "5454654"
+    },
+    {
+        id: 7,
+        name: "Jose",
+        lastName: "Perez Ramirez",
+        email: "admin_Main@gmail.com",
+        contact: 4546545,
+        isActive: 1,
+        driverLicenseNumber: "5454654"
+    },
+    {
+        id: 7,
+        name: "Jose",
+        lastName: "Perez Ramirez",
+        email: "admin_Main@gmail.com",
+        contact: 4546545,
+        isActive: 1,
+        driverLicenseNumber: "5454654"
     },
   ];

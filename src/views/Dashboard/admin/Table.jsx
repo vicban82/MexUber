@@ -10,7 +10,7 @@ const ContainerTabla = styled.div`
 `;
 
 const StyledTable = styled.table`
-  width: 95%;
+  width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
   background-color: #b8860b;
@@ -20,14 +20,14 @@ const StyledTable = styled.table`
     text-decoration: underline; 
     display: flex;
     justify-content: center;
-    min-width: 12%;
+    min-width: 16%;
   }
 
   th, td {
     text-align: left;
     display: flex;
     justify-content: center;
-    min-width: 12%;
+    min-width: 16%;
   }
   
   td:nth-child(1), th:nth-child(1) { min-width: 16%; }
@@ -48,15 +48,13 @@ const StyledTable = styled.table`
       justify-content: space-around;
       align-items: center;
       text-align: center;
-      min-width: 12%;
     }
   }
   tbody {
     display: flex;
     overflow: auto;
     width: 100%;
-    //height: 300px;
-    //max-height: 300px;
+    max-height: 260px;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
@@ -66,7 +64,6 @@ const StyledTable = styled.table`
       justify-content: space-around;
       align-items: center;
       text-align: center;
-      min-width: 12%;
     }
     tr:nth-child(even) {
       background-color: #5f5a5a;
@@ -75,7 +72,6 @@ const StyledTable = styled.table`
       justify-content: space-around;
       align-items: center;
       text-align: center;
-      min-width: 12%;
     }
   }
 
@@ -103,7 +99,7 @@ export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, s
     <>
       <ContainerTabla>
         <StyledTable>
-          <StyledThead> 
+          <thead> 
             <tr>
               {tHeader.length >= 1 &&
                 tHeader.map((item, i) => {
@@ -113,14 +109,14 @@ export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, s
                     </StyledTh>
                   );
                 })}
-              <StyledTh>
+              <th>
                 Editar
-              </StyledTh>
-              <StyledTh>
+              </th>
+              <th>
                 Eliminar
-              </StyledTh>
+              </th>
             </tr>
-          </StyledThead>
+          </thead>
           <tbody>
             {tBody.length >= 1 ? (
               tBody.map((data, i) => {
@@ -177,11 +173,11 @@ export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, s
               })
             ) : (
               <tr>
-                <StyledTd colSpan={tHeader.length + 1} >
+                <td colSpan={tHeader.length + 1} >
                   <p>
                     {error ? error : "No hay más información disponible"}
                   </p>
-                </StyledTd>
+                </td>
               </tr >
             )}
           </tbody>
