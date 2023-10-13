@@ -7,14 +7,7 @@ import { Search } from "./Search";
 import { DivPages } from "../../../components/reusable/global";
 
 export const Drivers = () => {
-  const tableHeader = [
-    "Nombres",
-    "Apellidos",
-    "Correo",
-    "Teléfono",
-    "Activo",
-    "Vehículo",
-  ];
+  const tableHeader = ["Nombres", "Apellidos", "Correo", "Teléfono", "Activo", "Vehículo"];
   const [tDriver, setTDriver] = useState([]);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(2);
@@ -89,7 +82,7 @@ export const Drivers = () => {
 
   return (
     <section>
-      <Search setTDriver={setTDriver} />
+      <Search setTDriver={setTDriver} page={page} limit={limit} />
       <Table
         tHeader={tableHeader}
         tDriver={tDriver}
@@ -112,7 +105,7 @@ export const Drivers = () => {
           {"<-- PREV"}
         </button>
         <p>{`Página: ${page}/${page}`}</p>
-        <button onClick={(e) => next(e)} disabled={tDriver.length < limit}>
+        <button onClick={(e) => next(e)} disabled={tDriver.length < page}>
           {"NEXT -->"}
         </button>
       </DivPages>

@@ -22,7 +22,17 @@ export async function axiosSearchAdmins(search, setTBody, setTError, headers) {
     }
   } catch (err) {
     const { error } = err.response.data;
-    setTError(error)
+    console.log('ERROR:', error);
+  }
+}
+
+export async function axiosSearchAdmins(search, setTBody, headers) {
+  try {
+    const { data } = (await axios.get(`/api/admins?search=${search}`, { headers }));
+    // console.log('DATA:', data);
+    setTBody(data);
+  } catch (err) {
+    const { error } = err.response.data;
     console.log('ERROR:', error);
   }
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Modal from "react-modal";
 import { validateDriver } from "../../../validations/drivers";
 import { headers } from "../../../tools/accessToken";
@@ -93,6 +93,10 @@ export const ButtonAdd = ({
     
     // Manejar cambios para checkbox y convertir 1 (true) o 0 (false)
     const newValue = type === "checkbox" ? !driver[name] : value;
+    // console.log("name:", name)
+    // console.log("value:", value)
+    // console.log("foto:", foto)
+    // console.log("e.target.value:", e.target.value)
     
     if (name === "zipCode") {
       const sepomexData = memorySepomes.find(el => el.codigoPostal === value);
@@ -103,6 +107,11 @@ export const ButtonAdd = ({
         setColonias(sepomexData.colonias);
       }
     }
+    
+    // Actualiza el estado de la foto si el nombre es driverPicture
+    // if (name === "driverPicture") {
+    //   setFoto(URL.createObjectURL(newValue)); // Crea una URL para mostrar la imagen
+    // }
 
     if (name === "driverLicenseNumber") {
       const filteredEstado = memoryLicencias.map(el => el.estado);
@@ -172,10 +181,58 @@ export const ButtonAdd = ({
     axiosGetLicencias(setLicencias);
   }, []);
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const onDriverPictureDrop = useCallback(acceptedFiles => {
+    const file = acceptedFiles[0];
+    convertAndSetImage(file, "driverPicture");
+  }, []);
+  
+  const onFrontLicensePictureDrop = useCallback(acceptedFiles => {
+    const file = acceptedFiles[0];
+    convertAndSetImage(file, "frontLicensePicture");
+  }, []);
+  
+  const onBackLicensePictureDrop = useCallback(acceptedFiles => {
+    const file = acceptedFiles[0];
+    convertAndSetImage(file, "backLicensePicture");
+  }, []);
+  
+  const convertAndSetImage = (file, fieldName) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64String = reader.result.split(',')[1];
+      setDriver(prevState => ({
+        ...prevState,
+        [fieldName]: base64String,
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const { getRootProps: getDriverRootProps, getInputProps: getDriverInputProps } = useDropzone({
+    onDrop: onDriverPictureDrop,
+    // FORMATOS DE IMAGEN PERMITIDA
     accept: {
-      "image/*": [".jpg", ".png"],
+     'image/*': ['.jpg', '.png'],
     },
+    maxFiles: 1, // ARCHIVOS PERMITIDOS
+  });
+  
+  const { getRootProps: getFrontLicenseRootProps, getInputProps: getFrontLicenseInputProps } = useDropzone({
+    onDrop: onFrontLicensePictureDrop,
+    // FORMATOS DE IMAGEN PERMITIDA
+    accept: {
+     'image/*': ['.jpg', '.png'],
+    },
+    maxFiles: 1, // ARCHIVOS PERMITIDOS
+  });
+  
+  const { getRootProps: getBackLicenseRootProps, getInputProps: getBackLicenseInputProps } = useDropzone({
+    onDrop: onBackLicensePictureDrop,
+    // FORMATOS DE IMAGEN PERMITIDA
+    accept: {
+     'image/*': ['.jpg', '.png'],
+    },
+    maxFiles: 1, // ARCHIVOS PERMITIDOS
   });
 
   async function handleSubmit(e) {
@@ -379,13 +436,14 @@ export const ButtonAdd = ({
           </div>
           <div>
             <label>{props.driverPicture}: </label>
-            <div {...getRootProps()} style={dropzoneContainerStyles}>
-              <input
-                {...getInputProps()}
-                name={"driverPicture"}
-                value={driverPicture}
-                onChange={handleChange}
-              />
+            <div {...getDriverRootProps()} style={dropzoneContainerStyles}>
+              <input {...getDriverInputProps()} />
+              {/* //* SE VISUALIZA LA IMAGEN EN FORMATE BASE 64 */}
+              {driverPicture && <img
+                src={`data:image/png;base64,${driverPicture}`}
+                alt="Foto conductor" 
+                style={{ maxWidth: '100px' }} 
+              />}
               <p>Frente</p>
             </div>
           </div>
@@ -441,7 +499,7 @@ export const ButtonAdd = ({
           <div>
             <label>{props.dateLicense}: </label>
             <input
-              disabled={true}
+              disabled={driverLicenseNumber ? false : true}
               type="date"
               name={"dateLicense"}
               value={dateLicense}
@@ -450,30 +508,42 @@ export const ButtonAdd = ({
           </div>
           <div>
             <div style={pictureLicence}>
-              {/* <label>{props.frontLicensePicture}: </label> */}
               <label>Fotos licencia: </label>
               <br />
-              <div {...getRootProps()} style={dropzoneContainerStyles}>
-                <input
-                  {...getInputProps()}
-                  name={"frontLicensePicture"}
-                  value={frontLicensePicture}
-                  onChange={handleChange}
-                  disabled={true}
-                />
-                <p>Frente</p>
-              </div>
-              {/* <label>{props.backLicensePicture}: </label> */}
-              <div {...getRootProps()} style={dropzoneContainerStyles}>
-                <input
-                  {...getInputProps()}
-                  name={"backLicensePicture"}
-                  value={backLicensePicture}
-                  onChange={handleChange}
-                  disabled={true}
-                />
-                <p>Atrás</p>
-              </div>
+              {!driverLicenseNumber ? (
+                <>
+                  <div style={dropzoneContainerStyles} >
+                    <p>Desabilitado</p>
+                  </div>
+                  <div style={dropzoneContainerStyles} >
+                    <p>Desabilitado</p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div {...getFrontLicenseRootProps()} style={dropzoneContainerStyles} >
+                    <input {...getFrontLicenseInputProps()} />
+                    {/* //* SE VISUALIZA LA IMAGEN EN FORMATE BASE 64 */}
+                    {frontLicensePicture && <img
+                      src={`data:image/png;base64,${frontLicensePicture}`}
+                      alt="Foto conductor"
+                      style={{ maxWidth: '100px' }}
+                    />}
+                    <p>Frente</p>
+                  </div>
+                  <div {...getBackLicenseRootProps()} style={dropzoneContainerStyles} >
+                    <input {...getBackLicenseInputProps()} />
+                    {/* //* SE VISUALIZA LA IMAGEN EN FORMATE BASE 64 */}
+                    {backLicensePicture && <img
+                      src={`data:image/png;base64,${backLicensePicture}`}
+                      alt="Foto conductor"
+                      style={{ maxWidth: '100px' }}
+                    />}
+                    <p>Atrás</p>
+                  </div>
+                </>
+              )}
+              
             </div>
           </div>
           <h2>Ajustes en la aplicación</h2>
@@ -528,7 +598,7 @@ export const ButtonAdd = ({
             <input
               type="checkbox"
               name={"isActive"}
-              value={isActive}
+              value={isActive ? 1 : 0}
               onChange={handleChange}
               checked={isActive}
             />

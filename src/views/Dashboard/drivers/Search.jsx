@@ -18,7 +18,7 @@ export const Search = ({ setTDriver }) => {
   
   function handleClick(e) {
     e.preventDefault();
-    axiosGetDrivers(setTDriver, headers);
+    axiosGetDrivers(setTDriver, page, limit, headers);
   }
 
   return (
