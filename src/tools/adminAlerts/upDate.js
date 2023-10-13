@@ -27,7 +27,7 @@ export function errorUpDate(admin, errorForm) {
         icon: "warning",
         text: "Credenciales incorrectas.",
         html: `
-          <p>${"Todos los campos son requeridos" || ""}</p>
+          <p>${"Si cambias de contraseña debes llenar el campo faltante" || ""}</p>
         `,
       });
     }
@@ -47,16 +47,22 @@ export function successUpDate(admin) {
     if (password && repeatPassword) {
       Swal.fire({
         icon: "success",
-        title: "Admin actualizado con exito",
+        title: "Modificar administrador",
         showConfirmButton: false,
-        timer: 2000,
+        timer: 4000,
+        html: `
+          <p>${`Administrador <strong>${name} ${lastName}</strong> ha sido modificado con exito` || ""}</p>
+        `,
       });
     } else {
       Swal.fire({
         icon: "success",
-        title: "Admin actualizado con exito",
+        title: "Modificar administrador",
         showConfirmButton: false,
-        timer: 2000,
+        timer: 4000,
+        html: `
+          <p>${`Administrador <strong>${name} ${lastName}</strong> ha sido modificado con exito` || ""}</p>
+        `,
       });
     }
   }
