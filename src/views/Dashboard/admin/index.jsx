@@ -9,9 +9,9 @@ const Admins = () => {
   const tableHeader = ["Nombres", "Apellidos", "Email", "Activo"];
 
   const [tBody, setTBody] = useState([]);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(2);
   const [error, setTError] = useState("");
+
+  // * Formulario
   const [errorForm, setErrorForm] = useState({
     nameError: "",
     lastNameError: "",
@@ -20,21 +20,35 @@ const Admins = () => {
     repeatPasswordError: "",
     isActiveError: "",
   });
-
-  useEffect(() => {
-    axiosGetAdmins(setTBody, page, limit);
-  }, [page, limit]);
-
-  //* Paginado
+  // * Formulario
+  
+  // * Páginado
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(2);
+  const [totalPages, setTotalPages] = useState(1);
+  
+  const firstPages = (e) => {
+    e.preventDefault();
+    setPage(1);
+  };
   const prev = (e) => {
     e.preventDefault();
     setPage(page > 1 ? page - 1 : 1);
   };
-
+  
   const next = (e) => {
     e.preventDefault();
     setPage(page + 1);
   };
+  const lastPages = (e) => {
+    e.preventDefault();
+    setPage(totalPages);
+  };
+  //* Paginado
+
+  useEffect(() => {
+    axiosGetAdmins(setTBody, setTotalPages, page, limit);
+  }, [page, limit]);
 
   return (
     <section>
@@ -55,12 +69,18 @@ const Admins = () => {
         setErrorForm={setErrorForm}
       />
       <DivPages>
-        <button onClick={(e) => prev(e)} disabled={page <= 1}>
-          {"<-- PREV"}
+        <button onClick={(e) => firstPages(e)} disabled={page <= 1}>
+          {"<<"}
         </button>
-        <p>{`Página: ${page}/${page}`}</p>
-        <button onClick={(e) => next(e)} disabled={tBody.length <= 1}>
-          {"NEXT -->"}
+        <button onClick={(e) => prev(e)} disabled={page <= 1}>
+          {"<"}
+        </button>
+        <p>{`Página: ${page}/${totalPages}`}</p>
+        <button onClick={(e) => next(e)} disabled={page >= totalPages}>
+          {">"}
+        </button>
+        <button onClick={(e) => lastPages(e)} disabled={page >= totalPages}>
+          {">>"}
         </button>
       </DivPages>
     </section>
