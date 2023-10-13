@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext } from 'react';
 import { Outlet } from "react-router-dom";
 import {
   ContentContainer,
@@ -6,8 +6,10 @@ import {
 import Navbar from "./Navbar-sidebar";
 import { Container } from "../../components/reusable/global";
 import { tokenAdmin } from "../../tools/accessToken";
-const Dashboard = () => {
 
+
+
+/* const Dashboard = () => {
   return (
     <>
       {tokenAdmin === null ? (
@@ -18,9 +20,7 @@ const Dashboard = () => {
         <div>
           <Navbar />
           <Container>
-            {/* Contenedor del contenido */}
             <ContentContainer>
-              {/* Outlet para mostrar las rutas anidadas */}
               <Outlet />
             </ContentContainer>
           </Container>
@@ -28,5 +28,34 @@ const Dashboard = () => {
       )}
     </>
   );
+} */
+
+//Dasboart sin token
+const Dashboard = () => {
+  
+  /* const cambiarLogin = () =>{
+    if (user) {
+      setUser(null)
+    } else {
+      setUser({
+        name: "Pepe",
+        emal: "pepe@gmal.com"
+      });
+    }
+  } */ 
+
+  return (
+    <>
+      <Navbar />
+      <Container>
+        {/* Contenedor del contenido */}
+        <ContentContainer>
+          {/* Outlet para mostrar las rutas anidadas */}
+          <Outlet />
+        </ContentContainer>
+      </Container>
+    </>
+  );
 }
+
 export default Dashboard;

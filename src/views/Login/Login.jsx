@@ -89,11 +89,11 @@ const Login = () => {
       firstLogin.email = email;
       firstLogin.password = password;
       firstLogin.isActive = 1;
-      verifyAdmin.push(firstLogin);
+      //verifyAdmin.push(firstLogin);
     }
     axiosVerifyAdmin(setVerifyAdmin)
-    const accessAdmin = verifyAdmin.find(el => el.email === email);
-    const {
+    //const accessAdmin = verifyAdmin.find(el => el.email === email);
+    /* const {
       emailError,
       passwordError,
     } = error;
@@ -114,15 +114,15 @@ const Login = () => {
         email: '',
         password: '',
       })
-    }
+    } */
     //* Conexion con el Back-End
 
     //! DATOS RANDOM
-    //  if (email && password) {
-    //    demoSwitAlertLogin(email, password);
-    //    navigate("/dashboard/home");
-    //   }
-    //  demoSwitAlertLogin(email, password);
+      if (email && password) {
+        demoSwitAlertLogin(email, password);
+        navigate("/dashboard/home");
+      }
+      demoSwitAlertLogin(email, password);
     //! DATOS RANDOM
   };
 

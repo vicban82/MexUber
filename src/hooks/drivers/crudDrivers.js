@@ -1,10 +1,11 @@
 import axios from "axios";
+import { dataFakeDriver } from "../../data/dataFakeDriver";
 
 export async function axiosGetDrivers(setTDriver, headers, page, limit) {
   try {
-    const { data } = (await axios.get(`/api/drivers?page=${page}&limit=${limit}`, { headers }));
+    //onst { data } = (await axios.get(`/api/drivers?page=${page}&limit=${limit}`, { headers }));
     // console.log('DATA:', data);
-    setTDriver(data);
+    setTDriver(dataFakeDriver);
   } catch (err) {
     const { error } = err.response.data;
     console.log('ERROR:', error);

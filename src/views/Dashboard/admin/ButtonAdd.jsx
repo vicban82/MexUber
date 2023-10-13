@@ -5,6 +5,17 @@ import { errorRegister, successRegister } from "../../../tools/adminAlerts/regis
 import { axiosPostAdmin } from "../../../hooks/admin/crudAdmin";
 import { headers } from "../../../tools/accessToken";
 import { props } from "./props";
+import { 
+  ContainerModal,
+  FormHead,
+  FormEdit,
+  InputContainer,
+  Label,
+  Input,
+  SubmitBtn,
+  ButtonContainer,
+  InputCheck,
+ } from "../../../components/reusable/FormularioModal";
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
 import styled from 'styled-components';
@@ -34,6 +45,8 @@ const ButtonV1 = styled.button`
   cursor: pointer;
   transition: border-color 0.25s;
 `;
+
+/* ----------------------- Funcionalidad --------------------------------- */
 
 export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -118,55 +131,58 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm }) => {
       <div><h2>Administradores<br /></h2></div>
       <ButtonV1 onClick={() => setModalIsOpen(true)}>Agregar</ButtonV1>
     </AdminTitulo>
-      <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
-        <form onSubmit={handleSubmit}>
+      <ContainerModal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
+        <FormEdit onSubmit={handleSubmit}>
+          <FormHead><h2>Nuevo Administrador</h2></FormHead>
           <br />
           {Object.keys(admin).map((el, idx) => {
             for (const esp in props) {
               if (el === esp) {
                 return (
-                  <div key={idx}>
-                    <label htmlFor={`input-${el}`}>{props[esp]}: </label>
+                  <InputContainer key={idx}>
                     {el !== "isActive" ? (
                       el === "password" || el === "repeatPassword" ? (
-                        <input
-                          id={`input-${el}`}
+                        <Input
+                        id={`input-${el}`}
                           name={el}
                           value={admin[el] || ""}
                           onChange={handleChange}
+                          placeholder="a"
                           type="password"
-                        />
+                          />
                       ) : (
-                        <input
+                        <Input
                           id={`input-${el}`}
                           name={el}
                           value={admin[el] || ""}
                           onChange={handleChange}
+                          placeholder="a"
                           type="text"
                         />
                       )
                     ) : (
-                      <input
+                      <InputCheck
                         id={`input-${el}`}
                         name={el}
                         checked={admin[el]}
                         onChange={handleChange}
                         type="checkbox"
                         value={admin[el] ? 1 : 0} // 1 como true y 0 como false
-                      />
-                    )}
-                  </div>
+                        />
+                        )}
+                      <Label htmlFor={`input-${el}`}>{props[esp]}: </Label>
+                  </InputContainer>
                 );
-
+                
               }
             }
           })}
-          <div>
-            <button onClick={() => setModalIsOpen(false)}>Cancelar</button>
-            <button type="submit">Guardar</button>
-          </div>
-        </form>
-      </Modal>
+          <ButtonContainer>
+            <SubmitBtn onClick={() => setModalIsOpen(false)}>Cancelar</SubmitBtn>
+            <SubmitBtn type="submit">Guardar</SubmitBtn>
+          </ButtonContainer>
+        </FormEdit>
+      </ContainerModal>
 </>  
   );
 };

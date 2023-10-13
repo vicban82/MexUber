@@ -9,35 +9,28 @@ import { axiosPutAdmin } from "../../../hooks/admin/crudAdmin";
 import { deleteAlert } from "../../../tools/adminAlerts/delete";
 import { errorUpDate, successUpDate } from "../../../tools/adminAlerts/upDate";
 import { props } from "./props";
+import { 
+  ContainerModal,
+  FormHead,
+  FormEdit,
+  InputContainer,
+  Label,
+  Input,
+  SubmitBtn,
+  ButtonContainer,
+  InputCheck,
+ } from "../../../components/reusable/FormularioModal";
 
-
-export const ContainerModal = styled(Modal)`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    height: 75%;
-    justify-content: center;
-    align-content: center;
-    margin: 105px 15% 100% 20%;
-    background: #c83737;
-
-`;
+/* --------------------------------------Estilos--------------------------------- */
 
 const Img = styled.img`
   height: 32px;
 `;
 
-const FormEdit = styled.form`
-  background-color: beige;
-  color: #000000;
-`;
-
+/* -------------------------------- Funcionalidad ----------------------------- */
 
 Modal.setAppElement("#root");
 
-const StyledTd = styled.td`
-  display: flex;
-`;
 
 export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErrorForm }) {
 
@@ -151,60 +144,64 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
           <Img src={editIcon} alt="Edición" />
         </button>
 
-      {/* Modal */}
-      <ContainerModal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Editar elemento"
-      >
-        <form onSubmit={handleSubmit}>
-          <br />
-          {Object.keys(admin).map((el, idx) => {
-            for (const esp in props) {
-              if (el === esp) {
-                return (
-                  <div key={idx}>
-                    <label htmlFor={`input-${el}`}>{props[esp]}: </label>
-                    {el !== "isActive" ? (
-                      el === "password" || el === "repeatPassword" ? (
-                        <input
-                          id={`input-${el}`}
-                          name={el}
-                          value={admin[el] || ""}
-                          onChange={handleChange}
-                          type="password"
-                        />
+        {/* Modal */}
+        <ContainerModal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          contentLabel="Editar elemento"
+        >
+          <FormEdit onSubmit={handleSubmit}>
+          <FormHead><h2>Modificar Administrador</h2></FormHead>
+            <br />
+            {Object.keys(admin).map((el, idx) => {
+              for (const esp in props) {
+                if (el === esp) {
+                  //console.log(esp)
+                  return (
+                    <InputContainer key={idx}>
+                      {el !== "isActive" ? (
+                        el === "password" || el === "repeatPassword" ? (
+                          <Input
+                            id={`input-${el}`}
+                            name={el}
+                            value={admin[el] || ""}
+                            onChange={handleChange}
+                            placeholder="a"
+                            type="password"
+                            />
+                            ) : (
+                          <Input
+                            id={`input-${el}`}
+                            name={el}
+                            value={admin[el] || ""}
+                            onChange={handleChange}
+                            placeholder="a"
+                            type="text"
+                          />
+                        )
                       ) : (
-                        <input
+                        <InputCheck
                           id={`input-${el}`}
                           name={el}
-                          value={admin[el] || ""}
+                          checked={admin[el]}
                           onChange={handleChange}
-                          type="text"
+                          type="checkbox"
+                          value={admin[el] ? 1 : 0} // 1 como true y 0 como false
                         />
-                      )
-                    ) : (
-                      <input
-                        id={`input-${el}`}
-                        name={el}
-                        checked={admin[el]}
-                        onChange={handleChange}
-                        type="checkbox"
-                        value={admin[el] ? 1 : 0} // 1 como true y 0 como false
-                      />
-                    )}
-                  </div>
-                );
+                      )}
+                      <Label htmlFor={`input-${el}`}>{props[esp]}: </Label>
+                    </InputContainer>
+                  );
+                }
               }
-            }
-          })}
-          <div>
-            <button onClick={closeModal}>Cancelar</button>
-            <button>Guardar</button>
-          </div>
-        </form>
-      </ContainerModal>
-  </td>
+            })}
+            <ButtonContainer>
+              <SubmitBtn onClick={closeModal}>Cancelar</SubmitBtn>
+              <SubmitBtn>Guardar</SubmitBtn>
+            </ButtonContainer>
+          </FormEdit>
+        </ContainerModal>
+      </td>
 
       {/* -------------------Boton Eliminar----------------------- */}
 

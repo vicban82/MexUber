@@ -1,58 +1,111 @@
 import styled from 'styled-components';
 import { ButtonsTable } from './ButtonsTable';
 
+const ContainerTabla = styled.div`
+  display: flex;
+  flex-direction: row;
+  padding: 5px 5px;
+  padding: 15px 65px 15px 65px;
+  justify-content: center;
+`;
+
 const StyledTable = styled.table`
-  width: 100%;
+  width: 95%;
+  table-layout: fixed;
   border-collapse: collapse;
-`;
+  background-color: #b8860b;
+  min-width: 885px;
+  
+  th { 
+    text-decoration: underline; 
+    display: flex;
+    justify-content: center;
+    min-width: 12%;
+  }
 
-const StyledThead = styled.thead`
-  background-color: #f0f0f0; /* Cambia esto al color que desees */
-  border: solid red 3px;
-`;
+  th, td {
+    text-align: left;
+    display: flex;
+    justify-content: center;
+    min-width: 12%;
+  }
+  
+  td:nth-child(1), th:nth-child(1) { min-width: 16%; }
+  td:nth-child(2), th:nth-child(2) { min-width: 16%; }
+  td:nth-child(3), th:nth-child(3) { width: 16%; }
 
-const StyledTbody = styled.tbody`
-  /* Agrega aquí los estilos que desees para el tbody */
-  border: solid green 3px;
-`;
+  thead {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    background-color: #333;
+    color: #FDFDFD;
+    height: 40px;
+    tr {
+      display: flex;
+      width: 100%;
+      height: 40px;
+      justify-content: space-around;
+      align-items: center;
+      text-align: center;
+      min-width: 12%;
+    }
+  }
+  tbody {
+    display: flex;
+    overflow: auto;
+    width: 100%;
+    //height: 300px;
+    //max-height: 300px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    tr {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      text-align: center;
+      min-width: 12%;
+    }
+    tr:nth-child(even) {
+      background-color: #5f5a5a;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      text-align: center;
+      min-width: 12%;
+    }
+  }
 
-const StyledTh = styled.th`
-  padding: 10px;
-  border: solid red 3px;
-`;
-
-const StyledTd = styled.td`
-  padding: 10px;
-  border: solid green 3px;
-  min-width: 150px; /* Ajusta el valor según tus necesidades */
-  text-align: center; /* Centra el contenido de los td */
 `;
 
 export const Table = ({ tHeader, tDriver, setTDriver, driver, setDriver, errorForm, setErrorForm }) => {
   // console.log("tDriver:", tDriver)
   return (
     <>
-      <div>
+      <ContainerTabla>
         <StyledTable>
-          <StyledThead>
+          <thead>
             <tr>
               {tHeader.length >= 1 &&
                 tHeader.map((item, i) => {
                   return (
-                    <StyledTh  key={i}>
+                    <th  key={i}>
                       <p>{item}</p>
-                    </StyledTh>
+                    </th>
                   );
                 })}
-              <StyledTh>
+              <th>
                 <p>Editar / Eliminar</p>
-              </StyledTh>
-              {/* <StyledTh>
+              </th>
+              {/* <th>
                 <p>Eliminar</p>
-              </StyledTh> */}
+              </th> */}
             </tr>
-          </StyledThead>
-          <StyledTbody>
+          </thead>
+          <tbody>
             {tDriver.length >= 1 ? (
               tDriver.map((data, i) => {
                 return (
@@ -64,7 +117,7 @@ export const Table = ({ tHeader, tDriver, setTDriver, driver, setDriver, errorFo
                         // Agregar un campo de tipo "checkbox"
                         if (subI === 5 || subI === 6) {
                           return (
-                            <StyledTd key={subI}>
+                            <td key={subI}>
                               <div>
                                 <input
                                   type="checkbox"
@@ -80,15 +133,15 @@ export const Table = ({ tHeader, tDriver, setTDriver, driver, setDriver, errorFo
                                   }}
                                 />
                               </div>
-                            </StyledTd>
+                            </td>
                           );
                         } else {
                           return (
-                            <StyledTd key={subI}>
+                            <td key={subI}>
                               <div>
                                 <p>{item}</p>
                               </div>
-                            </StyledTd>
+                            </td>
                           );
                         }
                       }
@@ -109,17 +162,17 @@ export const Table = ({ tHeader, tDriver, setTDriver, driver, setDriver, errorFo
               })
             ) : (
               <tr>
-                <StyledTd colSpan={tHeader.length + 1} >
+                <td colSpan={tHeader.length + 1} >
                   <p>
                     {/* {error ? error : "No hay información disponible"} */}
                     {"No hay información disponible"}
                   </p>
-                </StyledTd>
+                </td>
               </tr >
             )}
-          </StyledTbody>
+          </tbody>
         </StyledTable>
-      </div>
+      </ContainerTabla>
     </>
   );
 }

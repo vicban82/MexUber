@@ -10,6 +10,18 @@ import { useDropzone } from "react-dropzone";
 import { axiosPutDriver } from "../../../hooks/drivers/crudDrivers";
 import styled from 'styled-components';
 import { props } from "./props";
+import { 
+  ContainerModal,
+  FormHead,
+  FormEdit,
+  InputContainer,
+  Label,
+  Input,
+  SubmitBtn,
+  ButtonContainer,
+  InputCheck,
+ } from "../../../components/reusable/FormularioModal";
+
 Modal.setAppElement("#root");
 
 const StyledTd = styled.td`
@@ -33,6 +45,10 @@ const dropzoneStyles = {
   padding: '20px',
   cursor: 'pointer',
 };
+
+const Img = styled.img`
+  height: 32px;
+`;
 
 export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, errorForm, setErrorForm, }) {
 
@@ -185,11 +201,11 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
     <StyledTd>
       {/* The button to open modal */}
       <button onClick={openModal}>
-        <img src={editIcon} alt="Edición" />
+        <Img src={editIcon} alt="Edición" />
       </button>
 
       {/* Modal */}
-      <Modal
+      <ContainerModal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         contentLabel="Editar elemento"
@@ -308,10 +324,10 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
             <button>Guardar</button>
           </div>
         </form>
-      </Modal>
+      </ContainerModal>
 
       <button onClick={() => handleDelete(id)}>
-        <img
+        <Img
           src={deleteIcon}
           alt="Delete"
         />

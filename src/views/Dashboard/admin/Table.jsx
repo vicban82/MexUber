@@ -14,19 +14,20 @@ const StyledTable = styled.table`
   table-layout: fixed;
   border-collapse: collapse;
   background-color: #b8860b;
-  min-width: 740px;
+  min-width: 885px;
   
   th { 
     text-decoration: underline; 
     display: flex;
     justify-content: center;
+    min-width: 12%;
   }
 
   th, td {
     text-align: left;
     display: flex;
     justify-content: center;
-    
+    min-width: 12%;
   }
   
   td:nth-child(1), th:nth-child(1) { min-width: 16%; }
@@ -47,6 +48,7 @@ const StyledTable = styled.table`
       justify-content: space-around;
       align-items: center;
       text-align: center;
+      min-width: 12%;
     }
   }
   tbody {
@@ -64,6 +66,7 @@ const StyledTable = styled.table`
       justify-content: space-around;
       align-items: center;
       text-align: center;
+      min-width: 12%;
     }
     tr:nth-child(even) {
       background-color: #5f5a5a;
@@ -72,6 +75,7 @@ const StyledTable = styled.table`
       justify-content: space-around;
       align-items: center;
       text-align: center;
+      min-width: 12%;
     }
   }
 
@@ -117,7 +121,7 @@ export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, s
               </StyledTh>
             </tr>
           </StyledThead>
-          <StyledTbody>
+          <tbody>
             {tBody.length >= 1 ? (
               tBody.map((data, i) => {
                 return (
@@ -180,7 +184,7 @@ export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, s
                 </StyledTd>
               </tr >
             )}
-          </StyledTbody>
+          </tbody>
         </StyledTable>
       </ContainerTabla>
     </>

@@ -1,4 +1,4 @@
-export const dataFake = [
+export const dataFakeDriver = [
     {
         id: 1,
         nombres: "Jose",
@@ -13,7 +13,7 @@ export const dataFake = [
         email: "admin_Main@gmail.com",
         activo: 1,
     },
-    /* {
+    {
         id: 3,
         nombre: "Jose",
         apellidos: "Perez Ramirez",
@@ -22,8 +22,8 @@ export const dataFake = [
     },
     {
         id: 4,
-        nombre: "Jose",
-        apellidos: "Perez Ramirez",
+        nombre: "Victor",
+        apellidos: "Ricardo Ramirez",
         email: "admin_Main@gmail.com",
         activo: 1,
     },
@@ -40,5 +40,5 @@ export const dataFake = [
         apellidos: "Perez Ramirez",
         email: "admin_Main@gmail.com",
         activo: 1,
-    }, */
+    },
   ];
