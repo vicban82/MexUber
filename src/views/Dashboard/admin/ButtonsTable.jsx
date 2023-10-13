@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import editIcon from "../../../assets/img/editIcon.png";
 import deleteIcon from "../../../assets/img/deleteIcon.png";
 import Modal from "react-modal";
-import { validateAdmin } from "../../../validations/admins";
+import { validateUpDateAdmin } from "../../../validations/admins";
 import { headers } from "../../../tools/accessToken";
 import { axiosPutAdmin } from "../../../hooks/admin/crudAdmin";
 import { deleteAlert } from "../../../tools/adminAlerts/delete";
@@ -40,7 +40,7 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
     email: "",
     password: "",
     repeatPassword: "",
-    isActive: 0 || 1,
+    isActive: 1,
   });
 
   useEffect(() => {
@@ -50,11 +50,9 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
       name: currentAdmin.name,
       lastName: currentAdmin.lastName,
       email: currentAdmin.email,
-      // password: currentAdmin.password,
       password: "",
-      // repeatPassword: currentAdmin.password,
       repeatPassword: "",
-      isActive: 0 || 1,
+      isActive: currentAdmin.isActive,
     }
     if (update) {
       setAdmin(update);
@@ -77,22 +75,31 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
   };
 
   function handleChange(e) {
-    const { name, value, type, checked } = e.target;
-
-    // Manejar cambios para checkbox y convertir 1 (true) o 0 (false)
-    const newValue = type === "checkbox" ? !admin[name] : value;
+    const { name, value } = e.target;
 
     setAdmin({
       ...admin,
-      [name]: newValue,
+      [name]: value,
     });
     setErrorForm(
-      validateAdmin({
+      validateUpDateAdmin({
         ...admin,
-        [name]: newValue,
+        [name]: value,
       })
     )
   }
+
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+
+    let updatedAdmin = { ...admin };
+
+    if (name === "isActive") {
+      updatedAdmin.isActive = checked ? 1 : 0;
+    }
+
+    setAdmin(updatedAdmin);
+  };
 
   const {
     name,
@@ -103,35 +110,40 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
     isActive,
   } = admin;
   
+  const {
+    nameError,
+    lastNameError,
+    emailError,
+    passwordError,
+    repeatPasswordError,
+  } = errorForm;
+  
   async function handleSubmit(e) {
     e.preventDefault();
-    const {
-      nameError,
-      lastNameError,
-      emailError,
-    } = errorForm;
-    if (!name || !lastName || !email) {
-      errorUpDate(admin, errorForm);
-    } else if (nameError || lastNameError || emailError) {
-      errorUpDate(admin, errorForm);
-    } else {
-      try {
-        successUpDate(admin);
-        // Envia la solicitud de actualización al backend
-        const currentAdmin = await axiosPutAdmin(id, admin, headers, setErrorForm);
-        
-        // Actualiza la lista en el frontend
-        setTBody(prev => {
-          // Reemplaza el admin editado en la lista por el nuevo admin devuelto por el backend
-          const updatedTBody = prev.map(item => (item._id === id ? currentAdmin : item));
-          return updatedTBody;
-        });
-  
-        // Cierra el modal después de guardar
-        setModalIsOpen(false);
-      } catch (error) {
-        console.error("Error al guardar el admin:", error);
+    if (name || lastName || email) {
+      if (!passwordError && !repeatPasswordError) {
+        try {
+          successUpDate(admin);
+          // Envia la solicitud de actualización al backend
+          const currentAdmin = await axiosPutAdmin(id, admin, headers, setErrorForm);
+          
+          // Actualiza la lista en el frontend
+          setTBody(prev => {
+            // Reemplaza el admin editado en la lista por el nuevo admin devuelto por el backend
+            const updatedTBody = prev.map(item => (item._id === id ? currentAdmin : item));
+            return updatedTBody;
+          });
+          
+          // Cierra el modal después de guardar
+          setModalIsOpen(false);
+        } catch (error) {
+          console.error("Error al guardar el admin:", error);
+        }
+      } else {
+        errorUpDate(admin, errorForm);
       }
+    } else {
+      errorUpDate(admin, errorForm);
     }
   }
   
@@ -150,56 +162,93 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
           onRequestClose={closeModal}
           contentLabel="Editar elemento"
         >
-          <FormEdit onSubmit={handleSubmit}>
-          <FormHead><h2>Modificar Administrador</h2></FormHead>
+          <form onSubmit={handleSubmit}>
             <br />
-            {Object.keys(admin).map((el, idx) => {
-              for (const esp in props) {
-                if (el === esp) {
-                  //console.log(esp)
-                  return (
-                    <InputContainer key={idx}>
-                      {el !== "isActive" ? (
-                        el === "password" || el === "repeatPassword" ? (
-                          <Input
-                            id={`input-${el}`}
-                            name={el}
-                            value={admin[el] || ""}
-                            onChange={handleChange}
-                            placeholder="a"
-                            type="password"
-                            />
-                            ) : (
-                          <Input
-                            id={`input-${el}`}
-                            name={el}
-                            value={admin[el] || ""}
-                            onChange={handleChange}
-                            placeholder="a"
-                            type="text"
-                          />
-                        )
-                      ) : (
-                        <InputCheck
-                          id={`input-${el}`}
-                          name={el}
-                          checked={admin[el]}
-                          onChange={handleChange}
-                          type="checkbox"
-                          value={admin[el] ? 1 : 0} // 1 como true y 0 como false
-                        />
-                      )}
-                      <Label htmlFor={`input-${el}`}>{props[esp]}: </Label>
-                    </InputContainer>
-                  );
-                }
-              }
-            })}
-            <ButtonContainer>
-              <SubmitBtn onClick={closeModal}>Cancelar</SubmitBtn>
-              <SubmitBtn>Guardar</SubmitBtn>
-            </ButtonContainer>
-          </FormEdit>
+            <div>
+              <label>Nombre: </label>
+              <input
+                type="text"
+                name={"name"}
+                value={name}
+                onChange={handleChange}
+              />
+              <br />
+              {nameError && (
+                <span>{nameError}</span>
+              )}
+            </div>
+
+            <div>
+              <label>Apellidos: </label>
+              <input
+                type="text"
+                name={"lastName"}
+                value={lastName}
+                onChange={handleChange}
+              />
+              <br />
+              {lastNameError && (
+                <span>{lastNameError}</span>
+              )}
+            </div>
+
+            <div>
+              <label>Correo electrónico: </label>
+              <input
+                type="text"
+                name={"email"}
+                value={email}
+                onChange={handleChange}
+              />
+              <br />
+              {emailError && (
+                <span>{emailError}</span>
+              )}
+            </div>
+            <div>
+              <label>Contraseña: </label>
+              <input
+                type="password"
+                name={"password"}
+                value={password}
+                onChange={handleChange}
+              />
+              <br />
+              {passwordError && (
+                <span>{passwordError}</span>
+              )}
+            </div>
+
+            <div>
+              <label>Repetr contraseña: </label>
+              <input
+                type="password"
+                name={"repeatPassword"}
+                value={repeatPassword}
+                onChange={handleChange}
+              />
+              <br />
+              {repeatPasswordError && (
+                <span>{repeatPasswordError}</span>
+              )}
+            </div>
+
+            <div>
+              <label>Activo: </label>
+              <input
+                type="checkbox"
+                name={"isActive"}
+                checked={isActive === 1}
+                onChange={handleCheckboxChange}
+              />
+              <br />
+            </div>
+
+            <div>
+              <button onClick={closeModal}>Cancelar</button>
+              <button>Guardar</button>
+            </div>
+          </form>
         </ContainerModal>
       </td>
 

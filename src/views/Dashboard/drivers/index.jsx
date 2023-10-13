@@ -32,12 +32,14 @@ export const Drivers = () => {
     backLicensePicture: "", //* FOTO REVERSO DE LA LICENCIA
     //! DATOS DE LA LICENCIA DE CONDUCCION
     //! AJUSTES DE LA APLICACION
-    services: "", // TODOS - LGBQT+ - MUJERES
+    allServices: 1, // TODOS
+    servicesLGBQT: 0, // LGBQT+
+    onlyWomenServices: 0, // MUJERES
     //! AJUSTES DE LA APLICACION
     //! ACCESO A LA APLICACION
     password: "",
     repeatPassword: "",
-    isActive: 0 || 1,
+    isActive: 1,
     messageReasonInActive: "", // MENSAJE RASON INACTIVO
     //! ACCESO A LA APLICACION
     // car: "" || null,
@@ -54,16 +56,16 @@ export const Drivers = () => {
     emailError: "",
     driverPictureError: "",
     driverLicenseNumberError: "",
-    dateLicenseError: "",
     stateLicenseError: "",
     typeLicenseError: "",
+    dateLicenseError: "",
     frontLicensePictureError: "",
     backLicensePictureError: "",
+    servicesError: "",
     passwordError: "",
     repeatPasswordError: "",
     isActiveError: "",
     messageReasonInActiveError: "",
-    servicesError: "",
   });
   useEffect(() => {
     axiosGetDrivers(setTDriver, headers, page, limit);

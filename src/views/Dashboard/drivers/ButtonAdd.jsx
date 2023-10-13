@@ -68,35 +68,34 @@ export const ButtonAdd = ({
     contact, // NUMERO DE CONTACTO DEL CONDUCTOR
     email,
     driverPicture, //* FOTO DEL CONDUCTOR
+    //! DATOS DE LA LICENCIA DE CONDUCCION
     driverLicenseNumber, //* NUMERO LICENCIA DEL CONDUCTOR
-    dateLicense, // FECHA - VIGENCIA DE LA LICENCIA
     stateLicense, // ESTADO DE LA LICENCIA
     typeLicense, // TIPO LICENCIA
+    dateLicense, // FECHA - VIGENCIA DE LA LICENCIA
     frontLicensePicture, //* FOTO FRONTAL DE LA LICENCIA
     backLicensePicture, //* FOTO REVERSO DE LA LICENCIA
+    //! DATOS DE LA LICENCIA DE CONDUCCION
+    //! AJUSTES DE LA APLICACION
+    allServices, // TODOS
+    servicesLGBQT, // LGBQT+
+    onlyWomenServices, // MUJERES
+    //! AJUSTES DE LA APLICACION
+    //! ACCESO A LA APLICACION
     password,
     repeatPassword,
     isActive,
     messageReasonInActive, // MENSAJE RASON INACTIVO
-    tokenNotification, //? OPCIONAL
-    typePhone, //? OPCIONAL iOS || Android
-    services, // TODOS - LGBQT+ - MUJERES
+    //! ACCESO A LA APLICACION
     car,
   } = driver;
-  console.log("form driver:", driver)
+  // console.log("form driver:", driver)
 
   const memorySepomes = useMemo(() => sepomex, [sepomex])
   const memoryLicencias = useMemo(() => licencias, [licencias])
   
   function handleChange(e) {
     const { name, value, type } = e.target;
-    
-    // Manejar cambios para checkbox y convertir 1 (true) o 0 (false)
-    const newValue = type === "checkbox" ? !driver[name] : value;
-    // console.log("name:", name)
-    // console.log("value:", value)
-    // console.log("foto:", foto)
-    // console.log("e.target.value:", e.target.value)
     
     if (name === "zipCode") {
       const sepomexData = memorySepomes.find(el => el.codigoPostal === value);
@@ -107,11 +106,6 @@ export const ButtonAdd = ({
         setColonias(sepomexData.colonias);
       }
     }
-    
-    // Actualiza el estado de la foto si el nombre es driverPicture
-    // if (name === "driverPicture") {
-    //   setFoto(URL.createObjectURL(newValue)); // Crea una URL para mostrar la imagen
-    // }
 
     if (name === "driverLicenseNumber") {
       const filteredEstado = memoryLicencias.map(el => el.estado);
@@ -129,15 +123,47 @@ export const ButtonAdd = ({
 
     setDriver({
       ...driver,
-      [name]: newValue,
+      [name]: value,
     });
     setErrorForm(
       validateDriver({
         ...driver,
-        [name]: newValue,
-      }, codigoPostal, colonias)
+        [name]: value,
+      }, codigoPostal, estado, ciudad, colonias, licences)
     );
   }
+
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+
+    let updatedDriver = { ...driver };
+
+    if (name === "isActive") {
+      updatedDriver.isActive = checked ? 1 : 0;
+      // Resetear el campo messageReasonInActive si isActive se vuelve a bloquear
+      if (updatedDriver.isActive === 1) {
+        updatedDriver.messageReasonInActive = "";
+      }
+    } else if (name === "allServices" && checked) {
+      // Si allServices es seleccionado, desmarca los otros checkboxes
+      updatedDriver = {
+        ...updatedDriver,
+        allServices: 1,
+        servicesLGBQT: 0,
+        onlyWomenServices: 0,
+      };
+    } else {
+      // Si otros checkboxes son seleccionados, actualiza el checkbox correspondiente
+      updatedDriver[name] = checked ? 1 : 0;
+
+      // Si allServices estaba seleccionado, desmárcalo
+      if (updatedDriver.allServices === 1) {
+        updatedDriver.allServices = 0;
+      }
+    }
+
+    setDriver(updatedDriver);
+  };
 
   useEffect(() => {
     // Actualizar los valores del formulario cuando estado o ciudad cambien
@@ -163,16 +189,16 @@ export const ButtonAdd = ({
     emailError,
     driverPictureError,
     driverLicenseNumberError,
-    dateLicenseError,
     stateLicenseError,
     typeLicenseError,
+    dateLicenseError,
     frontLicensePictureError,
     backLicensePictureError,
+    servicesError,
     passwordError,
     repeatPasswordError,
     isActiveError,
     messageReasonInActiveError,
-    servicesError,
   } = errorForm;
   // console.log("errorForm:", errorForm)
 
@@ -239,54 +265,30 @@ export const ButtonAdd = ({
     e.preventDefault();
 
     if (
-      !name ||
-      !lastName ||
-      !zipCode ||
-      !state ||
-      !city ||
-      !colonia ||
-      !address ||
-      !contact ||
-      !email ||
-      !driverPicture ||
-      !driverLicenseNumber ||
-      !dateLicense ||
-      !stateLicense ||
-      !typeLicense ||
-      !frontLicensePicture ||
-      !backLicensePicture ||
-      !password ||
-      !repeatPassword ||
-      !isActive ||
-      !messageReasonInActive ||
-      !services
+      name &&
+      lastName &&
+      zipCode &&
+      state &&
+      city &&
+      colonia &&
+      address &&
+      contact &&
+      email &&
+      driverPicture &&
+      driverLicenseNumber &&
+      stateLicense &&
+      typeLicense &&
+      dateLicense &&
+      frontLicensePicture &&
+      backLicensePicture &&
+      allServices &&
+      servicesLGBQT &&
+      onlyWomenServices &&
+      password &&
+      repeatPassword &&
+      isActive &&
+      messageReasonInActive
     ) {
-      errorRegister(driver, errorForm);
-    } else if (
-      nameError ||
-      lastNameError ||
-      zipCodeError ||
-      stateError ||
-      cityError ||
-      coloniaError ||
-      addressError ||
-      contactError ||
-      emailError ||
-      driverPictureError ||
-      driverLicenseNumberError ||
-      dateLicenseError ||
-      stateLicenseError ||
-      typeLicenseError ||
-      frontLicensePictureError ||
-      backLicensePictureError ||
-      passwordError ||
-      repeatPasswordError ||
-      isActiveError ||
-      messageReasonInActiveError ||
-      servicesError
-    ) {
-      errorRegister(driver, errorForm);
-    } else {
       try {
         successRegister(driver);
         const newDriver = await axiosPostDriver(driver, headers);
@@ -314,12 +316,14 @@ export const ButtonAdd = ({
           backLicensePicture: "", //* FOTO REVERSO DE LA LICENCIA
           //! DATOS DE LA LICENCIA DE CONDUCCION
           //! AJUSTES DE LA APLICACION
-          services: "", // TODOS - LGBQT+ - MUJERES
+          allServices: 1, // TODOS
+          servicesLGBQT: 0, // LGBQT+
+          onlyWomenServices: 0, // MUJERES
           //! AJUSTES DE LA APLICACION
           //! ACCESO A LA APLICACION
           password: "",
           repeatPassword: "",
-          isActive: 0 || 1,
+          isActive: 1,
           messageReasonInActive: "", // MENSAJE RASON INACTIVO
           //! ACCESO A LA APLICACION
           // car: "" || null,
@@ -327,6 +331,9 @@ export const ButtonAdd = ({
       } catch (error) {
         console.error("Error al guardar el admin:", error);
       }
+    } else  {
+      // console.log("form driver:")
+      errorRegister(driver);
     }
   }
 
@@ -345,7 +352,12 @@ export const ButtonAdd = ({
               value={name}
               onChange={handleChange}
             />
+            <br />
+            {nameError && (
+              <span>{nameError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.lastName}: </label>
             <input
@@ -354,6 +366,10 @@ export const ButtonAdd = ({
               value={lastName}
               onChange={handleChange}
             />
+            <br />
+            {lastNameError && (
+              <span>{lastNameError}</span>
+            )}
           </div>
 
           <div>
@@ -364,7 +380,12 @@ export const ButtonAdd = ({
               value={zipCode}
               onChange={handleChange}
             />
+            <br />
+            {zipCodeError && (
+              <span>{zipCodeError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.state}: </label>
             <select
@@ -375,7 +396,12 @@ export const ButtonAdd = ({
             >
               <option>{estado || "Selecciona"}</option>
             </select>
+            <br />
+            {stateError && (
+              <span>{stateError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.city}: </label>
             <select
@@ -386,7 +412,12 @@ export const ButtonAdd = ({
             >
               <option>{ciudad || "Selecciona"}</option>
             </select>
+            <br />
+            {cityError && (
+              <span>{cityError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.colonia}: </label>
             <select
@@ -406,7 +437,12 @@ export const ButtonAdd = ({
                 );
               })}
             </select>
+            <br />
+            {coloniaError && (
+              <span>{coloniaError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.address}: </label>
             <input
@@ -415,7 +451,12 @@ export const ButtonAdd = ({
               value={address}
               onChange={handleChange}
             />
+            <br />
+            {addressError && (
+              <span>{addressError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.contact}: </label>
             <input
@@ -424,7 +465,12 @@ export const ButtonAdd = ({
               value={contact}
               onChange={handleChange}
             />
+            <br />
+            {contactError && (
+              <span>{contactError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.email}: </label>
             <input
@@ -433,7 +479,12 @@ export const ButtonAdd = ({
               value={email}
               onChange={handleChange}
             />
+            <br />
+            {emailError && (
+              <span>{emailError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.driverPicture}: </label>
             <div {...getDriverRootProps()} style={dropzoneContainerStyles}>
@@ -445,19 +496,30 @@ export const ButtonAdd = ({
                 style={{ maxWidth: '100px' }} 
               />}
               <p>Frente</p>
+              <br />
+              {driverPictureError && (
+                <span>{driverPictureError}</span>
+              )}
             </div>
           </div>
+
           <h2>Licencia de conducir</h2>
           <hr />
           <div>
             <label>{props.driverLicenseNumber}: </label>
+            {/* //! DE 5 A 10 CARACTERES Y PUEDE SER ALFANUMERICO */}
             <input
               type="text"
               name={"driverLicenseNumber"}
               value={driverLicenseNumber}
               onChange={handleChange}
             />
+            <br />
+            {driverLicenseNumberError && (
+              <span>{driverLicenseNumberError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.stateLicense}: </label>
             <select
@@ -476,7 +538,12 @@ export const ButtonAdd = ({
                 );
               })}
             </select>
+            <br />
+            {stateLicenseError && (
+              <span>{stateLicenseError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.typeLicense}: </label>
             <select
@@ -495,7 +562,12 @@ export const ButtonAdd = ({
                 );
               })}
             </select>
+            <br />
+            {typeLicenseError && (
+              <span>{typeLicenseError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.dateLicense}: </label>
             <input
@@ -505,7 +577,12 @@ export const ButtonAdd = ({
               value={dateLicense}
               onChange={handleChange}
             />
+            <br />
+            {dateLicenseError && (
+              <span>{dateLicenseError}</span>
+            )}
           </div>
+
           <div>
             <div style={pictureLicence}>
               <label>Fotos licencia: </label>
@@ -530,6 +607,10 @@ export const ButtonAdd = ({
                       style={{ maxWidth: '100px' }}
                     />}
                     <p>Frente</p>
+                    <br />
+                    {frontLicensePictureError && (
+                      <span>{frontLicensePictureError}</span>
+                    )}
                   </div>
                   <div {...getBackLicenseRootProps()} style={dropzoneContainerStyles} >
                     <input {...getBackLicenseInputProps()} />
@@ -540,39 +621,50 @@ export const ButtonAdd = ({
                       style={{ maxWidth: '100px' }}
                     />}
                     <p>Atrás</p>
+                    <br />
+                    {backLicensePictureError && (
+                      <span>{backLicensePictureError}</span>
+                    )}
                   </div>
                 </>
               )}
               
             </div>
           </div>
+
           <h2>Ajustes en la aplicación</h2>
           <hr />
           <div>
             <label>{props.services}: </label>
             <input
               type="checkbox"
-              name={"services"}
-              value={services}
-              onChange={handleChange}
-              checked={services}
+              name="allServices"
+              checked={allServices === 1}
+              onChange={handleCheckboxChange}
             />
-            TODOS
+            Todos
             <input
               type="checkbox"
-              name={"services"}
-              value={services}
-              onChange={handleChange}
+              name="servicesLGBQT"
+              checked={servicesLGBQT === 1}
+              disabled={allServices === 1 ? true : false}
+              onChange={handleCheckboxChange}
             />
             LGBTQ+
             <input
               type="checkbox"
-              name={"services"}
-              value={services}
-              onChange={handleChange}
+              name="onlyWomenServices"
+              checked={onlyWomenServices === 1}
+              disabled={allServices === 1 ? true : false}
+              onChange={handleCheckboxChange}
             />
-            MUJERES
+            Sólo mujeres
+            <br />
+            {servicesError && (
+              <span>{servicesError}</span>
+            )}
           </div>
+
           <h2>Acceso a la aplicación</h2>
           <hr />
           <div>
@@ -583,7 +675,12 @@ export const ButtonAdd = ({
               value={password}
               onChange={handleChange}
             />
+            <br />
+            {passwordError && (
+              <span>{passwordError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.repeatPassword}: </label>
             <input
@@ -592,26 +689,41 @@ export const ButtonAdd = ({
               value={repeatPassword}
               onChange={handleChange}
             />
+            <br />
+            {repeatPasswordError && (
+              <span>{repeatPasswordError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.isActive}: </label>
             <input
               type="checkbox"
               name={"isActive"}
-              value={isActive ? 1 : 0}
-              onChange={handleChange}
-              checked={isActive}
+              checked={isActive === 1}
+              onChange={handleCheckboxChange}
             />
+            <br />
+            {isActiveError && (
+              <span>{isActiveError}</span>
+            )}
           </div>
+
           <div>
             <label>{props.messageReasonInActive}: </label>
-            <input
+            {/* //! MAXIMO 10 CARACTERES */}
+            <textarea
               type="text"
               name={"messageReasonInActive"}
               value={messageReasonInActive}
+              maxLength={100}
+              disabled={isActive === 1}
               onChange={handleChange}
-              disabled={true}
             />
+            <br />
+            {messageReasonInActiveError && (
+              <span>{messageReasonInActiveError}</span>
+            )}
           </div>
 
           <div>

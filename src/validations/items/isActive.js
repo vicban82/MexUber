@@ -1,16 +1,11 @@
-export const validationIsActive = (isActive) => {
-  let isActiveError = '';
+export const validationIsActive = (isActive, messageReasonInActive) => {
+  let messageReasonInActiveError = '';
   
-  // 1 = true && 0 = false
-  const active = [0, 1]
-  if (!active.includes(isActive)) {
-    isActiveError = 'Debes ingresar: 1 = true o 0 = false, segun el caso';
+  if (isActive === 0) {
+    messageReasonInActiveError = 'Debes mencionar la razón de la inactividad';
+  } else if (messageReasonInActive.length >  100) {
+    messageReasonInActiveError = 'Sólo se permiten máximo 100 caracteres'
   }
-  
-  // if (typeof users.isActive !== "boolean") {
-  //   console.log("VAL:", users)
-  //   throw new Error("Debes ingresar: 1 = true o 0 = false, segun el caso")
-  // }
 
-  return isActiveError;
+  return messageReasonInActiveError;
 }
