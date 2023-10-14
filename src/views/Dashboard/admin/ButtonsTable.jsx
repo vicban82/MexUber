@@ -8,32 +8,30 @@ import { headers } from "../../../tools/accessToken";
 import { axiosPutAdmin } from "../../../hooks/admin/crudAdmin";
 import { deleteAlert } from "../../../tools/adminAlerts/delete";
 import { errorUpDate, successUpDate } from "../../../tools/adminAlerts/upDate";
+import { props } from "./props";
+import { 
+  ContainerModal,
+  FormHead,
+  FormEdit,
+  InputContainer,
+  Label,
+  Input,
+  SubmitBtn,
+  ButtonContainer,
+  InputCheck,
+  LabelCheck,
+ } from "../../../components/reusable/FormularioModal";
 
-export const ContainerModal = styled(Modal)`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    height: 75%;
-    justify-content: center;
-    align-content: center;
-    margin: 105px 15% 100% 20%;
-    background: #c83737;
-`;
+/* --------------------------------------Estilos--------------------------------- */
 
 const Img = styled.img`
   height: 32px;
 `;
 
-const FormEdit = styled.form`
-  background-color: beige;
-  color: #000000;
-`;
+/* -------------------------------- Funcionalidad ----------------------------- */
 
 Modal.setAppElement("#root");
 
-const StyledTd = styled.td`
-  display: flex;
-`;
 
 export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErrorForm }) {
 
@@ -165,93 +163,99 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
           onRequestClose={closeModal}
           contentLabel="Editar elemento"
         >
-          <form onSubmit={handleSubmit}>
+          <FormEdit onSubmit={handleSubmit}>
+          <FormHead><h2>Modificar Administrador</h2></FormHead>
             <br />
-            <div>
-              <label>Nombre: </label>
-              <input
+            <InputContainer>
+              <Input
                 type="text"
                 name={"name"}
                 value={name}
+                placeholder="a"
                 onChange={handleChange}
               />
-              <br />
+              <Label>Nombre: </Label>
+            <br />
               {nameError && (
                 <span>{nameError}</span>
               )}
-            </div>
+            </InputContainer>
 
-            <div>
-              <label>Apellidos: </label>
-              <input
+            <InputContainer>
+              <Input
                 type="text"
                 name={"lastName"}
+                placeholder="a"
                 value={lastName}
                 onChange={handleChange}
               />
+              <Label>Apellidos: </Label>
               <br />
               {lastNameError && (
                 <span>{lastNameError}</span>
               )}
-            </div>
+            </InputContainer>
 
-            <div>
-              <label>Correo electrónico: </label>
-              <input
+            <InputContainer>
+              <Input
                 type="text"
                 name={"email"}
+                placeholder="a"
                 value={email}
                 onChange={handleChange}
               />
+              <Label>Correo electrónico: </Label>
               <br />
               {emailError && (
                 <span>{emailError}</span>
               )}
-            </div>
-            <div>
-              <label>Contraseña: </label>
-              <input
+            </InputContainer>
+            <InputContainer>
+              <Input
                 type="password"
                 name={"password"}
+                placeholder="a"
                 value={password}
                 onChange={handleChange}
               />
+              <Label>Contraseña: </Label>
               <br />
               {passwordError && (
                 <span>{passwordError}</span>
               )}
-            </div>
+            </InputContainer>
 
-            <div>
-              <label>Repetr contraseña: </label>
-              <input
+            <InputContainer>
+              <Input
                 type="password"
                 name={"repeatPassword"}
+                placeholder="a"
                 value={repeatPassword}
                 onChange={handleChange}
               />
+              <Label>Repetr contraseña: </Label>
               <br />
               {repeatPasswordError && (
                 <span>{repeatPasswordError}</span>
               )}
-            </div>
+            </InputContainer>
 
-            <div>
-              <label>Activo: </label>
-              <input
+            <InputContainer>
+              <InputCheck
                 type="checkbox"
                 name={"isActive"}
                 checked={isActive === 1}
                 onChange={handleCheckboxChange}
               />
+              <LabelCheck>Activo </LabelCheck>
               <br />
-            </div>
+            </InputContainer>
 
-            <div>
-              <button onClick={closeModal}>Cancelar</button>
-              <button>Guardar</button>
-            </div>
-          </form>
+            <ButtonContainer>
+              <SubmitBtn onClick={closeModal}>Cancelar</SubmitBtn>
+              <SubmitBtn>Guardar</SubmitBtn>
+            </ButtonContainer>
+          </FormEdit>
         </ContainerModal>
       </td>
 

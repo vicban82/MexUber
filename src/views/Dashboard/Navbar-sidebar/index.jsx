@@ -176,8 +176,10 @@ const Navbar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const fullName = `${loginAdmin?.name || ''} ${loginAdmin?.lastName || ''}`;
-  const gmail = loginAdmin?.email;
+  //const fullName = `${loginAdmin?.name || ''} ${loginAdmin?.lastName || ''}`;
+  //const gmail = loginAdmin?.email;
+  const fullName = "Aqui Nombre de Prueba";
+  const gmail = "loginAdmin@gmal.com";
 
   const handleCerrarSesion = async () => {
     await cerrarSesion();

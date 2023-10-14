@@ -143,10 +143,16 @@ export const ContainerItenSidebar = styled.div`
 export const ContainerLogin = styled.div`
   background-color: transparent;
   margin-top: 10px;
+
 `;
 
-export const DivPages = styled.div`
+export const ContainerModal = styled(Modal)`
   display: flex;
   flex-direction: row;
+  align-items: center;
+  height: 75%;
   justify-content: center;
+  align-content: center;
+  margin: 105px 30px 13% 80px;
+  background: #333333;
 `;

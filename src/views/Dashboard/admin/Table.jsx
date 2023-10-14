@@ -10,23 +10,24 @@ const ContainerTabla = styled.div`
 `;
 
 const StyledTable = styled.table`
-  width: 95%;
+  width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
   background-color: #b8860b;
-  min-width: 740px;
+  min-width: 885px;
   
   th { 
     text-decoration: underline; 
     display: flex;
     justify-content: center;
+    min-width: 16%;
   }
 
   th, td {
     text-align: left;
     display: flex;
     justify-content: center;
-    
+    min-width: 16%;
   }
   
   td:nth-child(1), th:nth-child(1) { min-width: 16%; }
@@ -53,8 +54,7 @@ const StyledTable = styled.table`
     display: flex;
     overflow: auto;
     width: 100%;
-    //height: 300px;
-    //max-height: 300px;
+    max-height: 260px;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
@@ -74,23 +74,6 @@ const StyledTable = styled.table`
       text-align: center;
     }
   }
-
-`;
-
-const StyledThead = styled.thead`
-
-`;
-
-const StyledTbody = styled.tbody`
-  /* Agrega aquí los estilos que desees para el tbody */
-
-`;
-
-const StyledTh = styled.th`
-`;
-
-const StyledTd = styled.td`
-
 `;
 
 export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, setErrorForm }) => {
@@ -99,39 +82,37 @@ export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, s
     <>
       <ContainerTabla>
         <StyledTable>
-          <StyledThead> 
+          <thead> 
             <tr>
               {tHeader.length >= 1 &&
                 tHeader.map((item, i) => {
                   return (
-                    <StyledTh  key={i}>
+                    <th  key={i}>
                       {item}
-                    </StyledTh>
+                    </th>
                   );
                 })}
-              <StyledTh>
+              <th>
                 Editar
-              </StyledTh>
-              <StyledTh>
+              </th>
+              <th>
                 Eliminar
-              </StyledTh>
+              </th>
             </tr>
-          </StyledThead>
-          <StyledTbody>
+          </thead>
+          <tbody>
             {tBody.length >= 1 ? (
               tBody.map((data, i) => {
                 return (
                   <tr key={i}>
                     {Object.values(data).map((item, subI) => {
                       // console.log("TABLE-ITEMS:", item, "IDX:", subI)
-                      // SE IGNORA EL "ID" Y EL "PASSWORD"
-                      //! PENDIENTE CAMBIAR EL 5 POR EL 4 
+                      // SE IGNORA EL "ID"
                       if (subI !== 0) {
                         // Agregar un campo de tipo "checkbox"
-                        //! PENDIENTE CAMBIAR EL 4 POR EL 5 
                         if (subI === 4) {
                           return (
-                            <StyledTd key={subI}>
+                            <td key={subI}>
                               <div>
                                 <input
                                   type="checkbox"
@@ -147,15 +128,15 @@ export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, s
                                   }}
                                 />
                               </div>
-                            </StyledTd>
+                            </td>
                           );
                         } else {
                           return (
-                            <StyledTd key={subI}>
+                            <td key={subI}>
                               <div>
                                 <p>{item}</p>
                               </div>
-                            </StyledTd>
+                            </td>
                           );
                         }
                       }
@@ -173,14 +154,14 @@ export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, s
               })
             ) : (
               <tr>
-                <StyledTd colSpan={tHeader.length + 1} >
+                <td colSpan={tHeader.length + 1} >
                   <p>
                     {error ? error : "No hay más información disponible"}
                   </p>
-                </StyledTd>
+                </td>
               </tr >
             )}
-          </StyledTbody>
+          </tbody>
         </StyledTable>
       </ContainerTabla>
     </>

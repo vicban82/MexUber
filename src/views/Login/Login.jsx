@@ -118,11 +118,11 @@ const Login = () => {
     //* Conexion con el Back-End
 
     //! DATOS RANDOM
-    //  if (email && password) {
-    //    demoSwitAlertLogin(email, password);
-    //    navigate("/dashboard/home");
-    //   }
-    //  demoSwitAlertLogin(email, password);
+      // if (email && password) {
+      //   demoSwitAlertLogin(email, password);
+      //   navigate("/dashboard/home");
+      // }
+      // demoSwitAlertLogin(email, password);
     //! DATOS RANDOM
   };
 

@@ -4,14 +4,21 @@ import { headers } from "../../../tools/accessToken";
 import { Table } from "./Table";
 import { ButtonAdd } from "./ButtonAdd";
 import { Search } from "./Search";
-import { DivPages } from "../../../components/reusable/global";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faForward,
+  faBackward,
+  faFastBackward,
+  faFastForward
+} from "@fortawesome/free-solid-svg-icons";
+import { DivPages, ContentPages, DivButtonPages, DivGrupPage } from "../../../components/reusable/DivPages";
 
 export const Drivers = () => {
   const tableHeader = ["Nombres", "Apellidos", "Correo", "Teléfono", "Activo", "Vehículo"];
+
   const [tDriver, setTDriver] = useState([]);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(2);
-  // ESTADO DEL FORMULARIO
+
+  //* ESTADO DEL FORMULARIO
   const [driver, setDriver] = useState({
     name: "",
     lastName: "",
@@ -67,20 +74,37 @@ export const Drivers = () => {
     isActiveError: "",
     messageReasonInActiveError: "",
   });
-  useEffect(() => {
-    axiosGetDrivers(setTDriver, headers, page, limit);
-  }, [page, limit]);
+  //* ESTADO DEL FORMULARIO
+  
+  // * Páginado
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+  const [totalPages, setTotalPages] = useState(1);
+  
+  const firstPages = (e) => {
+    e.preventDefault();
+    setPage(1);
+  };
 
-  //* Paginado
   const prev = (e) => {
     e.preventDefault();
     setPage(page > 1 ? page - 1 : 1);
   };
-
+  
   const next = (e) => {
     e.preventDefault();
     setPage(page + 1);
   };
+
+  const lastPages = (e) => {
+    e.preventDefault();
+    setPage(totalPages);
+  };
+  //* Paginado
+
+  useEffect(() => {
+    axiosGetDrivers(setTDriver, setTotalPages, headers, page, limit);
+  }, [page, limit]);
 
   return (
     <section>
@@ -88,7 +112,15 @@ export const Drivers = () => {
         <p>En esta sección no hay información disponible</p>
       ) : (
         <>
-          <Search setTDriver={setTDriver} page={page} limit={limit} />
+          <Search setTDriver={setTDriver} setTotalPages={setTotalPages} page={page} limit={limit} />
+          <ButtonAdd
+            tDriver={tDriver}
+            setTDriver={setTDriver}
+            driver={driver}
+            setDriver={setDriver}
+            errorForm={errorForm}
+            setErrorForm={setErrorForm}
+          />
           <Table
             tHeader={tableHeader}
             tDriver={tDriver}
@@ -98,23 +130,33 @@ export const Drivers = () => {
             errorForm={errorForm}
             setErrorForm={setErrorForm}
           />
-          <ButtonAdd
-            tDriver={tDriver}
-            setTDriver={setTDriver}
-            driver={driver}
-            setDriver={setDriver}
-            errorForm={errorForm}
-            setErrorForm={setErrorForm}
-          />
-          <DivPages>
-            <button onClick={(e) => prev(e)} disabled={page <= 1}>
-              {"<-- PREV"}
-            </button>
-            <p>{`Página: ${page}/${page}`}</p>
-            <button onClick={(e) => next(e)} disabled={tDriver.length < page}>
-              {"NEXT -->"}
-            </button>
-          </DivPages>
+          <ContentPages>
+            <DivGrupPage>
+              <DivButtonPages>
+                <button onClick={(e) => firstPages(e)} disabled={page <= 1}>
+                  <FontAwesomeIcon icon={faFastBackward} />
+                </button>
+              </DivButtonPages>
+              <DivButtonPages>
+                <button onClick={(e) => prev(e)} disabled={page <= 1}>
+                  <FontAwesomeIcon icon={faBackward} />
+                </button>
+              </DivButtonPages>
+              <DivPages>
+                {`Página: ${page}/${totalPages}`}
+              </DivPages>
+              <DivButtonPages>
+                <button onClick={(e) => next(e)} disabled={page >= totalPages}>
+                  <FontAwesomeIcon icon={faForward} />
+                </button>
+              </DivButtonPages>
+              <DivButtonPages>
+                <button onClick={(e) => lastPages(e)} disabled={page >= totalPages}>
+                  <FontAwesomeIcon icon={faForward} />
+                </button>
+              </DivButtonPages>
+            </DivGrupPage>
+          </ContentPages >
         </>
       )}
     </section>

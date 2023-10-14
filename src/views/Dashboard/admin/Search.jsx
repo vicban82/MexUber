@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { axiosGetAdmins, axiosSearchAdmins } from '../../../hooks/admin/crudAdmin';
 import { headers } from '../../../tools/accessToken';
 
-export const Search = ({ setTBody, page, limit }) => {
+export const Search = ({ setTBody, setTotalPages, page, limit }) => {
   const [search, setSearch] = useState("");
 
   function handleSubmit(e) {
@@ -18,7 +18,7 @@ export const Search = ({ setTBody, page, limit }) => {
   
   function handleClick(e) {
     e.preventDefault();
-    axiosGetAdmins(setTBody, page, limit);
+    axiosGetAdmins(setTBody, setTotalPages, page, limit);
   }
 
   return (

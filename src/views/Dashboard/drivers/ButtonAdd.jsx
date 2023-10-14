@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import { validateDriver } from "../../../validations/drivers";
 import { headers } from "../../../tools/accessToken";
 import { axiosPostDriver } from "../../../hooks/drivers/crudDrivers";
+import styled from 'styled-components';
 import {
   errorRegister,
   successRegister,
@@ -10,7 +11,44 @@ import {
 import { axiosGetLicencias, axiosGetSepomex } from "../../../hooks/db/info";
 import { useDropzone } from "react-dropzone";
 import { props } from "./props";
+import { 
+  ContainerModal,
+  FormHead,
+  FormEdit,
+  InputContainer,
+  Label,
+  Input,
+  SubmitBtn,
+  ButtonContainer,
+  InputCheck,
+  LabelCheck,
+ } from "../../../components/reusable/FormularioModal";
+
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
+
+const AdminTitulo = styled.div`
+    display: flex;
+    flex-direction: row;
+    padding: 5px 5px;
+    padding: 15px 7% 1px 7%;
+    justify-content: space-between;
+    margin-top: -75px;
+    height: 50px;
+    align-items: center;
+`;
+
+const ButtonV1 = styled.button`
+  color: #646cff;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+`;
 
 const dropzoneContainerStyles = {
   width: "200px", // Establece el ancho del contenedor
@@ -339,12 +377,16 @@ export const ButtonAdd = ({
 
   return (
     <div>
-      <button onClick={() => setModalIsOpen(true)}>Agregar</button>
-      <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
-        <form onSubmit={handleSubmit}>
+      <AdminTitulo>
+        <div><h2>Conductores<br /></h2></div>
+        <ButtonV1 onClick={() => setModalIsOpen(true)}>Agregar</ButtonV1>
+      </AdminTitulo>
+      <ContainerModal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
+        <FormEdit onSubmit={handleSubmit}>
+        <FormHead><h2>Nuevo Conductor</h2></FormHead>
           <br />
           {/*//* INFORMACION DEL CONDUCTOR */}
-          <div>
+          <InputContainer>
             <label>{props.name}: </label>
             <input
               type="text"
@@ -356,9 +398,9 @@ export const ButtonAdd = ({
             {nameError && (
               <span>{nameError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
+          <InputContainer>
             <label>{props.lastName}: </label>
             <input
               type="text"
@@ -370,9 +412,9 @@ export const ButtonAdd = ({
             {lastNameError && (
               <span>{lastNameError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
+          <InputContainer>
             <label>{props.zipCode}: </label>
             <input
               type="text"
@@ -384,9 +426,9 @@ export const ButtonAdd = ({
             {zipCodeError && (
               <span>{zipCodeError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
+          <InputContainer>
             <label>{props.state}: </label>
             <select
               disabled={true}
@@ -400,9 +442,9 @@ export const ButtonAdd = ({
             {stateError && (
               <span>{stateError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
+          <InputContainer>
             <label>{props.city}: </label>
             <select
               disabled={true}
@@ -416,9 +458,9 @@ export const ButtonAdd = ({
             {cityError && (
               <span>{cityError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
+          <InputContainer>
             <label>{props.colonia}: </label>
             <select
               disabled={zipCode || codigoPostal === zipCode ? false : true}
@@ -441,9 +483,9 @@ export const ButtonAdd = ({
             {coloniaError && (
               <span>{coloniaError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
+          <InputContainer>
             <label>{props.address}: </label>
             <input
               type="text"
@@ -455,9 +497,9 @@ export const ButtonAdd = ({
             {addressError && (
               <span>{addressError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
+          <InputContainer>
             <label>{props.contact}: </label>
             <input
               type="text"
@@ -469,9 +511,9 @@ export const ButtonAdd = ({
             {contactError && (
               <span>{contactError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
+          <InputContainer>
             <label>{props.email}: </label>
             <input
               type="text"
@@ -483,9 +525,9 @@ export const ButtonAdd = ({
             {emailError && (
               <span>{emailError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
+          <InputContainer>
             <label>{props.driverPicture}: </label>
             <div {...getDriverRootProps()} style={dropzoneContainerStyles}>
               <input {...getDriverInputProps()} />
@@ -501,11 +543,11 @@ export const ButtonAdd = ({
                 <span>{driverPictureError}</span>
               )}
             </div>
-          </div>
+          </InputContainer>
 
           <h2>Licencia de conducir</h2>
           <hr />
-          <div>
+          <InputContainer>
             <label>{props.driverLicenseNumber}: </label>
             {/* //! DE 5 A 10 CARACTERES Y PUEDE SER ALFANUMERICO */}
             <input
@@ -518,9 +560,9 @@ export const ButtonAdd = ({
             {driverLicenseNumberError && (
               <span>{driverLicenseNumberError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
+          <InputContainer>
             <label>{props.stateLicense}: </label>
             <select
               disabled={driverLicenseNumber ? false : true}
@@ -542,9 +584,9 @@ export const ButtonAdd = ({
             {stateLicenseError && (
               <span>{stateLicenseError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
+          <InputContainer>
             <label>{props.typeLicense}: </label>
             <select
               disabled={driverLicenseNumber ? false : true}
@@ -566,9 +608,9 @@ export const ButtonAdd = ({
             {typeLicenseError && (
               <span>{typeLicenseError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
+          <InputContainer>
             <label>{props.dateLicense}: </label>
             <input
               disabled={driverLicenseNumber ? false : true}
@@ -581,9 +623,9 @@ export const ButtonAdd = ({
             {dateLicenseError && (
               <span>{dateLicenseError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
+          <InputContainer>
             <div style={pictureLicence}>
               <label>Fotos licencia: </label>
               <br />
@@ -598,7 +640,7 @@ export const ButtonAdd = ({
                 </>
               ) : (
                 <>
-                  <div {...getFrontLicenseRootProps()} style={dropzoneContainerStyles} >
+                  <InputContainer {...getFrontLicenseRootProps()} style={dropzoneContainerStyles} >
                     <input {...getFrontLicenseInputProps()} />
                     {/* //* SE VISUALIZA LA IMAGEN EN FORMATE BASE 64 */}
                     {frontLicensePicture && <img
@@ -611,8 +653,8 @@ export const ButtonAdd = ({
                     {frontLicensePictureError && (
                       <span>{frontLicensePictureError}</span>
                     )}
-                  </div>
-                  <div {...getBackLicenseRootProps()} style={dropzoneContainerStyles} >
+                  </InputContainer>
+                  <InputContainer {...getBackLicenseRootProps()} style={dropzoneContainerStyles} >
                     <input {...getBackLicenseInputProps()} />
                     {/* //* SE VISUALIZA LA IMAGEN EN FORMATE BASE 64 */}
                     {backLicensePicture && <img
@@ -625,16 +667,16 @@ export const ButtonAdd = ({
                     {backLicensePictureError && (
                       <span>{backLicensePictureError}</span>
                     )}
-                  </div>
+                  </InputContainer>
                 </>
               )}
               
             </div>
-          </div>
+          </InputContainer>
 
           <h2>Ajustes en la aplicación</h2>
           <hr />
-          <div>
+          <InputContainer>
             <label>{props.services}: </label>
             <input
               type="checkbox"
@@ -663,11 +705,11 @@ export const ButtonAdd = ({
             {servicesError && (
               <span>{servicesError}</span>
             )}
-          </div>
+          </InputContainer>
 
           <h2>Acceso a la aplicación</h2>
           <hr />
-          <div>
+          <InputContainer>
             <label>{props.password}: </label>
             <input
               type="password"
@@ -679,9 +721,9 @@ export const ButtonAdd = ({
             {passwordError && (
               <span>{passwordError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
+          <InputContainer>
             <label>{props.repeatPassword}: </label>
             <input
               type="password"
@@ -693,9 +735,9 @@ export const ButtonAdd = ({
             {repeatPasswordError && (
               <span>{repeatPasswordError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
+          <InputContainer>
             <label>{props.isActive}: </label>
             <input
               type="checkbox"
@@ -707,9 +749,9 @@ export const ButtonAdd = ({
             {isActiveError && (
               <span>{isActiveError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
+          <InputContainer>
             <label>{props.messageReasonInActive}: </label>
             {/* //! MAXIMO 10 CARACTERES */}
             <textarea
@@ -724,14 +766,14 @@ export const ButtonAdd = ({
             {messageReasonInActiveError && (
               <span>{messageReasonInActiveError}</span>
             )}
-          </div>
+          </InputContainer>
 
-          <div>
-            <button onClick={() => setModalIsOpen(false)}>Cancelar</button>
-            <button type="submit">Guardar</button>
-          </div>
-        </form>
-      </Modal>
+          <ButtonContainer>
+            <SubmitBtn onClick={() => setModalIsOpen(false)}>Cancelar</SubmitBtn>
+            <SubmitBtn type="submit">Guardar</SubmitBtn>
+          </ButtonContainer>
+        </FormEdit>
+      </ContainerModal>
     </div>
   );
 };

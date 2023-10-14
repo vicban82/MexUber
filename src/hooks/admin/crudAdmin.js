@@ -1,5 +1,5 @@
 import axios from "axios";
-import { dataFake } from "../../data/dataFake.js";
+import { dataFakeAdmin } from "../../data/dataFakeAdmin.js";
 
 export async function axiosGetAdmins(setTBody, setTotalPages, page, limit) {
   try {
@@ -7,7 +7,7 @@ export async function axiosGetAdmins(setTBody, setTotalPages, page, limit) {
     // console.log('DATA:', data);
     setTBody(data.admins);
     setTotalPages(data.totalPages)
-    //setTBody(dataFake);
+    // setTBody(dataFakeAdmin);
   } catch (err) {
     const { error } = err.response.data;
     console.log('ERROR:', error);
@@ -18,12 +18,17 @@ export async function axiosSearchAdmins(search, setTBody, headers) {
   try {
     const { data } = (await axios.get(`/api/admins?search=${search}`, { headers }));
     // console.log('DATA:', data);
-    setTBody(data);
+    setTBody(data.admins);
+    // setTBody(dataFakeAdmin);
   } catch (err) {
     const { error } = err.response.data;
     console.log('ERROR:', error);
   }
 }
+
+// export async function axiosSearchAdmins(search, setTBody, headers) {
+//   setTBody(dataFakeAdmin[4]);
+// }
 
 export async function axiosPostAdmin(admin, setErrorForm, headers) {
   try {
