@@ -32,6 +32,7 @@ const StyledTable = styled.table`
     min-width: 14%;
     max-width: 14%;
     word-break:break-all;
+    text-align: center;
   }
   
   td:nth-child(1), th:nth-child(1) { min-width: 14%; }

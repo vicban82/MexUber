@@ -37,8 +37,8 @@ const StyledTable = styled.table`
   
   td:nth-child(1), th:nth-child(1) { min-width: 16%; }
   td:nth-child(1), th:nth-child(1) { max-width: 16%; }
-  td:nth-child(1), th:nth-child(1) { min-width: 16%; }
-  td:nth-child(1), th:nth-child(1) { max-width: 16%; }
+  td:nth-child(2), th:nth-child(2) { min-width: 16%; }
+  td:nth-child(2), th:nth-child(2) { max-width: 16%; }
   td:nth-child(3), th:nth-child(3) { width: 16%; }
   td:nth-child(3), th:nth-child(3) { max-width: 16%; }
   td:nth-child(3), th:nth-child(3) { min-width: 16%; }
