@@ -84,33 +84,39 @@ export const Drivers = () => {
 
   return (
     <section>
-      <Search setTDriver={setTDriver} page={page} limit={limit} />
-      <Table
-        tHeader={tableHeader}
-        tDriver={tDriver}
-        setTDriver={setTDriver}
-        driver={driver}
-        setDriver={setDriver}
-        errorForm={errorForm}
-        setErrorForm={setErrorForm}
-      />
-      <ButtonAdd
-        tDriver={tDriver}
-        setTDriver={setTDriver}
-        driver={driver}
-        setDriver={setDriver}
-        errorForm={errorForm}
-        setErrorForm={setErrorForm}
-      />
-      <DivPages>
-        <button onClick={(e) => prev(e)} disabled={page <= 1}>
-          {"<-- PREV"}
-        </button>
-        <p>{`Página: ${page}/${page}`}</p>
-        <button onClick={(e) => next(e)} disabled={tDriver.length < page}>
-          {"NEXT -->"}
-        </button>
-      </DivPages>
+      {tDriver.length === 0 ? (
+        <p>En esta sección no hay información disponible</p>
+      ) : (
+        <>
+          <Search setTDriver={setTDriver} page={page} limit={limit} />
+          <Table
+            tHeader={tableHeader}
+            tDriver={tDriver}
+            setTDriver={setTDriver}
+            driver={driver}
+            setDriver={setDriver}
+            errorForm={errorForm}
+            setErrorForm={setErrorForm}
+          />
+          <ButtonAdd
+            tDriver={tDriver}
+            setTDriver={setTDriver}
+            driver={driver}
+            setDriver={setDriver}
+            errorForm={errorForm}
+            setErrorForm={setErrorForm}
+          />
+          <DivPages>
+            <button onClick={(e) => prev(e)} disabled={page <= 1}>
+              {"<-- PREV"}
+            </button>
+            <p>{`Página: ${page}/${page}`}</p>
+            <button onClick={(e) => next(e)} disabled={tDriver.length < page}>
+              {"NEXT -->"}
+            </button>
+          </DivPages>
+        </>
+      )}
     </section>
   );
 };

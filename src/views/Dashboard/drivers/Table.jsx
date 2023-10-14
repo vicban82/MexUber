@@ -36,24 +36,23 @@ export const Table = ({ tHeader, tDriver, setTDriver, driver, setDriver, errorFo
         <StyledTable>
           <StyledThead>
             <tr>
-              {tHeader.length >= 1 &&
-                tHeader.map((item, i) => {
-                  return (
-                    <StyledTh  key={i}>
-                      <p>{item}</p>
-                    </StyledTh>
-                  );
-                })}
+              {tHeader.map((item, i) => {
+                return (
+                  <StyledTh  key={i}>
+                    <p>{item}</p>
+                  </StyledTh>
+                );
+              })}
               <StyledTh>
-                <p>Editar / Eliminar</p>
+                <p>Editar</p>
               </StyledTh>
-              {/* <StyledTh>
+              <StyledTh>
                 <p>Eliminar</p>
-              </StyledTh> */}
+              </StyledTh>
             </tr>
           </StyledThead>
           <StyledTbody>
-            {tDriver.length >= 1 ? (
+            {tDriver.length >= 1 && (
               tDriver.map((data, i) => {
                 return (
                   <tr key={i}>
@@ -62,7 +61,7 @@ export const Table = ({ tHeader, tDriver, setTDriver, driver, setDriver, errorFo
                       // SE IGNORA EL "ID"
                       if (subI !== 0) {
                         // Agregar un campo de tipo "checkbox"
-                        if (subI === 5 || subI === 6) {
+                        if (subI === 5) {
                           return (
                             <StyledTd key={subI}>
                               <div>
@@ -79,6 +78,14 @@ export const Table = ({ tHeader, tDriver, setTDriver, driver, setDriver, errorFo
                                     setTDriver(updatedTBody);
                                   }}
                                 />
+                              </div>
+                            </StyledTd>
+                          );
+                        } else if (subI === 6) {
+                          return (
+                            <StyledTd key={subI}>
+                              <div>
+                                <p>{!item ? "SIN ASIGNACIÓN" : item}</p>
                               </div>
                             </StyledTd>
                           );
@@ -107,15 +114,6 @@ export const Table = ({ tHeader, tDriver, setTDriver, driver, setDriver, errorFo
                   </tr>
                 );
               })
-            ) : (
-              <tr>
-                <StyledTd colSpan={tHeader.length + 1} >
-                  <p>
-                    {/* {error ? error : "No hay información disponible"} */}
-                    {"No hay información disponible"}
-                  </p>
-                </StyledTd>
-              </tr >
             )}
           </StyledTbody>
         </StyledTable>

@@ -16,7 +16,7 @@ export async function axiosLogins(login) {
 export async function axiosVerifyAdmin(setVerifyAdmin) {
   try {
     const { data } = await axios.get('/api/admins');
-    console.log('VerifyAdmin:', data.admins);
+    // console.log('VerifyAdmin:', data.admins);
     setVerifyAdmin(data.admins);
   } catch (err) {
     const { error } = err.response.data;
