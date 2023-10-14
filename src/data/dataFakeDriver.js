@@ -1,12 +1,12 @@
 export const dataFakeDriver = [
     {
         id: 1,
-        name: "Jose",
-        lastName: "Perez Ramirez",
-        email: "admin_Main@gmail.com",
-        contact: 4546545,
+        name: "gfdgdf",
+        lastName: "",
+        email: "",
+        contact: "",
         isActive: 1,
-        driverLicenseNumber: "5454654",
+        driverLicenseNumber: "5454654"
     },
     {
         id: 2,

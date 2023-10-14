@@ -13,6 +13,7 @@ import { useDropzone } from "react-dropzone";
 import { props } from "./props";
 import { 
   ContainerModal,
+  ContainerScroll,
   FormHead,
   FormEdit,
   InputContainer,
@@ -22,7 +23,7 @@ import {
   ButtonContainer,
   InputCheck,
   LabelCheck,
- } from "../../../components/reusable/FormularioModal";
+ } from "../../../components/reusable/FormularioModalDriver";
 
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
@@ -49,6 +50,11 @@ const ButtonV1 = styled.button`
   cursor: pointer;
   transition: border-color 0.25s;
 `;
+
+const ContainerModalDriver = styled(ContainerModal)`
+  
+`;
+
 
 const dropzoneContainerStyles = {
   width: "200px", // Establece el ancho del contenedor
@@ -376,24 +382,26 @@ export const ButtonAdd = ({
   }
 
   return (
-    <div>
+    <>
       <AdminTitulo>
-        <div><h2>Administradores<br /></h2></div>
+        <div><h2>Conductores<br /></h2></div>
         <ButtonV1 onClick={() => setModalIsOpen(true)}>Agregar</ButtonV1>
       </AdminTitulo>
-      <ContainerModal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
+      <ContainerModalDriver isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
         <FormEdit onSubmit={handleSubmit}>
         <FormHead><h2>Nuevo Conductor</h2></FormHead>
-          <br />
+        <br />
+        <ContainerScroll>
           {/*//* INFORMACION DEL CONDUCTOR */}
           <InputContainer>
-            <label>{props.name}: </label>
-            <input
+            <Input
               type="text"
               name={"name"}
               value={name}
+              placeholder="a"
               onChange={handleChange}
             />
+            <Label>{props.name}: </Label>
             <br />
             {nameError && (
               <span>{nameError}</span>
@@ -401,13 +409,14 @@ export const ButtonAdd = ({
           </InputContainer>
 
           <InputContainer>
-            <label>{props.lastName}: </label>
-            <input
+            <Input
               type="text"
               name={"lastName"}
+              placeholder="a"
               value={lastName}
               onChange={handleChange}
             />
+            <Label>{props.lastName}: </Label>
             <br />
             {lastNameError && (
               <span>{lastNameError}</span>
@@ -415,13 +424,14 @@ export const ButtonAdd = ({
           </InputContainer>
 
           <InputContainer>
-            <label>{props.zipCode}: </label>
-            <input
+            <Input
               type="text"
               name={"zipCode"}
+              placeholder="a"
               value={zipCode}
               onChange={handleChange}
             />
+            <Label>{props.zipCode}: </Label>
             <br />
             {zipCodeError && (
               <span>{zipCodeError}</span>
@@ -429,7 +439,6 @@ export const ButtonAdd = ({
           </InputContainer>
 
           <InputContainer>
-            <label>{props.state}: </label>
             <select
               disabled={true}
               name={"state"}
@@ -442,6 +451,7 @@ export const ButtonAdd = ({
             {stateError && (
               <span>{stateError}</span>
             )}
+            <label>{props.state}: </label>
           </InputContainer>
 
           <InputContainer>
@@ -486,13 +496,14 @@ export const ButtonAdd = ({
           </InputContainer>
 
           <InputContainer>
-            <label>{props.address}: </label>
-            <input
+            <Input
               type="text"
               name={"address"}
+              placeholder="a"
               value={address}
               onChange={handleChange}
             />
+            <Label>{props.address}: </Label>
             <br />
             {addressError && (
               <span>{addressError}</span>
@@ -500,13 +511,14 @@ export const ButtonAdd = ({
           </InputContainer>
 
           <InputContainer>
-            <label>{props.contact}: </label>
-            <input
+            <Input
               type="text"
               name={"contact"}
               value={contact}
+              placeholder="a"
               onChange={handleChange}
             />
+            <Label>{props.contact}: </Label>
             <br />
             {contactError && (
               <span>{contactError}</span>
@@ -514,13 +526,14 @@ export const ButtonAdd = ({
           </InputContainer>
 
           <InputContainer>
-            <label>{props.email}: </label>
-            <input
+            <Input
               type="text"
               name={"email"}
               value={email}
+              placeholder="a"
               onChange={handleChange}
             />
+            <Label>{props.email}: </Label>
             <br />
             {emailError && (
               <span>{emailError}</span>
@@ -528,16 +541,16 @@ export const ButtonAdd = ({
           </InputContainer>
 
           <InputContainer>
-            <label>{props.driverPicture}: </label>
             <div {...getDriverRootProps()} style={dropzoneContainerStyles}>
-              <input {...getDriverInputProps()} />
+              <Input {...getDriverInputProps()} />
               {/* //* SE VISUALIZA LA IMAGEN EN FORMATE BASE 64 */}
               {driverPicture && <img
                 src={`data:image/png;base64,${driverPicture}`}
                 alt="Foto conductor" 
                 style={{ maxWidth: '100px' }} 
-              />}
+                />}
               <p>Frente</p>
+              <Label>{props.driverPicture}: </Label>
               <br />
               {driverPictureError && (
                 <span>{driverPictureError}</span>
@@ -550,10 +563,11 @@ export const ButtonAdd = ({
           <InputContainer>
             <label>{props.driverLicenseNumber}: </label>
             {/* //! DE 5 A 10 CARACTERES Y PUEDE SER ALFANUMERICO */}
-            <input
+            <Input
               type="text"
               name={"driverLicenseNumber"}
               value={driverLicenseNumber}
+              placeholder="a"
               onChange={handleChange}
             />
             <br />
@@ -612,7 +626,7 @@ export const ButtonAdd = ({
 
           <InputContainer>
             <label>{props.dateLicense}: </label>
-            <input
+            <Input
               disabled={driverLicenseNumber ? false : true}
               type="date"
               name={"dateLicense"}
@@ -641,7 +655,7 @@ export const ButtonAdd = ({
               ) : (
                 <>
                   <InputContainer {...getFrontLicenseRootProps()} style={dropzoneContainerStyles} >
-                    <input {...getFrontLicenseInputProps()} />
+                    <Input {...getFrontLicenseInputProps()} />
                     {/* //* SE VISUALIZA LA IMAGEN EN FORMATE BASE 64 */}
                     {frontLicensePicture && <img
                       src={`data:image/png;base64,${frontLicensePicture}`}
@@ -655,7 +669,7 @@ export const ButtonAdd = ({
                     )}
                   </InputContainer>
                   <InputContainer {...getBackLicenseRootProps()} style={dropzoneContainerStyles} >
-                    <input {...getBackLicenseInputProps()} />
+                    <Input {...getBackLicenseInputProps()} />
                     {/* //* SE VISUALIZA LA IMAGEN EN FORMATE BASE 64 */}
                     {backLicensePicture && <img
                       src={`data:image/png;base64,${backLicensePicture}`}
@@ -677,15 +691,14 @@ export const ButtonAdd = ({
           <h2>Ajustes en la aplicación</h2>
           <hr />
           <InputContainer>
-            <label>{props.services}: </label>
-            <input
+            <InputCheck
               type="checkbox"
               name="allServices"
               checked={allServices === 1}
               onChange={handleCheckboxChange}
             />
             Todos
-            <input
+            <InputCheck
               type="checkbox"
               name="servicesLGBQT"
               checked={servicesLGBQT === 1}
@@ -693,13 +706,14 @@ export const ButtonAdd = ({
               onChange={handleCheckboxChange}
             />
             LGBTQ+
-            <input
+            <InputCheck
               type="checkbox"
               name="onlyWomenServices"
               checked={onlyWomenServices === 1}
               disabled={allServices === 1 ? true : false}
               onChange={handleCheckboxChange}
             />
+            <LabelCheck>{props.services}: </LabelCheck>
             Sólo mujeres
             <br />
             {servicesError && (
@@ -710,13 +724,14 @@ export const ButtonAdd = ({
           <h2>Acceso a la aplicación</h2>
           <hr />
           <InputContainer>
-            <label>{props.password}: </label>
-            <input
+            <Input
               type="password"
               name={"password"}
               value={password}
+              placeholder="a"
               onChange={handleChange}
-            />
+              />
+            <Label>{props.password}: </Label>
             <br />
             {passwordError && (
               <span>{passwordError}</span>
@@ -724,13 +739,14 @@ export const ButtonAdd = ({
           </InputContainer>
 
           <InputContainer>
-            <label>{props.repeatPassword}: </label>
-            <input
+            <Input
               type="password"
               name={"repeatPassword"}
               value={repeatPassword}
+              placeholder="a"
               onChange={handleChange}
             />
+            <Label>{props.repeatPassword}: </Label>
             <br />
             {repeatPasswordError && (
               <span>{repeatPasswordError}</span>
@@ -739,7 +755,7 @@ export const ButtonAdd = ({
 
           <InputContainer>
             <label>{props.isActive}: </label>
-            <input
+            <InputCheck
               type="checkbox"
               name={"isActive"}
               checked={isActive === 1}
@@ -767,13 +783,13 @@ export const ButtonAdd = ({
               <span>{messageReasonInActiveError}</span>
             )}
           </InputContainer>
-
+          </ContainerScroll>
           <ButtonContainer>
             <SubmitBtn onClick={() => setModalIsOpen(false)}>Cancelar</SubmitBtn>
             <SubmitBtn type="submit">Guardar</SubmitBtn>
           </ButtonContainer>
-        </FormEdit>
-      </ContainerModal>
-    </div>
+          </FormEdit>
+      </ContainerModalDriver>
+    </>
   );
 };

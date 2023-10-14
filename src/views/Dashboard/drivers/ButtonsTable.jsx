@@ -21,7 +21,7 @@ import {
   ButtonContainer,
   InputCheck,
   LabelCheck,
- } from "../../../components/reusable/FormularioModal";
+ } from "../../../components/reusable/FormularioModalDriver";
 
 Modal.setAppElement("#root");
 
@@ -329,18 +329,24 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
           </ButtonContainer>
         </FormEdit>
       </ContainerModal>
+      <button onClick={() => handleDelete(id)}>
+          <Img
+            src={deleteIcon}
+            alt="Delete"
+          />
+        </button>
     </td>
 
 {/* -----------------------------Boton Eliminar------------------------------------------ */}
 
-      <td>
+{/*       <td>
         <button onClick={() => handleDelete(id)}>
           <Img
             src={deleteIcon}
             alt="Delete"
           />
         </button>
-      </td>
+      </td> */}
 </>
   );
 }

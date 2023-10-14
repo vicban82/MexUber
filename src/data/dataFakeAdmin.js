@@ -1,9 +1,9 @@
 export const dataFakeAdmin = [
     {
         id: 1,
-        nombres: "Jose",
-        apellidos: "Perez Ramirez",
-        email: "admin_Main@gmail.com",
+        nombres: "",
+        apellidos: "",
+        email: "",
         activo: 1,
     },
     {

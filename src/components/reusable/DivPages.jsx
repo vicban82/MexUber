@@ -10,7 +10,7 @@ export const DivGrupPage = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 235px;
+    width: 245px;
     border: solid;
     border-radius: 12px;
     border-color: #383739;

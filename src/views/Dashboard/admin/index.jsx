@@ -11,6 +11,7 @@ import {
   faFastForward
 } from "@fortawesome/free-solid-svg-icons";
 import { DivPages, ContentPages, DivButtonPages, DivGrupPage } from "../../../components/reusable/DivPages";
+import { Section } from "../../../components/reusable/global";
 
 
 const Admins = () => {
@@ -45,7 +46,7 @@ const Admins = () => {
   };
 
   return (
-    <section>
+    <Section>
       <ButtonAdd
         tBody={tBody}
         setTBody={setTBody}
@@ -83,13 +84,13 @@ const Admins = () => {
           </DivButtonPages>
           <DivButtonPages>
             <button onClick={(e) => next(e)} disabled={tBody.length <= 1}>
-            <FontAwesomeIcon icon={faFastForward} />{/* {"<-- PREV"} */} {/* {"NEXT -->"} */}
+            <FontAwesomeIcon icon={faFastForward} />
             </button>
           </DivButtonPages>
         </DivGrupPage>
       </ContentPages>
       <Search setTBody={setTBody} page={page} limit={limit} />
-    </section>
+    </Section>
   );
 };
 

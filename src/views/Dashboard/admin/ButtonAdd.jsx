@@ -17,7 +17,7 @@ import {
   ButtonContainer,
   InputCheck,
   LabelCheck,
- } from "../../../components/reusable/FormularioModal";
+ } from "../../../components/reusable/FormularioModalAdmin";
 
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 

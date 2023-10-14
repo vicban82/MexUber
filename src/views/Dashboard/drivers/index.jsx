@@ -12,6 +12,7 @@ import {
   faFastForward
 } from "@fortawesome/free-solid-svg-icons";
 import { DivPages, ContentPages, DivButtonPages, DivGrupPage } from "../../../components/reusable/DivPages";
+import { Section } from "../../../components/reusable/global";
 
 export const Drivers = () => {
   const tableHeader = ["Nombres", "Apellidos", "Correo", "Teléfono", "Activo", "Vehículo"];
@@ -90,7 +91,7 @@ export const Drivers = () => {
   };
 
   return (
-    <section>
+    <Section>
       <ButtonAdd
         tDriver={tDriver}
         setTDriver={setTDriver}
@@ -130,12 +131,12 @@ export const Drivers = () => {
           </DivButtonPages>
           <DivButtonPages>
             <button onClick={(e) => next(e)} disabled={tDriver.length < page}>
-              <FontAwesomeIcon icon={faForward} />{/* {"<-- PREV"} */} {/* {"NEXT -->"} */}
+              <FontAwesomeIcon icon={faFastForward} />
             </button>
           </DivButtonPages>
         </DivGrupPage>
       </ContentPages >
       <Search setTDriver={setTDriver} page={page} limit={limit} />
-    </section>
+    </Section>
   );
 };

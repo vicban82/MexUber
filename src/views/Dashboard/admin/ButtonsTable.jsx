@@ -20,7 +20,7 @@ import {
   ButtonContainer,
   InputCheck,
   LabelCheck,
- } from "../../../components/reusable/FormularioModal";
+ } from "../../../components/reusable/FormularioModalAdmin";
 
 /* --------------------------------------Estilos--------------------------------- */
 
@@ -257,11 +257,6 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
             </ButtonContainer>
           </FormEdit>
         </ContainerModal>
-      </td>
-
-      {/* -------------------Boton Eliminar----------------------- */}
-
-      <td>
         <button onClick={() => handleDelete(id)}>
           <Img
             src={deleteIcon}
