@@ -149,3 +149,14 @@ export const LabelCheck = styled.label`
     padding-left: 8px;
     font-size: 18px;
 `;
+
+export const Titulo = styled.div`
+    display: flex;
+    flex-direction: row;
+    padding: 5px 5px;
+    padding: 15px 7% 1px 7%;
+    justify-content: space-between;
+    margin-top: -75px;
+    height: 50px;
+    align-items: center;
+`;

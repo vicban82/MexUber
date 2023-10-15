@@ -17,7 +17,7 @@ export const ContainerModal = styled(Modal)`
 
 export const ContainerScroll = styled.div`
     overflow-y: scroll;
-    max-height: 440px;
+    max-height: 400px;
     padding: 9px 13px 10px 0px;
     //scrollbar-color: #007 #bada55;
     &::-webkit-scrollbar {
@@ -58,6 +58,7 @@ export const ButtonContainer = styled.div`
   width: 100%;
   justify-content: center;
   grid-gap: 20px;
+  padding-top: 13px;
 `;
 
 export const SubmitBtn = styled.button`
@@ -187,4 +188,15 @@ export const LabelCheck = styled.label`
     font-weight: bold;
     padding-left: 8px;
     font-size: 18px;
+`;
+
+export const Titulo = styled.div`
+    display: flex;
+    flex-direction: row;
+    padding: 5px 5px;
+    padding: 15px 7% 1px 7%;
+    justify-content: space-between;
+    margin-top: -75px;
+    height: 50px;
+    align-items: center;
 `;

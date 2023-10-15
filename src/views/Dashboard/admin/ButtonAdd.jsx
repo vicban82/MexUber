@@ -17,21 +17,10 @@ import {
   ButtonContainer,
   InputCheck,
   LabelCheck,
+  Titulo
  } from "../../../components/reusable/FormularioModalAdmin";
 
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
-
-
-const AdminTitulo = styled.div`
-    display: flex;
-    flex-direction: row;
-    padding: 5px 5px;
-    padding: 15px 7% 1px 7%;
-    justify-content: space-between;
-    margin-top: -75px;
-    height: 50px;
-    align-items: center;
-`;
 
 
 const ButtonV1 = styled.button`
@@ -134,10 +123,10 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm }) => {
 
   return (
   <>
-    <AdminTitulo>
+    <Titulo>
       <div><h2>Administradores<br /></h2></div>
       <ButtonV1 onClick={() => setModalIsOpen(true)}>Agregar</ButtonV1>
-    </AdminTitulo>
+    </Titulo>
       <ContainerModal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
         <FormEdit onSubmit={handleSubmit}>
           <FormHead><h2>Nuevo Administrador</h2></FormHead>

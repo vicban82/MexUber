@@ -23,20 +23,10 @@ import {
   ButtonContainer,
   InputCheck,
   LabelCheck,
+  Titulo
  } from "../../../components/reusable/FormularioModalDriver";
 
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
-
-const AdminTitulo = styled.div`
-    display: flex;
-    flex-direction: row;
-    padding: 5px 5px;
-    padding: 15px 7% 1px 7%;
-    justify-content: space-between;
-    margin-top: -75px;
-    height: 50px;
-    align-items: center;
-`;
 
 const ButtonV1 = styled.button`
   color: #646cff;
@@ -49,10 +39,6 @@ const ButtonV1 = styled.button`
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
-`;
-
-const ContainerModalDriver = styled(ContainerModal)`
-  
 `;
 
 
@@ -383,11 +369,11 @@ export const ButtonAdd = ({
 
   return (
     <>
-      <AdminTitulo>
+      <Titulo>
         <div><h2>Conductores<br /></h2></div>
         <ButtonV1 onClick={() => setModalIsOpen(true)}>Agregar</ButtonV1>
-      </AdminTitulo>
-      <ContainerModalDriver isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
+      </Titulo>
+      <ContainerModal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
         <FormEdit onSubmit={handleSubmit}>
         <FormHead><h2>Nuevo Conductor</h2></FormHead>
         <br />
@@ -783,13 +769,13 @@ export const ButtonAdd = ({
               <span>{messageReasonInActiveError}</span>
             )}
           </InputContainer>
-          </ContainerScroll>
+        </ContainerScroll>
           <ButtonContainer>
             <SubmitBtn onClick={() => setModalIsOpen(false)}>Cancelar</SubmitBtn>
             <SubmitBtn type="submit">Guardar</SubmitBtn>
           </ButtonContainer>
           </FormEdit>
-      </ContainerModalDriver>
+      </ContainerModal>
     </>
   );
 };
