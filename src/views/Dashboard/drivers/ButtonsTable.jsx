@@ -12,6 +12,7 @@ import styled from 'styled-components';
 import { props } from "./props";
 import { 
   ContainerModal,
+  ContainerScroll,
   FormHead,
   FormEdit,
   InputContainer,
@@ -21,7 +22,7 @@ import {
   ButtonContainer,
   InputCheck,
   LabelCheck,
- } from "../../../components/reusable/FormularioModal";
+ } from "../../../components/reusable/FormularioModalDriver";
 
 Modal.setAppElement("#root");
 
@@ -187,8 +188,7 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
   }
   
   return (
-    <>
-    {/* ------------------------------Boton Editar-------------------------------- */}
+  <>
     <td>
       {/* The button to open modal */}
       <button onClick={openModal}>
@@ -202,8 +202,9 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
         contentLabel="Editar elemento"
       >
         <FormEdit onSubmit={handleSubmit}>
-        <FormHead><h2>Modificar Administrador</h2></FormHead>
+        <FormHead><h2>Editar Conductor</h2></FormHead>
           <br />
+          <ContainerScroll>
           {
             Object.keys(driver).map((el, idx) => {
               // console.log("EL:", el, ",IDX:", idx)
@@ -215,7 +216,7 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
                     if (idx === 20) {
                       return (
                         <InputContainer key={idx}>
-                          <Input type="text" disabled={true} />
+                          <Input type="text" disabled={true} placeholder="a"/>
                           <Label>{props[esp]}: </Label>
                         </InputContainer>
                       );
@@ -237,7 +238,7 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
                       return (
                         <InputContainer key={idx}>
                           <InputContainer {...getRootProps()} style={dropzoneContainerStyles}>
-                            <input {...getInputProps()} />
+                            <Input {...getInputProps()} placeholder="a"/>
                           </InputContainer>
                           <Label>{props[esp]}: </Label>
                           <p>Frente</p>
@@ -245,20 +246,20 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
                       );
                     }
                     return (
-                      <InputContainer key={idx} >
-                        <label>{props[esp]}: </label>
-                        <div {...getRootProps()} style={dropzoneContainerStyles}>
-                          <input {...getInputProps()} />
-                        </div>
+                      <div key={idx} >
+                        <InputContainer {...getRootProps()} style={dropzoneContainerStyles}>
+                          <Input {...getInputProps()} placeholder="a"/>
+                          <Label>{props[esp]}: </Label>
+                        </InputContainer>
                         <p>Licencia</p>
-                      </InputContainer>
+                      </div>
                     );
                   } else if (idx === 13) {
                     // DATE-FECHA = VIGENCIA DE LA LICENCIA 13
                     return (
                       <InputContainer key={idx}>
-                        <label htmlFor={`input-${el}`}>{props[esp]}: </label>
-                        <input type="date" />
+                        <Input type="date" placeholder="a"/>
+                        <Label htmlFor={`input-${el}`}>{props[esp]}: </Label>
                       </InputContainer>
                     );
                   } else if (idx === 16 || idx === 19) {
@@ -272,6 +273,7 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
                             name={el}
                             checked={driver[el]}
                             onChange={handleChange}
+                            placeholder="a"
                             type="checkbox"
                             value={driver[el] ? 1 : 0}
                           />
@@ -294,15 +296,15 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
                     // PASSWORD = 17 - 18
                     return (
                       <InputContainer key={idx}>
-                        <Input type="password" />
+                        <Input type="password" placeholder="a"/>
                         <Label htmlFor={`input-${el}`}>{props[esp]}: </Label>
                       </InputContainer>
                     );
                   } else {
                     return (
                       <InputContainer key={idx}>
+                        <Input type="text" placeholder="a"/>
                         <label htmlFor={`input-${el}`}>{props[esp]}: </label>
-                        <Input type="text" />
                       </InputContainer>
                     );
                   }
@@ -311,24 +313,20 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
               }
             })
           }
+          </ContainerScroll>
           <ButtonContainer>
             <SubmitBtn onClick={closeModal}>Cancelar</SubmitBtn>
             <SubmitBtn>Guardar</SubmitBtn>
           </ButtonContainer>
         </FormEdit>
-      </ContainerModal>
-    </td>
-
-{/* -----------------------------Boton Eliminar------------------------------------------ */}
-
-      <td>
+        </ContainerModal>
         <button onClick={() => handleDelete(id)}>
           <Img
             src={deleteIcon}
             alt="Delete"
           />
         </button>
-      </td>
-</>
+    </td>
+  </>
   );
 }

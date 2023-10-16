@@ -12,6 +12,7 @@ import {
   faFastForward
 } from "@fortawesome/free-solid-svg-icons";
 import { DivPages, ContentPages, DivButtonPages, DivGrupPage } from "../../../components/reusable/DivPages";
+import { Section } from "../../../components/reusable/global";
 
 export const Drivers = () => {
   const tableHeader = ["Nombres", "Apellidos", "Correo", "Teléfono", "Activo", "Vehículo"];
@@ -107,7 +108,7 @@ export const Drivers = () => {
   }, [page, limit]);
 
   return (
-    <section>
+    <Section>
       {tDriver.length === 0 ? (
         <p>En esta sección no hay información disponible</p>
       ) : (
@@ -159,6 +160,6 @@ export const Drivers = () => {
           </ContentPages >
         </>
       )}
-    </section>
+    </Section>
   );
 };

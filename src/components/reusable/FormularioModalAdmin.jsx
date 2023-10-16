@@ -5,11 +5,13 @@ export const ContainerModal = styled(Modal)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 80%;
+  height: 550px;
   justify-content: center;
   align-content: center;
-  max-width: 400px;
-  margin: 100px 30% 80% 35%;
+  margin-top: 60px;
+  //color: black;
+  //max-width: 400px;
+  //margin: 100px 30% 80% 35%;
 `;
 
 export const ButtonContainer = styled.div`
@@ -30,7 +32,7 @@ export const SubmitBtn = styled.button`
   border-radius: 6px;
   cursor: pointer;
   font-size: 16px;
-  margin-top: 30px;
+  //margin-top: 5px;
   width: 100%;
   height: 48px;
 
@@ -45,9 +47,10 @@ export const FormHead = styled.div`
   align-content: center;
   align-items: center;
   justify-content: center;
-  color: #000000;
+  color: #e5e5e5;
+  background-color: #333333;
   width: 100%;
-  height: 34px;
+  height: 40px;
 `;
 
 export const InputContainer = styled.div`
@@ -145,4 +148,15 @@ export const LabelCheck = styled.label`
   font-weight: bold;
   padding-left: 8px;
   font-size: 18px;
+`;
+
+export const Titulo = styled.div`
+  display: flex;
+  flex-direction: row;
+  padding: 5px 5px;
+  padding: 15px 7% 1px 7%;
+  justify-content: space-between;
+  margin-top: -75px;
+  height: 50px;
+  align-items: center;
 `;

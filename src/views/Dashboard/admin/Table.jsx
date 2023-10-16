@@ -20,19 +20,28 @@ const StyledTable = styled.table`
     text-decoration: underline; 
     display: flex;
     justify-content: center;
+    max-width: 16%;
     min-width: 16%;
+
   }
 
   th, td {
     text-align: left;
     display: flex;
     justify-content: center;
+    max-width: 16%;
     min-width: 16%;
+    word-break:break-all;
+    text-align: center;
   }
   
   td:nth-child(1), th:nth-child(1) { min-width: 16%; }
+  td:nth-child(1), th:nth-child(1) { max-width: 16%; }
   td:nth-child(2), th:nth-child(2) { min-width: 16%; }
+  td:nth-child(2), th:nth-child(2) { max-width: 16%; }
   td:nth-child(3), th:nth-child(3) { width: 16%; }
+  td:nth-child(3), th:nth-child(3) { max-width: 16%; }
+  td:nth-child(3), th:nth-child(3) { min-width: 16%; }
 
   thead {
     display: flex;
@@ -93,10 +102,7 @@ export const Table = ({ tHeader, tBody, setTBody, error, setTError, errorForm, s
                   );
                 })}
               <th>
-                Editar
-              </th>
-              <th>
-                Eliminar
+                Editar/Eliminar
               </th>
             </tr>
           </thead>

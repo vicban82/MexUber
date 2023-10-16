@@ -14,25 +14,34 @@ const StyledTable = styled.table`
   table-layout: fixed;
   border-collapse: collapse;
   background-color: #b8860b;
-  min-width: 885px;
+  min-width: 963px;
+  overflow-x: auto;
   
   th { 
     text-decoration: underline; 
     display: flex;
     justify-content: center;
-    min-width: 12%;
+    min-width: 14%;
+    max-width: 14%;
   }
 
   th, td {
     text-align: left;
     display: flex;
     justify-content: center;
-    min-width: 12%;
+    min-width: 14%;
+    max-width: 14%;
+    word-break:break-all;
+    text-align: center;
   }
   
-  td:nth-child(1), th:nth-child(1) { min-width: 12.5; }
-  td:nth-child(2), th:nth-child(2) { min-width: 12.5; }
-  td:nth-child(3), th:nth-child(3) { width: 12.5; }
+  td:nth-child(1), th:nth-child(1) { min-width: 14%; }
+  td:nth-child(1), th:nth-child(1) { max-width: 14%; }
+  td:nth-child(2), th:nth-child(2) { min-width: 14%; }
+  td:nth-child(2), th:nth-child(2) { max-width: 14%; }
+  td:nth-child(3), th:nth-child(3) { width: 14%; }
+  td:nth-child(3), th:nth-child(3) { min-width: 14%; }
+  td:nth-child(3), th:nth-child(3) { max-width: 14%; }
 
   thead {
     display: flex;
@@ -65,7 +74,7 @@ const StyledTable = styled.table`
       justify-content: space-around;
       align-items: center;
       text-align: center;
-      min-width: 12%;
+      min-width: 14%;
     }
     tr:nth-child(even) {
       background-color: #5f5a5a;
@@ -74,10 +83,9 @@ const StyledTable = styled.table`
       justify-content: space-around;
       align-items: center;
       text-align: center;
-      min-width: 12%;
+      min-width: 14%;
     }
   }
-
 `;
 
 export const Table = ({ tHeader, tDriver, setTDriver, driver, setDriver, errorForm, setErrorForm }) => {
@@ -96,10 +104,7 @@ export const Table = ({ tHeader, tDriver, setTDriver, driver, setDriver, errorFo
                 );
               })}
               <th>
-                <p>Editar</p>
-              </th>
-              <th>
-                <p>Eliminar</p>
+                Editar/Eliminar
               </th>
             </tr>
           </thead>
