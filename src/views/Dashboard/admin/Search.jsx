@@ -1,25 +1,22 @@
 import React, { useState } from 'react'
-import { axiosGetAdmins, axiosSearchAdmins } from '../../../hooks/admin/crudAdmin';
-import { headers } from '../../../tools/accessToken';
 
-export const Search = ({ setTBody, setTotalPages, page, limit }) => {
+export const Search = ({ onSearch }) => {
   const [search, setSearch] = useState("");
 
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    axiosSearchAdmins(search, setTBody, headers);
-    setSearch("");
-  }
-  
-  function handleInputChange(e) {
-    e.preventDefault();
+    onSearch(search); // Pasar el término de búsqueda al componente principal
+    setSearch(""); // Limpiar el término de búsqueda
+  };
+
+  const handleInputChange = (e) => {
     setSearch(e.target.value);
-  }
-  
-  function handleClick(e) {
+  };
+
+  const handleLoadAll = (e) => {
     e.preventDefault();
-    axiosGetAdmins(setTBody, setTotalPages, page, limit);
-  }
+    onSearch(""); // Limpiar el término de búsqueda para cargar todos los administradores
+  };
 
   return (
     <div>
@@ -32,7 +29,7 @@ export const Search = ({ setTBody, setTotalPages, page, limit }) => {
             onChange={(e) => handleInputChange(e)}
           />
           <button type='submit' >Buscar</button>
-          <button onClick={(e) => handleClick(e)} >Cargar todos</button>
+          <button onClick={(e) => handleLoadAll(e)} >Cargar todos</button>
         </div>
       </form>
     </div>

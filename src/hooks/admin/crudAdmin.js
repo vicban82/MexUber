@@ -14,11 +14,12 @@ export async function axiosGetAdmins(setTBody, setTotalPages, page, limit) {
   }
 }
 
-export async function axiosSearchAdmins(search, setTBody, headers) {
+export async function axiosSearchAdmins(search, setTBody, setTotalPages, page, limit, headers) {
   try {
-    const { data } = (await axios.get(`/api/admins?search=${search}`, { headers }));
+    const { data } = (await axios.get(`/api/admins?search=${search}&page=${page}&limit=${limit}`, { headers }));
     // console.log('DATA:', data);
     setTBody(data.admins);
+    setTotalPages(data.totalPages)
     // setTBody(dataFakeAdmin);
   } catch (err) {
     const { error } = err.response.data;
