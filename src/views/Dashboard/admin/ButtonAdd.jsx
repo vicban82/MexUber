@@ -141,7 +141,6 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm, setPage, l
             <Input
               type="text"
               name={"name"}
-              placeholder="a"
               value={name}
               onChange={handleChange}
             />
@@ -156,7 +155,6 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm, setPage, l
             <Input
               type="text"
               name={"lastName"}
-              placeholder="a"
               value={lastName}
               onChange={handleChange}
             />
@@ -171,7 +169,6 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm, setPage, l
             <Input
               type="text"
               name={"email"}
-              placeholder="a"
               value={email}
               onChange={handleChange}
             />
@@ -185,7 +182,6 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm, setPage, l
             <Input
               type="password"
               name={"password"}
-              placeholder="a"
               value={password}
               onChange={handleChange}
             />
@@ -200,7 +196,6 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm, setPage, l
             <Input
               type="password"
               name={"repeatPassword"}
-              placeholder="a"
               value={repeatPassword}
               onChange={handleChange}
             />
@@ -224,7 +219,25 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm, setPage, l
 
           <ButtonContainer>
             <SubmitBtn type="submit">Guardar</SubmitBtn>
-            <SubmitBtn onClick={() => setModalIsOpen(false)}>Cancelar</SubmitBtn>
+            <SubmitBtn onClick={() => {
+              setModalIsOpen(false);
+              setAdmin({
+                name: "",
+                lastName: "",
+                email: "",
+                password: "",
+                repeatPassword: "",
+                isActive: 1,
+              });
+              setErrorForm({
+                nameError: "",
+                lastNameError: "",
+                emailError: "",
+                passwordError: "",
+                repeatPasswordError: "",
+                isActiveError: "",
+              });
+            }}>Cancelar</SubmitBtn>
           </ButtonContainer>
         </FormEdit>
       </ContainerModal>
