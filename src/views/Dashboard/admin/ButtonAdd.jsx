@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import Modal from "react-modal";
 import { validateAdmin } from "../../../validations/admins";
 import { errorRegister, successRegister } from "../../../tools/adminAlerts/register";
-import { axiosPostAdmin } from "../../../hooks/admin/crudAdmin";
+import { axiosGetAdmins, axiosPostAdmin } from "../../../hooks/admin/crudAdmin";
 import { headers } from "../../../tools/accessToken";
-import { props } from "./props";
 import styled from 'styled-components';
 import { 
   ContainerModal,
@@ -39,7 +38,7 @@ const ButtonV1 = styled.button`
 
 /* ----------------------- Funcionalidad --------------------------------- */
 
-export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm }) => {
+export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm, setPage, limit, setTotalPages }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const [admin, setAdmin] = useState({
@@ -100,8 +99,12 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm }) => {
     if (name && lastName && email && password && repeatPassword) {
       try {
         successRegister(admin);
-        const newAdmin = await axiosPostAdmin(admin, setErrorForm, headers);
+        const newAdmin = await axiosPostAdmin(admin, headers);
+        // !NOTA: Desde el Back-End se revierte el arreglo
         setTBody([...tBody, newAdmin]);
+
+        // Obtiene nuevamente los datos para actualizar la tabla
+        await axiosGetAdmins(setTBody, setTotalPages, 1, limit);
     
         // Cierra el modal después de guardar
         setModalIsOpen(false);
@@ -113,6 +116,9 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm }) => {
           repeatPassword: "",
           isActive: 1,
         })
+
+        // Establece la página en 1 después de agregar un elemento
+        setPage(1);
       } catch (error) {
         console.error("Error al guardar el admin:", error);
       }
@@ -217,8 +223,8 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm }) => {
           </InputContainer>
 
           <ButtonContainer>
-            <SubmitBtn onClick={() => setModalIsOpen(false)}>Cancelar</SubmitBtn>
             <SubmitBtn type="submit">Guardar</SubmitBtn>
+            <SubmitBtn onClick={() => setModalIsOpen(false)}>Cancelar</SubmitBtn>
           </ButtonContainer>
         </FormEdit>
       </ContainerModal>

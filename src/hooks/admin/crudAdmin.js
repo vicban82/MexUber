@@ -30,14 +30,13 @@ export async function axiosSearchAdmins(search, setTBody, headers) {
 //   setTBody(dataFakeAdmin[4]);
 // }
 
-export async function axiosPostAdmin(admin, setErrorForm, headers) {
+export async function axiosPostAdmin(admin, headers) {
   try {
     const { data } = (await axios.post('/api/admin', admin, { headers }));
     console.log('POST:', data);
     return data;
   } catch (err) {
     const { error } = err.response.data;
-    setErrorForm(error)
     console.log('ERROR:', error);
   }
 }

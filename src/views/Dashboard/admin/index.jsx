@@ -33,7 +33,7 @@ const Admins = () => {
   
   // * Páginado
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(4);
   const [totalPages, setTotalPages] = useState(1);
   
   const firstPages = (e) => {
@@ -68,6 +68,9 @@ const Admins = () => {
         setTBody={setTBody}
         errorForm={errorForm}
         setErrorForm={setErrorForm}
+        limit={limit}
+        setPage={setPage}
+        setTotalPages={setTotalPages}
       />
       <Table
         tHeader={tableHeader}
