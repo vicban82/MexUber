@@ -42,21 +42,9 @@ import {
 
 Modal.setAppElement("#root");
 
-/* const StyledTd = styled.td`
-  display: flex;
-`; */
-
 const dropzoneContainerStyles = {
   width: '200px', // Establece el ancho del contenedor
   height: '200px', // Establece la altura del contenedor
-  border: '2px dashed #cccccc',
-  borderRadius: '4px',
-  textAlign: 'center',
-  padding: '20px',
-  cursor: 'pointer',
-};
-
-const dropzoneStyles = {
   border: '2px dashed #cccccc',
   borderRadius: '4px',
   textAlign: 'center',

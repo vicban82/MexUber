@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { axiosGetAdmins } from "../../../hooks/admin/crudAdmin";
+import {
+  axiosGetAdmins,
+  axiosSearchAdmins,
+} from "../../../hooks/admin/crudAdmin";
 import { Table } from "./Table";
 import { ButtonAdd } from "./ButtonAdd";
 import { Search } from "./Search";
@@ -8,19 +11,24 @@ import {
   faForward,
   faBackward,
   faFastBackward,
-  faFastForward
+  faFastForward,
 } from "@fortawesome/free-solid-svg-icons";
-import { DivPages, ContentPages, DivButtonPages, DivGrupPage } from "../../../components/reusable/DivPages";
+import {
+  DivPages,
+  ContentPages,
+  DivButtonPages,
+  DivGrupPage,
+} from "../../../components/reusable/DivPages";
 import { Section } from "../../../components/reusable/global";
-
+import { headers } from "../../../tools/accessToken";
 
 const Admins = () => {
   const tableHeader = ["Nombres", "Apellidos", "Email", "Activo"];
 
   const [tBody, setTBody] = useState([]);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(2);
   const [error, setTError] = useState("");
+
+  // * Formulario
   const [errorForm, setErrorForm] = useState({
     nameError: "",
     lastNameError: "",
@@ -29,12 +37,18 @@ const Admins = () => {
     repeatPasswordError: "",
     isActiveError: "",
   });
+  // * Formulario
 
-  useEffect(() => {
-    axiosGetAdmins(setTBody, page, limit);
-  }, [page, limit]);
+  // * Páginado
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(4);
+  const [totalPages, setTotalPages] = useState(1);
 
-  //* Paginado
+  const firstPages = (e) => {
+    e.preventDefault();
+    setPage(1);
+  };
+
   const prev = (e) => {
     e.preventDefault();
     setPage(page > 1 ? page - 1 : 1);
@@ -45,6 +59,29 @@ const Admins = () => {
     setPage(page + 1);
   };
 
+  const lastPages = (e) => {
+    e.preventDefault();
+    setPage(totalPages);
+  };
+  //* Paginado
+
+  //* Consulta
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = (search) => {
+    setSearchTerm(search);
+    setPage(1); // Resetear la página al realizar una búsqueda
+  };
+
+  useEffect(() => {
+    if (searchTerm) {
+      axiosSearchAdmins(searchTerm, setTBody, setTotalPages, page, limit, headers);
+    } else {
+      axiosGetAdmins(setTBody, setTotalPages, page, limit);
+    }
+  }, [page, limit, searchTerm]);
+  //* Consulta
+
   return (
     <Section>
       <ButtonAdd
@@ -52,6 +89,9 @@ const Admins = () => {
         setTBody={setTBody}
         errorForm={errorForm}
         setErrorForm={setErrorForm}
+        limit={limit}
+        setPage={setPage}
+        setTotalPages={setTotalPages}
       />
       <Table
         tHeader={tableHeader}
@@ -65,31 +105,35 @@ const Admins = () => {
       <ContentPages>
         <DivGrupPage>
           <DivButtonPages>
-            <button onClick={(e) => prev(e)} disabled={page <= 1}>
-              <FontAwesomeIcon icon={faFastBackward} />{/* {"<-- PREV"} */}
+            <button onClick={(e) => firstPages(e)} disabled={page <= 1}>
+              <FontAwesomeIcon icon={faFastBackward} />
             </button>
           </DivButtonPages>
           <DivButtonPages>
             <button onClick={(e) => prev(e)} disabled={page <= 1}>
-              <FontAwesomeIcon icon={faBackward} />{/* {"<-- PREV"} */}
+              <FontAwesomeIcon icon={faBackward} />
             </button>
           </DivButtonPages>
-          <DivPages>
-            {`Página: ${page}/${page}`}
-          </DivPages>
+          <DivPages>{`Página: ${page}/${totalPages}`}</DivPages>
           <DivButtonPages>
-            <button onClick={(e) => next(e)} disabled={tBody.length <= 1}>
+            <button onClick={(e) => next(e)} disabled={page >= totalPages}>
               <FontAwesomeIcon icon={faForward} />
             </button>
           </DivButtonPages>
           <DivButtonPages>
-            <button onClick={(e) => next(e)} disabled={tBody.length <= 1}>
-            <FontAwesomeIcon icon={faFastForward} />
+            <button onClick={(e) => lastPages(e)} disabled={page >= totalPages}>
+              <FontAwesomeIcon icon={faFastForward} />
             </button>
           </DivButtonPages>
         </DivGrupPage>
       </ContentPages>
-      <Search setTBody={setTBody} page={page} limit={limit} />
+      <Search
+        setTBody={setTBody}
+        setTotalPages={setTotalPages}
+        onSearch={handleSearch}
+        page={page}
+        limit={limit}
+      />
     </Section>
   );
 };

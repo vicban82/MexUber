@@ -2,16 +2,16 @@ import { styled } from "styled-components";
 import Modal from "react-modal";
 
 export const ContainerModal = styled(Modal)`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 550px;
-    justify-content: center;
-    align-content: center;
-    margin-top: 60px;
-    //color: black;
-    //max-width: 400px;
-    //margin: 100px 30% 80% 35%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 550px;
+  justify-content: center;
+  align-content: center;
+  margin-top: 60px;
+  //color: black;
+  //max-width: 400px;
+  //margin: 100px 30% 80% 35%;
 `;
 
 export const ButtonContainer = styled.div`
@@ -36,7 +36,7 @@ export const SubmitBtn = styled.button`
   width: 100%;
   height: 48px;
 
-/*   &:hover {
+  /*   &:hover {
     background-color: #9867C5;
     //transform: translateY(-2px);
   } */
@@ -86,30 +86,30 @@ export const Input = styled.input`
   outline: none;
   background: none;
   z-index: 1;
-  
+
   &::placeholder {
     color: transparent;
   }
 
   &:focus + ${Label} {
-  top: -7px;
-  left: 3px;
-  z-index: 10;
-  font-size: 14px;
-  font-weight: 600;
-  color: purple;
+    top: -7px;
+    left: 3px;
+    z-index: 10;
+    font-size: 14px;
+    font-weight: 600;
+    color: purple;
   }
 
   &:focus {
     border: 2px solid purple;
   }
 
-  &:not(:placeholder-shown)+ ${Label} {
-  top: -7px;
-  left: 3px;
-  z-index: 10;
-  font-size: 14px;
-  font-weight: 600;
+  &:not(:placeholder-shown) + ${Label} {
+    top: -7px;
+    left: 3px;
+    z-index: 10;
+    font-size: 14px;
+    font-weight: 600;
   }
 
   &:-webkit-autofill,
@@ -129,12 +129,12 @@ export const FormEdit = styled.form`
   //width: 400px;
   border-radius: 8px;
   padding: 20px 40px;
-  box-shadow: 0 10px 25px rgba(92, 99, 105, .2);
+  box-shadow: 0 10px 25px rgba(92, 99, 105, 0.2);
 
-.title {
-  font-size: 50px;
-  margin-bottom: 50px;
-}
+  .title {
+    font-size: 50px;
+    margin-bottom: 50px;
+  }
 `;
 
 export const InputCheck = styled.input`
@@ -144,19 +144,19 @@ export const InputCheck = styled.input`
 `;
 
 export const LabelCheck = styled.label`
-    color: black;
-    font-weight: bold;
-    padding-left: 8px;
-    font-size: 18px;
+  color: black;
+  font-weight: bold;
+  padding-left: 8px;
+  font-size: 18px;
 `;
 
 export const Titulo = styled.div`
-    display: flex;
-    flex-direction: row;
-    padding: 5px 5px;
-    padding: 15px 7% 1px 7%;
-    justify-content: space-between;
-    margin-top: -75px;
-    height: 50px;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  padding: 5px 5px;
+  padding: 15px 7% 1px 7%;
+  justify-content: space-between;
+  margin-top: -75px;
+  height: 50px;
+  align-items: center;
 `;

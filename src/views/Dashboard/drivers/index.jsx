@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { axiosGetDrivers } from "../../../hooks/drivers/crudDrivers";
+import { axiosGetDrivers, axiosSearchDrivers } from "../../../hooks/drivers/crudDrivers";
 import { headers } from "../../../tools/accessToken";
 import { Table } from "./Table";
 import { ButtonAdd } from "./ButtonAdd";
@@ -9,17 +9,16 @@ import {
   faForward,
   faBackward,
   faFastBackward,
-  faFastForward
 } from "@fortawesome/free-solid-svg-icons";
 import { DivPages, ContentPages, DivButtonPages, DivGrupPage } from "../../../components/reusable/DivPages";
 import { Section } from "../../../components/reusable/global";
 
 export const Drivers = () => {
   const tableHeader = ["Nombres", "Apellidos", "Correo", "Teléfono", "Activo", "Vehículo"];
+
   const [tDriver, setTDriver] = useState([]);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(2);
-  // ESTADO DEL FORMULARIO
+
+  //* ESTADO DEL FORMULARIO
   const [driver, setDriver] = useState({
     name: "",
     lastName: "",
@@ -75,68 +74,104 @@ export const Drivers = () => {
     isActiveError: "",
     messageReasonInActiveError: "",
   });
-  useEffect(() => {
-    axiosGetDrivers(setTDriver, headers, page, limit);
-  }, [page, limit]);
+  //* ESTADO DEL FORMULARIO
+  
+  // * Páginado
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(2);
+  const [totalPages, setTotalPages] = useState(1);
+  
+  const firstPages = (e) => {
+    e.preventDefault();
+    setPage(1);
+  };
 
-  //* Paginado
   const prev = (e) => {
     e.preventDefault();
     setPage(page > 1 ? page - 1 : 1);
   };
-
+  
   const next = (e) => {
     e.preventDefault();
     setPage(page + 1);
   };
 
+  const lastPages = (e) => {
+    e.preventDefault();
+    setPage(totalPages);
+  };
+  //* Paginado
+
+  //* Consulta
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = (search) => {
+    setSearchTerm(search);
+    setPage(1); // Resetear la página al realizar una búsqueda
+  };
+
+  useEffect(() => {
+    if (searchTerm) {
+      axiosSearchDrivers(searchTerm, setTDriver, setTotalPages, headers, page, limit);
+    } else {
+      axiosGetDrivers(setTDriver, setTotalPages, headers, page, limit);
+    }
+  }, [page, limit, searchTerm]);
+  //* Consulta
+
   return (
     <Section>
-      <ButtonAdd
-        tDriver={tDriver}
-        setTDriver={setTDriver}
-        driver={driver}
-        setDriver={setDriver}
-        errorForm={errorForm}
-        setErrorForm={setErrorForm}
-      />
-      <Table
-        tHeader={tableHeader}
-        tDriver={tDriver}
-        setTDriver={setTDriver}
-        driver={driver}
-        setDriver={setDriver}
-        errorForm={errorForm}
-        setErrorForm={setErrorForm}
-      />
-      <ContentPages>
-        <DivGrupPage>
-          <DivButtonPages>
-            <button onClick={(e) => prev(e)} disabled={page <= 1}>
-              <FontAwesomeIcon icon={faFastBackward} />{/* {"<-- PREV"} */}
-            </button>
-          </DivButtonPages>
-          <DivButtonPages>
-            <button onClick={(e) => prev(e)} disabled={page <= 1}>
-              <FontAwesomeIcon icon={faBackward} />{/* {"<-- PREV"} */}
-            </button>
-          </DivButtonPages>
-          <DivPages>
-            {`Página: ${page}/${page}`}
-          </DivPages>
-          <DivButtonPages>
-            <button onClick={(e) => next(e)} disabled={tDriver.length < page}>
-              <FontAwesomeIcon icon={faForward} />{/* {"<-- PREV"} */}
-            </button>
-          </DivButtonPages>
-          <DivButtonPages>
-            <button onClick={(e) => next(e)} disabled={tDriver.length < page}>
-              <FontAwesomeIcon icon={faFastForward} />
-            </button>
-          </DivButtonPages>
-        </DivGrupPage>
-      </ContentPages >
-      <Search setTDriver={setTDriver} page={page} limit={limit} />
+      {tDriver.length === 0 ? (
+        <p>En esta sección no hay información disponible</p>
+      ) : (
+        <>
+          <ButtonAdd
+            tDriver={tDriver}
+            setTDriver={setTDriver}
+            driver={driver}
+            setDriver={setDriver}
+            errorForm={errorForm}
+            setErrorForm={setErrorForm}
+          />
+          <Table
+            tHeader={tableHeader}
+            tDriver={tDriver}
+            setTDriver={setTDriver}
+            driver={driver}
+            setDriver={setDriver}
+            errorForm={errorForm}
+            setErrorForm={setErrorForm}
+          />
+          <ContentPages>
+            <DivGrupPage>
+              <DivButtonPages>
+                <button onClick={(e) => firstPages(e)} disabled={page <= 1}>
+                  <FontAwesomeIcon icon={faFastBackward} />
+                </button>
+              </DivButtonPages>
+              <DivButtonPages>
+                <button onClick={(e) => prev(e)} disabled={page <= 1}>
+                  <FontAwesomeIcon icon={faBackward} />
+                </button>
+              </DivButtonPages>
+              <DivPages>
+                {`Página: ${page}/${totalPages}`}
+              </DivPages>
+              <DivButtonPages>
+                <button onClick={(e) => next(e)} disabled={page >= totalPages}>
+                  <FontAwesomeIcon icon={faForward} />
+                </button>
+              </DivButtonPages>
+              <DivButtonPages>
+                <button onClick={(e) => lastPages(e)} disabled={page >= totalPages}>
+                  <FontAwesomeIcon icon={faForward} />
+                </button>
+              </DivButtonPages>
+            </DivGrupPage>
+          </ContentPages >
+          <Search onSearch={handleSearch} />
+        </>
+      )}
     </Section>
   );
 };

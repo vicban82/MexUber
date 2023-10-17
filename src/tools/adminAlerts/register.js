@@ -34,9 +34,12 @@ export function successRegister(admin) {
   if (name && lastName && email && password && repeatPassword && isActive) {
     Swal.fire({
       icon: "success",
-      title: "Admin registrado con exito",
+      title: `Nuevo administrador`,
       showConfirmButton: false,
-      timer: 2000,
+      timer: 4000,
+      html: `
+        <p>${`Administrador <strong>${name} ${lastName}</strong> ha sido registrado con exito` || ""}</p>
+      `,
     });
   }
 }

@@ -7,9 +7,7 @@ import Navbar from "./Navbar-sidebar";
 import { Container } from "../../components/reusable/global";
 import { tokenAdmin } from "../../tools/accessToken";
 
-
-
-/* const Dashboard = () => {
+const Dashboard = () => {
   return (
     <>
       {tokenAdmin === null ? (
@@ -28,34 +26,22 @@ import { tokenAdmin } from "../../tools/accessToken";
       )}
     </>
   );
-} */
+}
 
 //Dasboart sin token
-const Dashboard = () => {
-  
-  /* const cambiarLogin = () =>{
-    if (user) {
-      setUser(null)
-    } else {
-      setUser({
-        name: "Pepe",
-        emal: "pepe@gmal.com"
-      });
-    }
-  } */ 
-
-  return (
-    <>
-      <Navbar />
-      <Container>
-        {/* Contenedor del contenido */}
-        <ContentContainer>
-          {/* Outlet para mostrar las rutas anidadas */}
-          <Outlet />
-        </ContentContainer>
-      </Container>
-    </>
-  );
-}
+// const Dashboard = () => {
+//   return (
+//     <>
+//       <Navbar />
+//       <Container>
+//         {/* Contenedor del contenido */}
+//         <ContentContainer>
+//           {/* Outlet para mostrar las rutas anidadas */}
+//           <Outlet />
+//         </ContentContainer>
+//       </Container>
+//     </>
+//   );
+// }
 
 export default Dashboard;

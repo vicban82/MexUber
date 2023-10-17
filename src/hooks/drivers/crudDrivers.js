@@ -1,24 +1,25 @@
 import axios from "axios";
 import { dataFakeDriver } from "../../data/dataFakeDriver";
 
-export async function axiosGetDrivers(setTDriver, headers, page, limit) {
+export async function axiosGetDrivers(setTDriver, setTotalPages, headers, page, limit) {
   try {
-    //onst { data } = (await axios.get(`/api/drivers?page=${page}&limit=${limit}`, { headers }));
+    const { data } = (await axios.get(`/api/drivers?page=${page}&limit=${limit}`, { headers }));
     // console.log('DATA:', data);
-    setTDriver(dataFakeDriver);
+    setTDriver(data.drivers);
+    setTotalPages(data.totalPages);
+    // setTDriver(dataFakeDriver);
   } catch (err) {
     const { error } = err.response.data;
     console.log('ERROR:', error);
   }
 }
 
-export async function axiosSearchDrivers(search, setTDriver, headers) {
+export async function axiosSearchDrivers(search, setTDriver, setTotalPages, headers, page, limit) {
   try {
-    if (search) {
-      const { data } = await axios.get(`/api/drivers?search=${search}`, { headers });
-      // console.log("DATA:", data);
-      setTDriver(data);
-    }
+    const { data } = (await axios.get(`/api/drivers?search=${search}&page=${page}&limit=${limit}`, { headers }));
+    // console.log("DATA:", data);
+    setTDriver(data.drivers);
+    setTotalPages(data.totalPages);
   } catch (err) {
     const { error } = err.response.data;
     console.log('ERROR:', error);

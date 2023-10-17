@@ -132,9 +132,12 @@ export function successRegister(driver) {
   ) {
     Swal.fire({
       icon: "success",
-      title: "Conductor registrado con exito",
+      title: `Nuevo conductor`,
       showConfirmButton: false,
-      timer: 2000,
+      timer: 4000,
+      html: `
+        <p>${`Conductor <strong>${name} ${lastName}</strong> ha sido registrado con exito` || ""}</p>
+      `,
     });
   }
 }

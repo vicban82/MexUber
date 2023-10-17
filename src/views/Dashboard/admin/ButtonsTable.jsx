@@ -62,14 +62,6 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
-
   const handleDelete = async (id) => {
     const deleteAdmin = tBody.find(el => el._id === id)
     deleteAlert(deleteAdmin, id, tBody, setTBody, setTError)
@@ -153,14 +145,14 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
       {/* -------------------Boton Editar-------------------------------- */}
       <td>
         {/* The button to open modal */}
-        <button onClick={openModal}>
+        <button onClick={() => setModalIsOpen(true)}>
           <Img src={editIcon} alt="Edición" />
         </button>
 
         {/* Modal */}
         <ContainerModal
           isOpen={modalIsOpen}
-          onRequestClose={closeModal}
+          onRequestClose={() => setModalIsOpen(false)}
           contentLabel="Editar elemento"
         >
           <FormEdit onSubmit={handleSubmit}>
@@ -171,7 +163,6 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
                 type="text"
                 name={"name"}
                 value={name}
-                placeholder="a"
                 onChange={handleChange}
               />
               <Label>Nombre: </Label>
@@ -185,7 +176,6 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
               <Input
                 type="text"
                 name={"lastName"}
-                placeholder="a"
                 value={lastName}
                 onChange={handleChange}
               />
@@ -200,7 +190,6 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
               <Input
                 type="text"
                 name={"email"}
-                placeholder="a"
                 value={email}
                 onChange={handleChange}
               />
@@ -214,7 +203,6 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
               <Input
                 type="password"
                 name={"password"}
-                placeholder="a"
                 value={password}
                 onChange={handleChange}
               />
@@ -229,7 +217,6 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
               <Input
                 type="password"
                 name={"repeatPassword"}
-                placeholder="a"
                 value={repeatPassword}
                 onChange={handleChange}
               />
@@ -252,8 +239,8 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
             </InputContainer>
 
             <ButtonContainer>
-              <SubmitBtn onClick={closeModal}>Cancelar</SubmitBtn>
               <SubmitBtn>Guardar</SubmitBtn>
+              <SubmitBtn onClick={() => setModalIsOpen(false)}>Cancelar</SubmitBtn>
             </ButtonContainer>
           </FormEdit>
         </ContainerModal>

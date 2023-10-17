@@ -1,44 +1,43 @@
 import axios from "axios";
 import { dataFakeAdmin } from "../../data/dataFakeAdmin.js";
 
-export async function axiosGetAdmins(setTBody, page, limit) {
+export async function axiosGetAdmins(setTBody, setTotalPages, page, limit) {
   try {
-    //const { data } = (await axios.get(`/api/admins?page=${page}&limit=${limit}`));
+    const { data } = (await axios.get(`/api/admins?page=${page}&limit=${limit}`));
     // console.log('DATA:', data);
-    //setTBody(data);
-    setTBody(dataFakeAdmin);
+    setTBody(data.admins);
+    setTotalPages(data.totalPages)
+    // setTBody(dataFakeAdmin);
   } catch (err) {
     const { error } = err.response.data;
     console.log('ERROR:', error);
   }
 }
 
-/* export async function axiosSearchAdmins(search, setTBody, headers) {
+export async function axiosSearchAdmins(search, setTBody, setTotalPages, page, limit, headers) {
   try {
-    const { data } = (await axios.get(`/api/admins?search=${search}`, { headers }));
+    const { data } = (await axios.get(`/api/admins?search=${search}&page=${page}&limit=${limit}`, { headers }));
     // console.log('DATA:', data);
-    //setTBody(data);
-    setTBody(dataFakeAdmin);
+    setTBody(data.admins);
+    setTotalPages(data.totalPages)
+    // setTBody(dataFakeAdmin);
   } catch (err) {
     const { error } = err.response.data;
     console.log('ERROR:', error);
   }
-} */
-
-export async function axiosSearchAdmins(search, setTBody, headers) {
-  
-    setTBody(dataFakeAdmin[4]);
-  
 }
 
-export async function axiosPostAdmin(admin, setErrorForm, headers) {
+// export async function axiosSearchAdmins(search, setTBody, headers) {
+//   setTBody(dataFakeAdmin[4]);
+// }
+
+export async function axiosPostAdmin(admin, headers) {
   try {
     const { data } = (await axios.post('/api/admin', admin, { headers }));
     console.log('POST:', data);
     return data;
   } catch (err) {
     const { error } = err.response.data;
-    setErrorForm(error)
     console.log('ERROR:', error);
   }
 }
