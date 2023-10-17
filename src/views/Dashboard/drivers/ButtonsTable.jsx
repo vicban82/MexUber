@@ -22,13 +22,29 @@ import {
   ButtonContainer,
   InputCheck,
   LabelCheck,
+  Titulo,
+  Span,
+  SelectContainer,
+  Select,
+  GrupoInput,
+  GrupoSelect,
+  GrupoImg,
+  SubeImgContainer,
+  TituloSeccion,
+  SpanData,
+  ImgSube,
+  SubeContainerImg,
+  GrupoCheck,
+  CheckContainer,
+  Textarea,
+  TextareaContainer
  } from "../../../components/reusable/FormularioModalDriver";
 
 Modal.setAppElement("#root");
 
-const StyledTd = styled.td`
+/* const StyledTd = styled.td`
   display: flex;
-`;
+`; */
 
 const dropzoneContainerStyles = {
   width: '200px', // Establece el ancho del contenedor
@@ -217,6 +233,7 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
         <FormHead><h2>Editar Conductor</h2></FormHead>
           <br />
           <ContainerScroll>
+          <TituloSeccion>Datos Personales<hr /></TituloSeccion>
           {
             Object.keys(driver).map((el, idx) => {
               // console.log("EL:", el, ",IDX:", idx)
@@ -227,51 +244,60 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
                     // MOTIVO DE BLOQUEO = 20
                     if (idx === 20) {
                       return (
+                        <GrupoInput>
                         <InputContainer key={idx}>
-                          <Input type="text" disabled={true} placeholder="a"/>
+                          <Input type="text" disabled={false} placeholder="a"/>
                           <Label>{props[esp]}: </Label>
                         </InputContainer>
+                        </GrupoInput>
                       );
                     }
                     return (
-                      <InputContainer key={idx}>
-                        <Label htmlFor={`input-${el}`}>{props[esp]}: </Label>
-                        <select disabled={true} >
+                      <GrupoSelect>
+                      <SelectContainer key={idx}>
+                        {/* <label htmlFor={`Input-${el}`}>{props[esp]}: </label> */}
+                        <Select disabled={true} >
                           <option>
                             Selecciona
                           </option>
+                          <option>
+                            dfsdf
+                          </option>
                           {/* {listSepomex} */}
-                        </select>
-                      </InputContainer>
+                        </Select>
+                      </SelectContainer>
+                      </GrupoSelect>
                     );
                   } else if (idx === 9 || idx === 14 || idx === 15) {
                     // DROP = FOTO CONDUCTOR 9, FOTO LICENCIA 14 - 15
                     if (idx === 9) {
                       return (
-                        <InputContainer key={idx}>
-                          <InputContainer {...getRootProps()} style={dropzoneContainerStyles}>
-                            <Input {...getInputProps()} placeholder="a"/>
-                          </InputContainer>
-                          <Label>{props[esp]}: </Label>
+                        <GrupoImg>
+                        <SubeImgContainer key={idx}>
+                          <div {...getRootProps()} style={dropzoneContainerStyles}>
+                            <input {...getInputProps()} placeholder="a"/>
                           <p>Frente</p>
-                        </InputContainer>
+                          <Label>{props[esp]}: </Label>
+                          </div>
+                        </SubeImgContainer>
+                        </GrupoImg>
                       );
                     }
                     return (
-                      <div key={idx} >
-                        <InputContainer {...getRootProps()} style={dropzoneContainerStyles}>
-                          <Input {...getInputProps()} placeholder="a"/>
-                          <Label>{props[esp]}: </Label>
-                        </InputContainer>
-                        <p>Licencia</p>
-                      </div>
+                        <SubeImgContainer key={idx} >
+                          <SubeContainerImg {...getRootProps()} style={dropzoneContainerStyles}>
+                            <ImgSube {...getInputProps()} placeholder="a" />
+                          <p>Licencia</p>
+                          {/* <Label>{props[esp]}: </Label> */}
+                          </SubeContainerImg>
+                        </SubeImgContainer>
                     );
                   } else if (idx === 13) {
                     // DATE-FECHA = VIGENCIA DE LA LICENCIA 13
                     return (
                       <InputContainer key={idx}>
                         <Input type="date" placeholder="a"/>
-                        <Label htmlFor={`input-${el}`}>{props[esp]}: </Label>
+                        <Label htmlFor={`Input-${el}`}>{props[esp]}: </Label>
                       </InputContainer>
                     );
                   } else if (idx === 16 || idx === 19) {
@@ -279,9 +305,9 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
                     if (idx === 19) {
                       return (
                         <InputContainer key={idx}>
-                          <label htmlFor={`input-${el}`}>{props[esp]}: </label>
+                          <label htmlFor={`Input-${el}`}>{props[esp]}: </label>
                           <InputCheck
-                            id={`input-${el}`}
+                            id={`Input-${el}`}
                             name={el}
                             checked={driver[el]}
                             onChange={handleChange}
@@ -309,14 +335,14 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
                     return (
                       <InputContainer key={idx}>
                         <Input type="password" placeholder="a"/>
-                        <Label htmlFor={`input-${el}`}>{props[esp]}: </Label>
+                        <Label htmlFor={`Input-${el}`}>{props[esp]}: </Label>
                       </InputContainer>
                     );
                   } else {
                     return (
                       <InputContainer key={idx}>
                         <Input type="text" placeholder="a"/>
-                        <label htmlFor={`input-${el}`}>{props[esp]}: </label>
+                        <label htmlFor={`nput-${el}`}>{props[esp]}: </label>
                       </InputContainer>
                     );
                   }

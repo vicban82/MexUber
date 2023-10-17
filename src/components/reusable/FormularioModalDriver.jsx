@@ -9,16 +9,16 @@ export const ContainerModal = styled(Modal)`
     justify-content: center;
     align-content: center;
     margin-top: 60px;
-    //overflow-y: scroll;
-    //color: black;
-    //max-width: 400px;
-    //margin: 100px 30% 80% 35%;
 `;
 
 export const ContainerScroll = styled.div`
     overflow-y: scroll;
     max-height: 400px;
     padding: 9px 13px 10px 0px;
+    //color: black;
+    display: flex;
+    flex-direction: column;
+    grid-gap: 40px;
     //scrollbar-color: #007 #bada55;
     &::-webkit-scrollbar {
         background-color: #e9dada;
@@ -93,10 +93,16 @@ export const FormHead = styled.div`
 `;
 
 export const InputContainer = styled.div`
-  position: relative;
-  height: 50px;
-  width: 90%;
-  margin-bottom: 17px;
+    display: flex;
+    position: relative;
+    height: 50px;
+    width: 90%;
+    margin-bottom: 17px;
+    flex-direction: column;
+    justify-content: center;
+    grid-gap: 62px;
+    min-height: 50px;
+    max-height: 50px;
 `;
 
 export const Label = styled.label`
@@ -117,7 +123,7 @@ export const Input = styled.input`
   left: 0px;
   height: 100%;
   width: 100%;
-  border: 1px solid #c6d0e5;
+  border: 1px solid #73809d;
   color: black;
   border-radius: 7px;
   font-size: 16px;
@@ -199,4 +205,191 @@ export const Titulo = styled.div`
     margin-top: -75px;
     height: 50px;
     align-items: center;
+`;
+
+
+export const Span = styled.span`
+    color: red;
+
+  `;
+
+
+export const Select = styled.select`
+    width: 100%;
+    height: 100%;
+    margin-left: 3px;
+    border-radius: 6px;
+    border: 1px solid #73809d;
+    background-color: transparent;
+    color: #a7b4d2;
+    //border-color: #73809d;
+    font-size: 16px;
+    padding-left: 14px;
+    height: 50px;
+    //font-weight: 600;
+
+    &::placeholder {
+    color: transparent;
+  }
+
+  
+  &:focus {
+    border: 1px solid purple;
+    color: black;
+  }
+
+  &::-ms-ticks-after {
+    border: 1px solid purple;
+    color: black;
+  }
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-transition: "color 9999s ease-out, background-color 9999s ease-out";
+    -webkit-transition-delay: 9999s;
+  }
+
+`;
+
+export const SelectContainer = styled.div`
+      display: flex;
+      flex-direction: column;
+      height: 75px;
+
+    `;
+
+export const GrupoInput = styled.div`
+    display: flex;
+    flex-direction: column;
+    grid-gap: 27px;
+`;
+
+export const GrupoSelect = styled.div`
+    display: flex;
+    flex-direction: column;
+    color: black;
+    grid-gap: 27px;
+    //grid-gap: 27px;
+`;
+
+export const GrupoImg = styled.div`
+    display: flex;
+    flex-direction: column;
+    grid-gap: 27px;
+`;
+
+
+export const SubeImgContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    color: black;
+    width: 100%;
+`;
+
+export const TituloSeccion = styled.h2`
+    text-align: center;
+    color: black;
+    margin-bottom: 0px;
+    margin-top: 0px;
+`;
+
+export const SpanData = styled.span`
+    margin-top: 107px;
+    color: red;
+`;
+
+export const ImgSube = styled.input`
+  border-color: red;
+`;
+
+export const SubeContainerImg = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50%;
+`;
+
+export const GrupoCheck = styled.div`
+    display: flex;
+    flex-direction: row;
+    color: black;
+    align-items: center;
+    grid-gap: 13px;
+`;
+
+export const CheckContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    color: black;
+    align-items: center;
+    grid-gap: 13px;
+`;
+
+export const Textarea = styled.textarea`
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 96%;
+  padding-top: 16px;
+  padding-left: 13px;
+  height: 70px;
+  border: 1px solid #73809d;
+  color: black;
+  border-radius: 7px;
+  font-size: 16px;
+  //padding: 0 20px;
+  outline: none;
+  background: none;
+  z-index: 1;
+  resize: none;
+  
+  &::placeholder {
+    color: transparent;
+  }
+
+  &:focus + ${Label} {
+  top: -7px;
+  left: 3px;
+  z-index: 10;
+  font-size: 14px;
+  font-weight: 600;
+  color: purple;
+  }
+
+  &:focus {
+    border: 2px solid purple;
+  }
+
+  &:not(:placeholder-shown)+ ${Label} {
+  top: -7px;
+  left: 3px;
+  z-index: 10;
+  font-size: 14px;
+  font-weight: 600;
+  }
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-transition: "color 9999s ease-out, background-color 9999s ease-out";
+    -webkit-transition-delay: 9999s;
+  }
+`;
+
+export const TextareaContainer = styled.div`
+    display: flex;
+    position: relative;
+    height: 50px;
+    width: 100%;
+    margin-bottom: 17px;
+    flex-direction: column;
+    justify-content: center;
+    grid-gap: 62px;
+    min-height: 50px;
+    max-height: 50px;
+ 
 `;
