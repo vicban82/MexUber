@@ -1,12 +1,15 @@
 export const validationState = (estado, state) => {
   let stateLicenseError = '';
 
-  if (!state) {
+  // console.log("estado:", estado)
+  // console.log("state:", state)
+  if (!state || !estado.includes(state)) {
     // console.log("state:", state)
     stateLicenseError = 'Debes seleccionar un Estado';
-  } else if (estado !== state) {
-    stateLicenseError = 'Debes seleccionar un Estado';
-  }
+  } 
+  // else if (estado !== state || !estado.includes(state)) {
+  //   stateLicenseError = 'Debes seleccionar un Estado';
+  // }
 
   return stateLicenseError;
 }

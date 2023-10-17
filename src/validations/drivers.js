@@ -57,12 +57,14 @@ export const validateDriver = (driver, codigoPostal, estado, ciudad, colonias, l
   }
   
   error.stateError = validationState(estado, state);
-  
-  if (ciudad !== city) {
+
+  // console.log("ciudad:", ciudad)
+  // console.log("city:", city)
+  if (!ciudad.includes(city)) {
     error.cityError = 'Debes seleccionar una Ciudad';
   }
   
-  if (!colonia || !colonias.includes(colonia)) {
+  if (!colonias.includes(colonia)) {
     error.coloniaError = 'Debes seleccionar una colonia';
   }
   

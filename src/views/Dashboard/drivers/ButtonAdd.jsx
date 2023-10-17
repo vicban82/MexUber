@@ -41,18 +41,9 @@ const ButtonV1 = styled.button`
   transition: border-color 0.25s;
 `;
 
-
 const dropzoneContainerStyles = {
   width: "200px", // Establece el ancho del contenedor
   height: "200px", // Establece la altura del contenedor
-  border: "2px dashed #cccccc",
-  borderRadius: "4px",
-  textAlign: "center",
-  padding: "20px",
-  cursor: "pointer",
-};
-
-const dropzoneStyles = {
   border: "2px dashed #cccccc",
   borderRadius: "4px",
   textAlign: "center",
@@ -78,6 +69,9 @@ export const ButtonAdd = ({
   //* INFORMACION DEL CONDUCTOR
   const [codigoPostal, setZipcode] = useState('');
   const [estado, setEstado] = useState('');
+  // console.log("estado:",typeof estado)
+  // console.log("estado:",typeof estado)
+  // const [selectEstado, setSelectEstado] = useState([]);
   const [ciudad, setCiudad] = useState('');
   const [colonias, setColonias] = useState([]);
   //* INFORMACION DEL CONDUCTOR
@@ -120,20 +114,54 @@ export const ButtonAdd = ({
     car,
   } = driver;
   // console.log("form driver:", driver)
-
+  
   const memorySepomes = useMemo(() => sepomex, [sepomex])
   const memoryLicencias = useMemo(() => licencias, [licencias])
   
   function handleChange(e) {
-    const { name, value, type } = e.target;
+    const { name, value } = e.target;
     
-    if (name === "zipCode") {
+    if (name === "zipCode" && value.length >= 5 || name === "state" || name === "city" || name === "colonia") {
       const sepomexData = memorySepomes.find(el => el.codigoPostal === value);
+            
       if (sepomexData) {
         setZipcode(sepomexData.codigoPostal);
         setEstado(sepomexData.estado);
         setCiudad(sepomexData.ciudad);
         setColonias(sepomexData.colonias);
+      } else {
+        // * ------------ ESTADOS ------------
+        const findState = [...new Set(memorySepomes.map(el => el.estado))]
+        // console.log("findState:", findState)
+        if (findState) {
+          setEstado(findState);
+        }
+        const filterByState = memorySepomes.filter(el => {
+          if (el.estado === value) {
+            // console.log("value:", value)
+            return el.ciudad
+          }
+        });
+        // * ------------ CIUDADES ------------
+        // console.log("filterByState:", filterByState)
+        const findCity = [...new Set(filterByState.map(el => el.ciudad))].filter(el => el !== undefined)
+        // console.log("findCity:", findCity)
+        if (findCity) {
+          setCiudad(findCity);
+        }
+        // * ------------ COLONIAS ------------
+        const filterByCity = memorySepomes.filter(el => {
+          if (el.ciudad === value) {
+            // console.log("value:", value)
+            return el.colonias
+          }
+        });
+        // console.log("filterByCity:", filterByCity)
+        const findColonia = [...new Set(filterByCity.map(el => el.colonias))].flat(1)
+        // console.log("findColonia:", findColonia)
+        if (findColonia) {
+          setColonias(findColonia);
+        }
       }
     }
 
@@ -424,7 +452,51 @@ export const ButtonAdd = ({
             )}
           </InputContainer>
 
-          <InputContainer>
+          {typeof estado !== "string" ? null : (
+            <InputContainer>
+              <select
+                disabled={true}
+                name={"state"}
+                value={state}
+                onChange={handleChange}
+              >
+                <option>{estado || "Selecciona"}</option>
+              </select>
+              <br />
+              {stateError && (
+                <span>{stateError}</span>
+              )}
+              <label>{props.state}: </label>
+            </InputContainer>
+          )}
+          {!Array.isArray(estado) ? null : (
+            <InputContainer>
+              <select
+                disabled={false}
+                name={"state"}
+                // value={state}
+                onChange={handleChange}
+              >
+                <option>Selecciona</option>
+                {estado.map((est, idx) => {
+                  // console.log("EL EST:", est)
+                  return (
+                    // <option key={idx} value={est} >
+                    <option key={idx} >
+                      {est}
+                    </option>
+                  );
+                })}
+              </select>
+              <br />
+              {stateError && (
+                <span>{stateError}</span>
+              )}
+              <label>{props.state}: </label>
+            </InputContainer>
+          )}
+
+          {/* <InputContainer>
             <select
               disabled={true}
               name={"state"}
@@ -438,9 +510,52 @@ export const ButtonAdd = ({
               <span>{stateError}</span>
             )}
             <label>{props.state}: </label>
-          </InputContainer>
+          </InputContainer> */}
 
-          <InputContainer>
+          {typeof ciudad !== "string" ? null : (
+            <InputContainer>
+              <label>{props.city}: </label>
+              <select
+                disabled={true}
+                name={"city"}
+                value={city}
+                onChange={handleChange}
+              >
+                <option>{ciudad || "Selecciona"}</option>
+              </select>
+              <br />
+              {cityError && (
+                <span>{cityError}</span>
+              )}
+            </InputContainer>
+          )}
+          {!Array.isArray(ciudad) ? null : (
+            <InputContainer>
+              <label>{props.city}: </label>
+              <select
+                disabled={false}
+                name={"city"}
+                // value={city}
+                onChange={handleChange}
+              >
+                <option>Selecciona</option>
+                {ciudad.map((cit, idx) => {
+                  return (
+                    // <option key={idx} value={cit} >
+                    <option key={idx} value={cit} >
+                      {cit}
+                    </option>
+                  );
+                })}
+              </select>
+              <br />
+              {cityError && (
+                <span>{cityError}</span>
+              )}
+            </InputContainer>
+          )}
+
+          {/* <InputContainer>
             <label>{props.city}: </label>
             <select
               disabled={true}
@@ -454,7 +569,7 @@ export const ButtonAdd = ({
             {cityError && (
               <span>{cityError}</span>
             )}
-          </InputContainer>
+          </InputContainer> */}
 
           <InputContainer>
             <label>{props.colonia}: </label>
