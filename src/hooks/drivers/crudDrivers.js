@@ -14,11 +14,12 @@ export async function axiosGetDrivers(setTDriver, setTotalPages, headers, page, 
   }
 }
 
-export async function axiosSearchDrivers(search, setTDriver, headers) {
+export async function axiosSearchDrivers(search, setTDriver, setTotalPages, headers, page, limit) {
   try {
-    const { data } = await axios.get(`/api/drivers?search=${search}`, { headers });
+    const { data } = (await axios.get(`/api/drivers?search=${search}&page=${page}&limit=${limit}`, { headers }));
     // console.log("DATA:", data);
     setTDriver(data.drivers);
+    setTotalPages(data.totalPages);
   } catch (err) {
     const { error } = err.response.data;
     console.log('ERROR:', error);

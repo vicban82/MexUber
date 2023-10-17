@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { axiosGetDrivers } from "../../../hooks/drivers/crudDrivers";
+import { axiosGetDrivers, axiosSearchDrivers } from "../../../hooks/drivers/crudDrivers";
 import { headers } from "../../../tools/accessToken";
 import { Table } from "./Table";
 import { ButtonAdd } from "./ButtonAdd";
@@ -9,7 +9,6 @@ import {
   faForward,
   faBackward,
   faFastBackward,
-  faFastForward
 } from "@fortawesome/free-solid-svg-icons";
 import { DivPages, ContentPages, DivButtonPages, DivGrupPage } from "../../../components/reusable/DivPages";
 import { Section } from "../../../components/reusable/global";
@@ -79,7 +78,7 @@ export const Drivers = () => {
   
   // * Páginado
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(2);
   const [totalPages, setTotalPages] = useState(1);
   
   const firstPages = (e) => {
@@ -103,9 +102,22 @@ export const Drivers = () => {
   };
   //* Paginado
 
+  //* Consulta
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = (search) => {
+    setSearchTerm(search);
+    setPage(1); // Resetear la página al realizar una búsqueda
+  };
+
   useEffect(() => {
-    axiosGetDrivers(setTDriver, setTotalPages, headers, page, limit);
-  }, [page, limit]);
+    if (searchTerm) {
+      axiosSearchDrivers(searchTerm, setTDriver, setTotalPages, headers, page, limit);
+    } else {
+      axiosGetDrivers(setTDriver, setTotalPages, headers, page, limit);
+    }
+  }, [page, limit, searchTerm]);
+  //* Consulta
 
   return (
     <Section>
@@ -113,7 +125,6 @@ export const Drivers = () => {
         <p>En esta sección no hay información disponible</p>
       ) : (
         <>
-          <Search setTDriver={setTDriver} setTotalPages={setTotalPages} page={page} limit={limit} />
           <ButtonAdd
             tDriver={tDriver}
             setTDriver={setTDriver}
@@ -158,6 +169,7 @@ export const Drivers = () => {
               </DivButtonPages>
             </DivGrupPage>
           </ContentPages >
+          <Search onSearch={handleSearch} />
         </>
       )}
     </Section>

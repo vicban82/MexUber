@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
-import { axiosGetDrivers, axiosSearchDrivers } from '../../../hooks/drivers/crudDrivers';
-import { headers } from '../../../tools/accessToken';
 
-export const Search = ({ setTDriver, setTotalPages, page, limit }) => {
+export const Search = ({ onSearch }) => {
   const [search, setSearch] = useState("");
 
   function handleSubmit(e) {
     e.preventDefault();
-    axiosSearchDrivers(search, setTDriver, headers);
+    onSearch(search);
     setSearch("");
   }
   
@@ -18,7 +16,7 @@ export const Search = ({ setTDriver, setTotalPages, page, limit }) => {
   
   function handleClick(e) {
     e.preventDefault();
-    axiosGetDrivers(setTDriver, setTotalPages, page, limit, headers);
+    onSearch("");
   }
 
   return (
