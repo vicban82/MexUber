@@ -121,7 +121,7 @@ export const Drivers = () => {
 
   return (
     <Section>
-      {tDriver.length === 0 ? (
+      {!tDriver || tDriver.length <= 0 ? (
         <p>En esta sección no hay información disponible</p>
       ) : (
         <>
