@@ -4,7 +4,8 @@ export const validationPassword = (password) => {
   let passwordError = '';
 
   if (!regexPassword.test(password)) {
-    passwordError = `La contraseña debe contener entre 8 - 16 caracteres incluyendo: Mayúsculas, números y caracteres especiales (@, $, !, %, *, ?, _ , -, &)`;
+    passwordError = `La clave debe contener entre 8 - 16 caracteres, mayúsculas, números y caracteres especiales.`;
+    /* `La contraseña debe contener entre 8 - 16 caracteres incluyendo: Mayúsculas, números y caracteres especiales (@, $, !, %, *, ?, _ , -, &)`; */
   }
 
   return passwordError;

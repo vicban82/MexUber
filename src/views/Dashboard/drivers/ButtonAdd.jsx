@@ -23,7 +23,22 @@ import {
   ButtonContainer,
   InputCheck,
   LabelCheck,
-  Titulo
+  Titulo,
+  Span,
+  SelectContainer,
+  Select,
+  GrupoInput,
+  GrupoSelect,
+  GrupoImg,
+  SubeImgContainer,
+  TituloSeccion,
+  SpanData,
+  ImgSube,
+  SubeContainerImg,
+  GrupoCheck,
+  CheckContainer,
+  Textarea,
+  TextareaContainer
  } from "../../../components/reusable/FormularioModalDriver";
 
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
@@ -41,10 +56,26 @@ const ButtonV1 = styled.button`
   transition: border-color 0.25s;
 `;
 
+const GrupoInputV1 = styled(GrupoInput)`
+  grid-gap: 60px;
+`;
+
+const InputContainerV1 = styled(InputContainer)`
+  grid-gap: 89px;
+`;
+
+const InputCheckV1 = styled(InputCheck)`
+  margin-top: 5px;
+`;
+
+/* const TituloSeccionV1 = styled(TituloSeccion)`
+  margin-top: 0px;
+`; */
+
 const dropzoneContainerStyles = {
-  width: "200px", // Establece el ancho del contenedor
+  width: "50%", // Establece el ancho del contenedor
   height: "200px", // Establece la altura del contenedor
-  border: "2px dashed #cccccc",
+  border: "2px dashed #700202",
   borderRadius: "4px",
   textAlign: "center",
   padding: "20px",
@@ -407,6 +438,8 @@ export const ButtonAdd = ({
         <br />
         <ContainerScroll>
           {/*//* INFORMACION DEL CONDUCTOR */}
+        <TituloSeccion>Datos Personales<hr /></TituloSeccion>
+        <GrupoInput>
           <InputContainer>
             <Input
               type="text"
@@ -418,7 +451,7 @@ export const ButtonAdd = ({
             <Label>{props.name}: </Label>
             <br />
             {nameError && (
-              <span>{nameError}</span>
+              <Span>{nameError}</Span>
             )}
           </InputContainer>
 
@@ -433,7 +466,7 @@ export const ButtonAdd = ({
             <Label>{props.lastName}: </Label>
             <br />
             {lastNameError && (
-              <span>{lastNameError}</span>
+              <Span>{lastNameError}</Span>
             )}
           </InputContainer>
 
@@ -448,9 +481,10 @@ export const ButtonAdd = ({
             <Label>{props.zipCode}: </Label>
             <br />
             {zipCodeError && (
-              <span>{zipCodeError}</span>
+              <Span>{zipCodeError}</Span>
             )}
           </InputContainer>
+          </GrupoInput>
 
           {typeof estado !== "string" ? null : (
             <InputContainer>
@@ -503,11 +537,12 @@ export const ButtonAdd = ({
               value={state}
               onChange={handleChange}
             >
-              <option>{estado || "Selecciona"}</option>
-            </select>
-            <br />
+              <option>{estado || "Estado"}</option>
+              <option>Primera opcion</option>
+              <option>Segunda opcion</option>
+            </Select>
             {stateError && (
-              <span>{stateError}</span>
+              <Span>{stateError}</Span>
             )}
             <label>{props.state}: </label>
           </InputContainer> */}
@@ -555,25 +590,27 @@ export const ButtonAdd = ({
             </InputContainer>
           )}
 
-          {/* <InputContainer>
+          {/* <SelectContainer>
             <label>{props.city}: </label>
             <select
               disabled={true}
               name={"city"}
               value={city}
+              placeholder="jashajshaj"
               onChange={handleChange}
-            >
-              <option>{ciudad || "Selecciona"}</option>
-            </select>
-            <br />
+              >
+              <option>{ciudad || "Ciudad"}</option>
+              <option>Morelia</option>
+              <option>Segunda opcion</option>
+            </Select>
             {cityError && (
-              <span>{cityError}</span>
+              <Span>{cityError}</Span>
             )}
-          </InputContainer> */}
+          </SelectContainer>*/}
 
-          <InputContainer>
-            <label>{props.colonia}: </label>
-            <select
+          <SelectContainer>
+            {/* <label>{props.colonia}: </label> */}
+            <Select
               disabled={zipCode || codigoPostal === zipCode ? false : true}
               name={"colonia"}
               value={colonia}
@@ -589,13 +626,15 @@ export const ButtonAdd = ({
                   </option>
                 );
               })}
-            </select>
-            <br />
+            </Select>
+            {/* <br /> */}
             {coloniaError && (
-              <span>{coloniaError}</span>
+              <Span>{coloniaError}</Span>
             )}
-          </InputContainer>
+          </SelectContainer>
+          {/* </GrupoSelect> */}
 
+          <GrupoInput>
           <InputContainer>
             <Input
               type="text"
@@ -607,9 +646,10 @@ export const ButtonAdd = ({
             <Label>{props.address}: </Label>
             <br />
             {addressError && (
-              <span>{addressError}</span>
+              <Span>{addressError}</Span>
             )}
           </InputContainer>
+          
 
           <InputContainer>
             <Input
@@ -622,7 +662,7 @@ export const ButtonAdd = ({
             <Label>{props.contact}: </Label>
             <br />
             {contactError && (
-              <span>{contactError}</span>
+              <Span>{contactError}</Span>
             )}
           </InputContainer>
 
@@ -637,14 +677,16 @@ export const ButtonAdd = ({
             <Label>{props.email}: </Label>
             <br />
             {emailError && (
-              <span>{emailError}</span>
+              <Span>{emailError}</Span>
             )}
           </InputContainer>
+          </GrupoInput>
 
-          <InputContainer>
+          <GrupoImg>
+          <TituloSeccion><hr />Foto del Conductor</TituloSeccion>
+          <SubeImgContainer>
             <div {...getDriverRootProps()} style={dropzoneContainerStyles}>
-              <Input {...getDriverInputProps()} />
-              {/* //* SE VISUALIZA LA IMAGEN EN FORMATE BASE 64 */}
+              <input {...getDriverInputProps()} />
               {driverPicture && <img
                 src={`data:image/png;base64,${driverPicture}`}
                 alt="Foto conductor" 
@@ -654,177 +696,176 @@ export const ButtonAdd = ({
               <Label>{props.driverPicture}: </Label>
               <br />
               {driverPictureError && (
-                <span>{driverPictureError}</span>
+                <Span>{driverPictureError}</Span>
               )}
             </div>
-          </InputContainer>
+          </SubeImgContainer>
+          </GrupoImg>
 
-          <h2>Licencia de conducir</h2>
-          <hr />
+          <GrupoInput>
+          <TituloSeccion><hr />Licencia de conducir</TituloSeccion>
+          
           <InputContainer>
-            <label>{props.driverLicenseNumber}: </label>
-            {/* //! DE 5 A 10 CARACTERES Y PUEDE SER ALFANUMERICO */}
             <Input
               type="text"
               name={"driverLicenseNumber"}
               value={driverLicenseNumber}
               placeholder="a"
               onChange={handleChange}
-            />
+              />
+            <Label>{props.driverLicenseNumber}: </Label>
             <br />
             {driverLicenseNumberError && (
               <span>{driverLicenseNumberError}</span>
             )}
           </InputContainer>
+          </GrupoInput>
 
-          <InputContainer>
-            <label>{props.stateLicense}: </label>
-            <select
+          <GrupoSelect>
+          <SelectContainer>
+            {/* <label>{props.stateLicense}: </label> */}
+            <Select
               disabled={driverLicenseNumber ? false : true}
               name={"stateLicense"}
               value={stateLicense}
               onChange={handleChange}
             >
-              <option>Selecciona</option>
+              <option>Estatus Licencia</option>
               {estados.length >= 1 && estados.map((estado, idx) => {
-                // console.log("EL ESTADOS:", estado)
                 return (
                   <option key={idx} value={estado}>
                     {estado}
                   </option>
                 );
               })}
-            </select>
-            <br />
+            </Select>
+            {/* <br /> */}
             {stateLicenseError && (
-              <span>{stateLicenseError}</span>
+              <Span>{stateLicenseError}</Span>
             )}
-          </InputContainer>
+          </SelectContainer>
 
-          <InputContainer>
-            <label>{props.typeLicense}: </label>
-            <select
+          <SelectContainer>
+            {/* <label>{props.typeLicense}: </label> */}
+            <Select
               disabled={driverLicenseNumber ? false : true}
               name={"typeLicense"}
               value={typeLicense}
               onChange={handleChange}
             >
-              <option>Selecciona</option>
+              <option>Tipo de licencia</option>
               {licences.length >= 1 && licences.map((licencia, idx) => {
-                // console.log("EL LICENCIAS:", licencia)
                 return (
                   <option key={idx} value={licencia}>
                     {licencia}
                   </option>
                 );
               })}
-            </select>
-            <br />
+            </Select>
+            {/* <br /> */}
             {typeLicenseError && (
-              <span>{typeLicenseError}</span>
+              <Span>{typeLicenseError}</Span>
             )}
-          </InputContainer>
+          </SelectContainer>
+          </GrupoSelect>
+          
+            <GrupoInput>
+              <InputContainer>
+                <Input
+                  disabled={driverLicenseNumber ? false : true}
+                  type="date"
+                  name={"dateLicense"}
+                  value={dateLicense}
+                  placeholder="a"
+                  onChange={handleChange}
+                />
+                <Label>{props.dateLicense}: </Label>
+                {dateLicenseError && (
+                  <SpanData>{dateLicenseError}</SpanData>
+                )}
+              </InputContainer>
 
-          <InputContainer>
-            <label>{props.dateLicense}: </label>
-            <Input
-              disabled={driverLicenseNumber ? false : true}
-              type="date"
-              name={"dateLicense"}
-              value={dateLicense}
-              onChange={handleChange}
-            />
-            <br />
-            {dateLicenseError && (
-              <span>{dateLicenseError}</span>
-            )}
-          </InputContainer>
+              <TituloSeccion><hr />Foto de Licencia (Ambos lados)</TituloSeccion>
+              {/* <SubeImgContainer> */}
+              <SubeImgContainer style={pictureLicence}>
+                {/* <label>Fotos licencia: </label> */}
+                <br />
+                {!driverLicenseNumber ? (
+                  <>
+                    <div style={dropzoneContainerStyles} >
+                      <p>Desabilitado</p>
+                    </div>
+                    <div style={dropzoneContainerStyles} >
+                      <p>Desabilitado</p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <SubeContainerImg {...getFrontLicenseRootProps()} style={dropzoneContainerStyles} >
+                      <ImgSube {...getFrontLicenseInputProps()} />
+                      {frontLicensePicture && <img
+                        src={`data:image/png;base64,${frontLicensePicture}`}
+                        alt="Foto conductor"
+                        style={{ maxWidth: '100px' }}
+                      />}
+                      Frente
+                      {frontLicensePictureError && (
+                        <Span>{frontLicensePictureError}</Span>
+                      )}
+                    </SubeContainerImg>
+                    <SubeContainerImg {...getBackLicenseRootProps()} style={dropzoneContainerStyles} >
+                      <ImgSube {...getBackLicenseInputProps()} />
+                      {backLicensePicture && <img
+                        src={`data:image/png;base64,${backLicensePicture}`}
+                        alt="Foto conductor"
+                        style={{ maxWidth: '100px' }}
+                      />}
+                      Atrás
+                      {backLicensePictureError && (
+                        <Span>{backLicensePictureError}</Span>
+                      )}
+                    </SubeContainerImg>
+                  </>
+                )}
 
-          <InputContainer>
-            <div style={pictureLicence}>
-              <label>Fotos licencia: </label>
-              <br />
-              {!driverLicenseNumber ? (
-                <>
-                  <div style={dropzoneContainerStyles} >
-                    <p>Desabilitado</p>
-                  </div>
-                  <div style={dropzoneContainerStyles} >
-                    <p>Desabilitado</p>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <InputContainer {...getFrontLicenseRootProps()} style={dropzoneContainerStyles} >
-                    <Input {...getFrontLicenseInputProps()} />
-                    {/* //* SE VISUALIZA LA IMAGEN EN FORMATE BASE 64 */}
-                    {frontLicensePicture && <img
-                      src={`data:image/png;base64,${frontLicensePicture}`}
-                      alt="Foto conductor"
-                      style={{ maxWidth: '100px' }}
-                    />}
-                    <p>Frente</p>
-                    <br />
-                    {frontLicensePictureError && (
-                      <span>{frontLicensePictureError}</span>
-                    )}
-                  </InputContainer>
-                  <InputContainer {...getBackLicenseRootProps()} style={dropzoneContainerStyles} >
-                    <Input {...getBackLicenseInputProps()} />
-                    {/* //* SE VISUALIZA LA IMAGEN EN FORMATE BASE 64 */}
-                    {backLicensePicture && <img
-                      src={`data:image/png;base64,${backLicensePicture}`}
-                      alt="Foto conductor"
-                      style={{ maxWidth: '100px' }}
-                    />}
-                    <p>Atrás</p>
-                    <br />
-                    {backLicensePictureError && (
-                      <span>{backLicensePictureError}</span>
-                    )}
-                  </InputContainer>
-                </>
-              )}
-              
-            </div>
-          </InputContainer>
+              </SubeImgContainer>
+            </GrupoInput>
 
-          <h2>Ajustes en la aplicación</h2>
-          <hr />
-          <InputContainer>
-            <InputCheck
-              type="checkbox"
-              name="allServices"
-              checked={allServices === 1}
-              onChange={handleCheckboxChange}
-            />
-            Todos
-            <InputCheck
-              type="checkbox"
-              name="servicesLGBQT"
-              checked={servicesLGBQT === 1}
-              disabled={allServices === 1 ? true : false}
-              onChange={handleCheckboxChange}
-            />
-            LGBTQ+
-            <InputCheck
-              type="checkbox"
-              name="onlyWomenServices"
-              checked={onlyWomenServices === 1}
-              disabled={allServices === 1 ? true : false}
-              onChange={handleCheckboxChange}
-            />
-            <LabelCheck>{props.services}: </LabelCheck>
-            Sólo mujeres
-            <br />
-            {servicesError && (
-              <span>{servicesError}</span>
-            )}
-          </InputContainer>
+            
+              <TituloSeccion><hr />Ajustes en la aplicación</TituloSeccion>
+              <GrupoCheck>
+              <LabelCheck>{props.services}: </LabelCheck>
+                <InputCheck
+                  type="checkbox"
+                  name="allServices"
+                  checked={allServices === 1}
+                  onChange={handleCheckboxChange}
+                />
+                Todos
+                <InputCheck
+                  type="checkbox"
+                  name="servicesLGBQT"
+                  checked={servicesLGBQT === 1}
+                  disabled={allServices === 1 ? true : false}
+                  onChange={handleCheckboxChange}
+                />
+                LGBTQ+
+                <InputCheck
+                  type="checkbox"
+                  name="onlyWomenServices"
+                  checked={onlyWomenServices === 1}
+                  disabled={allServices === 1 ? true : false}
+                  onChange={handleCheckboxChange}
+                />
+                Sólo mujeres
+                </GrupoCheck>
+                {servicesError && (
+                  <Span>{servicesError}</Span>
+                )}
 
-          <h2>Acceso a la aplicación</h2>
-          <hr />
-          <InputContainer>
+          <GrupoInputV1>
+          <TituloSeccion><hr />Acceso a la aplicación</TituloSeccion>
+          <InputContainerV1>
             <Input
               type="password"
               name={"password"}
@@ -835,11 +876,11 @@ export const ButtonAdd = ({
             <Label>{props.password}: </Label>
             <br />
             {passwordError && (
-              <span>{passwordError}</span>
+              <Span>{passwordError}</Span>
             )}
-          </InputContainer>
+          </InputContainerV1>
 
-          <InputContainer>
+          <InputContainerV1>
             <Input
               type="password"
               name={"repeatPassword"}
@@ -850,13 +891,15 @@ export const ButtonAdd = ({
             <Label>{props.repeatPassword}: </Label>
             <br />
             {repeatPasswordError && (
-              <span>{repeatPasswordError}</span>
+              <Span>{repeatPasswordError}</Span>
             )}
-          </InputContainer>
-
-          <InputContainer>
-            <label>{props.isActive}: </label>
-            <InputCheck
+          </InputContainerV1>
+          </GrupoInputV1>
+          
+          <GrupoCheck>
+           <CheckContainer> 
+            <LabelCheck>{props.isActive}: </LabelCheck>
+            <InputCheckV1
               type="checkbox"
               name={"isActive"}
               checked={isActive === 1}
@@ -864,30 +907,35 @@ export const ButtonAdd = ({
             />
             <br />
             {isActiveError && (
-              <span>{isActiveError}</span>
+              <Span>{isActiveError}</Span>
             )}
-          </InputContainer>
-
-          <InputContainer>
-            <label>{props.messageReasonInActive}: </label>
-            {/* //! MAXIMO 10 CARACTERES */}
-            <textarea
-              type="text"
-              name={"messageReasonInActive"}
-              value={messageReasonInActive}
-              maxLength={100}
-              disabled={isActive === 1}
-              onChange={handleChange}
-            />
-            <br />
-            {messageReasonInActiveError && (
-              <span>{messageReasonInActiveError}</span>
-            )}
-          </InputContainer>
+          </CheckContainer>
+          </GrupoCheck>
+          
+            <GrupoInput>
+              <TextareaContainer>
+                <Textarea
+                  type="text"
+                  name={"messageReasonInActive"}
+                  value={messageReasonInActive}
+                  placeholder="a"
+                  maxLength={100}
+                  disabled={isActive === 1}
+                  onChange={handleChange}
+                />
+                <Label>{props.messageReasonInActive}: </Label>
+              </TextareaContainer>
+              {messageReasonInActiveError && (
+                <Span>{messageReasonInActiveError}</Span>
+              )}
+            </GrupoInput>
+            <br/>
+            <br/>
+        
         </ContainerScroll>
           <ButtonContainer>
-            <SubmitBtn onClick={() => setModalIsOpen(false)}>Cancelar</SubmitBtn>
             <SubmitBtn type="submit">Guardar</SubmitBtn>
+            <SubmitBtn onClick={() => setModalIsOpen(false)}>Cancelar</SubmitBtn>
           </ButtonContainer>
           </FormEdit>
       </ContainerModal>

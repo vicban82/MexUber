@@ -21,7 +21,16 @@ import {
   SubmitBtn,
   ButtonContainer,
   InputCheck,
-  LabelCheck,
+  SelectContainer,
+  Select,
+  GrupoInput,
+  GrupoSelect,
+  GrupoImg,
+  SubeImgContainer,
+  TituloSeccion,
+  ImgSube,
+  SubeContainerImg,
+  Span,
  } from "../../../components/reusable/FormularioModalDriver";
 
 Modal.setAppElement("#root");
@@ -196,130 +205,67 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
       </button>
 
       {/* Modal */}
-      <ContainerModal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Editar elemento"
-      >
+      <ContainerModal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
         <FormEdit onSubmit={handleSubmit}>
-        <FormHead><h2>Editar Conductor</h2></FormHead>
-          <br />
-          <ContainerScroll>
-          {
-            Object.keys(driver).map((el, idx) => {
-              // console.log("EL:", el, ",IDX:", idx)
-              for (const esp in props) {
-                if (el === esp) {
-                  if (idx === 3 || idx === 4 || idx === 5 || idx === 11 || idx === 12 || idx === 20) {
-                    // SELECT = ESTADO 3, CIUDAD 4, COLONIA 5, ESTADO LICENCIA 11, TIPO LICENCIA 12
-                    // MOTIVO DE BLOQUEO = 20
-                    if (idx === 20) {
-                      return (
-                        <InputContainer key={idx}>
-                          <Input type="text" disabled={true} placeholder="a"/>
-                          <Label>{props[esp]}: </Label>
-                        </InputContainer>
-                      );
-                    }
-                    return (
-                      <InputContainer key={idx}>
-                        <Label htmlFor={`input-${el}`}>{props[esp]}: </Label>
-                        <select disabled={true} >
-                          <option>
-                            Selecciona
-                          </option>
-                          {/* {listSepomex} */}
-                        </select>
-                      </InputContainer>
-                    );
-                  } else if (idx === 9 || idx === 14 || idx === 15) {
-                    // DROP = FOTO CONDUCTOR 9, FOTO LICENCIA 14 - 15
-                    if (idx === 9) {
-                      return (
-                        <InputContainer key={idx}>
-                          <InputContainer {...getRootProps()} style={dropzoneContainerStyles}>
-                            <Input {...getInputProps()} placeholder="a"/>
-                          </InputContainer>
-                          <Label>{props[esp]}: </Label>
-                          <p>Frente</p>
-                        </InputContainer>
-                      );
-                    }
-                    return (
-                      <div key={idx} >
-                        <InputContainer {...getRootProps()} style={dropzoneContainerStyles}>
-                          <Input {...getInputProps()} placeholder="a"/>
-                          <Label>{props[esp]}: </Label>
-                        </InputContainer>
-                        <p>Licencia</p>
-                      </div>
-                    );
-                  } else if (idx === 13) {
-                    // DATE-FECHA = VIGENCIA DE LA LICENCIA 13
-                    return (
-                      <InputContainer key={idx}>
-                        <Input type="date" placeholder="a"/>
-                        <Label htmlFor={`input-${el}`}>{props[esp]}: </Label>
-                      </InputContainer>
-                    );
-                  } else if (idx === 16 || idx === 19) {
-                    // CHECKBOX = SERVICIOS(TODOS - MUJERES - LGBT) 16, ACTIVO 19
-                    if (idx === 19) {
-                      return (
-                        <InputContainer key={idx}>
-                          <label htmlFor={`input-${el}`}>{props[esp]}: </label>
-                          <InputCheck
-                            id={`input-${el}`}
-                            name={el}
-                            checked={driver[el]}
-                            onChange={handleChange}
-                            placeholder="a"
-                            type="checkbox"
-                            value={driver[el] ? 1 : 0}
-                          />
-                        </InputContainer>
-                      );
-                    }
-                    return (
-                      <InputContainer key={idx}>
-                        <label>{props[esp]}: </label>
-                        <InputCheck 
-                          type="checkbox"
-                          checked={driver[el]} 
-                          onChange={handleChange} 
-                        />TODOS
-                        <InputCheck type="checkbox" />LGBTQ+
-                        <InputCheck type="checkbox" />MUJERES
-                      </InputContainer>
-                    );
-                  } else if (idx === 17 || idx === 18) {
-                    // PASSWORD = 17 - 18
-                    return (
-                      <InputContainer key={idx}>
-                        <Input type="password" placeholder="a"/>
-                        <Label htmlFor={`input-${el}`}>{props[esp]}: </Label>
-                      </InputContainer>
-                    );
-                  } else {
-                    return (
-                      <InputContainer key={idx}>
-                        <Input type="text" placeholder="a"/>
-                        <label htmlFor={`input-${el}`}>{props[esp]}: </label>
-                      </InputContainer>
-                    );
-                  }
+        <FormHead><h2>Nuevo Conductor</h2></FormHead>
+        <br />
+        <ContainerScroll>
+          {/*//* INFORMACION DEL CONDUCTOR */}
+        <TituloSeccion>Datos Personales<hr /></TituloSeccion>
+        <GrupoInput>
+          <InputContainer>
+            <Input
+              type="text"
+              name={"name"}
+              value={name}
+              placeholder="a"
+              onChange={handleChange}
+            />
+            <Label>{props.name}: </Label>
+            <br />
+            {nameError && (
+              <Span>{nameError}</Span>
+            )}
+          </InputContainer>
 
-                }
-              }
-            })
-          }
-          </ContainerScroll>
+          <InputContainer>
+            <Input
+              type="text"
+              name={"lastName"}
+              placeholder="a"
+              value={lastName}
+              onChange={handleChange}
+            />
+            <Label>{props.lastName}: </Label>
+            <br />
+            {lastNameError && (
+              <Span>{lastNameError}</Span>
+            )}
+          </InputContainer>
+
+          <InputContainer>
+            <Input
+              type="text"
+              name={"zipCode"}
+              placeholder="a"
+              value={zipCode}
+              onChange={handleChange}
+            />
+            <Label>{props.zipCode}: </Label>
+            <br />
+            {zipCodeError && (
+              <Span>{zipCodeError}</Span>
+            )}
+          </InputContainer>
+          </GrupoInput>
+        
+        </ContainerScroll>
           <ButtonContainer>
-            <SubmitBtn onClick={closeModal}>Cancelar</SubmitBtn>
-            <SubmitBtn>Guardar</SubmitBtn>
+            <SubmitBtn type="submit">Guardar</SubmitBtn>
+            <SubmitBtn onClick={() => setModalIsOpen(false)}>Cancelar</SubmitBtn>
           </ButtonContainer>
-        </FormEdit>
-        </ContainerModal>
+          </FormEdit>
+      </ContainerModal>
         <button onClick={() => handleDelete(id)}>
           <Img
             src={deleteIcon}
