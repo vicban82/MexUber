@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 
 //* Esta funcion es para la conexion con el Back-End
-export function errorRegister(driver) {
+export function errorRegister(driver, errorForm) {
   const {
     name,
     lastName,
@@ -35,6 +35,16 @@ export function errorRegister(driver) {
     car,
   } = driver;
 
+  const {
+    driverLicenseNumberError,
+    stateLicenseError,
+    typeLicenseError,
+    dateLicenseError,
+    frontLicensePictureError,
+    backLicensePictureError,
+    messageReasonInActiveError,
+  } = errorForm;
+
   if (
     !name ||
     !lastName ||
@@ -46,28 +56,42 @@ export function errorRegister(driver) {
     !contact ||
     !email ||
     !driverPicture ||
-    !driverLicenseNumber ||
-    !dateLicense ||
-    !stateLicense ||
-    !typeLicense ||
-    !frontLicensePicture ||
-    !backLicensePicture ||
     !password ||
     !repeatPassword ||
-    !isActive ||
-    !messageReasonInActive ||
-    !allServices ||
-    !servicesLGBQT ||
-    !onlyWomenServices
+    !isActive === 1 ||
+    !allServices === 1 ||
+    !servicesLGBQT === 1 ||
+    !onlyWomenServices === 1
   ) {
     Swal.fire({
-      title: "Rectifica los capos",
+      title: "Advertencia",
       icon: "warning",
       text: "Credenciales incorrectas.",
       html: `
-        <p>${"Todos los campos son requeridos" || ""}</p>
+        <p>${"Todos los campos son requeridos"}</p>
       `,
     });
+  } else {
+    // if (driverLicenseNumber.length >= 5 && driverLicenseNumber.length <= 10) {
+    if (stateLicenseError || typeLicenseError || dateLicenseError || frontLicensePictureError || backLicensePictureError) {
+      Swal.fire({
+        title: "Advertencia",
+        icon: "warning",
+        text: "Credenciales incorrectas.",
+        html: `
+          <p>${"Rectifica los campos faltantes"}</p>
+        `,
+      });
+    } else if (isActive === 0) {
+      Swal.fire({
+        title: "Advertencia",
+        icon: "warning",
+        text: "Credenciales incorrectas.",
+        html: `
+          <p>${"Rectifica los campos faltantes parte 2"}</p>
+        `,
+      });
+    }
   }
 }
 
@@ -116,19 +140,17 @@ export function successRegister(driver) {
     contact &&
     email &&
     driverPicture &&
-    driverLicenseNumber &&
-    dateLicense &&
-    stateLicense &&
-    typeLicense &&
-    frontLicensePicture &&
-    backLicensePicture &&
+    // driverLicenseNumber &&
+    // dateLicense &&
+    // stateLicense &&
+    // typeLicense &&
+    // frontLicensePicture &&
+    // backLicensePicture &&
+    allServices === 1 ||
+    servicesLGBQT === 1 ||
+    onlyWomenServices === 1 ||
     password &&
-    repeatPassword &&
-    isActive &&
-    messageReasonInActive &&
-    allServices &&
-    servicesLGBQT &&
-    onlyWomenServices
+    repeatPassword
   ) {
     Swal.fire({
       icon: "success",
@@ -139,5 +161,17 @@ export function successRegister(driver) {
         <p>${`Conductor <strong>${name} ${lastName}</strong> ha sido registrado con exito` || ""}</p>
       `,
     });
+  } else {
+    if (dateLicense && stateLicense && typeLicense && frontLicensePicture && backLicensePicture || messageReasonInActive) {
+      Swal.fire({
+        icon: "success",
+        title: `Nuevo conductor`,
+        showConfirmButton: false,
+        timer: 4000,
+        html: `
+          <p>${`Conductor <strong>${name} ${lastName}</strong> ha sido registrado con exito` || ""}</p>
+        `,
+      });
+    }
   }
 }

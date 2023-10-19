@@ -42,7 +42,7 @@ export const validateDriver = (driver, codigoPostal, estado, formatImage, ciudad
     //! ACCESO A LA APLICACION
     car,
   } = driver;
-  console.log("validateDriver:", driver)
+  // console.log("validateDriver:", driver)
   const error = {};
 
   // * VALIDANDO INFORMACION DEL CONDUCTOR

@@ -49,7 +49,7 @@ export const Drivers = () => {
     isActive: 1,
     messageReasonInActive: "", // MENSAJE RASON INACTIVO
     //! ACCESO A LA APLICACION
-    // car: "" || null,
+    car: "6518c32a2696272c68e9c540",
   });
   const [errorForm, setErrorForm] = useState({
     nameError: "",
@@ -132,6 +132,8 @@ export const Drivers = () => {
             setDriver={setDriver}
             errorForm={errorForm}
             setErrorForm={setErrorForm}
+            limit={limit}
+            setTotalPages={setTotalPages}
           />
           <Table
             tHeader={tableHeader}

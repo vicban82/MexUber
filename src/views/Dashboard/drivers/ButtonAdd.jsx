@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Modal from "react-modal";
 import { validateDriver } from "../../../validations/drivers";
 import { headers } from "../../../tools/accessToken";
-import { axiosPostDriver } from "../../../hooks/drivers/crudDrivers";
+import { axiosGetDrivers, axiosPostDriver } from "../../../hooks/drivers/crudDrivers";
 import styled from 'styled-components';
 import {
   errorRegister,
@@ -93,6 +93,8 @@ export const ButtonAdd = ({
   setDriver,
   errorForm,
   setErrorForm,
+  limit,
+  setTotalPages,
 }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [sepomex, setSepomex] = useState([]);
@@ -150,7 +152,7 @@ export const ButtonAdd = ({
   
   function handleChange(e) {
     const { name, value } = e.target;
-    console.log("name:", name)
+    // console.log("name:", name)
     let updatedDriver = {...driver}
     
     if (name === "zipCode" && value.length >= 5 || name === "state" || name === "city" || name === "colonia") {
@@ -318,7 +320,7 @@ export const ButtonAdd = ({
   }, []);
   
   const convertAndSetImage = (file, fieldName) => {
-    console.log("file:", file)
+    // console.log("file:", file)
     setFormatImage(file.path)
     const reader = new FileReader();
     reader.onload = () => {
@@ -372,65 +374,74 @@ export const ButtonAdd = ({
       contact &&
       email &&
       driverPicture &&
-      driverLicenseNumber &&
-      stateLicense &&
-      typeLicense &&
-      dateLicense &&
-      frontLicensePicture &&
-      backLicensePicture &&
-      allServices &&
-      servicesLGBQT &&
-      onlyWomenServices &&
+      // driverLicenseNumber &&
+      // stateLicense &&
+      // typeLicense &&
+      // dateLicense &&
+      // frontLicensePicture &&
+      // backLicensePicture &&
+      allServices === 1 ||
+      servicesLGBQT === 1 ||
+      onlyWomenServices === 1 ||
       password &&
-      repeatPassword &&
-      isActive &&
-      messageReasonInActive
+      repeatPassword
     ) {
-      try {
-        successRegister(driver);
-        const newDriver = await axiosPostDriver(driver, headers);
-        setTDriver([...tDriver, newDriver]);
+      // console.log("ENVIADO")
+      if (driverLicenseNumber || isActive === 1) {
+        try {
+          successRegister(driver);
+          const newDriver = await axiosPostDriver(driver, headers);
+          setTDriver([...tDriver, newDriver]);
 
-        // Cierra el modal después de guardar
-        setModalIsOpen(false);
-        setDriver({
-          name: "",
-          lastName: "",
-          zipCode: "", // CODIGO POSTAL
-          state: "", // ESTADO DE MEXICO
-          city: "",
-          colonia: "",
-          address: "",
-          contact: "", // NUMERO DE CONTACTO DEL CONDUCTOR
-          email: "",
-          driverPicture: "", //* FOTO DEL CONDUCTOR
-          //! DATOS DE LA LICENCIA DE CONDUCCION
-          driverLicenseNumber: "", //* NUMERO LICENCIA DEL CONDUCTOR
-          stateLicense: "", // ESTADO DE LA LICENCIA
-          typeLicense: "", // TIPO LICENCIA
-          dateLicense: "", // FECHA - VIGENCIA DE LA LICENCIA
-          frontLicensePicture: "", //* FOTO FRONTAL DE LA LICENCIA
-          backLicensePicture: "", //* FOTO REVERSO DE LA LICENCIA
-          //! DATOS DE LA LICENCIA DE CONDUCCION
-          //! AJUSTES DE LA APLICACION
-          allServices: 1, // TODOS
-          servicesLGBQT: 0, // LGBQT+
-          onlyWomenServices: 0, // MUJERES
-          //! AJUSTES DE LA APLICACION
-          //! ACCESO A LA APLICACION
-          password: "",
-          repeatPassword: "",
-          isActive: 1,
-          messageReasonInActive: "", // MENSAJE RASON INACTIVO
-          //! ACCESO A LA APLICACION
-          // car: "" || null,
-        });
-      } catch (error) {
-        console.error("Error al guardar el admin:", error);
+          await axiosGetDrivers(setTDriver, setTotalPages, headers, 1, limit)
+  
+          // Cierra el modal después de guardar
+          setModalIsOpen(false);
+          setDriver({
+            name: "",
+            lastName: "",
+            zipCode: "", // CODIGO POSTAL
+            state: "", // ESTADO DE MEXICO
+            city: "",
+            colonia: "",
+            address: "",
+            contact: "", // NUMERO DE CONTACTO DEL CONDUCTOR
+            email: "",
+            driverPicture: "", //* FOTO DEL CONDUCTOR
+            //! DATOS DE LA LICENCIA DE CONDUCCION
+            driverLicenseNumber: "", //* NUMERO LICENCIA DEL CONDUCTOR
+            stateLicense: "", // ESTADO DE LA LICENCIA
+            typeLicense: "", // TIPO LICENCIA
+            dateLicense: "", // FECHA - VIGENCIA DE LA LICENCIA
+            frontLicensePicture: "", //* FOTO FRONTAL DE LA LICENCIA
+            backLicensePicture: "", //* FOTO REVERSO DE LA LICENCIA
+            //! DATOS DE LA LICENCIA DE CONDUCCION
+            //! AJUSTES DE LA APLICACION
+            allServices: 1, // TODOS
+            servicesLGBQT: 0, // LGBQT+
+            onlyWomenServices: 0, // MUJERES
+            //! AJUSTES DE LA APLICACION
+            //! ACCESO A LA APLICACION
+            password: "",
+            repeatPassword: "",
+            isActive: 1,
+            messageReasonInActive: "", // MENSAJE RASON INACTIVO
+            //! ACCESO A LA APLICACION
+            car: "",
+          });
+
+          // Establece la página en 1 después de agregar un elemento
+          setPage(1);
+        } catch (error) {
+          console.error("Error al guardar el admin:", error);
+        }
+      } else {
+        // console.log("NO ENVIADO")
+        errorRegister(driver, errorForm);
       }
     } else  {
-      // console.log("form driver:")
-      errorRegister(driver);
+      // console.log("NO ENVIADO")
+      errorRegister(driver, errorForm);
     }
   }
 
@@ -686,7 +697,7 @@ export const ButtonAdd = ({
             <Label>{props.driverLicenseNumber}: </Label>
             <br />
             {driverLicenseNumberError && (
-              <span>{driverLicenseNumberError}</span>
+              <Span>{driverLicenseNumberError}</Span>
             )}
           </InputContainer>
           </GrupoInput>
