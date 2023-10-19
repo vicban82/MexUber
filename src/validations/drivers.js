@@ -5,11 +5,11 @@ import { validationPassword } from "./items/password";
 import { regexDate, regexLicenceNumber, regexPhone, regexZipCode } from "../tools/regex";
 import { validationState } from "./items/state";
 import { validationDate } from "./items/date";
-import { validationPicture } from "./items/image";
+import { validationBackPicture, validationDriverPicture, validationFrontPicture } from "./items/image";
 import { validationIsActive } from "./items/isActive";
 // import { regexPhone } from "../tools/regex";
 
-export const validateDriver = (driver, codigoPostal, estado, ciudad, colonias, licences) => {
+export const validateDriver = (driver, codigoPostal, estado, formatImage, ciudad, colonias, licences) => {
   const {
     name,
     lastName,
@@ -42,6 +42,7 @@ export const validateDriver = (driver, codigoPostal, estado, ciudad, colonias, l
     //! ACCESO A LA APLICACION
     car,
   } = driver;
+  console.log("validateDriver:", driver)
   const error = {};
 
   // * VALIDANDO INFORMACION DEL CONDUCTOR
@@ -52,19 +53,21 @@ export const validateDriver = (driver, codigoPostal, estado, ciudad, colonias, l
   
   if (!zipCode) {
     error.zipCodeError = 'Debe colocar un código postal';
-  } else if (!regexZipCode.test(zipCode) || codigoPostal !== zipCode) {
+  } else if (!regexZipCode.test(zipCode)) {
     error.zipCodeError = 'Código postal invalido';
+  } else if (codigoPostal && codigoPostal !== zipCode) {
+    error.zipCodeError = 'Código postal no compatible con la db';
   }
   
   error.stateError = validationState(estado, state);
 
   // console.log("ciudad:", ciudad)
   // console.log("city:", city)
-  if (!ciudad.includes(city)) {
+  if (!city) {
     error.cityError = 'Debes seleccionar una Ciudad';
   }
   
-  if (!colonias.includes(colonia)) {
+  if (!colonia) {
     error.coloniaError = 'Debes seleccionar una colonia';
   }
   
@@ -76,7 +79,7 @@ export const validateDriver = (driver, codigoPostal, estado, ciudad, colonias, l
   
   error.emailError = validationEmail(email);
   
-  error.driverPictureError = validationPicture(driverPicture, frontLicensePicture, backLicensePicture);
+  error.driverPictureError = validationDriverPicture(formatImage, driverPicture);
   
   // * VALIDANDO LICENCIA DEL CONDUCTOR
 
@@ -93,15 +96,16 @@ export const validateDriver = (driver, codigoPostal, estado, ciudad, colonias, l
     
     error.dateLicenseError = validationDate(dateLicense);
     
-    error.frontLicensePictureError = validationPicture(driverPicture, frontLicensePicture, backLicensePicture);
+    error.frontLicensePictureError = validationFrontPicture(formatImage, frontLicensePicture);
     
-    error.backLicensePictureError = validationPicture(driverPicture, frontLicensePicture, backLicensePicture);
+    error.backLicensePictureError = validationBackPicture(formatImage, backLicensePicture);
   }
   
   
   // * VALIDANDO AJUSTES DE LA APLICACION
   
-  if (allServices === 0 || servicesLGBQT === 0 || onlyWomenServices === 0) {
+  // console.log("allServices:", allServices)
+  if (allServices === 0 && servicesLGBQT === 0 && onlyWomenServices === 0) {
     error.servicesError = 'Debes de elegir al menos un servicio';
   }
   

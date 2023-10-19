@@ -109,6 +109,8 @@ export const ButtonAdd = ({
   const [licences, setLicences] = useState([]);
   //* LICENCIA DE CONDUCIR
 
+  const [formatImage, setFormatImage] = useState('');
+
   const {
     name,
     lastName,
@@ -148,6 +150,7 @@ export const ButtonAdd = ({
   
   function handleChange(e) {
     const { name, value } = e.target;
+    console.log("name:", name)
     let updatedDriver = {...driver}
     
     if (name === "zipCode" && value.length >= 5 || name === "state" || name === "city" || name === "colonia") {
@@ -216,7 +219,7 @@ export const ButtonAdd = ({
       validateDriver({
         ...driver,
         [name]: value,
-      }, codigoPostal, estado, ciudad, colonias, licences)
+      }, codigoPostal, estado, formatImage, ciudad, colonias, licences)
     );
   }
 
@@ -264,6 +267,11 @@ export const ButtonAdd = ({
     }
   }, [estado, ciudad]);
 
+  useEffect(() => {
+    const validationErrors = validateDriver(driver, codigoPostal, estado, formatImage);
+    setErrorForm(validationErrors);
+  }, [driver]);
+
   const {
     nameError,
     lastNameError,
@@ -310,6 +318,8 @@ export const ButtonAdd = ({
   }, []);
   
   const convertAndSetImage = (file, fieldName) => {
+    console.log("file:", file)
+    setFormatImage(file.path)
     const reader = new FileReader();
     reader.onload = () => {
       const base64String = reader.result.split(',')[1];
@@ -498,7 +508,7 @@ export const ButtonAdd = ({
               </select>
               <br />
               {stateError && (
-                <span>{stateError}</span>
+                <Span>{stateError}</Span>
               )}
             </InputContainer>
           )}

@@ -29,4 +29,4 @@ export const regexLicenceNumber = /^[a-zA-Z0-9]{5,10}$/;
 export const regexDate = /^(0?[1-9]|[12][0-9]|3[01])-(0?[1-9]|1[0-2])-\d{4}$/;
 
 // VERIFICACION FORMATO DE IMAGENES
-export const regexImages = /^(http|https):\/\/\S+\.(jpg|png)$/;
+export const regexImages = /\.(jpg|png)$/;

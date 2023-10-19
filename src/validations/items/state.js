@@ -3,7 +3,7 @@ export const validationState = (estado, state) => {
 
   // console.log("estado:", estado)
   // console.log("state:", state)
-  if (!state || !estado.includes(state)) {
+  if (!state) {
     // console.log("state:", state)
     stateLicenseError = 'Debes seleccionar un Estado';
   } 
