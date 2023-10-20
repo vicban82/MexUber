@@ -95,6 +95,7 @@ export const ButtonAdd = ({
   setErrorForm,
   limit,
   setTotalPages,
+  setPage
 }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [sepomex, setSepomex] = useState([]);
@@ -111,7 +112,7 @@ export const ButtonAdd = ({
   const [licences, setLicences] = useState([]);
   //* LICENCIA DE CONDUCIR
 
-  const [formatImage, setFormatImage] = useState('');
+  const [selectImage, setSelectImage] = useState({});
 
   const {
     name,
@@ -221,7 +222,7 @@ export const ButtonAdd = ({
       validateDriver({
         ...driver,
         [name]: value,
-      }, codigoPostal, estado, formatImage, ciudad, colonias, licences)
+      }, codigoPostal, estado, selectImage, ciudad, colonias, licences)
     );
   }
 
@@ -270,7 +271,7 @@ export const ButtonAdd = ({
   }, [estado, ciudad]);
 
   useEffect(() => {
-    const validationErrors = validateDriver(driver, codigoPostal, estado, formatImage);
+    const validationErrors = validateDriver(driver, codigoPostal, estado, selectImage);
     setErrorForm(validationErrors);
   }, [driver]);
 
@@ -321,7 +322,7 @@ export const ButtonAdd = ({
   
   const convertAndSetImage = (file, fieldName) => {
     // console.log("file:", file)
-    setFormatImage(file.path)
+    setSelectImage(file)
     const reader = new FileReader();
     reader.onload = () => {
       const base64String = reader.result.split(',')[1];
@@ -387,7 +388,7 @@ export const ButtonAdd = ({
       repeatPassword
     ) {
       // console.log("ENVIADO")
-      if (driverLicenseNumber || isActive === 1) {
+      if (!stateLicenseError || !typeLicenseError || !dateLicenseError || !frontLicensePictureError || !backLicensePictureError || !messageReasonInActiveError) {
         try {
           successRegister(driver);
           const newDriver = await axiosPostDriver(driver, headers);
@@ -428,6 +429,10 @@ export const ButtonAdd = ({
             messageReasonInActive: "", // MENSAJE RASON INACTIVO
             //! ACCESO A LA APLICACION
             car: "",
+            //! NO SE VALIDAN
+            tokenNotification: "",
+            typePhone: "",
+            //! NO SE VALIDAN
           });
 
           // Establece la página en 1 después de agregar un elemento

@@ -50,6 +50,11 @@ export const Drivers = () => {
     messageReasonInActive: "", // MENSAJE RASON INACTIVO
     //! ACCESO A LA APLICACION
     car: "6518c32a2696272c68e9c540",
+    // car: "",
+    //! NO SE VALIDAN
+    tokenNotification: "",
+    typePhone: "",
+    //! NO SE VALIDAN
   });
   const [errorForm, setErrorForm] = useState({
     nameError: "",
@@ -134,6 +139,7 @@ export const Drivers = () => {
             setErrorForm={setErrorForm}
             limit={limit}
             setTotalPages={setTotalPages}
+            setPage={setPage}
           />
           <Table
             tHeader={tableHeader}

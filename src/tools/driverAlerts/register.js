@@ -72,7 +72,6 @@ export function errorRegister(driver, errorForm) {
       `,
     });
   } else {
-    // if (driverLicenseNumber.length >= 5 && driverLicenseNumber.length <= 10) {
     if (stateLicenseError || typeLicenseError || dateLicenseError || frontLicensePictureError || backLicensePictureError) {
       Swal.fire({
         title: "Advertencia",
@@ -82,7 +81,7 @@ export function errorRegister(driver, errorForm) {
           <p>${"Rectifica los campos faltantes"}</p>
         `,
       });
-    } else if (isActive === 0) {
+    } else if (messageReasonInActiveError) {
       Swal.fire({
         title: "Advertencia",
         icon: "warning",

@@ -9,7 +9,7 @@ import { validationBackPicture, validationDriverPicture, validationFrontPicture 
 import { validationIsActive } from "./items/isActive";
 // import { regexPhone } from "../tools/regex";
 
-export const validateDriver = (driver, codigoPostal, estado, formatImage, ciudad, colonias, licences) => {
+export const validateDriver = (driver, codigoPostal, estado, selectImage, ciudad, colonias, licences) => {
   const {
     name,
     lastName,
@@ -79,7 +79,7 @@ export const validateDriver = (driver, codigoPostal, estado, formatImage, ciudad
   
   error.emailError = validationEmail(email);
   
-  error.driverPictureError = validationDriverPicture(formatImage, driverPicture);
+  error.driverPictureError = validationDriverPicture(selectImage, driverPicture);
   
   // * VALIDANDO LICENCIA DEL CONDUCTOR
 
@@ -96,9 +96,9 @@ export const validateDriver = (driver, codigoPostal, estado, formatImage, ciudad
     
     error.dateLicenseError = validationDate(dateLicense);
     
-    error.frontLicensePictureError = validationFrontPicture(formatImage, frontLicensePicture);
+    error.frontLicensePictureError = validationFrontPicture(selectImage, frontLicensePicture);
     
-    error.backLicensePictureError = validationBackPicture(formatImage, backLicensePicture);
+    error.backLicensePictureError = validationBackPicture(selectImage, backLicensePicture);
   }
   
   
