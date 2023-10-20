@@ -321,7 +321,7 @@ export const ButtonAdd = ({
   }, []);
   
   const convertAndSetImage = (file, fieldName) => {
-    // console.log("file:", file)
+    console.log("file:", file)
     setSelectImage(file)
     const reader = new FileReader();
     reader.onload = () => {
@@ -361,6 +361,45 @@ export const ButtonAdd = ({
     maxFiles: 1, // ARCHIVOS PERMITIDOS
   });
 
+  function closeModal() {
+    setDriver({
+      name: "",
+      lastName: "",
+      zipCode: "", // CODIGO POSTAL
+      state: "", // ESTADO DE MEXICO
+      city: "",
+      colonia: "",
+      address: "",
+      contact: "", // NUMERO DE CONTACTO DEL CONDUCTOR
+      email: "",
+      driverPicture: "", //* FOTO DEL CONDUCTOR
+      //! DATOS DE LA LICENCIA DE CONDUCCION
+      driverLicenseNumber: "", //* NUMERO LICENCIA DEL CONDUCTOR
+      stateLicense: "", // ESTADO DE LA LICENCIA
+      typeLicense: "", // TIPO LICENCIA
+      dateLicense: "", // FECHA - VIGENCIA DE LA LICENCIA
+      frontLicensePicture: "", //* FOTO FRONTAL DE LA LICENCIA
+      backLicensePicture: "", //* FOTO REVERSO DE LA LICENCIA
+      //! DATOS DE LA LICENCIA DE CONDUCCION
+      //! AJUSTES DE LA APLICACION
+      allServices: 1, // TODOS
+      servicesLGBQT: 0, // LGBQT+
+      onlyWomenServices: 0, // MUJERES
+      //! AJUSTES DE LA APLICACION
+      //! ACCESO A LA APLICACION
+      password: "",
+      repeatPassword: "",
+      isActive: 1,
+      messageReasonInActive: "", // MENSAJE RASON INACTIVO
+      //! ACCESO A LA APLICACION
+      car: "" || null,
+      //! NO SE VALIDAN
+      tokenNotification: "",
+      typePhone: "",
+      //! NO SE VALIDAN
+    });
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -375,12 +414,6 @@ export const ButtonAdd = ({
       contact &&
       email &&
       driverPicture &&
-      // driverLicenseNumber &&
-      // stateLicense &&
-      // typeLicense &&
-      // dateLicense &&
-      // frontLicensePicture &&
-      // backLicensePicture &&
       allServices === 1 ||
       servicesLGBQT === 1 ||
       onlyWomenServices === 1 ||
@@ -388,7 +421,12 @@ export const ButtonAdd = ({
       repeatPassword
     ) {
       // console.log("ENVIADO")
-      if (!stateLicenseError || !typeLicenseError || !dateLicenseError || !frontLicensePictureError || !backLicensePictureError || !messageReasonInActiveError) {
+      if (stateLicenseError || typeLicenseError || dateLicenseError || frontLicensePictureError || backLicensePictureError) {
+        errorRegister(driver, errorForm);
+      } else if (messageReasonInActiveError) {
+        // console.log("NO ENVIADO")
+        errorRegister(driver, errorForm);
+      } else {
         try {
           successRegister(driver);
           const newDriver = await axiosPostDriver(driver, headers);
@@ -398,51 +436,13 @@ export const ButtonAdd = ({
   
           // Cierra el modal después de guardar
           setModalIsOpen(false);
-          setDriver({
-            name: "",
-            lastName: "",
-            zipCode: "", // CODIGO POSTAL
-            state: "", // ESTADO DE MEXICO
-            city: "",
-            colonia: "",
-            address: "",
-            contact: "", // NUMERO DE CONTACTO DEL CONDUCTOR
-            email: "",
-            driverPicture: "", //* FOTO DEL CONDUCTOR
-            //! DATOS DE LA LICENCIA DE CONDUCCION
-            driverLicenseNumber: "", //* NUMERO LICENCIA DEL CONDUCTOR
-            stateLicense: "", // ESTADO DE LA LICENCIA
-            typeLicense: "", // TIPO LICENCIA
-            dateLicense: "", // FECHA - VIGENCIA DE LA LICENCIA
-            frontLicensePicture: "", //* FOTO FRONTAL DE LA LICENCIA
-            backLicensePicture: "", //* FOTO REVERSO DE LA LICENCIA
-            //! DATOS DE LA LICENCIA DE CONDUCCION
-            //! AJUSTES DE LA APLICACION
-            allServices: 1, // TODOS
-            servicesLGBQT: 0, // LGBQT+
-            onlyWomenServices: 0, // MUJERES
-            //! AJUSTES DE LA APLICACION
-            //! ACCESO A LA APLICACION
-            password: "",
-            repeatPassword: "",
-            isActive: 1,
-            messageReasonInActive: "", // MENSAJE RASON INACTIVO
-            //! ACCESO A LA APLICACION
-            car: "",
-            //! NO SE VALIDAN
-            tokenNotification: "",
-            typePhone: "",
-            //! NO SE VALIDAN
-          });
+          closeModal()
 
           // Establece la página en 1 después de agregar un elemento
           setPage(1);
         } catch (error) {
           console.error("Error al guardar el admin:", error);
         }
-      } else {
-        // console.log("NO ENVIADO")
-        errorRegister(driver, errorForm);
       }
     } else  {
       // console.log("NO ENVIADO")
@@ -921,7 +921,10 @@ export const ButtonAdd = ({
         </ContainerScroll>
           <ButtonContainer>
             <SubmitBtn type="submit">Guardar</SubmitBtn>
-            <SubmitBtn onClick={() => setModalIsOpen(false)}>Cancelar</SubmitBtn>
+            <SubmitBtn onClick={() => {
+              setModalIsOpen(false), 
+              closeModal()
+            }}>Cancelar</SubmitBtn>
           </ButtonContainer>
           </FormEdit>
       </ContainerModal>

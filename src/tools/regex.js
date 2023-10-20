@@ -29,7 +29,7 @@ export const regexLicenceNumber = /^[a-zA-Z0-9]{5,10}$/;
 export const regexDate = /^(0?[1-9]|[12][0-9]|3[01])-(0?[1-9]|1[0-2])-\d{4}$/;
 
 // VERIFICACION FORMATO DE IMAGENES
-export const regexImages = /\.(jpg|png)$/;
+export const regexImages = /image\/(jpeg|jpg|png)$/;
 
 // VERIFICACION TAMAÑO DE IMAGENES
 export const maxSize = 5 * 1024 * 1024; // 5MB en bytes

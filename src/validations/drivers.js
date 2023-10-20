@@ -2,12 +2,11 @@ import { validationLastName, validationName } from "./items/name";
 import { validationContact } from "./items/contact";
 import { validationEmail } from "./items/email";
 import { validationPassword } from "./items/password";
-import { regexDate, regexLicenceNumber, regexPhone, regexZipCode } from "../tools/regex";
+import { regexLicenceNumber, regexZipCode } from "../tools/regex";
 import { validationState } from "./items/state";
 import { validationDate } from "./items/date";
 import { validationBackPicture, validationDriverPicture, validationFrontPicture } from "./items/image";
 import { validationIsActive } from "./items/isActive";
-// import { regexPhone } from "../tools/regex";
 
 export const validateDriver = (driver, codigoPostal, estado, selectImage, ciudad, colonias, licences) => {
   const {
@@ -61,8 +60,6 @@ export const validateDriver = (driver, codigoPostal, estado, selectImage, ciudad
   
   error.stateError = validationState(estado, state);
 
-  // console.log("ciudad:", ciudad)
-  // console.log("city:", city)
   if (!city) {
     error.cityError = 'Debes seleccionar una Ciudad';
   }
@@ -104,7 +101,6 @@ export const validateDriver = (driver, codigoPostal, estado, selectImage, ciudad
   
   // * VALIDANDO AJUSTES DE LA APLICACION
   
-  // console.log("allServices:", allServices)
   if (allServices === 0 && servicesLGBQT === 0 && onlyWomenServices === 0) {
     error.servicesError = 'Debes de elegir al menos un servicio';
   }
