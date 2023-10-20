@@ -127,7 +127,29 @@ export const Drivers = () => {
   return (
     <Section>
       {!tDriver || tDriver.length <= 0 ? (
-        <p>En esta sección no hay información disponible</p>
+          <div>
+            <ButtonAdd
+              tDriver={tDriver}
+              setTDriver={setTDriver}
+              driver={driver}
+              setDriver={setDriver}
+              errorForm={errorForm}
+              setErrorForm={setErrorForm}
+              limit={limit}
+              setTotalPages={setTotalPages}
+              setPage={setPage}
+            />
+            <Table
+              tHeader={tableHeader}
+              tDriver={tDriver}
+              setTDriver={setTDriver}
+              driver={driver}
+              setDriver={setDriver}
+              errorForm={errorForm}
+              setErrorForm={setErrorForm}
+            />
+            <p>En esta sección no hay información disponible</p>
+          </div>
       ) : (
         <>
           <ButtonAdd
