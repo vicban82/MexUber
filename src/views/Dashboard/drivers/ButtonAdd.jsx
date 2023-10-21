@@ -271,7 +271,7 @@ export const ButtonAdd = ({
   }, [estado, ciudad]);
 
   useEffect(() => {
-    const validationErrors = validateDriver(driver, codigoPostal, estado, selectImage);
+    const validationErrors = validateDriver(driver, codigoPostal, selectImage);
     setErrorForm(validationErrors);
   }, [driver]);
 

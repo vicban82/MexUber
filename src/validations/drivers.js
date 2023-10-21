@@ -2,13 +2,13 @@ import { validationLastName, validationName } from "./items/name";
 import { validationContact } from "./items/contact";
 import { validationEmail } from "./items/email";
 import { validationPassword } from "./items/password";
-import { regexLicenceNumber, regexZipCode } from "../tools/regex";
-import { validationState } from "./items/state";
+import { regexLicenceNumber } from "../tools/regex";
 import { validationDate } from "./items/date";
 import { validationBackPicture, validationDriverPicture, validationFrontPicture } from "./items/image";
 import { validationIsActive } from "./items/isActive";
+import { validationZipCode } from "./items/zipCode";
 
-export const validateDriver = (driver, codigoPostal, estado, selectImage, ciudad, colonias, licences) => {
+export const validateDriver = (driver, codigoPostal, selectImage) => {
   const {
     name,
     lastName,
@@ -46,36 +46,25 @@ export const validateDriver = (driver, codigoPostal, estado, selectImage, ciudad
 
   // * VALIDANDO INFORMACION DEL CONDUCTOR
   
-  error.nameError = validationName(name);
-  
-  error.lastNameError = validationLastName(lastName);
-  
-  if (!zipCode) {
-    error.zipCodeError = 'Debe colocar un código postal';
-  } else if (!regexZipCode.test(zipCode)) {
-    error.zipCodeError = 'Código postal invalido';
-  } else if (codigoPostal && codigoPostal !== zipCode) {
-    error.zipCodeError = 'Código postal no compatible con la db';
-  }
-  
-  error.stateError = validationState(estado, state);
-
-  if (!city) {
+  if (!name) {
+    error.nameError = validationName(name);
+  } else if (!lastName) {
+    error.lastNameError = validationLastName(lastName);
+  } else if (!zipCode) {
+    error.zipCodeError = validationZipCode(zipCode, codigoPostal);
+  } else if (!state) {
+    error.stateError = 'Debes seleccionar un Estado';
+  } else if (!city) {
     error.cityError = 'Debes seleccionar una Ciudad';
-  }
-  
-  if (!colonia) {
+  } else if (!colonia) {
     error.coloniaError = 'Debes seleccionar una colonia';
-  }
-  
-  if (!address) {
+  } else if (!address) {
     error.addressError = 'Debes ingregar tu domicilio o dirección';
+  } else if (!contact) {
+    error.contactError = validationContact(contact);
+  } else if (!email) {
+    error.emailError = validationEmail(email);
   }
-  
-  error.contactError = validationContact(contact);
-  
-  error.emailError = validationEmail(email);
-  
   error.driverPictureError = validationDriverPicture(selectImage, driverPicture);
   
   // * VALIDANDO LICENCIA DEL CONDUCTOR
@@ -83,21 +72,16 @@ export const validateDriver = (driver, codigoPostal, estado, selectImage, ciudad
   if (driverLicenseNumber) {
     if (!regexLicenceNumber.test(driverLicenseNumber)) {
       error.driverLicenseNumberError = 'Debes ingresar un número de licencia valido';
-    }
-    
-    error.stateLicenseError = validationState(estado, stateLicense);
-    
-    if (!typeLicense) {
+    } else if (!stateLicense) {
+      error.stateLicenseError = 'Debes seleccionar un Estado';
+    } else if (!typeLicense) {
       error.typeLicenseError = 'Debes de elegir un tipo de licencia'
+    } else if (!dateLicense) {
+      error.dateLicenseError = validationDate(dateLicense);
     }
-    
-    error.dateLicenseError = validationDate(dateLicense);
-    
     error.frontLicensePictureError = validationFrontPicture(selectImage, frontLicensePicture);
-    
     error.backLicensePictureError = validationBackPicture(selectImage, backLicensePicture);
   }
-  
   
   // * VALIDANDO AJUSTES DE LA APLICACION
   
@@ -107,9 +91,11 @@ export const validateDriver = (driver, codigoPostal, estado, selectImage, ciudad
   
   // * VALIDANDO ACCESO A LA APLICACION
 
-  error.passwordError = validationPassword(password);
-  
-  if (password !== repeatPassword) {
+  if (!password) {
+    error.passwordError = validationPassword(password);
+  } else if (!repeatPassword) {
+    error.repeatPasswordError = 'Debes confirmar el password';
+  } else if (password !== repeatPassword) {
     error.repeatPasswordError = 'El password no coincide';
   }
 
