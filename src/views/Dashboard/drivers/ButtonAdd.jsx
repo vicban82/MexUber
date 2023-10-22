@@ -68,10 +68,6 @@ const InputCheckV1 = styled(InputCheck)`
   margin-top: 5px;
 `;
 
-/* const TituloSeccionV1 = styled(TituloSeccion)`
-  margin-top: 0px;
-`; */
-
 const dropzoneContainerStyles = {
   width: "50%", // Establece el ancho del contenedor
   height: "200px", // Establece la altura del contenedor
@@ -222,7 +218,7 @@ export const ButtonAdd = ({
       validateDriver({
         ...driver,
         [name]: value,
-      }, codigoPostal, estado, selectImage, ciudad, colonias, licences)
+      }, codigoPostal, selectImage)
     );
   }
 
@@ -273,7 +269,7 @@ export const ButtonAdd = ({
   useEffect(() => {
     const validationErrors = validateDriver(driver, codigoPostal, selectImage);
     setErrorForm(validationErrors);
-  }, [driver]);
+  }, []);
 
   const {
     nameError,
@@ -420,11 +416,9 @@ export const ButtonAdd = ({
       password &&
       repeatPassword
     ) {
-      // console.log("ENVIADO")
       if (stateLicenseError || typeLicenseError || dateLicenseError || frontLicensePictureError || backLicensePictureError) {
         errorRegister(driver, errorForm);
       } else if (messageReasonInActiveError) {
-        // console.log("NO ENVIADO")
         errorRegister(driver, errorForm);
       } else {
         try {
@@ -445,7 +439,6 @@ export const ButtonAdd = ({
         }
       }
     } else  {
-      // console.log("NO ENVIADO")
       errorRegister(driver, errorForm);
     }
   }
