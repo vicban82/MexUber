@@ -5,20 +5,24 @@ export const ContainerModal = styled(Modal)`
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 550px;
+    height: 85vh;
+    max-height: 530px;
+    width: 55vh;
     justify-content: center;
     align-content: center;
-    margin-top: 60px;
+
 `;
 
 export const ContainerScroll = styled.div`
-    overflow-y: scroll;
-    max-height: 400px;
-    padding: 9px 13px 10px 0px;
-    //color: black;
     display: flex;
     flex-direction: column;
     grid-gap: 40px;
+    overflow-y: scroll;
+    max-height: 72%;
+    padding: 9px 13px 10px 0px;
+    width: 100%;
+    margin-bottom: 4%;
+    //color: black;
     //scrollbar-color: #007 #bada55;
     &::-webkit-scrollbar {
         background-color: #e9dada;
@@ -57,13 +61,14 @@ export const ButtonContainer = styled.div`
   width: 100%;
   justify-content: center;
   grid-gap: 20px;
-  padding-top: 13px;
+  height: 8%;
+  //padding-top: 13px;
 `;
 
 export const SubmitBtn = styled.button`
   display: block;
   margin-left: auto;
-  padding: 15px 30px;
+  //padding: 15px 30px;
   border: none;
   background-color: purple;
   color: white;
@@ -72,7 +77,7 @@ export const SubmitBtn = styled.button`
   font-size: 16px;
   //margin-top: 5px;
   width: 100%;
-  height: 48px;
+  height: 100%;
 
   /*   &:hover {
     background-color: #9867C5;
@@ -95,13 +100,14 @@ export const InputContainer = styled.div`
     display: flex;
     position: relative;
     height: 50px;
-    width: 90%;
+    width: 100%;
     margin-bottom: 17px;
     flex-direction: column;
     justify-content: center;
     grid-gap: 62px;
     min-height: 50px;
     max-height: 50px;
+    font-size: 2vh;
 `;
 
 export const Label = styled.label`
@@ -113,6 +119,7 @@ export const Label = styled.label`
   color: #a7acb5;
   font-size: 16px;
   transition: 0.5s;
+  font-size: 2vh;
   z-index: 0;
 `;
 
@@ -120,16 +127,18 @@ export const Input = styled.input`
   position: absolute;
   top: 0px;
   left: 0px;
-  height: 100%;
+  height: 95%;
   width: 100%;
   border: 1px solid #73809d;
   color: black;
   border-radius: 7px;
-  font-size: 16px;
-  padding: 0 20px;
+  font-size: 14px;
+  //padding: 0 20px;
   outline: none;
   background: none;
   z-index: 1;
+  padding-inline: 5%;
+  box-sizing: border-box;
 
   &::placeholder {
     color: transparent;
@@ -166,15 +175,15 @@ export const Input = styled.input`
 `;
 
 export const FormEdit = styled.form`
-  //height: 100%;
-  width: 100%;
-  max-width: 400px;
+  width: 55vh;
+  height: 85vh;
+  max-height: 530px;
   background-color: white;
-  //width: 400px;
   border-radius: 8px;
-  padding: 20px 40px;
-  height: 566px;
+  padding: 20px 30px;
+  font-size: 2vh;
   box-shadow: 0 10px 25px rgba(92, 99, 105, 0.2);
+  
 
   .title {
     font-size: 50px;
@@ -186,24 +195,34 @@ export const InputCheck = styled.input`
   margin-top: 12px;
   width: 18px;
   height: 18px;
+  margin-top: 5px;
 `;
 
 export const LabelCheck = styled.label`
   color: black;
   font-weight: bold;
   padding-left: 8px;
-  font-size: 18px;
+  font-size: 2vh;
 `;
 
 export const Titulo = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 5px 5px;
-  padding: 15px 7% 1px 7%;
+  align-items: center;
   justify-content: space-between;
   margin-top: -75px;
+  //padding: 5px 5px;
+  //padding: 15px 7% 1px 7%;
   height: 50px;
-  align-items: center;
+  width: 100%;
+  @media (max-width: 768px) {
+     //Mostrar el ícono de menú en pantallas pequeñas (como dispositivos móviles) 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 128px;
+    margin-top: -117px;
+  }
 `;
 
 
@@ -316,7 +335,10 @@ export const GrupoCheck = styled.div`
     flex-direction: row;
     color: black;
     align-items: center;
+    justify-content: center;
     grid-gap: 13px;
+    width: 100%;
+    font-size: 2vh;
 `;
 
 export const CheckContainer = styled.div`
@@ -391,4 +413,13 @@ export const TextareaContainer = styled.div`
     min-height: 50px;
     max-height: 50px;
  
+`;
+
+export const InputContainerPass = styled(InputContainer)`
+  grid-gap: 89px;
+  margin-bottom: 40px;
+`;
+
+export const GrupoInputPass = styled(GrupoInput)`
+  grid-gap: 60px;
 `;

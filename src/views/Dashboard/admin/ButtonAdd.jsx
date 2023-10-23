@@ -7,6 +7,7 @@ import { headers } from "../../../tools/accessToken";
 import styled from 'styled-components';
 import { 
   ContainerModal,
+  ContainerScroll,
   FormHead,
   FormEdit,
   InputContainer,
@@ -16,8 +17,25 @@ import {
   ButtonContainer,
   InputCheck,
   LabelCheck,
-  Titulo
- } from "../../../components/reusable/FormularioModalAdmin";
+  Titulo,
+  Span,
+  GrupoInput,
+  GrupoCheck,
+  CheckContainer,
+  InputContainerPass,
+  GrupoInputPass,
+  SelectContainer,
+  Select,
+  GrupoSelect,
+  GrupoImg,
+  SubeImgContainer,
+  TituloSeccion,
+  SpanData,
+  ImgSube,
+  SubeContainerImg,
+  Textarea,
+  TextareaContainer,
+ } from "../../../components/reusable/FormularioModal";
 
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
@@ -137,17 +155,20 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm, setPage, l
         <FormEdit onSubmit={handleSubmit}>
           <FormHead><h2>Nuevo Administrador</h2></FormHead>
           <br />
+        <ContainerScroll>
+        <GrupoInput>
           <InputContainer>
             <Input
               type="text"
               name={"name"}
               value={name}
+              placeholder="a"
               onChange={handleChange}
             />
             <Label>Nombre: </Label>
             <br />
             {nameError && (
-              <span>{nameError}</span>
+              <Span>{nameError}</Span>
             )}
           </InputContainer>
 
@@ -155,13 +176,14 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm, setPage, l
             <Input
               type="text"
               name={"lastName"}
+              placeholder="a"
               value={lastName}
               onChange={handleChange}
             />
             <Label>Apellidos: </Label>
             <br />
             {lastNameError && (
-              <span>{lastNameError}</span>
+              <Span>{lastNameError}</Span>
             )}
           </InputContainer>
 
@@ -169,26 +191,29 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm, setPage, l
             <Input
               type="text"
               name={"email"}
+              placeholder="a"
               value={email}
               onChange={handleChange}
             />
             <Label>Correo electrónico: </Label>
             <br />
             {emailError && (
-              <span>{emailError}</span>
+              <Span>{emailError}</Span>
             )}
           </InputContainer>
+        
           <InputContainer>
             <Input
               type="password"
               name={"password"}
+              placeholder="a"
               value={password}
               onChange={handleChange}
             />
             <Label>Contraseña: </Label>
             <br />
             {passwordError && (
-              <span>{passwordError}</span>
+              <Span>{passwordError}</Span>
             )}
           </InputContainer>
 
@@ -196,28 +221,33 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm, setPage, l
             <Input
               type="password"
               name={"repeatPassword"}
+              placeholder="a"
               value={repeatPassword}
               onChange={handleChange}
             />
             <Label>Repetr contraseña: </Label>
             <br />
             {repeatPasswordError && (
-              <span>{repeatPasswordError}</span>
+              <Span>{repeatPasswordError}</Span>
             )}
           </InputContainer>
+        </GrupoInput>
 
-          <InputContainer>
+        <GrupoCheck>
+          <CheckContainer>
+            <LabelCheck>Activo </LabelCheck>
             <InputCheck
               type="checkbox"
               name={"isActive"}
               checked={isActive === 1}
               onChange={handleCheckboxChange}
               />
-            <LabelCheck>Activo </LabelCheck>
-            <br />
-          </InputContainer>
+           {/*  <br /> */}
+           </CheckContainer>  
+        </GrupoCheck>
+        </ContainerScroll>
 
-          <ButtonContainer>
+        <ButtonContainer>
             <SubmitBtn type="submit">Guardar</SubmitBtn>
             <SubmitBtn onClick={() => {
               setModalIsOpen(false);
@@ -239,6 +269,7 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm, setPage, l
               });
             }}>Cancelar</SubmitBtn>
           </ButtonContainer>
+
         </FormEdit>
       </ContainerModal>
 </>  

@@ -38,14 +38,14 @@ import {
   CheckContainer,
   Textarea,
   TextareaContainer
- } from "../../../components/reusable/FormularioModalDriver";
+ } from "../../../components/reusable/FormularioModal";
 
 Modal.setAppElement("#root");
 
 const dropzoneContainerStyles = {
-  width: '200px', // Establece el ancho del contenedor
-  height: '200px', // Establece la altura del contenedor
-  border: '2px dashed #cccccc',
+  width: '50%', // Establece el ancho del contenedor
+  //height: '200px', // Establece la altura del contenedor
+  border: '2px dashed #700202',
   borderRadius: '4px',
   textAlign: 'center',
   padding: '20px',
@@ -224,7 +224,7 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
           <TituloSeccion>Datos Personales<hr /></TituloSeccion>
           {
             Object.keys(driver).map((el, idx) => {
-              // console.log("EL:", el, ",IDX:", idx)
+              //console.log("EL:", el, ",IDX:", idx)
               for (const esp in props) {
                 if (el === esp) {
                   if (idx === 3 || idx === 4 || idx === 5 || idx === 11 || idx === 12 || idx === 20) {
@@ -258,20 +258,22 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
                     );
                   } else if (idx === 9 || idx === 14 || idx === 15) {
                     // DROP = FOTO CONDUCTOR 9, FOTO LICENCIA 14 - 15
+                    
                     if (idx === 9) {
                       return (
                         <GrupoImg>
                         <SubeImgContainer key={idx}>
                           <div {...getRootProps()} style={dropzoneContainerStyles}>
-                            <input {...getInputProps()} placeholder="a"/>
+                            <input {...getInputProps()}/>
                           <p>Frente</p>
                           <Label>{props[esp]}: </Label>
                           </div>
-                        </SubeImgContainer>
+                        </SubeImgContainer> 
                         </GrupoImg>
                       );
                     }
                     return (
+                      
                         <SubeImgContainer key={idx} >
                           <SubeContainerImg {...getRootProps()} style={dropzoneContainerStyles}>
                             <ImgSube {...getInputProps()} placeholder="a" />
@@ -280,6 +282,10 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
                           </SubeContainerImg>
                         </SubeImgContainer>
                     );
+
+
+
+
                   } else if (idx === 13) {
                     // DATE-FECHA = VIGENCIA DE LA LICENCIA 13
                     return (
@@ -292,8 +298,8 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
                     // CHECKBOX = SERVICIOS(TODOS - MUJERES - LGBT) 16, ACTIVO 19
                     if (idx === 19) {
                       return (
-                        <InputContainer key={idx}>
-                          <label htmlFor={`Input-${el}`}>{props[esp]}: </label>
+                        <GrupoCheck key={idx}>
+                          <LabelCheck htmlFor={`Input-${el}`}>{props[esp]}: </LabelCheck>
                           <InputCheck
                             id={`Input-${el}`}
                             name={el}
@@ -303,12 +309,12 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
                             type="checkbox"
                             value={driver[el] ? 1 : 0}
                           />
-                        </InputContainer>
+                        </GrupoCheck>
                       );
                     }
                     return (
-                      <InputContainer key={idx}>
-                        <label>{props[esp]}: </label>
+                      <GrupoCheck key={idx}>
+                        <LabelCheck>{props[esp]}: </LabelCheck>
                         <InputCheck 
                           type="checkbox"
                           checked={driver[el]} 
@@ -316,7 +322,7 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
                         />TODOS
                         <InputCheck type="checkbox" />LGBTQ+
                         <InputCheck type="checkbox" />MUJERES
-                      </InputContainer>
+                      </GrupoCheck>
                     );
                   } else if (idx === 17 || idx === 18) {
                     // PASSWORD = 17 - 18
@@ -330,7 +336,7 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
                     return (
                       <InputContainer key={idx}>
                         <Input type="text" placeholder="a"/>
-                        <label htmlFor={`nput-${el}`}>{props[esp]}: </label>
+                        <Label htmlFor={`input-${el}`}>{props[esp]}: </Label>
                       </InputContainer>
                     );
                   }

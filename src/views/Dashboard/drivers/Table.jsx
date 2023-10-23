@@ -1,99 +1,13 @@
-import styled from 'styled-components';
 import { ButtonsTable } from './ButtonsTable';
+import {ContainerTabla, StyledTable} from "../../../components/reusable/TableComponente";
 
-const ContainerTabla = styled.div`
-  display: flex;
-  flex-direction: row;
-  padding: 5px 5px;
-  padding: 15px 65px 15px 65px;
-  justify-content: center;
-`;
-
-const StyledTable = styled.table`
-  width: 100%;
-  table-layout: fixed;
-  border-collapse: collapse;
-  background-color: #b8860b;
-  min-width: 963px;
-  overflow-x: auto;
-  
-  th { 
-    text-decoration: underline; 
-    display: flex;
-    justify-content: center;
-    min-width: 14%;
-    max-width: 14%;
-  }
-
-  th, td {
-    text-align: left;
-    display: flex;
-    justify-content: center;
-    min-width: 14%;
-    max-width: 14%;
-    word-break:break-all;
-    text-align: center;
-  }
-  
-  td:nth-child(1), th:nth-child(1) { min-width: 14%; }
-  td:nth-child(1), th:nth-child(1) { max-width: 14%; }
-  td:nth-child(2), th:nth-child(2) { min-width: 14%; }
-  td:nth-child(2), th:nth-child(2) { max-width: 14%; }
-  td:nth-child(3), th:nth-child(3) { width: 14%; }
-  td:nth-child(3), th:nth-child(3) { min-width: 14%; }
-  td:nth-child(3), th:nth-child(3) { max-width: 14%; }
-
-  thead {
-    display: flex;
-    width: 100%;
-    justify-content: space-around;
-    background-color: #333;
-    color: #FDFDFD;
-    height: 40px;
-    tr {
-      display: flex;
-      width: 100%;
-      height: 40px;
-      justify-content: space-around;
-      align-items: center;
-      text-align: center;
-      //min-width: 12.5;
-    }
-  }
-  tbody {
-    display: flex;
-    overflow: auto;
-    width: 100%;
-    max-height: 260px;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    tr {
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      text-align: center;
-      min-width: 14%;
-    }
-    tr:nth-child(even) {
-      background-color: #5f5a5a;
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      text-align: center;
-      min-width: 14%;
-    }
-  }
-`;
 
 export const Table = ({ tHeader, tDriver, setTDriver, driver, setDriver, errorForm, setErrorForm }) => {
   // console.log("tDriver:", tDriver)
   return (
     <>
       <ContainerTabla>
-        <StyledTable>
+        <StyledTable maxwidth={"14%"} minwidth={"14%"} width={"14%"}>
           <thead>
             <tr>
               {tHeader.map((item, i) => {

@@ -121,9 +121,9 @@ export const Drivers = () => {
 
   return (
     <Section>
-      {tDriver.length === 0 ? (
+      {/* {tDriver.length === 0 ? (
         <p>En esta sección no hay información disponible</p>
-      ) : (
+      ) : ( */}
         <>
           <ButtonAdd
             tDriver={tDriver}
@@ -171,7 +171,7 @@ export const Drivers = () => {
           </ContentPages >
           <Search onSearch={handleSearch} />
         </>
-      )}
+    {/*   )} */}
     </Section>
   );
 };

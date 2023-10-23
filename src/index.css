@@ -78,7 +78,7 @@ button:focus, button:focus-visible {
   display: flex;
   justify-content: center;
   transition: opacity .1s ease-in-out;
-  z-index: 999;
+  z-index: 1000;
 }
 
 .modal-fondo {
@@ -87,6 +87,7 @@ button:focus, button:focus-visible {
   left: 0;
   right: 0;
   top: 0;
+  width: 100%;
   position: fixed;
 }
 
@@ -98,13 +99,13 @@ button:focus, button:focus-visible {
   opacity: 0;
 }
 
-.modal {
+/* .modal {
   background: white;
   border-radius: 5px;
   color: rgb(51, 51, 51);
   display: inline;
-  max-height: 620px;
-  max-width: 500px;
+  max-height: 100%;
+  max-width: 100%;
   outline: none;
   padding: 10px;
-}
+} */

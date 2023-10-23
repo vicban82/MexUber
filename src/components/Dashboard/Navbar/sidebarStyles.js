@@ -43,19 +43,6 @@ export const SidebarLink = styled(Link)`
   }
 `;
 
-export const SidebarSession = styled.div`
-  display: flex;
-  flex-direction: row;
-  margin-left: 5px;
-  text-decoration: none;
-  color: #fff;
-  font-size: 18px;
-  cursor: pointer;
-  &:hover {
-    color: #ff5733;
-  }
-`;
-
 export const MenuIcon = styled.div`
   cursor: pointer;
   display: block;

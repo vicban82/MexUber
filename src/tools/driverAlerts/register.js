@@ -61,7 +61,7 @@ export function errorRegister(driver) {
     !onlyWomenServices
   ) {
     Swal.fire({
-      title: "Rectifica los capos",
+      title: "Rectifica los campos",
       icon: "warning",
       text: "Credenciales incorrectas.",
       html: `
