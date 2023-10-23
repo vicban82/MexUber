@@ -60,7 +60,10 @@ export function errorRegister(driver, errorForm) {
       icon: "warning",
       text: "Credenciales incorrectas.",
       html: `
-        <p>${"Todos los campos son requeridos"}</p>
+        <p>${`Todos los campos con "*" son requeridos`}</p>
+        <p>${"<strong>IMPORTANTE:</strong>"}</p>
+        <li>${"Si ingresas un número de licencia, <br/>los demás campos también seran requeridos"}</li>
+        <li>${`Si desactivas la casilla "Activo", <br/>debes ingresar el movito`}</li>
       `,
     });
   } else {

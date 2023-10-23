@@ -214,12 +214,6 @@ export const ButtonAdd = ({
       ...driver,
       [name]: value,
     });
-    setErrorForm(
-      validateDriver({
-        ...driver,
-        [name]: value,
-      }, codigoPostal, selectImage)
-    );
   }
 
   const handleCheckboxChange = (event) => {
@@ -266,10 +260,10 @@ export const ButtonAdd = ({
     }
   }, [estado, ciudad]);
 
-  useEffect(() => {
-    const validationErrors = validateDriver(driver, codigoPostal, selectImage);
-    setErrorForm(validationErrors);
-  }, []);
+  // useEffect(() => {
+  //   const validationErrors = validateDriver(driver, codigoPostal, selectImage);
+  //   setErrorForm(validationErrors);
+  // }, [driver]);
 
   const {
     nameError,
@@ -397,7 +391,14 @@ export const ButtonAdd = ({
   }
 
   async function handleSubmit(e) {
+    const { name, value } = e.target;
     e.preventDefault();
+    setErrorForm(
+      validateDriver({
+        ...driver,
+        [name]: value,
+      }, codigoPostal, selectImage)
+    );
 
     if (
       name &&
@@ -465,7 +466,7 @@ export const ButtonAdd = ({
               placeholder="a"
               onChange={handleChange}
             />
-            <Label>{props.name}: </Label>
+            <Label>*Nombre(s): </Label>
             <br />
             {nameError && (
               <Span>{nameError}</Span>
@@ -480,7 +481,7 @@ export const ButtonAdd = ({
               value={lastName}
               onChange={handleChange}
             />
-            <Label>{props.lastName}: </Label>
+            <Label>*Apellidos: </Label>
             <br />
             {lastNameError && (
               <Span>{lastNameError}</Span>
@@ -495,7 +496,7 @@ export const ButtonAdd = ({
               value={zipCode}
               onChange={handleChange}
             />
-            <Label>{props.zipCode}: </Label>
+            <Label>*Código postal: </Label>
             <br />
             {zipCodeError && (
               <Span>{zipCodeError}</Span>
@@ -506,7 +507,7 @@ export const ButtonAdd = ({
           <GrupoSelect>
           {typeof estado !== "string" ? null : (
             <InputContainer>
-            <Label>{props.state}: </Label>
+            <Label>*Estado: </Label>
               <select
                 disabled={true}
                 name={"state"}
@@ -523,7 +524,7 @@ export const ButtonAdd = ({
           )}
           {!Array.isArray(estado) ? null : (
             <InputContainer>
-              <Label>{props.state}: </Label>
+              <Label>*Estado: </Label>
               <select
                 disabled={false}
                 name={"state"}
@@ -548,7 +549,7 @@ export const ButtonAdd = ({
 
           {typeof ciudad !== "string" ? null : (
             <InputContainer>
-              <Label>{props.city}: </Label>
+              <Label>*Ciudad: </Label>
               <select
                 disabled={true}
                 name={"city"}
@@ -565,7 +566,7 @@ export const ButtonAdd = ({
           )}
           {!Array.isArray(ciudad) ? null : (
             <InputContainer>
-              <Label>{props.city}: </Label>
+              <Label>*Ciudad: </Label>
               <select
                 disabled={false}
                 name={"city"}
@@ -590,6 +591,7 @@ export const ButtonAdd = ({
           )}
 
           <SelectContainer>
+            <Label>*Colonia: </Label>
             <Select
               disabled={zipCode || codigoPostal === zipCode ? false : true}
               name={"colonia"}
@@ -622,7 +624,7 @@ export const ButtonAdd = ({
               value={address}
               onChange={handleChange}
             />
-            <Label>{props.address}: </Label>
+            <Label>*Domicilio: </Label>
             <br />
             {addressError && (
               <Span>{addressError}</Span>
@@ -638,7 +640,7 @@ export const ButtonAdd = ({
               placeholder="a"
               onChange={handleChange}
             />
-            <Label>{props.contact}: </Label>
+            <Label>*Teléfono (Móvil): </Label>
             <br />
             {contactError && (
               <Span>{contactError}</Span>
@@ -653,7 +655,7 @@ export const ButtonAdd = ({
               placeholder="a"
               onChange={handleChange}
             />
-            <Label>{props.email}: </Label>
+            <Label>*Correo electrónico: </Label>
             <br />
             {emailError && (
               <Span>{emailError}</Span>
@@ -672,7 +674,6 @@ export const ButtonAdd = ({
                 style={{ maxWidth: '100px' }} 
                 />}
               <p>Frente</p>
-              <Label>{props.driverPicture}: </Label>
               <br />
               {driverPictureError && (
                 <Span>{driverPictureError}</Span>
@@ -692,7 +693,7 @@ export const ButtonAdd = ({
               placeholder="a"
               onChange={handleChange}
               />
-            <Label>{props.driverLicenseNumber}: </Label>
+            <Label>Número de licencia: </Label>
             <br />
             {driverLicenseNumberError && (
               <Span>{driverLicenseNumberError}</Span>
@@ -702,14 +703,13 @@ export const ButtonAdd = ({
 
           <GrupoSelect>
           <SelectContainer>
-            {/* <label>{props.stateLicense}: </label> */}
             <Select
               disabled={driverLicenseNumber ? false : true}
               name={"stateLicense"}
               value={stateLicense}
               onChange={handleChange}
             >
-              <option>Estatus Licencia</option>
+              <option>{!driverLicenseNumber ? "Estato de la Licencia" : "*Estato de la Licencia"}</option>
               {estados.length >= 1 && estados.map((estado, idx) => {
                 return (
                   <option key={idx} value={estado}>
@@ -718,21 +718,19 @@ export const ButtonAdd = ({
                 );
               })}
             </Select>
-            {/* <br /> */}
             {stateLicenseError && (
               <Span>{stateLicenseError}</Span>
             )}
           </SelectContainer>
 
           <SelectContainer>
-            {/* <label>{props.typeLicense}: </label> */}
             <Select
               disabled={driverLicenseNumber ? false : true}
               name={"typeLicense"}
               value={typeLicense}
               onChange={handleChange}
             >
-              <option>Tipo de licencia</option>
+              <option>{!driverLicenseNumber ? "Tipo de licencia" : "*Tipo de licencia"}</option>
               {licences.length >= 1 && licences.map((licencia, idx) => {
                 return (
                   <option key={idx} value={licencia}>
@@ -741,7 +739,6 @@ export const ButtonAdd = ({
                 );
               })}
             </Select>
-            {/* <br /> */}
             {typeLicenseError && (
               <Span>{typeLicenseError}</Span>
             )}
@@ -758,16 +755,14 @@ export const ButtonAdd = ({
                   placeholder="a"
                   onChange={handleChange}
                 />
-                <Label>{props.dateLicense}: </Label>
+                <Label>{!driverLicenseNumber ? "Vigencia de licencia: " : "*Vigencia de licencia: "}</Label>
                 {dateLicenseError && (
                   <SpanData>{dateLicenseError}</SpanData>
                 )}
               </InputContainer>
 
-              <TituloSeccion><hr />Foto de Licencia (Ambos lados)</TituloSeccion>
-              {/* <SubeImgContainer> */}
+              <TituloSeccion><hr />{!driverLicenseNumber ? "Foto de Licencia (Ambos lados)" : "*Foto de Licencia (Ambos lados)"}</TituloSeccion>
               <SubeImgContainer style={pictureLicence}>
-                {/* <label>Fotos licencia: </label> */}
                 <br />
                 {!driverLicenseNumber ? (
                   <>
@@ -813,7 +808,7 @@ export const ButtonAdd = ({
             
               <TituloSeccion><hr />Ajustes en la aplicación</TituloSeccion>
               <GrupoCheck>
-              <LabelCheck>{props.services}: </LabelCheck>
+              <LabelCheck>Servicio para: </LabelCheck>
                 <InputCheck
                   type="checkbox"
                   name="allServices"
@@ -852,7 +847,7 @@ export const ButtonAdd = ({
               placeholder="a"
               onChange={handleChange}
               />
-            <Label>{props.password}: </Label>
+            <Label>*Contraseña: </Label>
             <br />
             {passwordError && (
               <Span>{passwordError}</Span>
@@ -867,7 +862,7 @@ export const ButtonAdd = ({
               placeholder="a"
               onChange={handleChange}
             />
-            <Label>{props.repeatPassword}: </Label>
+            <Label>*Repetir contraseña: </Label>
             <br />
             {repeatPasswordError && (
               <Span>{repeatPasswordError}</Span>
@@ -877,7 +872,7 @@ export const ButtonAdd = ({
           
           <GrupoCheck>
            <CheckContainer> 
-            <LabelCheck>{props.isActive}: </LabelCheck>
+            <LabelCheck>Activo: </LabelCheck>
             <InputCheckV1
               type="checkbox"
               name={"isActive"}
@@ -902,7 +897,7 @@ export const ButtonAdd = ({
                   disabled={isActive === 1}
                   onChange={handleChange}
                 />
-                <Label>{props.messageReasonInActive}: </Label>
+                <Label>Motivo de bloqueo: </Label>
               </TextareaContainer>
               {messageReasonInActiveError && (
                 <Span>{messageReasonInActiveError}</Span>

@@ -46,13 +46,11 @@ export const validateDriver = (driver, codigoPostal, selectImage) => {
 
   // * VALIDANDO INFORMACION DEL CONDUCTOR
   
-  if (!name) {
-    error.nameError = validationName(name);
-  } else if (!lastName) {
-    error.lastNameError = validationLastName(lastName);
-  } else if (!zipCode) {
-    error.zipCodeError = validationZipCode(zipCode, codigoPostal);
-  } else if (!state) {
+  error.nameError = validationName(name);
+  error.lastNameError = validationLastName(lastName);
+  error.zipCodeError = validationZipCode(zipCode, codigoPostal);
+
+  if (!state) {
     error.stateError = 'Debes seleccionar un Estado';
   } else if (!city) {
     error.cityError = 'Debes seleccionar una Ciudad';
@@ -60,11 +58,10 @@ export const validateDriver = (driver, codigoPostal, selectImage) => {
     error.coloniaError = 'Debes seleccionar una colonia';
   } else if (!address) {
     error.addressError = 'Debes ingregar tu domicilio o dirección';
-  } else if (!contact) {
-    error.contactError = validationContact(contact);
-  } else if (!email) {
-    error.emailError = validationEmail(email);
   }
+
+  error.contactError = validationContact(contact);
+  error.emailError = validationEmail(email);
   error.driverPictureError = validationDriverPicture(selectImage, driverPicture);
   
   // * VALIDANDO LICENCIA DEL CONDUCTOR
@@ -76,9 +73,8 @@ export const validateDriver = (driver, codigoPostal, selectImage) => {
       error.stateLicenseError = 'Debes seleccionar un Estado';
     } else if (!typeLicense) {
       error.typeLicenseError = 'Debes de elegir un tipo de licencia'
-    } else if (!dateLicense) {
-      error.dateLicenseError = validationDate(dateLicense);
     }
+    error.dateLicenseError = validationDate(dateLicense);
     error.frontLicensePictureError = validationFrontPicture(selectImage, frontLicensePicture);
     error.backLicensePictureError = validationBackPicture(selectImage, backLicensePicture);
   }
@@ -91,9 +87,8 @@ export const validateDriver = (driver, codigoPostal, selectImage) => {
   
   // * VALIDANDO ACCESO A LA APLICACION
 
-  if (!password) {
-    error.passwordError = validationPassword(password);
-  } else if (!repeatPassword) {
+  error.passwordError = validationPassword(password);
+  if (!repeatPassword) {
     error.repeatPasswordError = 'Debes confirmar el password';
   } else if (password !== repeatPassword) {
     error.repeatPasswordError = 'El password no coincide';
