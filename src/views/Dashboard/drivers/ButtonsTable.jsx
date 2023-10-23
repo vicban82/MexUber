@@ -40,7 +40,7 @@ import {
   CheckContainer,
   Textarea,
   TextareaContainer
- } from "../../../components/reusable/FormularioModalDriver";
+ } from "../../../components/reusable/FormularioModal";
 
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
@@ -70,13 +70,13 @@ const InputCheckV1 = styled(InputCheck)`
 `;
 
 const dropzoneContainerStyles = {
-  width: "50%", // Establece el ancho del contenedor
-  height: "200px", // Establece la altura del contenedor
-  border: "2px dashed #700202",
-  borderRadius: "4px",
-  textAlign: "center",
-  padding: "20px",
-  cursor: "pointer",
+  width: '50%', // Establece el ancho del contenedor
+  //height: '200px', // Establece la altura del contenedor
+  border: '2px dashed #700202',
+  borderRadius: '4px',
+  textAlign: 'center',
+  padding: '20px',
+  cursor: 'pointer',
 };
 
 const pictureLicence = {

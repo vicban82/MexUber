@@ -37,8 +37,9 @@ import {
   GrupoCheck,
   CheckContainer,
   Textarea,
-  TextareaContainer
- } from "../../../components/reusable/FormularioModalDriver";
+  TextareaContainer,
+  GrupoInputPass
+ } from "../../../components/reusable/FormularioModal";
 
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
@@ -53,18 +54,6 @@ const ButtonV1 = styled.button`
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
-`;
-
-const GrupoInputV1 = styled(GrupoInput)`
-  grid-gap: 60px;
-`;
-
-const InputContainerV1 = styled(InputContainer)`
-  grid-gap: 89px;
-`;
-
-const InputCheckV1 = styled(InputCheck)`
-  margin-top: 5px;
 `;
 
 const dropzoneContainerStyles = {
@@ -446,299 +435,260 @@ export const ButtonAdd = ({
       </Titulo>
       <ContainerModal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
         <FormEdit onSubmit={handleSubmit}>
-        <FormHead><h2>Nuevo Conductor</h2></FormHead>
-        <br />
-        <ContainerScroll>
-          {/*//* INFORMACION DEL CONDUCTOR */}
-        <TituloSeccion>Datos Personales<hr /></TituloSeccion>
-        <GrupoInput>
-          <InputContainer>
-            <Input
-              type="text"
-              name={"name"}
-              value={name}
-              placeholder="a"
-              onChange={handleChange}
-            />
-            <Label>*Nombre(s): </Label>
-            <br />
-            {nameError && (
-              <Span>{nameError}</Span>
-            )}
-          </InputContainer>
+          <FormHead><h2>Nuevo Conductor</h2></FormHead>
+          <br />
+          <ContainerScroll>
+            {/*//* INFORMACION DEL CONDUCTOR */}
+            <TituloSeccion>Datos Personales<hr /></TituloSeccion>
+            <GrupoInput>
+              <InputContainer>
+                <Input
+                  type="text"
+                  name={"name"}
+                  value={name}
+                  placeholder="a"
+                  onChange={handleChange}
+                />
+                {/* <Label>{props.name}: </Label> */}
+                <br />
+                {nameError && (
+                  <Span>{nameError}</Span>
+                )}
+              </InputContainer>
 
-          <InputContainer>
-            <Input
-              type="text"
-              name={"lastName"}
-              placeholder="a"
-              value={lastName}
-              onChange={handleChange}
-            />
-            <Label>*Apellidos: </Label>
-            <br />
-            {lastNameError && (
-              <Span>{lastNameError}</Span>
-            )}
-          </InputContainer>
+              <InputContainer>
+                <Input
+                  type="text"
+                  name={"lastName"}
+                  placeholder="a"
+                  value={lastName}
+                  onChange={handleChange}
+                />
+                {/* <Label>{props.lastName}: </Label> */}
+                <br />
+                {lastNameError && (
+                  <Span>{lastNameError}</Span>
+                )}
+              </InputContainer>
 
-          <InputContainer>
-            <Input
-              type="text"
-              name={"zipCode"}
-              placeholder="a"
-              value={zipCode}
-              onChange={handleChange}
-            />
-            <Label>*Código postal: </Label>
-            <br />
-            {zipCodeError && (
-              <Span>{zipCodeError}</Span>
-            )}
-          </InputContainer>
-          </GrupoInput>
+              <InputContainer>
+                <Input
+                  type="text"
+                  name={"zipCode"}
+                  placeholder="a"
+                  value={zipCode}
+                  onChange={handleChange}
+                />
+                {/* <Label>{props.zipCode}: </Label> */}
+                <br />
+                {zipCodeError && (
+                  <Span>{zipCodeError}</Span>
+                )}
+              </InputContainer>
+            </GrupoInput>
 
-          <GrupoSelect>
-          {typeof estado !== "string" ? null : (
-            <InputContainer>
-            <Label>*Estado: </Label>
-              <select
-                disabled={true}
-                name={"state"}
-                value={state}
-                onChange={handleChange}
-              >
-                <option>{estado || "Selecciona"}</option>
-              </select>
-              <br />
-              {stateError && (
-                <Span>{stateError}</Span>
-              )}
-            </InputContainer>
-          )}
-          {!Array.isArray(estado) ? null : (
-            <InputContainer>
-              <Label>*Estado: </Label>
-              <select
-                disabled={false}
-                name={"state"}
-                value={state}
-                onChange={handleChange}
-              >
-                <option>Selecciona</option>
-                {estado.map((est, idx) => {
-                  return (
-                    <option key={idx} >
-                      {est}
-                    </option>
-                  );
-                })}
-              </select>
-              <br />
-              {stateError && (
-                <Span>{stateError}</Span>
-              )}
-            </InputContainer>
-          )}
 
-          {typeof ciudad !== "string" ? null : (
-            <InputContainer>
-              <Label>*Ciudad: </Label>
-              <select
-                disabled={true}
-                name={"city"}
-                value={city}
-                onChange={handleChange}
-              >
-                <option>{ciudad || "Selecciona"}</option>
-              </select>
-              <br />
-              {cityError && (
-                <Span>{cityError}</Span>
-              )}
-            </InputContainer>
-          )}
-          {!Array.isArray(ciudad) ? null : (
-            <InputContainer>
-              <Label>*Ciudad: </Label>
-              <select
-                disabled={false}
-                name={"city"}
-                // value={city}
-                value={typeof city === "string" && city}
-                onChange={handleChange}
-              >
-                <option>Selecciona</option>
-                {ciudad.map((cit, idx) => {
-                  return (
-                    <option key={idx} >
-                      {cit}
-                    </option>
-                  );
-                })}
-              </select>
-              <br />
-              {cityError && (
-                <Span>{cityError}</Span>
-              )}
-            </InputContainer>
-          )}
+            <GrupoSelect>
+              <SelectContainer>
+                <Select
+                  disabled={false}
+                  name={"state"}
+                  value={state}
+                  onChange={handleChange}
+                >
+                  <option>{estado || "Estado"}</option>
+                  <option>Primera opcion</option>
+                  <option>Segunda opcion</option>
+                </Select>
+                {/* <br /> */}
+                {stateError && (
+                  <Span>{stateError}</Span>
+                )}
+                {/* <label>{props.state}: </label> */}
+              </SelectContainer>
 
-          <SelectContainer>
-            <Label>*Colonia: </Label>
-            <Select
-              disabled={zipCode || codigoPostal === zipCode ? false : true}
-              name={"colonia"}
-              value={colonia}
-              onChange={handleChange}
-            >
-              <option>
-                Selecciona
-              </option>
-              {colonias.length >= 1 && colonias.map((colonia, idx) => {
-                return (
-                  <option key={idx} >
-                    {colonia}
+
+
+              <SelectContainer>
+                <Select
+                  disabled={false}
+                  name={"city"}
+                  value={city}
+                  placeholder="jashajshaj"
+                  onChange={handleChange}
+                >
+                  <option>{ciudad || "Ciudad"}</option>
+                  <option>Morelia</option>
+                  <option>Segunda opcion</option>
+                </Select>
+                {/* <label>{props.city}: </label> */}
+                {/* <br /> */}
+                {cityError && (
+                  <Span>{cityError}</Span>
+                )}
+              </SelectContainer>
+
+              <SelectContainer>
+                {/* <label>{props.colonia}: </label> */}
+                <Select
+                  disabled={zipCode || codigoPostal === zipCode ? false : true}
+                  name={"colonia"}
+                  value={colonia}
+                  onChange={handleChange}
+                >
+                  <option>
+                    Selecciona
                   </option>
-                );
-              })}
-            </Select>
-            {coloniaError && (
-              <Span>{coloniaError}</Span>
-            )}
-          </SelectContainer>
-          </GrupoSelect>
+                  {colonias.length >= 1 && colonias.map((colonia, idx) => {
+                    return (
+                      <option key={idx} value={colonia}>
+                        {colonia}
+                      </option>
+                    );
+                  })}
+                </Select>
+                {/* <br /> */}
+                {coloniaError && (
+                  <Span>{coloniaError}</Span>
+                )}
+              </SelectContainer>
+            </GrupoSelect>
 
-          <GrupoInput>
-          <InputContainer>
-            <Input
-              type="text"
-              name={"address"}
-              placeholder="a"
-              value={address}
-              onChange={handleChange}
-            />
-            <Label>*Domicilio: </Label>
-            <br />
-            {addressError && (
-              <Span>{addressError}</Span>
-            )}
-          </InputContainer>
-          
+            <GrupoInput>
+              <InputContainer>
+                <Input
+                  type="text"
+                  name={"address"}
+                  placeholder="a"
+                  value={address}
+                  onChange={handleChange}
+                />
+                {/* <Label>{props.address}: </Label> */}
+                <br />
+                {addressError && (
+                  <Span>{addressError}</Span>
+                )}
+              </InputContainer>
 
-          <InputContainer>
-            <Input
-              type="text"
-              name={"contact"}
-              value={contact}
-              placeholder="a"
-              onChange={handleChange}
-            />
-            <Label>*Teléfono (Móvil): </Label>
-            <br />
-            {contactError && (
-              <Span>{contactError}</Span>
-            )}
-          </InputContainer>
 
-          <InputContainer>
-            <Input
-              type="text"
-              name={"email"}
-              value={email}
-              placeholder="a"
-              onChange={handleChange}
-            />
-            <Label>*Correo electrónico: </Label>
-            <br />
-            {emailError && (
-              <Span>{emailError}</Span>
-            )}
-          </InputContainer>
-          </GrupoInput>
+              <InputContainer>
+                <Input
+                  type="text"
+                  name={"contact"}
+                  value={contact}
+                  placeholder="a"
+                  onChange={handleChange}
+                />
+                {/* <Label>{props.contact}: </Label> */}
+                <br />
+                {contactError && (
+                  <Span>{contactError}</Span>
+                )}
+              </InputContainer>
 
-          <GrupoImg>
-          <TituloSeccion><hr />Foto del Conductor</TituloSeccion>
-          <SubeImgContainer>
-            <div {...getDriverRootProps()} style={dropzoneContainerStyles}>
-              <input {...getDriverInputProps()} />
-              {driverPicture && <img
-                src={`data:image/png;base64,${driverPicture}`}
-                alt="Foto conductor" 
-                style={{ maxWidth: '100px' }} 
-                />}
-              <p>Frente</p>
-              <br />
-              {driverPictureError && (
-                <Span>{driverPictureError}</Span>
-              )}
-            </div>
-          </SubeImgContainer>
-          </GrupoImg>
+              <InputContainer>
+                <Input
+                  type="text"
+                  name={"email"}
+                  value={email}
+                  placeholder="a"
+                  onChange={handleChange}
+                />
+                {/* <Label>{props.email}: </Label> */}
+                <br />
+                {emailError && (
+                  <Span>{emailError}</Span>
+                )}
+              </InputContainer>
+            </GrupoInput>
 
-          <GrupoInput>
-          <TituloSeccion><hr />Licencia de conducir</TituloSeccion>
-          
-          <InputContainer>
-            <Input
-              type="text"
-              name={"driverLicenseNumber"}
-              value={driverLicenseNumber}
-              placeholder="a"
-              onChange={handleChange}
-              />
-            <Label>Número de licencia: </Label>
-            <br />
-            {driverLicenseNumberError && (
-              <Span>{driverLicenseNumberError}</Span>
-            )}
-          </InputContainer>
-          </GrupoInput>
+            <GrupoImg>
+              <TituloSeccion><hr />Foto del Conductor</TituloSeccion>
+              <SubeImgContainer>
+                <div {...getDriverRootProps()} style={dropzoneContainerStyles}>
+                  <input {...getDriverInputProps()} />
+                  {driverPicture && <img
+                    src={`data:image/png;base64,${driverPicture}`}
+                    alt="Foto conductor"
+                    style={{ maxWidth: '100px' }}
+                  />}
+                  <p>Frente</p>
+                  {/* <Label>{props.driverPicture}: </Label> */}
+                  <br />
+                  {driverPictureError && (
+                    <Span>{driverPictureError}</Span>
+                  )}
+                </div>
+              </SubeImgContainer>
+            </GrupoImg>
 
-          <GrupoSelect>
-          <SelectContainer>
-            <Select
-              disabled={driverLicenseNumber ? false : true}
-              name={"stateLicense"}
-              value={stateLicense}
-              onChange={handleChange}
-            >
-              <option>{!driverLicenseNumber ? "Estato de la Licencia" : "*Estato de la Licencia"}</option>
-              {estados.length >= 1 && estados.map((estado, idx) => {
-                return (
-                  <option key={idx} value={estado}>
-                    {estado}
-                  </option>
-                );
-              })}
-            </Select>
-            {stateLicenseError && (
-              <Span>{stateLicenseError}</Span>
-            )}
-          </SelectContainer>
+            <GrupoInput>
+              <TituloSeccion><hr />Licencia de conducir</TituloSeccion>
 
-          <SelectContainer>
-            <Select
-              disabled={driverLicenseNumber ? false : true}
-              name={"typeLicense"}
-              value={typeLicense}
-              onChange={handleChange}
-            >
-              <option>{!driverLicenseNumber ? "Tipo de licencia" : "*Tipo de licencia"}</option>
-              {licences.length >= 1 && licences.map((licencia, idx) => {
-                return (
-                  <option key={idx} value={licencia}>
-                    {licencia}
-                  </option>
-                );
-              })}
-            </Select>
-            {typeLicenseError && (
-              <Span>{typeLicenseError}</Span>
-            )}
-          </SelectContainer>
-          </GrupoSelect>
-          
+              <InputContainer>
+                <Input
+                  type="text"
+                  name={"driverLicenseNumber"}
+                  value={driverLicenseNumber}
+                  placeholder="a"
+                  onChange={handleChange}
+                />
+                {/* <Label>{props.driverLicenseNumber}: </Label> */}
+                <br />
+                {driverLicenseNumberError && (
+                  <span>{driverLicenseNumberError}</span>
+                )}
+              </InputContainer>
+            </GrupoInput>
+
+            <GrupoSelect>
+              <SelectContainer>
+                {/* <label>{props.stateLicense}: </label> */}
+                <Select
+                  disabled={driverLicenseNumber ? false : true}
+                  name={"stateLicense"}
+                  value={stateLicense}
+                  onChange={handleChange}
+                >
+                  <option>Estatus Licencia</option>
+                  {estados.length >= 1 && estados.map((estado, idx) => {
+                    return (
+                      <option key={idx} value={estado}>
+                        {estado}
+                      </option>
+                    );
+                  })}
+                </Select>
+                {/* <br /> */}
+                {stateLicenseError && (
+                  <Span>{stateLicenseError}</Span>
+                )}
+              </SelectContainer>
+
+              <SelectContainer>
+                {/* <label>{props.typeLicense}: </label> */}
+                <Select
+                  disabled={driverLicenseNumber ? false : true}
+                  name={"typeLicense"}
+                  value={typeLicense}
+                  onChange={handleChange}
+                >
+                  <option>Tipo de licencia</option>
+                  {licences.length >= 1 && licences.map((licencia, idx) => {
+                    return (
+                      <option key={idx} value={licencia}>
+                        {licencia}
+                      </option>
+                    );
+                  })}
+                </Select>
+                {/* <br /> */}
+                {typeLicenseError && (
+                  <Span>{typeLicenseError}</Span>
+                )}
+              </SelectContainer>
+            </GrupoSelect>
+
             <GrupoInput>
               <InputContainer>
                 <Input
@@ -799,87 +749,87 @@ export const ButtonAdd = ({
               </SubeImgContainer>
             </GrupoInput>
 
-            
-              <TituloSeccion><hr />Ajustes en la aplicación</TituloSeccion>
-              <GrupoCheck>
-              <LabelCheck>Servicio para: </LabelCheck>
-                <InputCheck
-                  type="checkbox"
-                  name="allServices"
-                  checked={allServices === 1}
-                  onChange={handleCheckboxChange}
-                />
-                Todos
-                <InputCheck
-                  type="checkbox"
-                  name="servicesLGBQT"
-                  checked={servicesLGBQT === 1}
-                  disabled={allServices === 1 ? true : false}
-                  onChange={handleCheckboxChange}
-                />
-                LGBTQ+
-                <InputCheck
-                  type="checkbox"
-                  name="onlyWomenServices"
-                  checked={onlyWomenServices === 1}
-                  disabled={allServices === 1 ? true : false}
-                  onChange={handleCheckboxChange}
-                />
-                Sólo mujeres
-                </GrupoCheck>
-                {servicesError && (
-                  <Span>{servicesError}</Span>
-                )}
 
-          <GrupoInputV1>
-          <TituloSeccion><hr />Acceso a la aplicación</TituloSeccion>
-          <InputContainerV1>
-            <Input
-              type="password"
-              name={"password"}
-              value={password}
-              placeholder="a"
-              onChange={handleChange}
+            <TituloSeccion><hr />Servicio para...</TituloSeccion>
+            <GrupoCheck>
+              {/* <LabelCheck>{props.services}: </LabelCheck> */}
+              <InputCheck
+                type="checkbox"
+                name="allServices"
+                checked={allServices === 1}
+                onChange={handleCheckboxChange}
               />
-            <Label>*Contraseña: </Label>
-            <br />
-            {passwordError && (
-              <Span>{passwordError}</Span>
+              Todos
+              <InputCheck
+                type="checkbox"
+                name="servicesLGBQT"
+                checked={servicesLGBQT === 1}
+                disabled={allServices === 1 ? true : false}
+                onChange={handleCheckboxChange}
+              />
+              LGBTQ+
+              <InputCheck
+                type="checkbox"
+                name="onlyWomenServices"
+                checked={onlyWomenServices === 1}
+                disabled={allServices === 1 ? true : false}
+                onChange={handleCheckboxChange}
+              />
+              Sólo mujeres
+            </GrupoCheck>
+            {servicesError && (
+              <Span>{servicesError}</Span>
             )}
-          </InputContainerV1>
 
-          <InputContainerV1>
-            <Input
-              type="password"
-              name={"repeatPassword"}
-              value={repeatPassword}
-              placeholder="a"
-              onChange={handleChange}
-            />
-            <Label>*Repetir contraseña: </Label>
-            <br />
-            {repeatPasswordError && (
-              <Span>{repeatPasswordError}</Span>
-            )}
-          </InputContainerV1>
-          </GrupoInputV1>
-          
-          <GrupoCheck>
-           <CheckContainer> 
-            <LabelCheck>Activo: </LabelCheck>
-            <InputCheckV1
-              type="checkbox"
-              name={"isActive"}
-              checked={isActive === 1}
-              onChange={handleCheckboxChange}
-            />
-            <br />
-            {isActiveError && (
-              <Span>{isActiveError}</Span>
-            )}
-          </CheckContainer>
-          </GrupoCheck>
-          
+            <GrupoInput>
+              <TituloSeccion><hr />Acceso a la aplicación</TituloSeccion>
+              <InputContainer>
+                <Input
+                  type="password"
+                  name={"password"}
+                  value={password}
+                  placeholder="a"
+                  onChange={handleChange}
+                />
+                {/* <Label>{props.password}: </Label> */}
+                <br />
+                {passwordError && (
+                  <Span>{passwordError}</Span>
+                )}
+              </InputContainer>
+
+              <InputContainer>
+                <Input
+                  type="password"
+                  name={"repeatPassword"}
+                  value={repeatPassword}
+                  placeholder="a"
+                  onChange={handleChange}
+                />
+                {/* <Label>{props.repeatPassword}: </Label> */}
+                <br />
+                {repeatPasswordError && (
+                  <Span>{repeatPasswordError}</Span>
+                )}
+              </InputContainer>
+            </GrupoInput>
+
+            <GrupoCheck>
+              <CheckContainer>
+                {/* <LabelCheck>{props.isActive}: </LabelCheck> */}
+                <InputCheck
+                  type="checkbox"
+                  name={"isActive"}
+                  checked={isActive === 1}
+                  onChange={handleCheckboxChange}
+                />
+                <br />
+                {isActiveError && (
+                  <Span>{isActiveError}</Span>
+                )}
+              </CheckContainer>
+            </GrupoCheck>
+
             <GrupoInput>
               <TextareaContainer>
                 <Textarea
@@ -897,10 +847,10 @@ export const ButtonAdd = ({
                 <Span>{messageReasonInActiveError}</Span>
               )}
             </GrupoInput>
-            <br/>
-            <br/>
-        
-        </ContainerScroll>
+            <br />
+            <br />
+          </ContainerScroll>
+
           <ButtonContainer>
             <SubmitBtn type="submit">Guardar</SubmitBtn>
             <SubmitBtn onClick={() => {
@@ -908,7 +858,8 @@ export const ButtonAdd = ({
               closeModal()
             }}>Cancelar</SubmitBtn>
           </ButtonContainer>
-          </FormEdit>
+
+        </FormEdit>
       </ContainerModal>
     </>
   );

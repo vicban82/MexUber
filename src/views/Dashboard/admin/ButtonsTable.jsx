@@ -11,6 +11,7 @@ import { errorUpDate, successUpDate } from "../../../tools/adminAlerts/upDate";
 import { props } from "./props";
 import { 
   ContainerModal,
+  ContainerScroll,
   FormHead,
   FormEdit,
   InputContainer,
@@ -20,7 +21,25 @@ import {
   ButtonContainer,
   InputCheck,
   LabelCheck,
- } from "../../../components/reusable/FormularioModalAdmin";
+  Titulo,
+  Span,
+  GrupoInput,
+  GrupoCheck,
+  CheckContainer,
+  InputContainerPass,
+  GrupoInputPass,
+  SelectContainer,
+  Select,
+  GrupoSelect,
+  GrupoImg,
+  SubeImgContainer,
+  TituloSeccion,
+  SpanData,
+  ImgSube,
+  SubeContainerImg,
+  Textarea,
+  TextareaContainer,
+ } from "../../../components/reusable/FormularioModal";
 
 /* --------------------------------------Estilos--------------------------------- */
 
@@ -158,90 +177,103 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
           <FormEdit onSubmit={handleSubmit}>
           <FormHead><h2>Modificar Administrador</h2></FormHead>
             <br />
-            <InputContainer>
-              <Input
-                type="text"
-                name={"name"}
-                value={name}
-                onChange={handleChange}
-              />
-              <Label>Nombre: </Label>
-            <br />
-              {nameError && (
-                <span>{nameError}</span>
-              )}
-            </InputContainer>
+            <ContainerScroll>
+              <GrupoInput>
+                <InputContainer>
+                  <Input
+                    type="text"
+                    name={"name"}
+                    placeholder='a'
+                    value={name}
+                    onChange={handleChange}
+                  />
+                  <Label>Nombre: </Label>
+                  <br />
+                  {nameError && (
+                    <Span>{nameError}</Span>
+                  )}
+                </InputContainer>
 
-            <InputContainer>
-              <Input
-                type="text"
-                name={"lastName"}
-                value={lastName}
-                onChange={handleChange}
-              />
-              <Label>Apellidos: </Label>
-              <br />
-              {lastNameError && (
-                <span>{lastNameError}</span>
-              )}
-            </InputContainer>
+                <InputContainer>
+                  <Input
+                    type="text"
+                    name={"lastName"}
+                    value={lastName}
+                    placeholder='a'
+                    onChange={handleChange}
+                  />
+                  <Label>Apellidos: </Label>
+                  <br />
+                  {lastNameError && (
+                    <Span>{lastNameError}</Span>
+                  )}
+                </InputContainer>
 
-            <InputContainer>
-              <Input
-                type="text"
-                name={"email"}
-                value={email}
-                onChange={handleChange}
-              />
-              <Label>Correo electrónico: </Label>
-              <br />
-              {emailError && (
-                <span>{emailError}</span>
-              )}
-            </InputContainer>
-            <InputContainer>
-              <Input
-                type="password"
-                name={"password"}
-                value={password}
-                onChange={handleChange}
-              />
-              <Label>Contraseña: </Label>
-              <br />
-              {passwordError && (
-                <span>{passwordError}</span>
-              )}
-            </InputContainer>
+                <InputContainer>
+                  <Input
+                    type="text"
+                    name={"email"}
+                    placeholder='a'
+                    value={email}
+                    onChange={handleChange}
+                  />
+                  <Label>Correo electrónico: </Label>
+                  <br />
+                  {emailError && (
+                    <Span>{emailError}</Span>
+                  )}
+                </InputContainer>
 
-            <InputContainer>
-              <Input
-                type="password"
-                name={"repeatPassword"}
-                value={repeatPassword}
-                onChange={handleChange}
-              />
-              <Label>Repetr contraseña: </Label>
-              <br />
-              {repeatPasswordError && (
-                <span>{repeatPasswordError}</span>
-              )}
-            </InputContainer>
+                <InputContainer>
+                  <Input
+                    type="password"
+                    name={"password"}
+                    placeholder='a'
+                    value={password}
+                    onChange={handleChange}
+                  />
+                  <Label>Contraseña: </Label>
+                  <br />
+                  {passwordError && (
+                    <Span>{passwordError}</Span>
+                  )}
+                </InputContainer>
 
-            <InputContainer>
+                <InputContainer>
+                  <Input
+                    type="password"
+                    name={"repeatPassword"}
+                    placeholder='a'
+                    value={repeatPassword}
+                    onChange={handleChange}
+                  />
+                  <Label>Repetr contraseña: </Label>
+                  <br />
+                  {repeatPasswordError && (
+                    <Span>{repeatPasswordError}</Span>
+                  )}
+                </InputContainer>
+              </GrupoInput>
+
+            <GrupoCheck>
+            <CheckContainer>
+              <LabelCheck>Activo </LabelCheck>
               <InputCheck
                 type="checkbox"
                 name={"isActive"}
                 checked={isActive === 1}
                 onChange={handleCheckboxChange}
               />
-              <LabelCheck>Activo </LabelCheck>
-              <br />
-            </InputContainer>
+             {/*  <br /> */}
+            </CheckContainer>
+            </GrupoCheck>
+          </ContainerScroll>
 
             <ButtonContainer>
               <SubmitBtn>Guardar</SubmitBtn>
               <SubmitBtn onClick={() => setModalIsOpen(false)}>Cancelar</SubmitBtn>
             </ButtonContainer>
+
           </FormEdit>
         </ContainerModal>
         <button onClick={() => handleDelete(id)}>

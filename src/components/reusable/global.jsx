@@ -149,5 +149,7 @@ export const ContainerLogin = styled.div`
 export const Section = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  align-items: center;
+  width: 95%;
+  grid-gap: 25px;
 `;
