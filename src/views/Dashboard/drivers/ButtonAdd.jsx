@@ -265,10 +265,11 @@ export const ButtonAdd = ({
     }
   }, [estado, ciudad]);
 
-  // useEffect(() => {
-  //   const validationErrors = validateDriver(driver, codigoPostal, selectImage);
-  //   setErrorForm(validationErrors);
-  // }, [driver]);
+  useEffect(() => {
+    // Este codigo permite la sincronización de los mensajes de las imagenes
+    const validationErrors = validateDriver(driver, codigoPostal, selectImage);
+    setErrorForm(validationErrors);
+  }, [driver]);
 
   const {
     nameError,
@@ -301,8 +302,10 @@ export const ButtonAdd = ({
   }, []);
 
   const onDriverPictureDrop = useCallback(acceptedFiles => {
-    const file = acceptedFiles[0];
-    convertAndSetImage(file, "driverPicture");
+    if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0];
+      convertAndSetImage(file, "driverPicture");
+    }
   }, []);
   
   const onFrontLicensePictureDrop = useCallback(acceptedFiles => {
