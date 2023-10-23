@@ -14,10 +14,7 @@ export const validationDate = (dateLicense) => {
   // console.log("fechaUsuario:", fechaUsuario)
   // console.log("treintaDiasDespues:", treintaDiasDespues)
 
-  if (!fechaIngresada) {
-    // console.log("dateLicense:", dateLicense)
-    dateLicenseError = 'Te falto poner una fecha';
-  } else if (fechaUsuario > treintaDiasDespues) {
+  if (fechaIngresada && fechaUsuario > treintaDiasDespues) {
     dateLicenseError = 'La fecha de vigencia debe ser mayor a la fecha actual mínimo por 30 días';
   }
 

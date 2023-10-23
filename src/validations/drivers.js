@@ -50,11 +50,11 @@ export const validateDriver = (driver, codigoPostal, selectImage) => {
   error.lastNameError = validationLastName(lastName);
   error.zipCodeError = validationZipCode(zipCode, codigoPostal);
 
-  if (!state) {
+  if (zipCode && !state) {
     error.stateError = 'Debes seleccionar un Estado';
-  } else if (!city) {
+  } else if (zipCode && !city) {
     error.cityError = 'Debes seleccionar una Ciudad';
-  } else if (!colonia) {
+  } else if (zipCode && !colonia) {
     error.coloniaError = 'Debes seleccionar una colonia';
   } else if (!address) {
     error.addressError = 'Debes ingregar tu domicilio o dirección';
@@ -69,9 +69,9 @@ export const validateDriver = (driver, codigoPostal, selectImage) => {
   if (driverLicenseNumber) {
     if (!regexLicenceNumber.test(driverLicenseNumber)) {
       error.driverLicenseNumberError = 'Debes ingresar un número de licencia valido';
-    } else if (!stateLicense) {
+    } else if (driverLicenseNumber && !stateLicense) {
       error.stateLicenseError = 'Debes seleccionar un Estado';
-    } else if (!typeLicense) {
+    } else if (driverLicenseNumber && !typeLicense) {
       error.typeLicenseError = 'Debes de elegir un tipo de licencia'
     }
     error.dateLicenseError = validationDate(dateLicense);
@@ -88,7 +88,7 @@ export const validateDriver = (driver, codigoPostal, selectImage) => {
   // * VALIDANDO ACCESO A LA APLICACION
 
   error.passwordError = validationPassword(password);
-  if (!repeatPassword) {
+  if (password && !repeatPassword) {
     error.repeatPasswordError = 'Debes confirmar el password';
   } else if (password !== repeatPassword) {
     error.repeatPasswordError = 'El password no coincide';

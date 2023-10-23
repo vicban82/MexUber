@@ -10,7 +10,6 @@ import {
 } from "../../../tools/driverAlerts/register";
 import { axiosGetLicencias, axiosGetSepomex } from "../../../hooks/db/info";
 import { useDropzone } from "react-dropzone";
-import { props } from "./props";
 import { 
   ContainerModal,
   ContainerScroll,
@@ -411,9 +410,9 @@ export const ButtonAdd = ({
       contact &&
       email &&
       driverPicture &&
-      allServices === 1 ||
+      (allServices === 1 ||
       servicesLGBQT === 1 ||
-      onlyWomenServices === 1 ||
+      onlyWomenServices === 1) &&
       password &&
       repeatPassword
     ) {
