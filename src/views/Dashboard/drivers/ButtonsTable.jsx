@@ -9,7 +9,7 @@ import { errorUpDate, successUpDate } from "../../../tools/adminAlerts/upDate";
 import { useDropzone } from "react-dropzone";
 import { axiosPutDriver } from "../../../hooks/drivers/crudDrivers";
 import styled from 'styled-components';
-import { props } from "./props";
+// import { props } from "./props";
 import { 
   ContainerModal,
   ContainerScroll,
@@ -221,7 +221,7 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
               placeholder="a"
               onChange={handleChange}
             />
-            <Label>{props.name}: </Label>
+            {/* <Label>{props.name}: </Label> */}
             <br />
             {nameError && (
               <Span>{nameError}</Span>
@@ -236,7 +236,7 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
               value={lastName}
               onChange={handleChange}
             />
-            <Label>{props.lastName}: </Label>
+            {/* <Label>{props.lastName}: </Label> */}
             <br />
             {lastNameError && (
               <Span>{lastNameError}</Span>
@@ -251,7 +251,7 @@ export function ButtonsTable({ id, tDriver, setTDriver, driver, setDriver, error
               value={zipCode}
               onChange={handleChange}
             />
-            <Label>{props.zipCode}: </Label>
+            {/* <Label>{props.zipCode}: </Label> */}
             <br />
             {zipCodeError && (
               <Span>{zipCodeError}</Span>

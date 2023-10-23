@@ -56,7 +56,7 @@ export const validateDriver = (driver, codigoPostal, selectImage) => {
     error.cityError = 'Debes seleccionar una Ciudad';
   } else if (zipCode && !colonia) {
     error.coloniaError = 'Debes seleccionar una colonia';
-  } else if (!address) {
+  } else if (zipCode && !address) {
     error.addressError = 'Debes ingregar tu domicilio o dirección';
   }
 

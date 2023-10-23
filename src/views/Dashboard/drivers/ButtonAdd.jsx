@@ -213,6 +213,12 @@ export const ButtonAdd = ({
       ...driver,
       [name]: value,
     });
+    setErrorForm(
+      validateDriver({
+        ...driver,
+        [name]: value,
+      }, codigoPostal, selectImage)
+    );
   }
 
   const handleCheckboxChange = (event) => {
@@ -390,14 +396,7 @@ export const ButtonAdd = ({
   }
 
   async function handleSubmit(e) {
-    const { name, value } = e.target;
     e.preventDefault();
-    setErrorForm(
-      validateDriver({
-        ...driver,
-        [name]: value,
-      }, codigoPostal, selectImage)
-    );
 
     if (
       name &&
