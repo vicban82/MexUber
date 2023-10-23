@@ -160,13 +160,6 @@ export const ButtonAdd = ({
         setCiudad(sepomexData.ciudad);
         setColonias(sepomexData.colonias);
       } else {
-        updatedDriver = {
-          ...updatedDriver,
-          state: "",
-          city: "",
-          colonia: "",
-        }
-        setDriver(updatedDriver)
         // * ------------ ESTADOS ------------
         const findState = [...new Set(memorySepomes.map(el => el.estado))]
         if (findState) {
@@ -217,7 +210,7 @@ export const ButtonAdd = ({
       validateDriver({
         ...driver,
         [name]: value,
-      }, codigoPostal, selectImage)
+      }, selectImage)
     );
   }
 
@@ -267,7 +260,7 @@ export const ButtonAdd = ({
 
   useEffect(() => {
     // Este codigo permite la sincronización de los mensajes de las imagenes
-    const validationErrors = validateDriver(driver, codigoPostal, selectImage);
+    const validationErrors = validateDriver(driver, selectImage);
     setErrorForm(validationErrors);
   }, [driver]);
 

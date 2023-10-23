@@ -8,7 +8,7 @@ import { validationBackPicture, validationDriverPicture, validationFrontPicture 
 import { validationIsActive } from "./items/isActive";
 import { validationZipCode } from "./items/zipCode";
 
-export const validateDriver = (driver, codigoPostal, selectImage) => {
+export const validateDriver = (driver, selectImage) => {
   const {
     name,
     lastName,
@@ -48,7 +48,7 @@ export const validateDriver = (driver, codigoPostal, selectImage) => {
   
   error.nameError = validationName(name);
   error.lastNameError = validationLastName(lastName);
-  error.zipCodeError = validationZipCode(zipCode, codigoPostal);
+  error.zipCodeError = validationZipCode(zipCode);
 
   if (zipCode && !state) {
     error.stateError = 'Debes seleccionar un Estado';
