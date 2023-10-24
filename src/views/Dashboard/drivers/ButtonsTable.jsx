@@ -485,20 +485,13 @@ export function ButtonsTable({
                     placeholder={currentDriver.name}
                     onChange={handleChange}
                   />
-                  {/* <Input
-                    type="text"
-                    name={"name"}
-                    value={name}
-                    placeholder={currentDriver.name}
-                    onChange={handleChange}
-                  /> */}
                   <Label>*Nombre(s): </Label>
                   <br />
                   {nameError && <Span>{nameError}</Span>}
                 </InputContainer>
 
                 <InputContainer>
-                  <Input
+                  <input
                     type="text"
                     name={"lastName"}
                     placeholder={currentDriver.lastName}
@@ -511,7 +504,7 @@ export function ButtonsTable({
                 </InputContainer>
 
                 <InputContainer>
-                  <Input
+                  <input
                     type="text"
                     name={"zipCode"}
                     placeholder={currentDriver.zipCode}
@@ -527,7 +520,6 @@ export function ButtonsTable({
               <GrupoSelect>
                 {typeof estado !== "string" ? null : (
                   <InputContainer>
-                    <Label>*Estado: </Label>
                     <select
                       disabled={true}
                       name={"state"}
@@ -537,8 +529,8 @@ export function ButtonsTable({
                     >
                       <option>{estado || "Selecciona"}</option>
                     </select>
-                    <br />
                     {stateError && <Span>{stateError}</Span>}
+                    <Label>*Estado: </Label>
                   </InputContainer>
                 )}
                 {!Array.isArray(estado) ? null : (
@@ -567,11 +559,11 @@ export function ButtonsTable({
                     <select
                       disabled={true}
                       name={"city"}
-                      placeholder={currentDriver.city}
+                      // placeholder={currentDriver.city}
                       value={city}
                       onChange={handleChange}
                     >
-                      <option>{ciudad || "Selecciona"}</option>
+                      <option>{currentDriver.city || "Selecciona"}</option>
                     </select>
                     <br />
                     {cityError && <Span>{cityError}</Span>}
@@ -621,7 +613,7 @@ export function ButtonsTable({
 
               <GrupoInput>
                 <InputContainer>
-                  <Input
+                  <input
                     type="text"
                     name={"address"}
                     placeholder={currentDriver.address}
@@ -634,7 +626,7 @@ export function ButtonsTable({
                 </InputContainer>
 
                 <InputContainer>
-                  <Input
+                  <input
                     type="text"
                     name={"contact"}
                     placeholder={currentDriver.contact}
@@ -647,7 +639,7 @@ export function ButtonsTable({
                 </InputContainer>
 
                 <InputContainer>
-                  <Input
+                  <input
                     type="text"
                     name={"email"}
                     placeholder={currentDriver.email}
@@ -692,7 +684,7 @@ export function ButtonsTable({
                 </TituloSeccion>
 
                 <InputContainer>
-                  <Input
+                  <input
                     type="text"
                     name={"driverLicenseNumber"}
                     placeholder={currentDriver.driverLicenseNumber}
@@ -761,12 +753,12 @@ export function ButtonsTable({
 
               <GrupoInput>
                 <InputContainer>
-                  <Input
+                  <input
                     disabled={driverLicenseNumber ? false : true}
                     type="date"
                     name={"dateLicense"}
                     value={dateLicense}
-                    placeholder="a"
+                    placeholder={currentDriver.dateLicense}
                     onChange={handleChange}
                   />
                   <Label>
@@ -873,27 +865,25 @@ export function ButtonsTable({
                   Acceso a la aplicación
                 </TituloSeccion>
                 <InputContainerV1>
-                  <Input
+                  <input
                     type="password"
                     name={"password"}
                     value={password}
-                    placeholder="a"
                     onChange={handleChange}
                   />
-                  <Label>*Contraseña: </Label>
+                  <Label>Contraseña: </Label>
                   <br />
                   {passwordError && <Span>{passwordError}</Span>}
                 </InputContainerV1>
 
                 <InputContainerV1>
-                  <Input
+                  <input
                     type="password"
                     name={"repeatPassword"}
                     value={repeatPassword}
-                    placeholder="a"
                     onChange={handleChange}
                   />
-                  <Label>*Repetir contraseña: </Label>
+                  <Label>Repetir contraseña: </Label>
                   <br />
                   {repeatPasswordError && <Span>{repeatPasswordError}</Span>}
                 </InputContainerV1>
@@ -919,7 +909,7 @@ export function ButtonsTable({
                     type="text"
                     name={"messageReasonInActive"}
                     value={messageReasonInActive}
-                    placeholder="a"
+                    placeholder={currentDriver.messageReasonInActive}
                     maxLength={100}
                     disabled={isActive === 1}
                     onChange={handleChange}

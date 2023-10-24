@@ -62,7 +62,9 @@ export const validateDriver = (driver, selectImage) => {
 
   error.contactError = validationContact(contact);
   error.emailError = validationEmail(email);
-  error.driverPictureError = validationDriverPicture(selectImage, driverPicture);
+  if (selectImage.path !== undefined && selectImage.type !== undefined) {
+    error.driverPictureError = validationDriverPicture(selectImage, driverPicture);
+  }
   
   // * VALIDANDO LICENCIA DEL CONDUCTOR
 
