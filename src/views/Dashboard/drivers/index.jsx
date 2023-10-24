@@ -171,6 +171,9 @@ export const Drivers = () => {
             setDriver={setDriver}
             errorForm={errorForm}
             setErrorForm={setErrorForm}
+            limit={limit}
+            setTotalPages={setTotalPages}
+            setPage={setPage}
           />
           <ContentPages>
             <DivGrupPage>

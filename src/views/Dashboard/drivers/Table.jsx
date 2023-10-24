@@ -1,8 +1,21 @@
-import { ButtonsTable } from './ButtonsTable';
-import {ContainerTabla, StyledTable} from "../../../components/reusable/TableComponente";
+import { ButtonsTable } from "./ButtonsTable";
+import {
+  ContainerTabla,
+  StyledTable,
+} from "../../../components/reusable/TableComponente";
 
-
-export const Table = ({ tHeader, tDriver, setTDriver, driver, setDriver, errorForm, setErrorForm }) => {
+export const Table = ({
+  tHeader,
+  tDriver,
+  setTDriver,
+  driver,
+  setDriver,
+  errorForm,
+  setErrorForm,
+  limit,
+  setTotalPages,
+  setPage,
+}) => {
   // console.log("tDriver:", tDriver)
   return (
     <>
@@ -12,18 +25,16 @@ export const Table = ({ tHeader, tDriver, setTDriver, driver, setDriver, errorFo
             <tr>
               {tHeader.map((item, i) => {
                 return (
-                  <th  key={i}>
+                  <th key={i}>
                     <p>{item}</p>
                   </th>
                 );
               })}
-              <th>
-                Editar/Eliminar
-              </th>
+              <th>Editar/Eliminar</th>
             </tr>
           </thead>
           <tbody>
-            {tDriver.length >= 1 && (
+            {tDriver.length >= 1 &&
               tDriver.map((data, i) => {
                 return (
                   <tr key={i}>
@@ -81,14 +92,16 @@ export const Table = ({ tHeader, tDriver, setTDriver, driver, setDriver, errorFo
                       // ESTADO DEL FORMULARIO
                       errorForm={errorForm}
                       setErrorForm={setErrorForm}
+                      limit={limit}
+                      setTotalPages={setTotalPages}
+                      setPage={setPage}
                     />
                   </tr>
                 );
-              })
-            )}
+              })}
           </tbody>
         </StyledTable>
       </ContainerTabla>
     </>
   );
-}
+};

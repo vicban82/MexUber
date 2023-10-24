@@ -4,7 +4,7 @@ import deleteIcon from "../../../assets/img/deleteIcon.png";
 import Modal from "react-modal";
 import { validateDriver } from "../../../validations/drivers";
 import { headers } from "../../../tools/accessToken";
-import { axiosGetDrivers, axiosPostDriver } from "../../../hooks/drivers/crudDrivers";
+import { axiosGetDrivers, axiosPostDriver, axiosPutDriver } from "../../../hooks/drivers/crudDrivers";
 import styled from 'styled-components';
 import {
   errorRegister,
@@ -94,54 +94,14 @@ export function ButtonsTable({
   driver,
   setDriver,
   errorForm,
-  setErrorForm,
+  setErrorForm, 
+  limit, 
+  setTotalPages, 
+  setPage,
 }) {
   const currentDriver = tDriver.find((item) => item._id === id);
+  const [modifDriver, setModifDriver] = useState({});
   // console.log("currentDriver:", currentDriver)
-
-  useEffect(() => {
-    // Actualiza el estado del driver cuando se cambia el ID para que coincida con el objeto correspondiente en tDriver
-    const currentDriver = tDriver.find(item => item._id === id);
-    const update = {
-      name: currentDriver.name,
-      lastName: currentDriver.lastName,
-      zipCode: currentDriver.zipCode,
-      state: currentDriver.state,
-      city: currentDriver.city,
-      colonia: currentDriver.colonia,
-      address: currentDriver.address,
-      contact: currentDriver.contact,
-      email: currentDriver.email,
-      driverPicture: currentDriver.driverPicture,
-      //! DATOS DE LA LICENCIA DE CONDUCCION
-      driverLicenseNumber: currentDriver.driverLicenseNumber,
-      stateLicense: currentDriver.stateLicense,
-      typeLicense: currentDriver.typeLicense,
-      dateLicense: currentDriver.dateLicense,
-      frontLicensePicture: currentDriver.frontLicensePicture,
-      backLicensePicture: currentDriver.backLicensePicture,
-      //! DATOS DE LA LICENCIA DE CONDUCCION
-      //! AJUSTES DE LA APLICACION
-      allServices: currentDriver.allServices,
-      servicesLGBQT: currentDriver.servicesLGBQT,
-      onlyWomenServices: currentDriver.onlyWomenServices,
-      //! AJUSTES DE LA APLICACION
-      //! ACCESO A LA APLICACION
-      password: "",
-      repeatPassword: "",
-      isActive: currentDriver.isActive,
-      messageReasonInActive: currentDriver.messageReasonInActive,
-      //! ACCESO A LA APLICACION
-      car: currentDriver.car,
-      //! NO SE VALIDAN
-      tokenNotification: currentDriver.tokenNotification,
-      typePhone: currentDriver.typePhone,
-      //! NO SE VALIDAN
-    }
-    if (update) {
-      setDriver(update);
-    }
-  }, [id, tDriver]);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [sepomex, setSepomex] = useState([]);
@@ -404,40 +364,40 @@ export function ButtonsTable({
   });
 
   function closeModal() {
-    setDriver({
-      name: "",
-      lastName: "",
-      zipCode: "", // CODIGO POSTAL
-      state: "", // ESTADO DE MEXICO
-      city: "",
-      colonia: "",
-      address: "",
-      contact: "", // NUMERO DE CONTACTO DEL CONDUCTOR
-      email: "",
-      driverPicture: "", //* FOTO DEL CONDUCTOR
+    setModifDriver({
+      name: currentDriver.name,
+      lastName: currentDriver.lastName,
+      zipCode: currentDriver.zipCode, // CODIGO POSTAL
+      state: currentDriver.state, // ESTADO DE MEXICO
+      city: currentDriver.city,
+      colonia: currentDriver.colonia,
+      address: currentDriver.address,
+      contact: currentDriver.contact, // NUMERO DE CONTACTO DEL CONDUCTOR
+      email: currentDriver.email,
+      driverPicture: currentDriver.driverPicture, //* FOTO DEL CONDUCTOR
       //! DATOS DE LA LICENCIA DE CONDUCCION
-      driverLicenseNumber: "", //* NUMERO LICENCIA DEL CONDUCTOR
-      stateLicense: "", // ESTADO DE LA LICENCIA
-      typeLicense: "", // TIPO LICENCIA
-      dateLicense: "", // FECHA - VIGENCIA DE LA LICENCIA
-      frontLicensePicture: "", //* FOTO FRONTAL DE LA LICENCIA
-      backLicensePicture: "", //* FOTO REVERSO DE LA LICENCIA
+      driverLicenseNumber: currentDriver.driverLicenseNumber, //* NUMERO LICENCIA DEL CONDUCTOR
+      stateLicense: currentDriver.stateLicense, // ESTADO DE LA LICENCIA
+      typeLicense: currentDriver.typeLicense, // TIPO LICENCIA
+      dateLicense: currentDriver.dateLicense, // FECHA - VIGENCIA DE LA LICENCIA
+      frontLicensePicture: currentDriver.frontLicensePicture, //* FOTO FRONTAL DE LA LICENCIA
+      backLicensePicture: currentDriver.backLicensePicture, //* FOTO REVERSO DE LA LICENCIA
       //! DATOS DE LA LICENCIA DE CONDUCCION
       //! AJUSTES DE LA APLICACION
-      allServices: 1, // TODOS
-      servicesLGBQT: 0, // LGBQT+
-      onlyWomenServices: 0, // MUJERES
+      allServices: currentDriver.allServices, // TODOS
+      servicesLGBQT: currentDriver.servicesLGBQT, // LGBQT+
+      onlyWomenServices: currentDriver.onlyWomenServices, // MUJERES
       //! AJUSTES DE LA APLICACION
       //! ACCESO A LA APLICACION
-      password: "",
-      repeatPassword: "",
-      isActive: 1,
-      messageReasonInActive: "", // MENSAJE RASON INACTIVO
+      password: '',
+      repeatPassword: '',
+      isActive: currentDriver.isActive,
+      messageReasonInActive: currentDriver.messageReasonInActive, // MENSAJE RASON INACTIVO
       //! ACCESO A LA APLICACION
-      car: "" || null,
+      car: currentDriver.car || null,
       //! NO SE VALIDAN
-      tokenNotification: "",
-      typePhone: "",
+      tokenNotification: currentDriver.tokenNotification,
+      typePhone: currentDriver.typePhone,
       //! NO SE VALIDAN
     });
   }
@@ -446,30 +406,33 @@ export function ButtonsTable({
     e.preventDefault();
 
     if (
-      name &&
-      lastName &&
-      zipCode &&
-      state &&
-      city &&
-      colonia &&
-      address &&
-      contact &&
-      email &&
-      driverPicture &&
+      name ||
+      lastName ||
+      zipCode ||
+      state ||
+      city ||
+      colonia ||
+      address ||
+      contact ||
+      email ||
       (allServices === 1 ||
       servicesLGBQT === 1 ||
-      onlyWomenServices === 1) &&
-      password &&
+      onlyWomenServices === 1) ||
+      password ||
       repeatPassword
     ) {
-      if (stateLicenseError || typeLicenseError || dateLicenseError || frontLicensePictureError || backLicensePictureError) {
+      if (passwordError && repeatPasswordError) {
+        errorRegister(driver, errorForm);
+      } else if (driverPictureError || frontLicensePictureError && backLicensePictureError) {
+        errorRegister(driver, errorForm);
+      } else if (stateLicenseError || typeLicenseError || dateLicenseError || frontLicensePictureError || backLicensePictureError) {
         errorRegister(driver, errorForm);
       } else if (messageReasonInActiveError) {
         errorRegister(driver, errorForm);
       } else {
         try {
           successRegister(driver);
-          const newDriver = await axiosPostDriver(driver, headers);
+          const newDriver = await axiosPutDriver(id, driver, headers);
           setTDriver([...tDriver, newDriver]);
 
           await axiosGetDrivers(setTDriver, setTotalPages, headers, 1, limit)
@@ -515,13 +478,20 @@ export function ButtonsTable({
               </TituloSeccion>
               <GrupoInput>
                 <InputContainer>
-                  <Input
+                  <input
                     type="text"
                     name={"name"}
                     value={name}
                     placeholder={currentDriver.name}
                     onChange={handleChange}
                   />
+                  {/* <Input
+                    type="text"
+                    name={"name"}
+                    value={name}
+                    placeholder={currentDriver.name}
+                    onChange={handleChange}
+                  /> */}
                   <Label>*Nombre(s): </Label>
                   <br />
                   {nameError && <Span>{nameError}</Span>}
@@ -966,7 +936,10 @@ export function ButtonsTable({
             </ContainerScroll>
             <ButtonContainer>
               <SubmitBtn type="submit">Guardar</SubmitBtn>
-              <SubmitBtn onClick={() => setModalIsOpen(false)}>
+              <SubmitBtn onClick={() => {
+                setModalIsOpen(false);
+                closeModal();
+              }}>
                 Cancelar
               </SubmitBtn>
             </ButtonContainer>
