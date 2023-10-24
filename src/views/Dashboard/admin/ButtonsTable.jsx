@@ -183,7 +183,6 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
                   <Input
                     type="text"
                     name={"name"}
-                    placeholder='a'
                     value={name}
                     onChange={handleChange}
                   />
@@ -199,7 +198,6 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
                     type="text"
                     name={"lastName"}
                     value={lastName}
-                    placeholder='a'
                     onChange={handleChange}
                   />
                   <Label>Apellidos: </Label>
@@ -210,10 +208,9 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
                 </InputContainer>
 
                 <InputContainer>
-                  <Input
+                  <Input 
                     type="text"
                     name={"email"}
-                    placeholder='a'
                     value={email}
                     onChange={handleChange}
                   />
@@ -228,7 +225,6 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
                   <Input
                     type="password"
                     name={"password"}
-                    placeholder='a'
                     value={password}
                     onChange={handleChange}
                   />
@@ -243,7 +239,6 @@ export function ButtonsTable({ id, tBody, setTBody, setTError, errorForm, setErr
                   <Input
                     type="password"
                     name={"repeatPassword"}
-                    placeholder='a'
                     value={repeatPassword}
                     onChange={handleChange}
                   />

@@ -442,7 +442,7 @@ export const ButtonAdd = ({
             <TituloSeccion>Datos Personales<hr /></TituloSeccion>
             <GrupoInput>
               <InputContainer>
-                <Input
+                <Input color={"transparent"}
                   type="text"
                   name={"name"}
                   value={name}
@@ -457,7 +457,7 @@ export const ButtonAdd = ({
               </InputContainer>
 
               <InputContainer>
-                <Input
+                <Input color={"transparent"}
                   type="text"
                   name={"lastName"}
                   placeholder="a"
@@ -472,7 +472,7 @@ export const ButtonAdd = ({
               </InputContainer>
 
               <InputContainer>
-                <Input
+                <Input color={"transparent"}
                   type="text"
                   name={"zipCode"}
                   placeholder="a"
@@ -510,11 +510,11 @@ export const ButtonAdd = ({
 
 
               <SelectContainer>
-                <Select
+                <Select color={"transparent"}
                   disabled={false}
                   name={"city"}
                   value={city}
-                  placeholder="jashajshaj"
+                  placeholder="a"
                   onChange={handleChange}
                 >
                   <option>{ciudad || "Ciudad"}</option>
@@ -556,7 +556,7 @@ export const ButtonAdd = ({
 
             <GrupoInput>
               <InputContainer>
-                <Input
+                <Input color={"transparent"}
                   type="text"
                   name={"address"}
                   placeholder="a"
@@ -572,7 +572,7 @@ export const ButtonAdd = ({
 
 
               <InputContainer>
-                <Input
+                <Input color={"transparent"}
                   type="text"
                   name={"contact"}
                   value={contact}
@@ -587,7 +587,7 @@ export const ButtonAdd = ({
               </InputContainer>
 
               <InputContainer>
-                <Input
+                <Input color={"transparent"}
                   type="text"
                   name={"email"}
                   value={email}
@@ -626,7 +626,7 @@ export const ButtonAdd = ({
               <TituloSeccion><hr />Licencia de conducir</TituloSeccion>
 
               <InputContainer>
-                <Input
+                <Input color={"transparent"}
                   type="text"
                   name={"driverLicenseNumber"}
                   value={driverLicenseNumber}
@@ -691,7 +691,7 @@ export const ButtonAdd = ({
 
             <GrupoInput>
               <InputContainer>
-                <Input
+                <Input color={"transparent"}
                   disabled={driverLicenseNumber ? false : true}
                   type="date"
                   name={"dateLicense"}
@@ -784,7 +784,7 @@ export const ButtonAdd = ({
             <GrupoInput>
               <TituloSeccion><hr />Acceso a la aplicación</TituloSeccion>
               <InputContainer>
-                <Input
+                <Input color={"transparent"}
                   type="password"
                   name={"password"}
                   value={password}
@@ -799,7 +799,7 @@ export const ButtonAdd = ({
               </InputContainer>
 
               <InputContainer>
-                <Input
+                <Input color={"transparent"}
                   type="password"
                   name={"repeatPassword"}
                   value={repeatPassword}
@@ -832,7 +832,7 @@ export const ButtonAdd = ({
 
             <GrupoInput>
               <TextareaContainer>
-                <Textarea
+                <Textarea color={"transparent"}
                   type="text"
                   name={"messageReasonInActive"}
                   value={messageReasonInActive}
