@@ -140,9 +140,23 @@ export const Input = styled.input`
   padding-inline: 5%;
   box-sizing: border-box;
 
+  
   &::placeholder {
-    color: transparent;
+    color: ${(props) => (props.color)};
   }
+
+
+  ${props => {
+        if (props.color != 'transparent') return `
+        & + ${Label} {
+          top: -7px;
+          left: 3px;
+          z-index: 10;
+          font-size: 14px;
+          font-weight: 600;
+          color: purple;
+        }`
+    }}
 
   &:focus + ${Label} {
     top: -7px;
@@ -247,7 +261,7 @@ export const Select = styled.select`
     //font-weight: 600;
 
     &::placeholder {
-    color: transparent;
+    color: ${(props) => (props.color)};
   }
 
   
@@ -368,7 +382,7 @@ export const Textarea = styled.textarea`
   resize: none;
   
   &::placeholder {
-    color: transparent;
+    color: ${(props) => (props.color)};
   }
 
   &:focus + ${Label} {

@@ -158,7 +158,7 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm, setPage, l
         <ContainerScroll>
         <GrupoInput>
           <InputContainer>
-            <Input
+            <Input color={"transparent"}
               type="text"
               name={"name"}
               value={name}
@@ -173,7 +173,7 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm, setPage, l
           </InputContainer>
 
           <InputContainer>
-            <Input
+            <Input color={"transparent"}
               type="text"
               name={"lastName"}
               placeholder="a"
@@ -188,7 +188,7 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm, setPage, l
           </InputContainer>
 
           <InputContainer>
-            <Input
+            <Input color={"transparent"}
               type="text"
               name={"email"}
               placeholder="a"
@@ -203,7 +203,7 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm, setPage, l
           </InputContainer>
         
           <InputContainer>
-            <Input
+            <Input color={"transparent"}
               type="password"
               name={"password"}
               placeholder="a"
@@ -218,7 +218,7 @@ export const ButtonAdd = ({ tBody, setTBody, errorForm, setErrorForm, setPage, l
           </InputContainer>
 
           <InputContainer>
-            <Input
+            <Input color={"transparent"}
               type="password"
               name={"repeatPassword"}
               placeholder="a"
