@@ -89,8 +89,8 @@ export const ButtonAdd = ({
   const [licencias, setLicencias] = useState([]);
   //* INFORMACION DEL CONDUCTOR
   const [codigoPostal, setZipcode] = useState("");
-  const [estado, setEstado] = useState("");
-  const [ciudad, setCiudad] = useState("");
+  const [estado, setEstado] = useState("" || []);
+  const [ciudad, setCiudad] = useState("" || []);
   const [colonias, setColonias] = useState([]);
   //* INFORMACION DEL CONDUCTOR
 
@@ -141,7 +141,6 @@ export const ButtonAdd = ({
   function handleChange(e) {
     const { name, value } = e.target;
     // console.log("name:", name)
-    let updatedDriver = { ...driver };
 
     if (
       (name === "zipCode" && value.length >= 5) ||
@@ -220,6 +219,24 @@ export const ButtonAdd = ({
       )
     );
   }
+  
+  useEffect(() => {
+    // SE RESETEAN LOS SIGUIENTES CAMPOS
+    let updatedDriver = {...driver}
+    if (zipCode.length <= 4) {
+      setEstado("");
+      setCiudad("");
+      setColonias("");
+      updatedDriver = {
+        ...updatedDriver,
+        state: "",
+        city: "",
+        colonia: "",
+      }
+    }
+
+    setDriver(updatedDriver);
+  }, [zipCode]);
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
@@ -304,7 +321,6 @@ export const ButtonAdd = ({
   const onDriverPictureDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles.length > 0) {
       const file = acceptedFiles[0];
-      console.log("file:", file);
       convertAndSetImage(file, "driverPicture");
     }
   }, []);
@@ -532,22 +548,22 @@ export const ButtonAdd = ({
             <GrupoSelect>
               {typeof estado !== "string" ? null : (
                 <InputContainer>
-                  <select
+                <Label>*Estado: </Label>
+                  <Select
                     disabled={true}
                     name={"state"}
                     value={state}
                     onChange={handleChange}
                   >
                     <option>{estado || "Selecciona"}</option>
-                  </select>
+                  </Select>
                   {stateError && <Span>{stateError}</Span>}
-                  <Label>*Estado: </Label>
                 </InputContainer>
               )}
               {!Array.isArray(estado) ? null : (
                 <InputContainer>
-                  <Label>*Estado: </Label>
-                  <select
+                <Label>*Estado: </Label>
+                  <Select
                     disabled={false}
                     name={"state"}
                     value={state}
@@ -557,7 +573,7 @@ export const ButtonAdd = ({
                     {estado.map((est, idx) => {
                       return <option key={idx}>{est}</option>;
                     })}
-                  </select>
+                  </Select>
                   <br />
                   {stateError && <Span>{stateError}</Span>}
                 </InputContainer>
@@ -566,14 +582,14 @@ export const ButtonAdd = ({
               {typeof ciudad !== "string" ? null : (
                 <InputContainer>
                   <Label>*Ciudad: </Label>
-                  <select
+                  <Select
                     disabled={true}
                     name={"city"}
                     value={city}
                     onChange={handleChange}
                   >
                     <option>{ciudad || "Selecciona"}</option>
-                  </select>
+                  </Select>
                   <br />
                   {cityError && <Span>{cityError}</Span>}
                 </InputContainer>
