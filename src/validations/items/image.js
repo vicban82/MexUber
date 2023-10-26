@@ -1,21 +1,42 @@
-import { regexImages } from "../../tools/regex";
+import { maxSize, regexExtension, regexMimeType } from "../../tools/regex";
 
-export const validationPicture = (driverPicture, frontLicensePicture, backLicensePicture) => {
+export const validationDriverPicture = (selectImage, driverPicture) => {
   let imageError = '';
 
-  if (!driverPicture) {
-    // console.log("state:", state)
-    imageError = 'Debes subir una foto tuya';
-  } else if (!regexImages.test(driverPicture)) {
-    imageError = 'Solo se admiten formato jpg y png';
-  } else if (!frontLicensePicture) {
-    imageError = 'Debe de subir una foto frontal de tu licencia';
-  } else if (!regexImages.test(frontLicensePicture)) {
-    imageError = 'Solo se admiten formato jpg y png';
-  } else if (!backLicensePicture) {
-    imageError = 'Debe de subir una foto del reverso de tu licencia';
-  } else if (!regexImages.test(backLicensePicture)) {
-    imageError = 'Solo se admiten formato jpg y png';
+  if (driverPicture &&!regexMimeType.test(selectImage.type)) {
+    imageError = 'Sólo se admiten formato jpeg, jpg y png';
+  } else if (driverPicture && !regexExtension.test(selectImage.path)) {
+    imageError = 'Sólo se admiten formato png, jpg y jpeg';
+  } else if (selectImage.size > maxSize) {
+    imageError = 'La imagen no puede exceder de 5MB';
+  }
+
+  return imageError;
+}
+
+export const validationFrontPicture = (selectImage, frontLicensePicture) => {
+  let imageError = '';
+  
+  if (frontLicensePicture &&!regexMimeType.test(selectImage.type)) {
+    imageError = 'Solo se admiten formato jpeg, jpg y png';
+  } else if (frontLicensePicture && !regexExtension.test(selectImage.path)) {
+    imageError = 'Sólo se admiten formato png, jpg y jpeg';
+  } else if (selectImage.size > maxSize) {
+    imageError = 'La imagen no puede exceder de 5MB';
+  }
+
+  return imageError;
+}
+
+export const validationBackPicture = (selectImage, backLicensePicture) => {
+  let imageError = '';
+  
+  if (backLicensePicture &&!regexMimeType.test(selectImage.type)) {
+    imageError = 'Solo se admiten formato jpeg, jpg y png';
+  } else if (backLicensePicture && !regexExtension.test(selectImage.path)) {
+    imageError = 'Sólo se admiten formato png, jpg y jpeg';
+  } else if (selectImage.size > maxSize) {
+    imageError = 'La imagen no puede exceder de 5MB';
   }
 
   return imageError;

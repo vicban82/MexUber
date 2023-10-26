@@ -49,7 +49,12 @@ export const Drivers = () => {
     isActive: 1,
     messageReasonInActive: "", // MENSAJE RASON INACTIVO
     //! ACCESO A LA APLICACION
-    // car: "" || null,
+    // car: "6518c32a2696272c68e9c540",
+    car: "" || null,
+    //! NO SE VALIDAN
+    tokenNotification: "",
+    typePhone: "",
+    //! NO SE VALIDAN
   });
   const [errorForm, setErrorForm] = useState({
     nameError: "",
@@ -121,9 +126,31 @@ export const Drivers = () => {
 
   return (
     <Section>
-      {/* {tDriver.length === 0 ? (
-        <p>En esta sección no hay información disponible</p>
-      ) : ( */}
+      {!tDriver || tDriver.length <= 0 ? (
+          <div>
+            <ButtonAdd
+              tDriver={tDriver}
+              setTDriver={setTDriver}
+              driver={driver}
+              setDriver={setDriver}
+              errorForm={errorForm}
+              setErrorForm={setErrorForm}
+              limit={limit}
+              setTotalPages={setTotalPages}
+              setPage={setPage}
+            />
+            <Table
+              tHeader={tableHeader}
+              tDriver={tDriver}
+              setTDriver={setTDriver}
+              driver={driver}
+              setDriver={setDriver}
+              errorForm={errorForm}
+              setErrorForm={setErrorForm}
+            />
+            <p>En esta sección no hay información disponible</p>
+          </div>
+      ) : (
         <>
           <ButtonAdd
             tDriver={tDriver}
@@ -132,6 +159,9 @@ export const Drivers = () => {
             setDriver={setDriver}
             errorForm={errorForm}
             setErrorForm={setErrorForm}
+            limit={limit}
+            setTotalPages={setTotalPages}
+            setPage={setPage}
           />
           <Table
             tHeader={tableHeader}
@@ -141,6 +171,9 @@ export const Drivers = () => {
             setDriver={setDriver}
             errorForm={errorForm}
             setErrorForm={setErrorForm}
+            limit={limit}
+            setTotalPages={setTotalPages}
+            setPage={setPage}
           />
           <ContentPages>
             <DivGrupPage>
@@ -171,7 +204,7 @@ export const Drivers = () => {
           </ContentPages >
           <Search onSearch={handleSearch} />
         </>
-    {/*   )} */}
+      )}
     </Section>
   );
 };

@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 
 //* Esta funcion es para la conexion con el Back-End
-export function errorRegister(driver) {
+export function errorRegister(driver, errorForm) {
   const {
     name,
     lastName,
@@ -13,14 +13,6 @@ export function errorRegister(driver) {
     contact, // NUMERO DE CONTACTO DEL CONDUCTOR
     email,
     driverPicture, //* FOTO DEL CONDUCTOR
-    //! DATOS DE LA LICENCIA DE CONDUCCION
-    driverLicenseNumber, //* NUMERO LICENCIA DEL CONDUCTOR
-    stateLicense, // ESTADO DE LA LICENCIA
-    typeLicense, // TIPO LICENCIA
-    dateLicense, // FECHA - VIGENCIA DE LA LICENCIA
-    frontLicensePicture, //* FOTO FRONTAL DE LA LICENCIA
-    backLicensePicture, //* FOTO REVERSO DE LA LICENCIA
-    //! DATOS DE LA LICENCIA DE CONDUCCION
     //! AJUSTES DE LA APLICACION
     allServices, // TODOS
     servicesLGBQT, // LGBQT+
@@ -35,6 +27,16 @@ export function errorRegister(driver) {
     car,
   } = driver;
 
+  const {
+    driverLicenseNumberError,
+    stateLicenseError,
+    typeLicenseError,
+    dateLicenseError,
+    frontLicensePictureError,
+    backLicensePictureError,
+    messageReasonInActiveError,
+  } = errorForm;
+
   if (
     !name ||
     !lastName ||
@@ -46,28 +48,44 @@ export function errorRegister(driver) {
     !contact ||
     !email ||
     !driverPicture ||
-    !driverLicenseNumber ||
-    !dateLicense ||
-    !stateLicense ||
-    !typeLicense ||
-    !frontLicensePicture ||
-    !backLicensePicture ||
     !password ||
     !repeatPassword ||
-    !isActive ||
-    !messageReasonInActive ||
-    !allServices ||
-    !servicesLGBQT ||
-    !onlyWomenServices
+    !isActive === 1 ||
+    !allServices === 1 ||
+    !servicesLGBQT === 1 ||
+    !onlyWomenServices === 1
   ) {
     Swal.fire({
-      title: "Rectifica los campos",
+      title: "Advertencia",
       icon: "warning",
       text: "Credenciales incorrectas.",
       html: `
-        <p>${"Todos los campos son requeridos" || ""}</p>
+        <p>${`Todos los campos con <strong>"*"</strong> son requeridos`}</p>
+        <p>${"<strong>IMPORTANTE:</strong>"}</p>
+        <li>${"Si ingresas un <strong>número de licencia</strong>, <br/>los demás campos también seran requeridos"}</li>
+        <li>${`Si desactivas la casilla <strong>"Activo"</strong>, <br/>debes ingresar el movito`}</li>
       `,
     });
+  } else {
+    if (stateLicenseError || typeLicenseError || dateLicenseError || frontLicensePictureError || backLicensePictureError) {
+      Swal.fire({
+        title: "Advertencia",
+        icon: "warning",
+        text: "Credenciales incorrectas.",
+        html: `
+          <p>${"Rectifica los campos de la licencia de conducción"}</p>
+        `,
+      });
+    } else if (messageReasonInActiveError) {
+      Swal.fire({
+        title: "Advertencia",
+        icon: "warning",
+        text: "Credenciales incorrectas.",
+        html: `
+          <p>${"Te falto el motivo de la inactividad"}</p>
+        `,
+      });
+    }
   }
 }
 
@@ -116,19 +134,11 @@ export function successRegister(driver) {
     contact &&
     email &&
     driverPicture &&
-    driverLicenseNumber &&
-    dateLicense &&
-    stateLicense &&
-    typeLicense &&
-    frontLicensePicture &&
-    backLicensePicture &&
+    allServices === 1 ||
+    servicesLGBQT === 1 ||
+    onlyWomenServices === 1 ||
     password &&
-    repeatPassword &&
-    isActive &&
-    messageReasonInActive &&
-    allServices &&
-    servicesLGBQT &&
-    onlyWomenServices
+    repeatPassword
   ) {
     Swal.fire({
       icon: "success",
@@ -139,5 +149,17 @@ export function successRegister(driver) {
         <p>${`Conductor <strong>${name} ${lastName}</strong> ha sido registrado con exito` || ""}</p>
       `,
     });
+  } else {
+    if (dateLicense && stateLicense && typeLicense && frontLicensePicture && backLicensePicture || messageReasonInActive) {
+      Swal.fire({
+        icon: "success",
+        title: `Nuevo conductor`,
+        showConfirmButton: false,
+        timer: 4000,
+        html: `
+          <p>${`Conductor <strong>${name} ${lastName}</strong> ha sido registrado con exito` || ""}</p>
+        `,
+      });
+    }
   }
 }

@@ -2,14 +2,13 @@ import { validationLastName, validationName } from "./items/name";
 import { validationContact } from "./items/contact";
 import { validationEmail } from "./items/email";
 import { validationPassword } from "./items/password";
-import { regexDate, regexLicenceNumber, regexPhone, regexZipCode } from "../tools/regex";
-import { validationState } from "./items/state";
+import { regexLicenceNumber } from "../tools/regex";
 import { validationDate } from "./items/date";
-import { validationPicture } from "./items/image";
+import { validationBackPicture, validationDriverPicture, validationFrontPicture } from "./items/image";
 import { validationIsActive } from "./items/isActive";
-// import { regexPhone } from "../tools/regex";
+import { validationZipCode } from "./items/zipCode";
 
-export const validateDriver = (driver, codigoPostal, estado, ciudad, colonias, licences) => {
+export const validateDriver = (driver, selectImage) => {
   const {
     name,
     lastName,
@@ -42,72 +41,58 @@ export const validateDriver = (driver, codigoPostal, estado, ciudad, colonias, l
     //! ACCESO A LA APLICACION
     car,
   } = driver;
+  // console.log("validateDriver:", driver)
   const error = {};
 
   // * VALIDANDO INFORMACION DEL CONDUCTOR
   
   error.nameError = validationName(name);
-  
   error.lastNameError = validationLastName(lastName);
-  
-  if (!zipCode) {
-    error.zipCodeError = 'Debe colocar un código postal';
-  } else if (!regexZipCode.test(zipCode) || codigoPostal !== zipCode) {
-    error.zipCodeError = 'Código postal invalido';
-  }
-  
-  error.stateError = validationState(estado, state);
-  
-  if (ciudad !== city) {
+  error.zipCodeError = validationZipCode(zipCode);
+
+  if (zipCode && !state) {
+    error.stateError = 'Debes seleccionar un Estado';
+  } else if (zipCode && !city) {
     error.cityError = 'Debes seleccionar una Ciudad';
-  }
-  
-  if (!colonia || !colonias.includes(colonia)) {
+  } else if (zipCode && !colonia) {
     error.coloniaError = 'Debes seleccionar una colonia';
-  }
-  
-  if (!address) {
+  } else if (zipCode && !address) {
     error.addressError = 'Debes ingregar tu domicilio o dirección';
   }
-  
+
   error.contactError = validationContact(contact);
-  
   error.emailError = validationEmail(email);
-  
-  error.driverPictureError = validationPicture(driverPicture, frontLicensePicture, backLicensePicture);
+  if (selectImage.path !== undefined && selectImage.type !== undefined) {
+    error.driverPictureError = validationDriverPicture(selectImage, driverPicture);
+  }
   
   // * VALIDANDO LICENCIA DEL CONDUCTOR
 
   if (driverLicenseNumber) {
     if (!regexLicenceNumber.test(driverLicenseNumber)) {
       error.driverLicenseNumberError = 'Debes ingresar un número de licencia valido';
-    }
-    
-    error.stateLicenseError = validationState(estado, stateLicense);
-    
-    if (!typeLicense) {
+    } else if (driverLicenseNumber && !stateLicense) {
+      error.stateLicenseError = 'Debes seleccionar un Estado';
+    } else if (driverLicenseNumber && !typeLicense) {
       error.typeLicenseError = 'Debes de elegir un tipo de licencia'
     }
-    
     error.dateLicenseError = validationDate(dateLicense);
-    
-    error.frontLicensePictureError = validationPicture(driverPicture, frontLicensePicture, backLicensePicture);
-    
-    error.backLicensePictureError = validationPicture(driverPicture, frontLicensePicture, backLicensePicture);
+    error.frontLicensePictureError = validationFrontPicture(selectImage, frontLicensePicture);
+    error.backLicensePictureError = validationBackPicture(selectImage, backLicensePicture);
   }
-  
   
   // * VALIDANDO AJUSTES DE LA APLICACION
   
-  if (allServices === 0 || servicesLGBQT === 0 || onlyWomenServices === 0) {
+  if (allServices === 0 && servicesLGBQT === 0 && onlyWomenServices === 0) {
     error.servicesError = 'Debes de elegir al menos un servicio';
   }
   
   // * VALIDANDO ACCESO A LA APLICACION
 
   error.passwordError = validationPassword(password);
-  
-  if (password !== repeatPassword) {
+  if (password && !repeatPassword) {
+    error.repeatPasswordError = 'Debes confirmar el password';
+  } else if (password !== repeatPassword) {
     error.repeatPasswordError = 'El password no coincide';
   }
 

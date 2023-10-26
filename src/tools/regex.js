@@ -1,7 +1,5 @@
 // VERIFICACION DEL GMAIL
 export const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-export const dominiosPermitidos = ['gmail.com', 'hotmail.com', "yahoo.com", "yahoo.es", "outlook.com", "outlook.es"];
-export const dominiosPermitidosRegex = new RegExp(`^[a-zA-Z0-9._%+-]+@(${dominiosPermitidos.join('|')})$`, 'i');
 
 // VERIFICACION DEL PASSWORD
 export const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_-])[A-Za-z\d@$!%*?&_-]{8,16}$/;
@@ -29,4 +27,8 @@ export const regexLicenceNumber = /^[a-zA-Z0-9]{5,10}$/;
 export const regexDate = /^(0?[1-9]|[12][0-9]|3[01])-(0?[1-9]|1[0-2])-\d{4}$/;
 
 // VERIFICACION FORMATO DE IMAGENES
-export const regexImages = /^(http|https):\/\/\S+\.(jpg|png)$/;
+export const regexMimeType = /image\/(jpeg|jpg|png)$/;
+export const regexExtension = /\.(jpeg|jpg|png)$/;
+
+// VERIFICACION TAMAÑO DE IMAGENES
+export const maxSize = 5 * 1024 * 1024; // 5MB en bytes

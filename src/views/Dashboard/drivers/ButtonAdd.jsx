@@ -2,16 +2,18 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Modal from "react-modal";
 import { validateDriver } from "../../../validations/drivers";
 import { headers } from "../../../tools/accessToken";
-import { axiosPostDriver } from "../../../hooks/drivers/crudDrivers";
-import styled from 'styled-components';
+import {
+  axiosGetDrivers,
+  axiosPostDriver,
+} from "../../../hooks/drivers/crudDrivers";
+import styled from "styled-components";
 import {
   errorRegister,
   successRegister,
 } from "../../../tools/driverAlerts/register";
 import { axiosGetLicencias, axiosGetSepomex } from "../../../hooks/db/info";
 import { useDropzone } from "react-dropzone";
-import { props } from "./props";
-import { 
+import {
   ContainerModal,
   ContainerScroll,
   FormHead,
@@ -39,8 +41,8 @@ import {
   CheckContainer,
   Textarea,
   TextareaContainer,
-  GrupoInputPass
- } from "../../../components/reusable/FormularioModal";
+  GrupoInputPass,
+} from "../../../components/reusable/FormularioModal";
 
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
@@ -57,23 +59,10 @@ const ButtonV1 = styled.button`
   transition: border-color 0.25s;
 `;
 
-
-/* const TituloSeccionV1 = styled(TituloSeccion)`
-  margin-top: 0px;
-`; */
-
 const dropzoneContainerStyles = {
   width: "50%", // Establece el ancho del contenedor
   height: "200px", // Establece la altura del contenedor
   border: "2px dashed #700202",
-  borderRadius: "4px",
-  textAlign: "center",
-  padding: "20px",
-  cursor: "pointer",
-};
-
-const dropzoneStyles = {
-  border: "2px dashed #cccccc",
   borderRadius: "4px",
   textAlign: "center",
   padding: "20px",
@@ -91,14 +80,17 @@ export const ButtonAdd = ({
   setDriver,
   errorForm,
   setErrorForm,
+  limit,
+  setTotalPages,
+  setPage,
 }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [sepomex, setSepomex] = useState([]);
   const [licencias, setLicencias] = useState([]);
   //* INFORMACION DEL CONDUCTOR
-  const [codigoPostal, setZipcode] = useState('');
-  const [estado, setEstado] = useState('');
-  const [ciudad, setCiudad] = useState('');
+  const [codigoPostal, setZipcode] = useState("");
+  const [estado, setEstado] = useState("" || []);
+  const [ciudad, setCiudad] = useState("" || []);
   const [colonias, setColonias] = useState([]);
   //* INFORMACION DEL CONDUCTOR
 
@@ -106,6 +98,8 @@ export const ButtonAdd = ({
   const [estados, setEstados] = useState([]);
   const [licences, setLicences] = useState([]);
   //* LICENCIA DE CONDUCIR
+
+  const [selectImage, setSelectImage] = useState({});
 
   const {
     name,
@@ -141,33 +135,73 @@ export const ButtonAdd = ({
   } = driver;
   // console.log("form driver:", driver)
 
-  const memorySepomes = useMemo(() => sepomex, [sepomex])
-  const memoryLicencias = useMemo(() => licencias, [licencias])
-  
+  const memorySepomes = useMemo(() => sepomex, [sepomex]);
+  const memoryLicencias = useMemo(() => licencias, [licencias]);
+
   function handleChange(e) {
-    const { name, value, type } = e.target;
-    
-    if (name === "zipCode") {
-      const sepomexData = memorySepomes.find(el => el.codigoPostal === value);
+    const { name, value } = e.target;
+    // console.log("name:", name)
+
+    if (
+      (name === "zipCode" && value.length >= 5) ||
+      name === "state" ||
+      name === "city" ||
+      name === "colonia"
+    ) {
+      const sepomexData = memorySepomes.find((el) => el.codigoPostal === value);
+
       if (sepomexData) {
         setZipcode(sepomexData.codigoPostal);
         setEstado(sepomexData.estado);
         setCiudad(sepomexData.ciudad);
         setColonias(sepomexData.colonias);
+      } else {
+        // * ------------ ESTADOS ------------
+        const findState = [...new Set(memorySepomes.map((el) => el.estado))];
+        if (findState) {
+          setEstado(findState);
+        }
+        // * ------------ CIUDADES ------------
+        const filterByState = memorySepomes.filter((el) => {
+          if (el.estado === value) {
+            return el.ciudad;
+          }
+        });
+        const findCity = [
+          ...new Set(filterByState.map((el) => el.ciudad)),
+        ].filter((el) => el !== undefined);
+        if (findCity) {
+          setCiudad(findCity);
+        }
+        // * ------------ COLONIAS ------------
+        const filterByCity = memorySepomes.filter((el) => {
+          if (el.ciudad === value) {
+            return el.colonias;
+          }
+        });
+        const findColonia = [
+          ...new Set(filterByCity.map((el) => el.colonias)),
+        ].flat(1);
+        if (findColonia) {
+          setColonias(findColonia);
+        }
       }
     }
 
     if (name === "driverLicenseNumber") {
-      const filteredEstado = memoryLicencias.map(el => el.estado);
+      const filteredEstado = memoryLicencias.map((el) => el.estado);
       setEstados(filteredEstado);
     }
 
     if (name === "stateLicense") {
-      const filteredLicencias = memoryLicencias.map(el => {
-        if (el.estado === value) {
-          return el.tipoDeLicencias;
-        }
-      }).flat(1).filter(el => el !== undefined);
+      const filteredLicencias = memoryLicencias
+        .map((el) => {
+          if (el.estado === value) {
+            return el.tipoDeLicencias;
+          }
+        })
+        .flat(1)
+        .filter((el) => el !== undefined);
       setLicences(filteredLicencias);
     }
 
@@ -176,12 +210,33 @@ export const ButtonAdd = ({
       [name]: value,
     });
     setErrorForm(
-      validateDriver({
-        ...driver,
-        [name]: value,
-      }, codigoPostal, estado, ciudad, colonias, licences)
+      validateDriver(
+        {
+          ...driver,
+          [name]: value,
+        },
+        selectImage
+      )
     );
   }
+  
+  useEffect(() => {
+    // SE RESETEAN LOS SIGUIENTES CAMPOS
+    let updatedDriver = {...driver}
+    if (zipCode.length <= 4) {
+      setEstado("");
+      setCiudad("");
+      setColonias("");
+      updatedDriver = {
+        ...updatedDriver,
+        state: "",
+        city: "",
+        colonia: "",
+      }
+    }
+
+    setDriver(updatedDriver);
+  }, [zipCode]);
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
@@ -217,15 +272,21 @@ export const ButtonAdd = ({
 
   useEffect(() => {
     // Actualizar los valores del formulario cuando estado o ciudad cambien
-    if (estado || ciudad) {
+    if (typeof estado === "string" || typeof ciudad === "string") {
       // ACTUALIZAMOS EL FORMULARIO CON LOS CAMPOS QUE SE AUTOCOMPLETAN
-      setDriver(prevState => ({
+      setDriver((prevState) => ({
         ...prevState,
         state: estado,
         city: ciudad,
       }));
     }
   }, [estado, ciudad]);
+
+  useEffect(() => {
+    // Este codigo permite la sincronización de los mensajes de las imagenes
+    const validationErrors = validateDriver(driver, selectImage);
+    setErrorForm(validationErrors);
+  }, [driver]);
 
   const {
     nameError,
@@ -257,26 +318,30 @@ export const ButtonAdd = ({
     axiosGetLicencias(setLicencias);
   }, []);
 
-  const onDriverPictureDrop = useCallback(acceptedFiles => {
-    const file = acceptedFiles[0];
-    convertAndSetImage(file, "driverPicture");
+  const onDriverPictureDrop = useCallback((acceptedFiles) => {
+    if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0];
+      convertAndSetImage(file, "driverPicture");
+    }
   }, []);
-  
-  const onFrontLicensePictureDrop = useCallback(acceptedFiles => {
+
+  const onFrontLicensePictureDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
     convertAndSetImage(file, "frontLicensePicture");
   }, []);
-  
-  const onBackLicensePictureDrop = useCallback(acceptedFiles => {
+
+  const onBackLicensePictureDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
     convertAndSetImage(file, "backLicensePicture");
   }, []);
-  
+
   const convertAndSetImage = (file, fieldName) => {
+    console.log("file:", file);
+    setSelectImage(file);
     const reader = new FileReader();
     reader.onload = () => {
-      const base64String = reader.result.split(',')[1];
-      setDriver(prevState => ({
+      const base64String = reader.result.split(",")[1];
+      setDriver((prevState) => ({
         ...prevState,
         [fieldName]: base64String,
       }));
@@ -284,32 +349,80 @@ export const ButtonAdd = ({
     reader.readAsDataURL(file);
   };
 
-  const { getRootProps: getDriverRootProps, getInputProps: getDriverInputProps } = useDropzone({
+  const {
+    getRootProps: getDriverRootProps,
+    getInputProps: getDriverInputProps,
+  } = useDropzone({
     onDrop: onDriverPictureDrop,
     // FORMATOS DE IMAGEN PERMITIDA
     accept: {
-     'image/*': ['.jpg', '.png'],
+      "image/*": [".jpg", ".png"],
     },
     maxFiles: 1, // ARCHIVOS PERMITIDOS
   });
-  
-  const { getRootProps: getFrontLicenseRootProps, getInputProps: getFrontLicenseInputProps } = useDropzone({
+
+  const {
+    getRootProps: getFrontLicenseRootProps,
+    getInputProps: getFrontLicenseInputProps,
+  } = useDropzone({
     onDrop: onFrontLicensePictureDrop,
     // FORMATOS DE IMAGEN PERMITIDA
     accept: {
-     'image/*': ['.jpg', '.png'],
+      "image/*": [".jpg", ".png"],
     },
     maxFiles: 1, // ARCHIVOS PERMITIDOS
   });
-  
-  const { getRootProps: getBackLicenseRootProps, getInputProps: getBackLicenseInputProps } = useDropzone({
+
+  const {
+    getRootProps: getBackLicenseRootProps,
+    getInputProps: getBackLicenseInputProps,
+  } = useDropzone({
     onDrop: onBackLicensePictureDrop,
     // FORMATOS DE IMAGEN PERMITIDA
     accept: {
-     'image/*': ['.jpg', '.png'],
+      "image/*": [".jpg", ".png"],
     },
     maxFiles: 1, // ARCHIVOS PERMITIDOS
   });
+
+  function closeModal() {
+    setDriver({
+      name: "",
+      lastName: "",
+      zipCode: "", // CODIGO POSTAL
+      state: "", // ESTADO DE MEXICO
+      city: "",
+      colonia: "",
+      address: "",
+      contact: "", // NUMERO DE CONTACTO DEL CONDUCTOR
+      email: "",
+      driverPicture: "", //* FOTO DEL CONDUCTOR
+      //! DATOS DE LA LICENCIA DE CONDUCCION
+      driverLicenseNumber: "", //* NUMERO LICENCIA DEL CONDUCTOR
+      stateLicense: "", // ESTADO DE LA LICENCIA
+      typeLicense: "", // TIPO LICENCIA
+      dateLicense: "", // FECHA - VIGENCIA DE LA LICENCIA
+      frontLicensePicture: "", //* FOTO FRONTAL DE LA LICENCIA
+      backLicensePicture: "", //* FOTO REVERSO DE LA LICENCIA
+      //! DATOS DE LA LICENCIA DE CONDUCCION
+      //! AJUSTES DE LA APLICACION
+      allServices: 1, // TODOS
+      servicesLGBQT: 0, // LGBQT+
+      onlyWomenServices: 0, // MUJERES
+      //! AJUSTES DE LA APLICACION
+      //! ACCESO A LA APLICACION
+      password: "",
+      repeatPassword: "",
+      isActive: 1,
+      messageReasonInActive: "", // MENSAJE RASON INACTIVO
+      //! ACCESO A LA APLICACION
+      car: "" || null,
+      //! NO SE VALIDAN
+      tokenNotification: "",
+      typePhone: "",
+      //! NO SE VALIDAN
+    });
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -325,275 +438,286 @@ export const ButtonAdd = ({
       contact &&
       email &&
       driverPicture &&
-      driverLicenseNumber &&
-      stateLicense &&
-      typeLicense &&
-      dateLicense &&
-      frontLicensePicture &&
-      backLicensePicture &&
-      allServices &&
-      servicesLGBQT &&
-      onlyWomenServices &&
+      (allServices === 1 || servicesLGBQT === 1 || onlyWomenServices === 1) &&
       password &&
-      repeatPassword &&
-      isActive &&
-      messageReasonInActive
+      repeatPassword
     ) {
-      try {
-        successRegister(driver);
-        const newDriver = await axiosPostDriver(driver, headers);
-        setTDriver([...tDriver, newDriver]);
+      if (
+        stateLicenseError ||
+        typeLicenseError ||
+        dateLicenseError ||
+        frontLicensePictureError ||
+        backLicensePictureError
+      ) {
+        errorRegister(driver, errorForm);
+      } else if (messageReasonInActiveError) {
+        errorRegister(driver, errorForm);
+      } else {
+        try {
+          successRegister(driver);
+          const newDriver = await axiosPostDriver(driver, headers);
+          setTDriver([...tDriver, newDriver]);
 
-        // Cierra el modal después de guardar
-        setModalIsOpen(false);
-        setDriver({
-          name: "",
-          lastName: "",
-          zipCode: "", // CODIGO POSTAL
-          state: "", // ESTADO DE MEXICO
-          city: "",
-          colonia: "",
-          address: "",
-          contact: "", // NUMERO DE CONTACTO DEL CONDUCTOR
-          email: "",
-          driverPicture: "", //* FOTO DEL CONDUCTOR
-          //! DATOS DE LA LICENCIA DE CONDUCCION
-          driverLicenseNumber: "", //* NUMERO LICENCIA DEL CONDUCTOR
-          stateLicense: "", // ESTADO DE LA LICENCIA
-          typeLicense: "", // TIPO LICENCIA
-          dateLicense: "", // FECHA - VIGENCIA DE LA LICENCIA
-          frontLicensePicture: "", //* FOTO FRONTAL DE LA LICENCIA
-          backLicensePicture: "", //* FOTO REVERSO DE LA LICENCIA
-          //! DATOS DE LA LICENCIA DE CONDUCCION
-          //! AJUSTES DE LA APLICACION
-          allServices: 1, // TODOS
-          servicesLGBQT: 0, // LGBQT+
-          onlyWomenServices: 0, // MUJERES
-          //! AJUSTES DE LA APLICACION
-          //! ACCESO A LA APLICACION
-          password: "",
-          repeatPassword: "",
-          isActive: 1,
-          messageReasonInActive: "", // MENSAJE RASON INACTIVO
-          //! ACCESO A LA APLICACION
-          // car: "" || null,
-        });
-      } catch (error) {
-        console.error("Error al guardar el admin:", error);
+          await axiosGetDrivers(setTDriver, setTotalPages, headers, 1, limit);
+
+          // Cierra el modal después de guardar
+          setModalIsOpen(false);
+          closeModal();
+
+          // Establece la página en 1 después de agregar un elemento
+          setPage(1);
+        } catch (error) {
+          console.error("Error al guardar el admin:", error);
+        }
       }
-    } else  {
-      // console.log("form driver:")
-      errorRegister(driver);
+    } else {
+      errorRegister(driver, errorForm);
     }
   }
 
   return (
     <>
       <Titulo>
-        <div><h2>Conductores<br /></h2></div>
+        <div>
+          <h2>
+            Conductores
+            <br />
+          </h2>
+        </div>
         <ButtonV1 onClick={() => setModalIsOpen(true)}>Agregar</ButtonV1>
       </Titulo>
-      <ContainerModal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)}>
+      <ContainerModal
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+      >
         <FormEdit onSubmit={handleSubmit}>
-          <FormHead><h2>Nuevo Conductor</h2></FormHead>
+          <FormHead>
+            <h2>Nuevo Conductor</h2>
+          </FormHead>
           <br />
           <ContainerScroll>
             {/*//* INFORMACION DEL CONDUCTOR */}
-            <TituloSeccion>Datos Personales<hr /></TituloSeccion>
+            <TituloSeccion>
+              Datos Personales
+              <hr />
+            </TituloSeccion>
             <GrupoInput>
               <InputContainer>
-                <Input color={"transparent"}
+                <Input
+                  color={"transparent"}
                   type="text"
                   name={"name"}
                   value={name}
                   placeholder="a"
                   onChange={handleChange}
                 />
-                <Label>{props.name}: </Label>
+                <Label>*Nombre(s): </Label>
                 <br />
-                {nameError && (
-                  <Span>{nameError}</Span>
-                )}
+                {nameError && <Span>{nameError}</Span>}
               </InputContainer>
 
               <InputContainer>
-                <Input color={"transparent"}
+                <Input
+                  color={"transparent"}
                   type="text"
                   name={"lastName"}
                   placeholder="a"
                   value={lastName}
                   onChange={handleChange}
                 />
-                <Label>{props.lastName}: </Label>
+                <Label>*Apellidos: </Label>
                 <br />
-                {lastNameError && (
-                  <Span>{lastNameError}</Span>
-                )}
+                {lastNameError && <Span>{lastNameError}</Span>}
               </InputContainer>
 
               <InputContainer>
-                <Input color={"transparent"}
+                <Input
+                  color={"transparent"}
                   type="text"
                   name={"zipCode"}
                   placeholder="a"
                   value={zipCode}
                   onChange={handleChange}
                 />
-                <Label>{props.zipCode}: </Label>
+                <Label>*Código postal: </Label>
                 <br />
-                {zipCodeError && (
-                  <Span>{zipCodeError}</Span>
-                )}
+                {zipCodeError && <Span>{zipCodeError}</Span>}
               </InputContainer>
             </GrupoInput>
 
-
             <GrupoSelect>
+              {typeof estado !== "string" ? null : (
+                <InputContainer>
+                <Label>*Estado: </Label>
+                  <Select
+                    disabled={true}
+                    name={"state"}
+                    value={state}
+                    onChange={handleChange}
+                  >
+                    <option>{estado || "Selecciona"}</option>
+                  </Select>
+                  {stateError && <Span>{stateError}</Span>}
+                </InputContainer>
+              )}
+              {!Array.isArray(estado) ? null : (
+                <InputContainer>
+                <Label>*Estado: </Label>
+                  <Select
+                    disabled={false}
+                    name={"state"}
+                    value={state}
+                    onChange={handleChange}
+                  >
+                    <option>Selecciona</option>
+                    {estado.map((est, idx) => {
+                      return <option key={idx}>{est}</option>;
+                    })}
+                  </Select>
+                  <br />
+                  {stateError && <Span>{stateError}</Span>}
+                </InputContainer>
+              )}
+
+              {typeof ciudad !== "string" ? null : (
+                <InputContainer>
+                  <Label>*Ciudad: </Label>
+                  <Select
+                    disabled={true}
+                    name={"city"}
+                    value={city}
+                    onChange={handleChange}
+                  >
+                    <option>{ciudad || "Selecciona"}</option>
+                  </Select>
+                  <br />
+                  {cityError && <Span>{cityError}</Span>}
+                </InputContainer>
+              )}
+              {!Array.isArray(ciudad) ? null : (
+                <SelectContainer>
+                  <Label>*Ciudad: </Label>
+                  <Select
+                    color={"transparent"}
+                    disabled={false}
+                    name={"city"}
+                    value={city}
+                    onChange={handleChange}
+                  >
+                    <option>Selecciona</option>
+                    {ciudad.map((cit, idx) => {
+                      return <option key={idx}>{cit}</option>;
+                    })}
+                  </Select>
+                  <br />
+                  {cityError && <Span>{cityError}</Span>}
+                </SelectContainer>
+              )}
+
               <SelectContainer>
-                <Select
-                  disabled={false}
-                  name={"state"}
-                  value={state}
-                  onChange={handleChange}
-                >
-                  <option>{estado || "Estado"}</option>
-                  <option>Primera opcion</option>
-                  <option>Segunda opcion</option>
-                </Select>
-                {/* <br /> */}
-                {stateError && (
-                  <Span>{stateError}</Span>
-                )}
-                {/* <label>{props.state}: </label> */}
-              </SelectContainer>
-
-
-
-              <SelectContainer>
-                <Select color={"transparent"}
-                  disabled={false}
-                  name={"city"}
-                  value={city}
-                  placeholder="a"
-                  onChange={handleChange}
-                >
-                  <option>{ciudad || "Ciudad"}</option>
-                  <option>Morelia</option>
-                  <option>Segunda opcion</option>
-                </Select>
-                {/* <label>{props.city}: </label> */}
-                {/* <br /> */}
-                {cityError && (
-                  <Span>{cityError}</Span>
-                )}
-              </SelectContainer>
-
-              <SelectContainer>
-                {/* <label>{props.colonia}: </label> */}
+                <Label>*Colonia: </Label>
                 <Select
                   disabled={zipCode || codigoPostal === zipCode ? false : true}
                   name={"colonia"}
                   value={colonia}
                   onChange={handleChange}
                 >
-                  <option>
-                    Selecciona
-                  </option>
-                  {colonias.length >= 1 && colonias.map((colonia, idx) => {
-                    return (
-                      <option key={idx} value={colonia}>
-                        {colonia}
-                      </option>
-                    );
-                  })}
+                  <option>Selecciona</option>
+                  {colonias.length >= 1 &&
+                    colonias.map((colonia, idx) => {
+                      return (
+                        <option key={idx} value={colonia}>
+                          {colonia}
+                        </option>
+                      );
+                    })}
                 </Select>
-                {/* <br /> */}
-                {coloniaError && (
-                  <Span>{coloniaError}</Span>
-                )}
+                {coloniaError && <Span>{coloniaError}</Span>}
               </SelectContainer>
             </GrupoSelect>
 
             <GrupoInput>
               <InputContainer>
-                <Input color={"transparent"}
+                <Input
+                  color={"transparent"}
                   type="text"
                   name={"address"}
                   placeholder="a"
                   value={address}
                   onChange={handleChange}
                 />
-                <Label>{props.address}: </Label>
+                <Label>*Domicilio: </Label>
                 <br />
-                {addressError && (
-                  <Span>{addressError}</Span>
-                )}
+                {addressError && <Span>{addressError}</Span>}
               </InputContainer>
 
-
               <InputContainer>
-                <Input color={"transparent"}
+                <Input
+                  color={"transparent"}
                   type="text"
                   name={"contact"}
                   value={contact}
                   placeholder="a"
                   onChange={handleChange}
                 />
-                <Label>{props.contact}: </Label>
+                <Label>*Teléfono (Móvil): </Label>
                 <br />
-                {contactError && (
-                  <Span>{contactError}</Span>
-                )}
+                {contactError && <Span>{contactError}</Span>}
               </InputContainer>
 
               <InputContainer>
-                <Input color={"transparent"}
+                <Input
+                  color={"transparent"}
                   type="text"
                   name={"email"}
                   value={email}
                   placeholder="a"
                   onChange={handleChange}
                 />
-                <Label>{props.email}: </Label>
+                <Label>*Correo electrónico: </Label>
                 <br />
-                {emailError && (
-                  <Span>{emailError}</Span>
-                )}
+                {emailError && <Span>{emailError}</Span>}
               </InputContainer>
             </GrupoInput>
 
             <GrupoImg>
-              <TituloSeccion><hr />Foto del Conductor</TituloSeccion>
+              <TituloSeccion>
+                <hr />
+                Foto del Conductor
+              </TituloSeccion>
               <SubeImgContainer>
                 <div {...getDriverRootProps()} style={dropzoneContainerStyles}>
                   <input {...getDriverInputProps()} />
-                  {driverPicture && <img
-                    src={`data:image/png;base64,${driverPicture}`}
-                    alt="Foto conductor"
-                    style={{ maxWidth: '100px' }}
-                  />}
-                  <p>Frente</p>
-                  {/* <Label>{props.driverPicture}: </Label> */}
-                  <br />
-                  {driverPictureError && (
-                    <Span>{driverPictureError}</Span>
+                  {driverPicture && (
+                    <img
+                      src={`data:image/png;base64,${driverPicture}`}
+                      alt="Foto conductor"
+                      style={{ maxWidth: "100px" }}
+                    />
                   )}
+                  <p>Frente</p>
+                  <br />
+                  {driverPictureError && <Span>{driverPictureError}</Span>}
                 </div>
               </SubeImgContainer>
             </GrupoImg>
 
             <GrupoInput>
-              <TituloSeccion><hr />Licencia de conducir</TituloSeccion>
+              <TituloSeccion>
+                <hr />
+                Licencia de conducir
+              </TituloSeccion>
 
               <InputContainer>
-                <Input color={"transparent"}
+                <Input
+                  color={"transparent"}
                   type="text"
                   name={"driverLicenseNumber"}
                   value={driverLicenseNumber}
                   placeholder="a"
                   onChange={handleChange}
                 />
-                <Label>{props.driverLicenseNumber}: </Label>
+                <Label>Número de licencia: </Label>
                 <br />
                 {driverLicenseNumberError && (
                   <span>{driverLicenseNumberError}</span>
@@ -603,55 +727,58 @@ export const ButtonAdd = ({
 
             <GrupoSelect>
               <SelectContainer>
-                {/* <label>{props.stateLicense}: </label> */}
                 <Select
                   disabled={driverLicenseNumber ? false : true}
                   name={"stateLicense"}
                   value={stateLicense}
                   onChange={handleChange}
                 >
-                  <option>Estatus Licencia</option>
-                  {estados.length >= 1 && estados.map((estado, idx) => {
-                    return (
-                      <option key={idx} value={estado}>
-                        {estado}
-                      </option>
-                    );
-                  })}
+                  <option>
+                    {!driverLicenseNumber
+                      ? "Estato de la Licencia"
+                      : "*Estato de la Licencia"}
+                  </option>
+                  {estados.length >= 1 &&
+                    estados.map((estado, idx) => {
+                      return (
+                        <option key={idx} value={estado}>
+                          {estado}
+                        </option>
+                      );
+                    })}
                 </Select>
-                {/* <br /> */}
-                {stateLicenseError && (
-                  <Span>{stateLicenseError}</Span>
-                )}
+                {stateLicenseError && <Span>{stateLicenseError}</Span>}
               </SelectContainer>
 
               <SelectContainer>
-                {/* <label>{props.typeLicense}: </label> */}
                 <Select
                   disabled={driverLicenseNumber ? false : true}
                   name={"typeLicense"}
                   value={typeLicense}
                   onChange={handleChange}
                 >
-                  <option>Tipo de licencia</option>
-                  {licences.length >= 1 && licences.map((licencia, idx) => {
-                    return (
-                      <option key={idx} value={licencia}>
-                        {licencia}
-                      </option>
-                    );
-                  })}
+                  <option>
+                    {!driverLicenseNumber
+                      ? "Tipo de licencia"
+                      : "*Tipo de licencia"}
+                  </option>
+                  {licences.length >= 1 &&
+                    licences.map((licencia, idx) => {
+                      return (
+                        <option key={idx} value={licencia}>
+                          {licencia}
+                        </option>
+                      );
+                    })}
                 </Select>
-                {/* <br /> */}
-                {typeLicenseError && (
-                  <Span>{typeLicenseError}</Span>
-                )}
+                {typeLicenseError && <Span>{typeLicenseError}</Span>}
               </SelectContainer>
             </GrupoSelect>
 
             <GrupoInput>
               <InputContainer>
-                <Input color={"transparent"}
+                <Input
+                  color={"transparent"}
                   disabled={driverLicenseNumber ? false : true}
                   type="date"
                   name={"dateLicense"}
@@ -659,47 +786,62 @@ export const ButtonAdd = ({
                   placeholder="a"
                   onChange={handleChange}
                 />
-                <Label>{props.dateLicense}: </Label>
-                {dateLicenseError && (
-                  <SpanData>{dateLicenseError}</SpanData>
-                )}
+                <Label>
+                  {!driverLicenseNumber
+                    ? "Vigencia de licencia: "
+                    : "*Vigencia de licencia: "}
+                </Label>
+                {dateLicenseError && <SpanData>{dateLicenseError}</SpanData>}
               </InputContainer>
 
-              <TituloSeccion><hr />Foto de Licencia (Ambos lados)</TituloSeccion>
-              {/* <SubeImgContainer> */}
+              <TituloSeccion>
+                <hr />
+                {!driverLicenseNumber
+                  ? "Foto de Licencia (Ambos lados)"
+                  : "*Foto de Licencia (Ambos lados)"}
+              </TituloSeccion>
               <SubeImgContainer style={pictureLicence}>
-                {/* <label>Fotos licencia: </label> */}
                 <br />
                 {!driverLicenseNumber ? (
                   <>
-                    <div style={dropzoneContainerStyles} >
+                    <div style={dropzoneContainerStyles}>
                       <p>Desabilitado</p>
                     </div>
-                    <div style={dropzoneContainerStyles} >
+                    <div style={dropzoneContainerStyles}>
                       <p>Desabilitado</p>
                     </div>
                   </>
                 ) : (
                   <>
-                    <SubeContainerImg {...getFrontLicenseRootProps()} style={dropzoneContainerStyles} >
+                    <SubeContainerImg
+                      {...getFrontLicenseRootProps()}
+                      style={dropzoneContainerStyles}
+                    >
                       <ImgSube {...getFrontLicenseInputProps()} />
-                      {frontLicensePicture && <img
-                        src={`data:image/png;base64,${frontLicensePicture}`}
-                        alt="Foto conductor"
-                        style={{ maxWidth: '100px' }}
-                      />}
+                      {frontLicensePicture && (
+                        <img
+                          src={`data:image/png;base64,${frontLicensePicture}`}
+                          alt="Foto conductor"
+                          style={{ maxWidth: "100px" }}
+                        />
+                      )}
                       Frente
                       {frontLicensePictureError && (
                         <Span>{frontLicensePictureError}</Span>
                       )}
                     </SubeContainerImg>
-                    <SubeContainerImg {...getBackLicenseRootProps()} style={dropzoneContainerStyles} >
+                    <SubeContainerImg
+                      {...getBackLicenseRootProps()}
+                      style={dropzoneContainerStyles}
+                    >
                       <ImgSube {...getBackLicenseInputProps()} />
-                      {backLicensePicture && <img
-                        src={`data:image/png;base64,${backLicensePicture}`}
-                        alt="Foto conductor"
-                        style={{ maxWidth: '100px' }}
-                      />}
+                      {backLicensePicture && (
+                        <img
+                          src={`data:image/png;base64,${backLicensePicture}`}
+                          alt="Foto conductor"
+                          style={{ maxWidth: "100px" }}
+                        />
+                      )}
                       Atrás
                       {backLicensePictureError && (
                         <Span>{backLicensePictureError}</Span>
@@ -707,14 +849,14 @@ export const ButtonAdd = ({
                     </SubeContainerImg>
                   </>
                 )}
-
               </SubeImgContainer>
             </GrupoInput>
 
-
-            <TituloSeccion><hr />Servicio para...</TituloSeccion>
+            <TituloSeccion>
+              <hr />
+              Servicio para...
+            </TituloSeccion>
             <GrupoCheck>
-              {/* <LabelCheck>{props.services}: </LabelCheck> */}
               <InputCheck
                 type="checkbox"
                 name="allServices"
@@ -739,46 +881,45 @@ export const ButtonAdd = ({
               />
               Sólo mujeres
             </GrupoCheck>
-            {servicesError && (
-              <Span>{servicesError}</Span>
-            )}
+            {servicesError && <Span>{servicesError}</Span>}
 
             <GrupoInput>
-              <TituloSeccion><hr />Acceso a la aplicación</TituloSeccion>
+              <TituloSeccion>
+                <hr />
+                Acceso a la aplicación
+              </TituloSeccion>
               <InputContainer>
-                <Input color={"transparent"}
+                <Input
+                  color={"transparent"}
                   type="password"
                   name={"password"}
                   value={password}
                   placeholder="a"
                   onChange={handleChange}
                 />
-                <Label>{props.password}: </Label>
+                <Label>*Contraseña: </Label>
                 <br />
-                {passwordError && (
-                  <Span>{passwordError}</Span>
-                )}
+                {passwordError && <Span>{passwordError}</Span>}
               </InputContainer>
 
               <InputContainer>
-                <Input color={"transparent"}
+                <Input
+                  color={"transparent"}
                   type="password"
                   name={"repeatPassword"}
                   value={repeatPassword}
                   placeholder="a"
                   onChange={handleChange}
                 />
-                <Label>{props.repeatPassword}: </Label>
+                <Label>*Repetir contraseña: </Label>
                 <br />
-                {repeatPasswordError && (
-                  <Span>{repeatPasswordError}</Span>
-                )}
+                {repeatPasswordError && <Span>{repeatPasswordError}</Span>}
               </InputContainer>
             </GrupoInput>
 
             <GrupoCheck>
               <CheckContainer>
-                <LabelCheck>{props.isActive}: </LabelCheck>
+                <LabelCheck>Activo: </LabelCheck>
                 <InputCheck
                   type="checkbox"
                   name={"isActive"}
@@ -786,15 +927,14 @@ export const ButtonAdd = ({
                   onChange={handleCheckboxChange}
                 />
                 <br />
-                {isActiveError && (
-                  <Span>{isActiveError}</Span>
-                )}
+                {isActiveError && <Span>{isActiveError}</Span>}
               </CheckContainer>
             </GrupoCheck>
 
             <GrupoInput>
               <TextareaContainer>
-                <Textarea color={"transparent"}
+                <Textarea
+                  color={"transparent"}
                   type="text"
                   name={"messageReasonInActive"}
                   value={messageReasonInActive}
@@ -803,7 +943,7 @@ export const ButtonAdd = ({
                   disabled={isActive === 1}
                   onChange={handleChange}
                 />
-                <Label>{props.messageReasonInActive}: </Label>
+                <Label>Motivo de bloqueo: </Label>
               </TextareaContainer>
               {messageReasonInActiveError && (
                 <Span>{messageReasonInActiveError}</Span>
@@ -814,10 +954,15 @@ export const ButtonAdd = ({
           </ContainerScroll>
 
           <ButtonContainer>
-            <SubmitBtn onClick={() => setModalIsOpen(false)}>Cancelar</SubmitBtn>
             <SubmitBtn type="submit">Guardar</SubmitBtn>
+            <SubmitBtn
+              onClick={() => {
+                setModalIsOpen(false), closeModal();
+              }}
+            >
+              Cancelar
+            </SubmitBtn>
           </ButtonContainer>
-
         </FormEdit>
       </ContainerModal>
     </>
