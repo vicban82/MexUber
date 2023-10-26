@@ -547,9 +547,8 @@ export const ButtonAdd = ({
 
             <GrupoSelect>
               {typeof estado !== "string" ? null : (
-                <InputContainer>
-                <Label>*Estado: </Label>
-                  <Select
+                <SelectContainer>
+                  <Select 
                     disabled={true}
                     name={"state"}
                     value={state}
@@ -557,12 +556,12 @@ export const ButtonAdd = ({
                   >
                     <option>{estado || "Selecciona"}</option>
                   </Select>
+                  <Label>*Estado: </Label>
                   {stateError && <Span>{stateError}</Span>}
-                </InputContainer>
+                </SelectContainer>
               )}
               {!Array.isArray(estado) ? null : (
-                <InputContainer>
-                <Label>*Estado: </Label>
+                <SelectContainer>
                   <Select
                     disabled={false}
                     name={"state"}
@@ -574,14 +573,14 @@ export const ButtonAdd = ({
                       return <option key={idx}>{est}</option>;
                     })}
                   </Select>
-                  <br />
+                  <Label>*Estado: </Label>
                   {stateError && <Span>{stateError}</Span>}
-                </InputContainer>
+                </SelectContainer>
               )}
 
               {typeof ciudad !== "string" ? null : (
-                <InputContainer>
-                  <Label>*Ciudad: </Label>
+                <SelectContainer>
+                  
                   <Select
                     disabled={true}
                     name={"city"}
@@ -590,15 +589,14 @@ export const ButtonAdd = ({
                   >
                     <option>{ciudad || "Selecciona"}</option>
                   </Select>
-                  <br />
+                  <Label>*Ciudad: </Label>
                   {cityError && <Span>{cityError}</Span>}
-                </InputContainer>
+                </SelectContainer>
               )}
               {!Array.isArray(ciudad) ? null : (
                 <SelectContainer>
-                  <Label>*Ciudad: </Label>
+                  
                   <Select
-                    color={"transparent"}
                     disabled={false}
                     name={"city"}
                     value={city}
@@ -609,13 +607,14 @@ export const ButtonAdd = ({
                       return <option key={idx}>{cit}</option>;
                     })}
                   </Select>
-                  <br />
+                  <Label>*Ciudad: </Label>
+                  {/* <br /> */}
                   {cityError && <Span>{cityError}</Span>}
                 </SelectContainer>
               )}
 
               <SelectContainer>
-                <Label>*Colonia: </Label>
+                
                 <Select
                   disabled={zipCode || codigoPostal === zipCode ? false : true}
                   name={"colonia"}
@@ -632,6 +631,7 @@ export const ButtonAdd = ({
                       );
                     })}
                 </Select>
+                <Label>*Colonia: </Label>
                 {coloniaError && <Span>{coloniaError}</Span>}
               </SelectContainer>
             </GrupoSelect>
@@ -730,6 +730,7 @@ export const ButtonAdd = ({
                 <Select
                   disabled={driverLicenseNumber ? false : true}
                   name={"stateLicense"}
+                  //placeholder="dsdsd"
                   value={stateLicense}
                   onChange={handleChange}
                 >
