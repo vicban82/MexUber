@@ -89,9 +89,15 @@ export const ButtonAdd = ({
   const [licencias, setLicencias] = useState([]);
   //* INFORMACION DEL CONDUCTOR
   const [codigoPostal, setZipcode] = useState("");
-  const [estado, setEstado] = useState("" || []);
-  const [ciudad, setCiudad] = useState("" || []);
+  const [estado, setEstado] = useState("");
+  // console.log("estado:", estado)
+  const [selectEstado, setSelectEstado] = useState([]);
+  // console.log("selectEstado:", selectEstado)
+  const [ciudad, setCiudad] = useState("");
+  const [selectCiudad, setSelectCiudad] = useState([]);
+  // console.log("selectCiudad:", selectCiudad)
   const [colonias, setColonias] = useState([]);
+  const [selectColonias, setSelectColonias] = useState([]);
   //* INFORMACION DEL CONDUCTOR
 
   //* LICENCIA DE CONDUCIR
@@ -159,7 +165,7 @@ export const ButtonAdd = ({
         // * ------------ ESTADOS ------------
         const findState = [...new Set(memorySepomes.map((el) => el.estado))];
         if (findState) {
-          setEstado(findState);
+          setSelectEstado(findState);
         }
         // * ------------ CIUDADES ------------
         const filterByState = memorySepomes.filter((el) => {
@@ -171,7 +177,7 @@ export const ButtonAdd = ({
           ...new Set(filterByState.map((el) => el.ciudad)),
         ].filter((el) => el !== undefined);
         if (findCity) {
-          setCiudad(findCity);
+          setSelectCiudad(findCity);
         }
         // * ------------ COLONIAS ------------
         const filterByCity = memorySepomes.filter((el) => {
@@ -183,7 +189,7 @@ export const ButtonAdd = ({
           ...new Set(filterByCity.map((el) => el.colonias)),
         ].flat(1);
         if (findColonia) {
-          setColonias(findColonia);
+          setSelectColonias(findColonia);
         }
       }
     }
@@ -227,6 +233,9 @@ export const ButtonAdd = ({
       setEstado("");
       setCiudad("");
       setColonias("");
+      setSelectEstado([]);
+      setSelectCiudad([]);
+      setSelectColonias([]);
       updatedDriver = {
         ...updatedDriver,
         state: "",
@@ -272,7 +281,7 @@ export const ButtonAdd = ({
 
   useEffect(() => {
     // Actualizar los valores del formulario cuando estado o ciudad cambien
-    if (typeof estado === "string" || typeof ciudad === "string") {
+    if (estado || ciudad) {
       // ACTUALIZAMOS EL FORMULARIO CON LOS CAMPOS QUE SE AUTOCOMPLETAN
       setDriver((prevState) => ({
         ...prevState,
@@ -546,7 +555,7 @@ export const ButtonAdd = ({
             </GrupoInput>
 
             <GrupoSelect>
-              {typeof estado !== "string" ? null : (
+              {!estado ? null : (
                 <InputContainer>
                 <Label>*Estado: </Label>
                   <Select
@@ -560,7 +569,7 @@ export const ButtonAdd = ({
                   {stateError && <Span>{stateError}</Span>}
                 </InputContainer>
               )}
-              {!Array.isArray(estado) ? null : (
+              {!selectEstado.length >= 1 ? null : (
                 <InputContainer>
                 <Label>*Estado: </Label>
                   <Select
@@ -570,7 +579,7 @@ export const ButtonAdd = ({
                     onChange={handleChange}
                   >
                     <option>Selecciona</option>
-                    {estado.map((est, idx) => {
+                    {selectEstado.map((est, idx) => {
                       return <option key={idx}>{est}</option>;
                     })}
                   </Select>
@@ -579,7 +588,7 @@ export const ButtonAdd = ({
                 </InputContainer>
               )}
 
-              {typeof ciudad !== "string" ? null : (
+              {!ciudad ? null : (
                 <InputContainer>
                   <Label>*Ciudad: </Label>
                   <Select
@@ -594,10 +603,10 @@ export const ButtonAdd = ({
                   {cityError && <Span>{cityError}</Span>}
                 </InputContainer>
               )}
-              {!Array.isArray(ciudad) ? null : (
+              {!selectCiudad.length ? null : (
                 <SelectContainer>
                   <Label>*Ciudad: </Label>
-                  <Select
+                  <select
                     color={"transparent"}
                     disabled={false}
                     name={"city"}
@@ -605,35 +614,61 @@ export const ButtonAdd = ({
                     onChange={handleChange}
                   >
                     <option>Selecciona</option>
-                    {ciudad.map((cit, idx) => {
+                    {selectCiudad.map((cit, idx) => {
                       return <option key={idx}>{cit}</option>;
                     })}
-                  </Select>
+                  </select>
                   <br />
                   {cityError && <Span>{cityError}</Span>}
                 </SelectContainer>
               )}
 
-              <SelectContainer>
-                <Label>*Colonia: </Label>
-                <Select
-                  disabled={zipCode || codigoPostal === zipCode ? false : true}
-                  name={"colonia"}
-                  value={colonia}
-                  onChange={handleChange}
-                >
-                  <option>Selecciona</option>
-                  {colonias.length >= 1 &&
-                    colonias.map((colonia, idx) => {
-                      return (
-                        <option key={idx} value={colonia}>
-                          {colonia}
-                        </option>
-                      );
-                    })}
-                </Select>
-                {coloniaError && <Span>{coloniaError}</Span>}
-              </SelectContainer>
+              {!estado && !ciudad ? null : (
+                <SelectContainer>
+                  <Label>*Colonia: </Label>
+                  <Select
+                    disabled={zipCode ? false : true}
+                    name={"colonia"}
+                    value={colonia}
+                    onChange={handleChange}
+                  >
+                    <option>Selecciona</option>
+                    {colonias.length >= 1 &&
+                      colonias.map((colonia, idx) => {
+                        return (
+                          <option key={idx} >
+                            {colonia}
+                          </option>
+                        );
+                      })}
+                  </Select>
+                  {coloniaError && <Span>{coloniaError}</Span>}
+                </SelectContainer>
+              )}
+
+              {!selectEstado.length && !selectCiudad.length ? null : (
+                <SelectContainer>
+                  <Label>*Colonia: </Label>
+                  <Select
+                    disabled={zipCode ? false : true}
+                    name={"colonia"}
+                    value={colonia}
+                    onChange={handleChange}
+                  >
+                    <option>Selecciona</option>
+                    {selectColonias.length >= 1 &&
+                      selectColonias.map((colonia, idx) => {
+                        return (
+                          <option key={idx} >
+                            {colonia}
+                          </option>
+                        );
+                      })}
+                  </Select>
+                  {coloniaError && <Span>{coloniaError}</Span>}
+                </SelectContainer>
+              )}
+
             </GrupoSelect>
 
             <GrupoInput>
