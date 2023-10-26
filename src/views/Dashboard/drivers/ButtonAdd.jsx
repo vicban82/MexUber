@@ -230,12 +230,12 @@ export const ButtonAdd = ({
     // SE RESETEAN LOS SIGUIENTES CAMPOS
     let updatedDriver = {...driver}
     if (zipCode.length <= 4) {
-      setEstado("");
-      setCiudad("");
-      setColonias("");
-      setSelectEstado([]);
-      setSelectCiudad([]);
-      setSelectColonias([]);
+      // setEstado("");
+      // setCiudad("");
+      // setColonias("");
+      // setSelectEstado([]);
+      // setSelectCiudad([]);
+      // setSelectColonias([]);
       updatedDriver = {
         ...updatedDriver,
         state: "",
@@ -243,9 +243,19 @@ export const ButtonAdd = ({
         colonia: "",
       }
     }
+    if (driverLicenseNumber.length <= 4) {
+      updatedDriver = {
+        ...updatedDriver,
+        stateLicense: "",
+        typeLicense: "",
+        dateLicense: "",
+        frontLicensePicture: "",
+        backLicensePicture: "",
+      }
+    }
 
     setDriver(updatedDriver);
-  }, [zipCode]);
+  }, [zipCode, driverLicenseNumber]);
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
@@ -755,7 +765,7 @@ export const ButtonAdd = ({
                 <Label>Número de licencia: </Label>
                 <br />
                 {driverLicenseNumberError && (
-                  <span>{driverLicenseNumberError}</span>
+                  <Span>{driverLicenseNumberError}</Span>
                 )}
               </InputContainer>
             </GrupoInput>
