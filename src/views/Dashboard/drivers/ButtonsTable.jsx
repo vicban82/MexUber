@@ -12,7 +12,7 @@ import {
 } from "../../../tools/driverAlerts/register";
 import { axiosGetLicencias, axiosGetSepomex } from "../../../hooks/db/info";
 import { useDropzone } from "react-dropzone";
-import { 
+import {
   ContainerModal,
   ContainerScroll,
   FormHead,
@@ -40,7 +40,7 @@ import {
   CheckContainer,
   Textarea,
   TextareaContainer
- } from "../../../components/reusable/FormularioModal";
+} from "../../../components/reusable/FormularioModal";
 
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
@@ -478,7 +478,7 @@ export function ButtonsTable({
               </TituloSeccion>
               <GrupoInput>
                 <InputContainer>
-                  <input
+                  <Input
                     type="text"
                     name={"name"}
                     value={name}
@@ -491,7 +491,7 @@ export function ButtonsTable({
                 </InputContainer>
 
                 <InputContainer>
-                  <input
+                  <Input
                     type="text"
                     name={"lastName"}
                     placeholder={currentDriver.lastName}
@@ -504,7 +504,7 @@ export function ButtonsTable({
                 </InputContainer>
 
                 <InputContainer>
-                  <input
+                  <Input
                     type="text"
                     name={"zipCode"}
                     placeholder={currentDriver.zipCode}
@@ -519,8 +519,8 @@ export function ButtonsTable({
 
               <GrupoSelect>
                 {typeof estado !== "string" ? null : (
-                  <InputContainer>
-                    <select
+                  <SelectContainer>
+                    <Select
                       disabled={true}
                       name={"state"}
                       placeholder={currentDriver.state}
@@ -528,15 +528,14 @@ export function ButtonsTable({
                       onChange={handleChange}
                     >
                       <option>{estado || "Selecciona"}</option>
-                    </select>
-                    {stateError && <Span>{stateError}</Span>}
+                    </Select>
                     <Label>*Estado: </Label>
-                  </InputContainer>
+                    {stateError && <Span>{stateError}</Span>}
+                  </SelectContainer>
                 )}
                 {!Array.isArray(estado) ? null : (
-                  <InputContainer>
-                    <Label>*Estado: </Label>
-                    <select
+                  <SelectContainer>
+                    <Select
                       disabled={false}
                       name={"state"}
                       placeholder={currentDriver.state}
@@ -547,16 +546,16 @@ export function ButtonsTable({
                       {estado.map((est, idx) => {
                         return <option key={idx}>{est}</option>;
                       })}
-                    </select>
-                    <br />
+                    </Select>
+                    <Label>*Estado: </Label>
+                    {/* <br /> */}
                     {stateError && <Span>{stateError}</Span>}
-                  </InputContainer>
+                  </SelectContainer>
                 )}
 
                 {typeof ciudad !== "string" ? null : (
-                  <InputContainer>
-                    <Label>*Ciudad: </Label>
-                    <select
+                  <SelectContainer>
+                    <Select
                       disabled={true}
                       name={"city"}
                       // placeholder={currentDriver.city}
@@ -564,19 +563,18 @@ export function ButtonsTable({
                       onChange={handleChange}
                     >
                       <option>{currentDriver.city || "Selecciona"}</option>
-                    </select>
-                    <br />
+                    </Select>
+                    <Label>*Ciudad: </Label>
                     {cityError && <Span>{cityError}</Span>}
-                  </InputContainer>
+                  </SelectContainer>
                 )}
                 {!Array.isArray(ciudad) ? null : (
-                  <InputContainer>
-                    <Label>*Ciudad: </Label>
-                    <select
+                  <SelectContainer>
+                    <Select
                       disabled={false}
                       name={"city"}
                       placeholder={currentDriver.city}
-                      // value={city}
+                      //value={city}
                       value={typeof city === "string" && city}
                       onChange={handleChange}
                     >
@@ -584,14 +582,12 @@ export function ButtonsTable({
                       {ciudad.map((cit, idx) => {
                         return <option key={idx}>{cit}</option>;
                       })}
-                    </select>
-                    <br />
+                    </Select>
+                    <Label>*Ciudad: </Label>
                     {cityError && <Span>{cityError}</Span>}
-                  </InputContainer>
+                  </SelectContainer>
                 )}
-
                 <SelectContainer>
-                  <Label>*Colonia: </Label>
                   <Select
                     disabled={
                       zipCode || codigoPostal === zipCode ? false : true
@@ -607,13 +603,14 @@ export function ButtonsTable({
                         return <option key={idx}>{colonia}</option>;
                       })}
                   </Select>
+                  <Label>*Colonia: </Label>
                   {coloniaError && <Span>{coloniaError}</Span>}
                 </SelectContainer>
               </GrupoSelect>
 
               <GrupoInput>
                 <InputContainer>
-                  <input
+                  <Input
                     type="text"
                     name={"address"}
                     placeholder={currentDriver.address}
@@ -626,7 +623,7 @@ export function ButtonsTable({
                 </InputContainer>
 
                 <InputContainer>
-                  <input
+                  <Input
                     type="text"
                     name={"contact"}
                     placeholder={currentDriver.contact}
@@ -639,7 +636,7 @@ export function ButtonsTable({
                 </InputContainer>
 
                 <InputContainer>
-                  <input
+                  <Input
                     type="text"
                     name={"email"}
                     placeholder={currentDriver.email}
@@ -684,7 +681,7 @@ export function ButtonsTable({
                 </TituloSeccion>
 
                 <InputContainer>
-                  <input
+                  <Input
                     type="text"
                     name={"driverLicenseNumber"}
                     placeholder={currentDriver.driverLicenseNumber}
@@ -753,7 +750,7 @@ export function ButtonsTable({
 
               <GrupoInput>
                 <InputContainer>
-                  <input
+                  <Input
                     disabled={driverLicenseNumber ? false : true}
                     type="date"
                     name={"dateLicense"}
@@ -811,7 +808,7 @@ export function ButtonsTable({
                       >
                         <ImgSube {...getBackLicenseInputProps()} />
                         {backLicensePicture && (
-                          <img
+                          <Img
                             src={`data:image/png;base64,${backLicensePicture}`}
                             alt="Foto conductor"
                             style={{ maxWidth: "100px" }}
@@ -865,7 +862,7 @@ export function ButtonsTable({
                   Acceso a la aplicación
                 </TituloSeccion>
                 <InputContainerV1>
-                  <input
+                  <Input
                     type="password"
                     name={"password"}
                     value={password}
@@ -877,7 +874,7 @@ export function ButtonsTable({
                 </InputContainerV1>
 
                 <InputContainerV1>
-                  <input
+                  <Input
                     type="password"
                     name={"repeatPassword"}
                     value={repeatPassword}

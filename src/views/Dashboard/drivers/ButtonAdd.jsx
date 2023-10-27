@@ -230,12 +230,12 @@ export const ButtonAdd = ({
     // SE RESETEAN LOS SIGUIENTES CAMPOS
     let updatedDriver = {...driver}
     if (zipCode.length <= 4) {
-      // setEstado("");
-      // setCiudad("");
-      // setColonias("");
-      // setSelectEstado([]);
-      // setSelectCiudad([]);
-      // setSelectColonias([]);
+      setEstado("");
+      setCiudad("");
+      setColonias("");
+      setSelectEstado([]);
+      setSelectCiudad([]);
+      setSelectColonias([]);
       updatedDriver = {
         ...updatedDriver,
         state: "",
@@ -565,10 +565,9 @@ export const ButtonAdd = ({
             </GrupoInput>
 
             <GrupoSelect>
-              {!estado ? null : (
-                <InputContainer>
-                <Label>*Estado: </Label>
-                  <Select
+              {!selectEstado.length ? (
+                <SelectContainer>
+                  <Select 
                     disabled={true}
                     name={"state"}
                     value={state}
@@ -576,14 +575,13 @@ export const ButtonAdd = ({
                   >
                     <option>{estado || "Selecciona"}</option>
                   </Select>
+                  <Label>*Estado: </Label>
                   {stateError && <Span>{stateError}</Span>}
-                </InputContainer>
-              )}
-              {!selectEstado.length >= 1 ? null : (
-                <InputContainer>
-                <Label>*Estado: </Label>
+                </SelectContainer>
+              ) : (
+                <SelectContainer>
                   <Select
-                    disabled={false}
+                    disabled={zipCode.length <= 4 ? true : false}
                     name={"state"}
                     value={state}
                     onChange={handleChange}
@@ -593,14 +591,13 @@ export const ButtonAdd = ({
                       return <option key={idx}>{est}</option>;
                     })}
                   </Select>
-                  <br />
+                  <Label>*Estado: </Label>
                   {stateError && <Span>{stateError}</Span>}
-                </InputContainer>
+                </SelectContainer>
               )}
 
-              {!ciudad ? null : (
-                <InputContainer>
-                  <Label>*Ciudad: </Label>
+              {!selectCiudad.length ? (
+                <SelectContainer>
                   <Select
                     disabled={true}
                     name={"city"}
@@ -609,15 +606,12 @@ export const ButtonAdd = ({
                   >
                     <option>{ciudad || "Selecciona"}</option>
                   </Select>
-                  <br />
-                  {cityError && <Span>{cityError}</Span>}
-                </InputContainer>
-              )}
-              {!selectCiudad.length ? null : (
-                <SelectContainer>
                   <Label>*Ciudad: </Label>
-                  <select
-                    color={"transparent"}
+                  {cityError && <Span>{cityError}</Span>}
+                </SelectContainer>
+              ) : (
+                <SelectContainer>
+                  <Select
                     disabled={false}
                     name={"city"}
                     value={city}
@@ -627,17 +621,16 @@ export const ButtonAdd = ({
                     {selectCiudad.map((cit, idx) => {
                       return <option key={idx}>{cit}</option>;
                     })}
-                  </select>
-                  <br />
+                  </Select>
+                  <Label>*Ciudad: </Label>
                   {cityError && <Span>{cityError}</Span>}
                 </SelectContainer>
               )}
 
-              {!estado && !ciudad ? null : (
+              {!selectColonias.length ? (
                 <SelectContainer>
-                  <Label>*Colonia: </Label>
                   <Select
-                    disabled={zipCode ? false : true}
+                    disabled={zipCode.length <= 4 || !state || !city ? true : false}
                     name={"colonia"}
                     value={colonia}
                     onChange={handleChange}
@@ -652,15 +645,13 @@ export const ButtonAdd = ({
                         );
                       })}
                   </Select>
+                  <Label>*Colonia: </Label>
                   {coloniaError && <Span>{coloniaError}</Span>}
                 </SelectContainer>
-              )}
-
-              {!selectEstado.length && !selectCiudad.length ? null : (
+              ) : (
                 <SelectContainer>
-                  <Label>*Colonia: </Label>
                   <Select
-                    disabled={zipCode ? false : true}
+                    disabled={zipCode.length <= 4 || !state || !city ? true : false}
                     name={"colonia"}
                     value={colonia}
                     onChange={handleChange}
@@ -675,10 +666,10 @@ export const ButtonAdd = ({
                         );
                       })}
                   </Select>
+                  <Label>*Colonia: </Label>
                   {coloniaError && <Span>{coloniaError}</Span>}
                 </SelectContainer>
               )}
-
             </GrupoSelect>
 
             <GrupoInput>
@@ -775,6 +766,7 @@ export const ButtonAdd = ({
                 <Select
                   disabled={driverLicenseNumber ? false : true}
                   name={"stateLicense"}
+                  //placeholder="dsdsd"
                   value={stateLicense}
                   onChange={handleChange}
                 >

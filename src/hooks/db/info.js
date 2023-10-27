@@ -1,4 +1,5 @@
 import axios from "axios";
+import { sepomex } from "../../data/dataFakeSepomex";
 
 export async function axiosGetSepomex(setSepomex) {
   try {
@@ -6,6 +7,8 @@ export async function axiosGetSepomex(setSepomex) {
     // console.log('DATA:', data);
     setSepomex(data);
     return data;
+    // setSepomex(sepomex);
+    return sepomex;
   } catch (err) {
     const { error } = err.response.data;
     console.log('ERROR:', error);

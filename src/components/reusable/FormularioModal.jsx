@@ -22,8 +22,6 @@ export const ContainerScroll = styled.div`
     padding: 9px 13px 10px 0px;
     width: 100%;
     margin-bottom: 4%;
-    //color: black;
-    //scrollbar-color: #007 #bada55;
     &::-webkit-scrollbar {
         background-color: #e9dada;
     }
@@ -35,7 +33,6 @@ export const ContainerScroll = styled.div`
 
   &::-webkit-scrollbar-thumb {
     background: #996699;
-    //border: 3px solid red;
     border-radius: 5px;
     transition: 0.5s;
   }
@@ -62,27 +59,19 @@ export const ButtonContainer = styled.div`
   justify-content: center;
   grid-gap: 20px;
   height: 8%;
-  //padding-top: 13px;
 `;
 
 export const SubmitBtn = styled.button`
   display: block;
   margin-left: auto;
-  //padding: 15px 30px;
   border: none;
   background-color: purple;
   color: white;
   border-radius: 6px;
   cursor: pointer;
   font-size: 16px;
-  //margin-top: 5px;
   width: 100%;
   height: 100%;
-
-  /*   &:hover {
-    background-color: #9867C5;
-    //transform: translateY(-2px);
-  } */
 `;
 
 export const FormHead = styled.div`
@@ -133,7 +122,6 @@ export const Input = styled.input`
   color: black;
   border-radius: 7px;
   font-size: 14px;
-  //padding: 0 20px;
   outline: none;
   background: none;
   z-index: 1;
@@ -225,8 +213,6 @@ export const Titulo = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-top: -75px;
-  //padding: 5px 5px;
-  //padding: 15px 7% 1px 7%;
   height: 50px;
   width: 100%;
   @media (max-width: 768px) {
@@ -254,24 +240,38 @@ export const Select = styled.select`
     border: 1px solid #73809d;
     background-color: transparent;
     color: #a7b4d2;
-    //border-color: #73809d;
     font-size: 16px;
     padding-left: 14px;
     height: 50px;
-    //font-weight: 600;
 
     &::placeholder {
     color: ${(props) => (props.color)};
   }
 
-  
-  &:focus {
-    border: 1px solid purple;
-    color: black;
+  &:focus + ${Label} {
+    //top: -7px;
+    //left: 3px;
+    z-index: 10;
+    font-size: 14px;
+    font-weight: 600;
+    color: purple;
   }
 
-  &::-ms-ticks-after {
-    border: 1px solid purple;
+  &:focus {
+    border: 2px solid purple;
+    color: black
+    
+  }
+
+  &:not(:placeholder-shown) + ${Label} {
+    top: -7px;
+    left: 3px;
+    z-index: 10;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  &:not(:empty) {
     color: black;
   }
 
@@ -286,11 +286,17 @@ export const Select = styled.select`
 `;
 
 export const SelectContainer = styled.div`
-      display: flex;
-      flex-direction: column;
-      height: 75px;
+    display: flex;
+    position: relative;
+    height: 65px;
+    width: 100%;
+    margin-bottom: 17px;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 50px;
+    font-size: 2vh;
 
-    `;
+`;
 
 export const GrupoInput = styled.div`
     display: flex;
@@ -303,7 +309,6 @@ export const GrupoSelect = styled.div`
     flex-direction: column;
     color: black;
     grid-gap: 27px;
-    //grid-gap: 27px;
 `;
 
 export const GrupoImg = styled.div`
@@ -375,7 +380,6 @@ export const Textarea = styled.textarea`
   color: black;
   border-radius: 7px;
   font-size: 16px;
-  //padding: 0 20px;
   outline: none;
   background: none;
   z-index: 1;

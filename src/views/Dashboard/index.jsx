@@ -29,19 +29,19 @@ const Dashboard = () => {
 }
 
 //Dasboart sin token
-//  const Dashboard = () => {
-//    return (
-//      <>
-//        <Navbar />
-//        <Container>
-//          {/* Contenedor del contenido */}
-//          <ContentContainer>
-//            {/* Outlet para mostrar las rutas anidadas */}
-//            <Outlet />
-//          </ContentContainer>
-//        </Container>
-//      </>
+// const Dashboard = () => {
+//     return (
+//       <>
+//         <Navbar />
+//         <Container>
+//           {/* Contenedor del contenido */}
+//           <ContentContainer>
+//             {/* Outlet para mostrar las rutas anidadas */}
+//             <Outlet />
+//           </ContentContainer>
+//         </Container>
+//       </>
 //    );
-//  }
+// }
 
 export default Dashboard;
