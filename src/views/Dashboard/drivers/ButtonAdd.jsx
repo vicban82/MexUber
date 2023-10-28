@@ -90,12 +90,9 @@ export const ButtonAdd = ({
   //* INFORMACION DEL CONDUCTOR
   const [codigoPostal, setZipcode] = useState("");
   const [estado, setEstado] = useState("");
-  // console.log("estado:", estado)
   const [selectEstado, setSelectEstado] = useState([]);
-  // console.log("selectEstado:", selectEstado)
   const [ciudad, setCiudad] = useState("");
   const [selectCiudad, setSelectCiudad] = useState([]);
-  // console.log("selectCiudad:", selectCiudad)
   const [colonias, setColonias] = useState([]);
   const [selectColonias, setSelectColonias] = useState([]);
   //* INFORMACION DEL CONDUCTOR
@@ -165,6 +162,7 @@ export const ButtonAdd = ({
         // * ------------ ESTADOS ------------
         const findState = [...new Set(memorySepomes.map((el) => el.estado))];
         if (findState) {
+          // console.log("findState:", findState.length) // 32
           setSelectEstado(findState);
         }
         // * ------------ CIUDADES ------------
@@ -177,7 +175,9 @@ export const ButtonAdd = ({
           ...new Set(filterByState.map((el) => el.ciudad)),
         ].filter((el) => el !== undefined);
         if (findCity) {
-          setSelectCiudad(findCity);
+          localStorage.setItem("Ciudades", JSON.stringify(findCity));
+          const ciudades = JSON.parse(localStorage.getItem("Ciudades"));
+          setSelectCiudad(ciudades);
         }
         // * ------------ COLONIAS ------------
         const filterByCity = memorySepomes.filter((el) => {
@@ -189,7 +189,9 @@ export const ButtonAdd = ({
           ...new Set(filterByCity.map((el) => el.colonias)),
         ].flat(1);
         if (findColonia) {
-          setSelectColonias(findColonia);
+          localStorage.setItem("Colonias", JSON.stringify(findColonia));
+          const colonias = JSON.parse(localStorage.getItem("Colonias"));
+          setSelectColonias(colonias);
         }
       }
     }
@@ -230,12 +232,15 @@ export const ButtonAdd = ({
     // SE RESETEAN LOS SIGUIENTES CAMPOS
     let updatedDriver = {...driver}
     if (zipCode.length <= 4) {
+      setZipcode("");
       setEstado("");
       setCiudad("");
       setColonias("");
+      localStorage.removeItem("Ciudades");
+      localStorage.removeItem("Colonias");
       setSelectEstado([]);
-      setSelectCiudad([]);
-      setSelectColonias([]);
+      // setSelectCiudad([]);
+      // setSelectColonias([]);
       updatedDriver = {
         ...updatedDriver,
         state: "",
@@ -565,7 +570,7 @@ export const ButtonAdd = ({
             </GrupoInput>
 
             <GrupoSelect>
-              {!selectEstado.length ? (
+              {codigoPostal ? (
                 <SelectContainer>
                   <Select 
                     disabled={true}
@@ -596,7 +601,7 @@ export const ButtonAdd = ({
                 </SelectContainer>
               )}
 
-              {!selectCiudad.length ? (
+              {codigoPostal ? (
                 <SelectContainer>
                   <Select
                     disabled={true}
@@ -612,7 +617,7 @@ export const ButtonAdd = ({
               ) : (
                 <SelectContainer>
                   <Select
-                    disabled={false}
+                    disabled={zipCode.length <= 4 ? true : false}
                     name={"city"}
                     value={city}
                     onChange={handleChange}
@@ -627,7 +632,7 @@ export const ButtonAdd = ({
                 </SelectContainer>
               )}
 
-              {!selectColonias.length ? (
+              {codigoPostal ? (
                 <SelectContainer>
                   <Select
                     disabled={zipCode.length <= 4 || !state || !city ? true : false}
