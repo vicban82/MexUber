@@ -162,7 +162,6 @@ export const ButtonAdd = ({
         // * ------------ ESTADOS ------------
         const findState = [...new Set(memorySepomes.map((el) => el.estado))];
         if (findState) {
-          // console.log("findState:", findState.length) // 32
           setSelectEstado(findState);
         }
         // * ------------ CIUDADES ------------

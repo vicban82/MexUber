@@ -50,16 +50,6 @@ export const validateDriver = (driver, selectImage) => {
   error.lastNameError = validationLastName(lastName);
   error.zipCodeError = validationZipCode(zipCode);
 
-  if (zipCode && !state) {
-    error.stateError = 'Debes seleccionar un Estado';
-  } else if (zipCode && !city) {
-    error.cityError = 'Debes seleccionar una Ciudad';
-  } else if (zipCode && !colonia) {
-    error.coloniaError = 'Debes seleccionar una colonia';
-  } else if (zipCode && !address) {
-    error.addressError = 'Debes ingregar tu domicilio o dirección';
-  }
-
   error.contactError = validationContact(contact);
   error.emailError = validationEmail(email);
   if (selectImage.path !== undefined && selectImage.type !== undefined) {
@@ -70,11 +60,7 @@ export const validateDriver = (driver, selectImage) => {
 
   if (driverLicenseNumber) {
     if (!regexLicenceNumber.test(driverLicenseNumber)) {
-      error.driverLicenseNumberError = 'Debes ingresar un número de licencia valido';
-    } else if (driverLicenseNumber && !stateLicense) {
-      error.stateLicenseError = 'Debes seleccionar un Estado';
-    } else if (driverLicenseNumber && !typeLicense) {
-      error.typeLicenseError = 'Debes de elegir un tipo de licencia'
+      error.driverLicenseNumberError = 'Debes ingresar un número de licencia entre 5 y 10 caracteres';
     }
     error.dateLicenseError = validationDate(dateLicense);
     error.frontLicensePictureError = validationFrontPicture(selectImage, frontLicensePicture);
