@@ -7,7 +7,7 @@ Modal.setAppElement("#root");
 export const Detail = (props) => {
   const { id } = props;
   const [detailDriver, setDetailDriver] = useState({});
-  console.log("detailDriver:", detailDriver);
+  // console.log("detailDriver:", detailDriver);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   useEffect(() => {
@@ -24,7 +24,7 @@ export const Detail = (props) => {
           <h2>Consulta conductor</h2>
           <hr />
           <img
-            src={`data:image/png;base64,${detailDriver.driverPicture}`}
+            // src={`data:image/png;base64,${detailDriver.driverPicture}`}
             // src={`/images/${detailDriver.driverPicture}`}
             alt="Foto conductor"
             style={{ maxWidth: "200px" }}
@@ -48,6 +48,24 @@ export const Detail = (props) => {
           <h2>Ajuste en la aplicación</h2>
           <hr />
           <p>Servicio para:</p>
+          <input
+            type="checkbox"
+            disabled
+            checked={detailDriver.allServices === 1}
+          />
+          Todos
+          <input
+            type="checkbox"
+            disabled
+            checked={detailDriver.servicesLGBQT === 1}
+          />
+          LGBTQ+
+          <input
+            type="checkbox"
+            disabled
+            checked={detailDriver.onlyWomenServices === 1}
+          />
+          Sólo mujeres
           <h2>Acceso a la aplicación</h2>
           <hr />
           <p>Activo: {detailDriver.isActive === 1 ? "Si" : "NO"}</p>
