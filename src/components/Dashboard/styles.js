@@ -22,6 +22,7 @@ export const ContentContainer = styled.div`
 	align-items: center;
 	align-content: center;
   margin-top: 160px;
+  width: 100%;
 `;
 
 export const Button = styled.button`
@@ -37,6 +38,8 @@ export const Button = styled.button`
   width: 170px;
   height: 10rem;
   border-radius: 20px;
+  border: solid 8px;
+  border-color: #333333;
   &:hover {
     background-color: #11121a;
   }

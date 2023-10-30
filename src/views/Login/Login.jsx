@@ -1,3 +1,4 @@
+import { styled } from "styled-components";
 import React, { useEffect, useState } from "react";
 import {
   Checkbox,
@@ -29,6 +30,11 @@ import { useNavigate } from "react-router-dom";
 import { validateLogin } from "../../validations/logins";
 import { axiosLogins, axiosVerifyAdmin } from "../../hooks/logins";
 import { demoSwitAlertLogin, errorLogins, successLogins } from "../../tools/switAlertLogins";
+
+const ContainerV1 = styled(Container)`
+  margin-left: 0px;
+`;
+
 const Login = () => {
   const [login, setLogin] = useState({
     email: '',
@@ -131,7 +137,7 @@ const Login = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
   return (
-    <Container>
+    <ContainerV1>
       <ContainerLogin>
       <Checkbox type="checkbox" id="check" />
       <ImageContainer>
@@ -182,7 +188,7 @@ const Login = () => {
         </Form>
       </ContainerForm>
       </ContainerLogin>
-    </Container>
+    </ContainerV1>
   );
 };
 

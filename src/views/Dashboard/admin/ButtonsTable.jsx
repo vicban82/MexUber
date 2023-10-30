@@ -45,6 +45,13 @@ import {
 
 const Img = styled.img`
   height: 32px;
+  border-radius: 5px;
+  size: 5px;
+  transition: border-radius 0.5s;
+  &:hover{
+    border-radius: 25px;
+    transition: border-radius 0.5s;
+  }
 `;
 
 /* -------------------------------- Funcionalidad ----------------------------- */

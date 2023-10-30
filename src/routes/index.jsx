@@ -7,6 +7,8 @@ import Dashboard from "../views/Dashboard";
 import MainDashboard from "../views/Dashboard/Main";
 import Admins from "../views/Dashboard/admin";
 import { Drivers } from "../views/Dashboard/drivers";
+import { Cars } from "../views/Dashboard/cars";
+//import { Card } from "../components/Dashboard/styles";
 
 export default function MainRoutes() {
   return (
@@ -18,7 +20,7 @@ export default function MainRoutes() {
           <Route path="home" element={<MainDashboard />} />
           <Route path="admins" element={<Admins />} />
           <Route path="drivers" element={<Drivers />} />
-          <Route path="cars" element={<Admins />} />
+          <Route path="cars" element={<Cars/>} />
           <Route path="clients" element={<Admins />} />
           <Route path="trips" element={<Admins />} />
         </Route>

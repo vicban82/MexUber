@@ -41,9 +41,8 @@ import {
   Textarea,
   TextareaContainer
 } from "../../../components/reusable/FormularioModal";
-import { Detail } from "./detail";
 
-Modal.setAppElement("#root");
+Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
 const ButtonV1 = styled.button`
   color: #646cff;
@@ -115,13 +114,10 @@ export function ButtonsTable({
   const [sepomex, setSepomex] = useState([]);
   const [licencias, setLicencias] = useState([]);
   //* INFORMACION DEL CONDUCTOR
-  const [codigoPostal, setZipcode] = useState("");
-  const [estado, setEstado] = useState("");
-  const [selectEstado, setSelectEstado] = useState([]);
-  const [ciudad, setCiudad] = useState("");
-  const [selectCiudad, setSelectCiudad] = useState([]);
+  const [codigoPostal, setZipcode] = useState('');
+  const [estado, setEstado] = useState('');
+  const [ciudad, setCiudad] = useState('');
   const [colonias, setColonias] = useState([]);
-  const [selectColonias, setSelectColonias] = useState([]);
   //* INFORMACION DEL CONDUCTOR
 
   //* LICENCIA DE CONDUCIR
@@ -171,6 +167,7 @@ export function ButtonsTable({
   function handleChange(e) {
     const { name, value } = e.target;
     // console.log("name:", name)
+    let updatedDriver = {...driver}
     
     if (name === "zipCode" && value.length >= 5 || name === "state" || name === "city" || name === "colonia") {
       const sepomexData = memorySepomes.find(el => el.codigoPostal === value);
@@ -234,40 +231,6 @@ export function ButtonsTable({
       }, selectImage)
     );
   }
-  
-  useEffect(() => {
-    // SE RESETEAN LOS SIGUIENTES CAMPOS
-    let updatedDriver = {...driver}
-    if (zipCode.length <= 4) {
-      setZipcode("");
-      setEstado("");
-      setCiudad("");
-      setColonias("");
-      localStorage.removeItem("Ciudades");
-      localStorage.removeItem("Colonias");
-      setSelectEstado([]);
-      // setSelectCiudad([]);
-      // setSelectColonias([]);
-      updatedDriver = {
-        ...updatedDriver,
-        state: "",
-        city: "",
-        colonia: "",
-      }
-    }
-    if (driverLicenseNumber.length <= 4) {
-      updatedDriver = {
-        ...updatedDriver,
-        stateLicense: "",
-        typeLicense: "",
-        dateLicense: "",
-        frontLicensePicture: "",
-        backLicensePicture: "",
-      }
-    }
-
-    setDriver(updatedDriver);
-  }, [zipCode, driverLicenseNumber]);
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
@@ -303,7 +266,7 @@ export function ButtonsTable({
 
   useEffect(() => {
     // Actualizar los valores del formulario cuando estado o ciudad cambien
-    if (estado || ciudad) {
+    if (typeof estado === "string" || typeof ciudad === "string") {
       // ACTUALIZAMOS EL FORMULARIO CON LOS CAMPOS QUE SE AUTOCOMPLETAN
       setDriver(prevState => ({
         ...prevState,
@@ -349,25 +312,21 @@ export function ButtonsTable({
     axiosGetLicencias(setLicencias);
   }, []);
 
-  const onDriverPictureDrop = useCallback((acceptedFiles) => {
+  const onDriverPictureDrop = useCallback(acceptedFiles => {
     if (acceptedFiles.length > 0) {
       const file = acceptedFiles[0];
       convertAndSetImage(file, "driverPicture");
     }
   }, []);
   
-  const onFrontLicensePictureDrop = useCallback((acceptedFiles) => {
-    if (acceptedFiles.length > 0) {
-      const file = acceptedFiles[0];
-      convertAndSetImage(file, "frontLicensePicture");
-    }
+  const onFrontLicensePictureDrop = useCallback(acceptedFiles => {
+    const file = acceptedFiles[0];
+    convertAndSetImage(file, "frontLicensePicture");
   }, []);
   
-  const onBackLicensePictureDrop = useCallback((acceptedFiles) => {
-    if (acceptedFiles.length > 0) {
-      const file = acceptedFiles[0];
-      convertAndSetImage(file, "backLicensePicture");
-    }
+  const onBackLicensePictureDrop = useCallback(acceptedFiles => {
+    const file = acceptedFiles[0];
+    convertAndSetImage(file, "backLicensePicture");
   }, []);
   
   const convertAndSetImage = (file, fieldName) => {
@@ -465,7 +424,9 @@ export function ButtonsTable({
       email ||
       (allServices === 1 ||
       servicesLGBQT === 1 ||
-      onlyWomenServices === 1)
+      onlyWomenServices === 1) ||
+      password ||
+      repeatPassword
     ) {
       if (passwordError && repeatPasswordError) {
         errorRegister(driver, errorForm);
@@ -500,7 +461,6 @@ export function ButtonsTable({
 
   return (
     <>
-      <Detail id={id} />
       <td>
         {/* The button to open modal */}
         <button onClick={() => setModalIsOpen(true)}>
@@ -514,7 +474,7 @@ export function ButtonsTable({
         >
           <FormEdit onSubmit={handleSubmit}>
             <FormHead>
-              <h2>Modificar Conductor</h2>
+              <h2>Modificar Vehiculo</h2>
             </FormHead>
             <br />
             <ContainerScroll>
