@@ -30,6 +30,7 @@ export const Table = ({
                   </th>
                 );
               })}
+              <th>Ver</th>
               <th>Editar/Eliminar</th>
             </tr>
           </thead>
