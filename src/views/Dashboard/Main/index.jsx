@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import { Button, ContainerCard, TextCard } from "../../../components/Dashboard/styles";
-import { Link } from "react-router-dom";
+import { Link, Router, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCarRear, faHome, faCog, faCreditCard, faUserCheck, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 const MainDashboard = () => {
   const [selectedIcon, setSelectedIcon] = useState("main");
+  
+  
+  const navigate = useNavigate()
   const handleIconClick = (icon) => {
     setSelectedIcon(icon);
-
+    navigate("/dashboard/"+icon);
   };
+
   return (
 
     <ContainerCard>

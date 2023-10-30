@@ -474,7 +474,7 @@ export function ButtonsTable({
         >
           <FormEdit onSubmit={handleSubmit}>
             <FormHead>
-              <h2>Modificar Conductor</h2>
+              <h2>Modificar Vehiculo</h2>
             </FormHead>
             <br />
             <ContainerScroll>

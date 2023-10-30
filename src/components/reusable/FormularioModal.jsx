@@ -24,12 +24,9 @@ export const ContainerScroll = styled.div`
     margin-bottom: 4%;
     &::-webkit-scrollbar {
         background-color: #e9dada;
+        width: 7px;
+        height: 7px;
     }
-
-  &::-webkit-scrollbar {
-    width: 7px;
-    height: 7px;
-  }
 
   &::-webkit-scrollbar-thumb {
     background: #996699;
@@ -177,7 +174,7 @@ export const Input = styled.input`
 `;
 
 export const FormEdit = styled.form`
-  width: 55vh;
+  width: 52vh;
   height: 85vh;
   max-height: 530px;
   background-color: white;
@@ -186,6 +183,10 @@ export const FormEdit = styled.form`
   font-size: 2vh;
   box-shadow: 0 10px 25px rgba(92, 99, 105, 0.2);
   
+  @media (max-width: 768px) {
+     //Mostrar el ícono de menú en pantallas pequeñas (como dispositivos móviles) 
+     width: 40vh;
+  }
 
   .title {
     font-size: 50px;

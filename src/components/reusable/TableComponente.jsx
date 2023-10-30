@@ -6,13 +6,16 @@ export const ContainerTabla = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   overflow-x: auto;
+  
 
   @media (max-width: 900px) {
-        max-width: 95vmin;
-        margin-left: 20px;
-        margin-right: 20px;
-        background-color: aqua;
+        width: 70vh;
     }
+  
+  @media (max-width: 430px) 
+  {
+        width: 40vh;
+  }
 `;
 
 export const StyledTable = styled.table.withConfig({
@@ -23,6 +26,7 @@ export const StyledTable = styled.table.withConfig({
   border-collapse: collapse;
   background-color: #b8860b;
   min-width: 885px;
+  font-size: 2.3vh;
   
   th { 
     text-decoration: underline; 
@@ -55,7 +59,7 @@ export const StyledTable = styled.table.withConfig({
 
   thead {
     display: flex;
-    width: 100%;
+    //width: 100vh;
     justify-content: space-around;
     background-color: #333;
     color: #FDFDFD;
@@ -67,23 +71,50 @@ export const StyledTable = styled.table.withConfig({
       justify-content: space-around;
       align-items: center;
       text-align: center;
+      padding-right: 2vh;
     }
   }
   tbody {
     display: flex;
     overflow: auto;
-    width: 100%;
+    //width: 100vh;
     max-height: 260px;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+        background-color: #cab7b7;
+        width: 2vh;
+        height: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #686868;
+      transition: 0.5s;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: #797979;
+      transition: 0.5s;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #424242;
+      border-left: 1px solid $dark-blue-o-20;
+      border-radius: 2px;
+    }
+
     tr {
       width: 100%;
       display: flex;
       justify-content: space-around;
       align-items: center;
       text-align: center;
+      
     }
+
     tr:nth-child(even) {
       background-color: #5f5a5a;
       width: 100%;
