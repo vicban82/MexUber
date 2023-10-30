@@ -37,6 +37,16 @@ export async function axiosSearchDrivers(search, setTDriver, setTotalPages, head
   }
 }
 
+export async function axiosDetailDriver(id, setDetailDriver, headers) {
+  try {
+    const { data } = (await axios.get(`/api/driver/${id}`, { headers }));
+    setDetailDriver(data);
+  } catch (err) {
+    const { error } = err.response.data;
+    console.log('ERROR:', error);
+  }
+}
+
 export async function axiosPostDriver(driver, headers) {
   try {
     const { data } = (await axios.post('/api/driver', driver, { headers }));

@@ -349,13 +349,17 @@ export const ButtonAdd = ({
   }, []);
 
   const onFrontLicensePictureDrop = useCallback((acceptedFiles) => {
-    const file = acceptedFiles[0];
-    convertAndSetImage(file, "frontLicensePicture");
+    if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0];
+      convertAndSetImage(file, "frontLicensePicture");
+    }
   }, []);
 
   const onBackLicensePictureDrop = useCallback((acceptedFiles) => {
-    const file = acceptedFiles[0];
-    convertAndSetImage(file, "backLicensePicture");
+    if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0];
+      convertAndSetImage(file, "backLicensePicture");
+    }
   }, []);
 
   const convertAndSetImage = (file, fieldName) => {
