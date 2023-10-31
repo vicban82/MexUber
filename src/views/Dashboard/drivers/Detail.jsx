@@ -7,8 +7,11 @@ Modal.setAppElement("#root");
 export const Detail = (props) => {
   const { id } = props;
   const [detailDriver, setDetailDriver] = useState({});
-  const [imageSrc, setImageSrc] = useState(null);
-  
+  const { driverPicture, frontLicensePicture, backLicensePicture } = detailDriver;
+  const [fotoConductor, setFotoConductor] = useState(null);
+  const [fotoFront, setFotoFront] = useState(null);
+  const [fotoBack, setFotoBack] = useState(null);
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
   useEffect(() => {
     axiosDetailDriver(id, setDetailDriver, headers);
@@ -17,20 +20,30 @@ export const Detail = (props) => {
   useEffect(() => {
     const loadImage = async () => {
       try {
-        // Obtén la ruta correcta de la imagen utilizando import.meta.env
-        const imagePath = `../../../assets/img/drivers/${detailDriver.driverPicture}`;
-        // Importa la imagen de manera dinámica
-        const { default: img } = await import(imagePath);
-        setImageSrc(img);
+        if (driverPicture) {
+          const imagePath = `../../../assets/img/drivers/${driverPicture}`;
+          const { default: img } = await import(imagePath);
+          setFotoConductor(img);
+        }
+        if (frontLicensePicture) {
+          const imagePath = `../../../assets/img/drivers/${frontLicensePicture}`;
+          const { default: img } = await import(imagePath);
+          setFotoFront(img);
+        }
+        if (backLicensePicture) {
+          const imagePath = `../../../assets/img/drivers/${backLicensePicture}`;
+          const { default: img } = await import(imagePath);
+          setFotoBack(img);
+        }
       } catch (error) {
         console.error("Error al cargar la imagen:", error);
       }
     };
 
-    if (detailDriver.driverPicture) {
+    if (driverPicture || frontLicensePicture && backLicensePicture) {
       loadImage();
     }
-  }, [detailDriver.driverPicture]);
+  }, [driverPicture, frontLicensePicture, backLicensePicture]);
   return (
     <>
       <td>
@@ -42,7 +55,7 @@ export const Detail = (props) => {
           <h2>Consulta conductor</h2>
           <hr />
           <img
-            src={imageSrc}
+            src={fotoConductor}
             alt="Foto conductor"
             style={{ maxWidth: "200px" }}
           />
@@ -57,11 +70,29 @@ export const Detail = (props) => {
           <p>Correo electrónico: {detailDriver.email}</p>
           <h2>Licencia de conducir</h2>
           <hr />
-          <p>Número de licencia: {detailDriver.driverLicenseNumber}</p>
-          <p>Estado licencia: {detailDriver.stateLicense}</p>
-          <p>Tipo licencia: {detailDriver.typeLicense}</p>
-          <p>Vigencia de licencia: {detailDriver.dateLicense}</p>
-          <p>Fotos licencia:</p>
+          {!detailDriver.driverLicenseNumber ? (
+            <div>
+              <p>Sin información de momento</p>
+            </div>
+          ) : (
+            <div>
+              <p>Número de licencia: {detailDriver.driverLicenseNumber}</p>
+              <p>Estado licencia: {detailDriver.stateLicense}</p>
+              <p>Tipo licencia: {detailDriver.typeLicense}</p>
+              <p>Vigencia de licencia: {detailDriver.dateLicense}</p>
+              <p>Fotos licencia:</p>
+              <img
+                src={fotoFront}
+                alt="Foto frontal de la licencia"
+                style={{ maxWidth: "200px" }}
+              />
+              <img
+                src={fotoBack}
+                alt="Foto reverso de la licencia"
+                style={{ maxWidth: "200px" }}
+              />
+            </div>
+          )}
           <h2>Ajuste en la aplicación</h2>
           <hr />
           <p>Servicio para:</p>
