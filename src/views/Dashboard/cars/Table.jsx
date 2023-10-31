@@ -16,7 +16,7 @@ export const Table = ({
   setTotalPages,
   setPage,
 }) => {
-  console.log("tDriver:", tHeader)
+  // console.log("tDriver:", tHeader)
   return (
     <>
       <ContainerTabla>

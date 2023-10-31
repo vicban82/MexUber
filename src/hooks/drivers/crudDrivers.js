@@ -38,9 +38,11 @@ export async function axiosSearchDrivers(search, setTDriver, setTotalPages, head
 }
 
 export async function axiosDetailDriver(id, setDetailDriver, headers) {
+  // console.log("id:", id)
   try {
     const { data } = (await axios.get(`/api/driver/${id}`, { headers }));
     setDetailDriver(data);
+    return data;
   } catch (err) {
     const { error } = err.response.data;
     console.log('ERROR:', error);

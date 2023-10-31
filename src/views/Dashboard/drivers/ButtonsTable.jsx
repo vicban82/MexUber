@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import editIcon from "../../../assets/img/editIcon.png";
 import deleteIcon from "../../../assets/img/deleteIcon.png";
 import Modal from "react-modal";
-import { validateDriver } from "../../../validations/drivers";
+import { validateDriver, validateUpDateDriver } from "../../../validations/drivers";
 import { headers } from "../../../tools/accessToken";
-import { axiosGetDrivers, axiosPostDriver, axiosPutDriver } from "../../../hooks/drivers/crudDrivers";
+import { axiosDetailDriver, axiosGetDrivers, axiosPostDriver, axiosPutDriver } from "../../../hooks/drivers/crudDrivers";
 import styled from 'styled-components';
 import {
   errorRegister,
@@ -107,9 +107,47 @@ export function ButtonsTable({
   setTotalPages, 
   setPage,
 }) {
-  const currentDriver = tDriver.find((item) => item._id === id);
-  const [modifDriver, setModifDriver] = useState({});
-  // console.log("currentDriver:", currentDriver)
+  const [detailDriver, setDetailDriver] = useState({});
+  useEffect(() => {
+    axiosDetailDriver(id, setDetailDriver, headers);
+  }, [id]);
+  // useEffect(() => {
+  //   async function upDate() {
+  //     const data = await axiosDetailDriver(id, setDetailDriver, headers);
+  //     const update = {
+  //       name: data.name,
+  //       lastName: data.lastName,
+  //       zipCode: data.zipCode,
+  //       state: data.state,
+  //       colonia: data.colonia,
+  //       address: data.address,
+  //       contact: data.contact,
+  //       email: data.email,
+  //       driverPicture: data.driverPicture,
+  //       dateLicense: data.dateLicense,
+  //       stateLicense: data.stateLicense,
+  //       typeLicense: data.typeLicense,
+  //       frontLicensePicture: data.frontLicensePicture,
+  //       backLicensePicture: data.backLicensePicture,
+  //       password: '',
+  //       isActive: data.isActive,
+  //       messageReasonInActive: data.messageReasonInActive,
+  //       tokenNotification: data.tokenNotification,
+  //       typePhone: data.typePhone,
+  //       allServices: data.allServices,
+  //       servicesLGBQT: data.servicesLGBQT,
+  //       onlyWomenServices: data.onlyWomenServices,
+  //     }
+  //     console.log("update:", update)
+  //     if (update) {
+  //       setDriver(update)
+  //     }
+  //   }
+  //   upDate()
+  // }, [id]);
+  // const [modifDriver, setModifDriver] = useState({});
+  // console.log("detailDriver:", detailDriver)
+  // console.log("id:", id)
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [sepomex, setSepomex] = useState([]);
@@ -184,7 +222,7 @@ export function ButtonsTable({
         // * ------------ ESTADOS ------------
         const findState = [...new Set(memorySepomes.map(el => el.estado))]
         if (findState) {
-          setEstado(findState);
+          setSelectEstado(findState);
         }
         // * ------------ CIUDADES ------------
         const filterByState = memorySepomes.filter(el => {
@@ -194,7 +232,7 @@ export function ButtonsTable({
         });
         const findCity = [...new Set(filterByState.map(el => el.ciudad))].filter(el => el !== undefined)
         if (findCity) {
-          setCiudad(findCity);
+          setSelectCiudad(findCity);
         }
         // * ------------ COLONIAS ------------
         const filterByCity = memorySepomes.filter(el => {
@@ -204,7 +242,7 @@ export function ButtonsTable({
         });
         const findColonia = [...new Set(filterByCity.map(el => el.colonias))].flat(1)
         if (findColonia) {
-          setColonias(findColonia);
+          setSelectColonias(findColonia);
         }
       }
     }
@@ -228,7 +266,7 @@ export function ButtonsTable({
       [name]: value,
     });
     setErrorForm(
-      validateDriver({
+      validateUpDateDriver({
         ...driver,
         [name]: value,
       }, selectImage)
@@ -243,11 +281,11 @@ export function ButtonsTable({
       setEstado("");
       setCiudad("");
       setColonias("");
-      localStorage.removeItem("Ciudades");
-      localStorage.removeItem("Colonias");
+      // localStorage.removeItem("Ciudades");
+      // localStorage.removeItem("Colonias");
       setSelectEstado([]);
-      // setSelectCiudad([]);
-      // setSelectColonias([]);
+      setSelectCiudad([]);
+      setSelectColonias([]);
       updatedDriver = {
         ...updatedDriver,
         state: "",
@@ -413,39 +451,39 @@ export function ButtonsTable({
 
   function closeModal() {
     setModifDriver({
-      name: currentDriver.name,
-      lastName: currentDriver.lastName,
-      zipCode: currentDriver.zipCode, // CODIGO POSTAL
-      state: currentDriver.state, // ESTADO DE MEXICO
-      city: currentDriver.city,
-      colonia: currentDriver.colonia,
-      address: currentDriver.address,
-      contact: currentDriver.contact, // NUMERO DE CONTACTO DEL CONDUCTOR
-      email: currentDriver.email,
-      driverPicture: currentDriver.driverPicture, //* FOTO DEL CONDUCTOR
+      name: detailDriver.name,
+      lastName: detailDriver.lastName,
+      zipCode: detailDriver.zipCode, // CODIGO POSTAL
+      state: detailDriver.state, // ESTADO DE MEXICO
+      city: detailDriver.city,
+      colonia: detailDriver.colonia,
+      address: detailDriver.address,
+      contact: detailDriver.contact, // NUMERO DE CONTACTO DEL CONDUCTOR
+      email: detailDriver.email,
+      driverPicture: detailDriver.driverPicture, //* FOTO DEL CONDUCTOR
       //! DATOS DE LA LICENCIA DE CONDUCCION
-      driverLicenseNumber: currentDriver.driverLicenseNumber, //* NUMERO LICENCIA DEL CONDUCTOR
-      stateLicense: currentDriver.stateLicense, // ESTADO DE LA LICENCIA
-      typeLicense: currentDriver.typeLicense, // TIPO LICENCIA
-      dateLicense: currentDriver.dateLicense, // FECHA - VIGENCIA DE LA LICENCIA
-      frontLicensePicture: currentDriver.frontLicensePicture, //* FOTO FRONTAL DE LA LICENCIA
-      backLicensePicture: currentDriver.backLicensePicture, //* FOTO REVERSO DE LA LICENCIA
+      driverLicenseNumber: detailDriver.driverLicenseNumber, //* NUMERO LICENCIA DEL CONDUCTOR
+      stateLicense: detailDriver.stateLicense, // ESTADO DE LA LICENCIA
+      typeLicense: detailDriver.typeLicense, // TIPO LICENCIA
+      dateLicense: detailDriver.dateLicense, // FECHA - VIGENCIA DE LA LICENCIA
+      frontLicensePicture: detailDriver.frontLicensePicture, //* FOTO FRONTAL DE LA LICENCIA
+      backLicensePicture: detailDriver.backLicensePicture, //* FOTO REVERSO DE LA LICENCIA
       //! DATOS DE LA LICENCIA DE CONDUCCION
       //! AJUSTES DE LA APLICACION
-      allServices: currentDriver.allServices, // TODOS
-      servicesLGBQT: currentDriver.servicesLGBQT, // LGBQT+
-      onlyWomenServices: currentDriver.onlyWomenServices, // MUJERES
+      allServices: detailDriver.allServices, // TODOS
+      servicesLGBQT: detailDriver.servicesLGBQT, // LGBQT+
+      onlyWomenServices: detailDriver.onlyWomenServices, // MUJERES
       //! AJUSTES DE LA APLICACION
       //! ACCESO A LA APLICACION
       password: '',
       repeatPassword: '',
-      isActive: currentDriver.isActive,
-      messageReasonInActive: currentDriver.messageReasonInActive, // MENSAJE RASON INACTIVO
+      isActive: detailDriver.isActive,
+      messageReasonInActive: detailDriver.messageReasonInActive, // MENSAJE RASON INACTIVO
       //! ACCESO A LA APLICACION
-      car: currentDriver.car || null,
+      car: detailDriver.car || null,
       //! NO SE VALIDAN
-      tokenNotification: currentDriver.tokenNotification,
-      typePhone: currentDriver.typePhone,
+      tokenNotification: detailDriver.tokenNotification,
+      typePhone: detailDriver.typePhone,
       //! NO SE VALIDAN
     });
   }
@@ -478,19 +516,37 @@ export function ButtonsTable({
       } else {
         try {
           successRegister(driver);
-          const newDriver = await axiosPutDriver(id, driver, headers);
-          setTDriver([...tDriver, newDriver]);
-
-          await axiosGetDrivers(setTDriver, setTotalPages, headers, 1, limit)
+          const currentDriver = await axiosPutDriver(id, driver, headers);
+          
+          // Actualiza la lista en el frontend
+          setTDriver(prev => {
+            // Reemplaza el driver editado en la lista por el nuevo driver devuelto por el backend
+            const updatedTDrivers = prev.map(item => {
+              if (item._id === id) {
+                return  {
+                  name: currentDriver.name,
+                  lastName: currentDriver.lastName,
+                  email: currentDriver.email,
+                  contact: currentDriver.contact,
+                  isActive: currentDriver.isActive,
+                  car: currentDriver.car,
+                }
+              } else {
+                return item;
+              }
+            });
+            // const updatedTDrivers = prev.map(item => (item._id === id ? currentDriver : item));
+            return updatedTDrivers;
+          });
   
           // Cierra el modal después de guardar
           setModalIsOpen(false);
-          closeModal()
+          // closeModal()
 
           // Establece la página en 1 después de agregar un elemento
           setPage(1);
         } catch (error) {
-          console.error("Error al guardar el admin:", error);
+          console.error("Error al modificar el conductor:", error);
         }
       }
     } else  {
@@ -529,7 +585,7 @@ export function ButtonsTable({
                     type="text"
                     name={"name"}
                     value={name}
-                    placeholder={currentDriver.name}
+                    // placeholder={detailDriver.name}
                     onChange={handleChange}
                   />
                   <Label>*Nombre(s): </Label>
@@ -541,7 +597,7 @@ export function ButtonsTable({
                   <Input
                     type="text"
                     name={"lastName"}
-                    placeholder={currentDriver.lastName}
+                    placeholder={detailDriver.lastName}
                     value={lastName}
                     onChange={handleChange}
                   />
@@ -554,7 +610,7 @@ export function ButtonsTable({
                   <Input
                     type="text"
                     name={"zipCode"}
-                    placeholder={currentDriver.zipCode}
+                    placeholder={detailDriver.zipCode}
                     value={zipCode}
                     onChange={handleChange}
                   />
@@ -565,68 +621,60 @@ export function ButtonsTable({
               </GrupoInput>
 
               <GrupoSelect>
-                {typeof estado !== "string" ? null : (
+                {codigoPostal ? (
                   <SelectContainer>
-                    <Select
+                    <Select 
                       disabled={true}
                       name={"state"}
-                      placeholder={currentDriver.state}
                       value={state}
                       onChange={handleChange}
                     >
-                      <option>{estado || "Selecciona"}</option>
+                      <option>{!estado ? detailDriver.state : estado || "Selecciona"}</option>
                     </Select>
                     <Label>*Estado: </Label>
                     {stateError && <Span>{stateError}</Span>}
                   </SelectContainer>
-                )}
-                {!Array.isArray(estado) ? null : (
+                ) : (
                   <SelectContainer>
                     <Select
-                      disabled={false}
+                      disabled={zipCode.length <= 4 ? true : false}
                       name={"state"}
-                      placeholder={currentDriver.state}
                       value={state}
                       onChange={handleChange}
                     >
-                      <option>Selecciona</option>
-                      {estado.map((est, idx) => {
+                      <option>{detailDriver.state || "Selecciona"}</option>
+                      {selectEstado.map((est, idx) => {
                         return <option key={idx}>{est}</option>;
                       })}
                     </Select>
                     <Label>*Estado: </Label>
-                    {/* <br /> */}
                     {stateError && <Span>{stateError}</Span>}
                   </SelectContainer>
                 )}
 
-                {typeof ciudad !== "string" ? null : (
+                {codigoPostal ? (
                   <SelectContainer>
                     <Select
                       disabled={true}
                       name={"city"}
-                      // placeholder={currentDriver.city}
                       value={city}
                       onChange={handleChange}
                     >
-                      <option>{currentDriver.city || "Selecciona"}</option>
+                      <option>{ciudad || "Selecciona"}</option>
                     </Select>
                     <Label>*Ciudad: </Label>
                     {cityError && <Span>{cityError}</Span>}
                   </SelectContainer>
-                )}
-                {!Array.isArray(ciudad) ? null : (
+                ) : (
                   <SelectContainer>
                     <Select
-                      disabled={false}
+                      disabled={zipCode.length <= 4 ? true : false}
                       name={"city"}
-                      placeholder={currentDriver.city}
-                      //value={city}
-                      value={typeof city === "string" && city}
+                      value={city}
                       onChange={handleChange}
                     >
-                      <option>Selecciona</option>
-                      {ciudad.map((cit, idx) => {
+                      <option>{detailDriver.city || "Selecciona"}</option>
+                      {selectCiudad.map((cit, idx) => {
                         return <option key={idx}>{cit}</option>;
                       })}
                     </Select>
@@ -634,25 +682,50 @@ export function ButtonsTable({
                     {cityError && <Span>{cityError}</Span>}
                   </SelectContainer>
                 )}
-                <SelectContainer>
-                  <Select
-                    disabled={
-                      zipCode || codigoPostal === zipCode ? false : true
-                    }
-                    name={"colonia"}
-                    placeholder={currentDriver.colonia}
-                    value={colonia}
-                    onChange={handleChange}
-                  >
-                    <option>Selecciona</option>
-                    {colonias.length >= 1 &&
-                      colonias.map((colonia, idx) => {
-                        return <option key={idx}>{colonia}</option>;
-                      })}
-                  </Select>
-                  <Label>*Colonia: </Label>
-                  {coloniaError && <Span>{coloniaError}</Span>}
-                </SelectContainer>
+
+                {codigoPostal ? (
+                  <SelectContainer>
+                    <Select
+                      disabled={zipCode.length <= 4 || !state || !city ? true : false}
+                      name={"colonia"}
+                      value={colonia}
+                      onChange={handleChange}
+                    >
+                      <option>{detailDriver.colonia || "Selecciona"}</option>
+                      {colonias.length >= 1 &&
+                        colonias.map((colonia, idx) => {
+                          return (
+                            <option key={idx} >
+                              {colonia}
+                            </option>
+                          );
+                        })}
+                    </Select>
+                    <Label>*Colonia: </Label>
+                    {coloniaError && <Span>{coloniaError}</Span>}
+                  </SelectContainer>
+                ) : (
+                  <SelectContainer>
+                    <Select
+                      disabled={zipCode.length <= 4 || !state || !city ? true : false}
+                      name={"colonia"}
+                      value={colonia}
+                      onChange={handleChange}
+                    >
+                      <option>{detailDriver.colonia || "Selecciona"}</option>
+                      {selectColonias.length >= 1 &&
+                        selectColonias.map((colonia, idx) => {
+                          return (
+                            <option key={idx} >
+                              {colonia}
+                            </option>
+                          );
+                        })}
+                    </Select>
+                    <Label>*Colonia: </Label>
+                    {coloniaError && <Span>{coloniaError}</Span>}
+                  </SelectContainer>
+                )}
               </GrupoSelect>
 
               <GrupoInput>
@@ -660,7 +733,7 @@ export function ButtonsTable({
                   <Input
                     type="text"
                     name={"address"}
-                    placeholder={currentDriver.address}
+                    placeholder={detailDriver.address}
                     value={address}
                     onChange={handleChange}
                   />
@@ -673,7 +746,7 @@ export function ButtonsTable({
                   <Input
                     type="text"
                     name={"contact"}
-                    placeholder={currentDriver.contact}
+                    placeholder={detailDriver.contact}
                     value={contact}
                     onChange={handleChange}
                   />
@@ -686,7 +759,7 @@ export function ButtonsTable({
                   <Input
                     type="text"
                     name={"email"}
-                    placeholder={currentDriver.email}
+                    placeholder={detailDriver.email}
                     value={email}
                     onChange={handleChange}
                   />
@@ -731,7 +804,7 @@ export function ButtonsTable({
                   <Input
                     type="text"
                     name={"driverLicenseNumber"}
-                    placeholder={currentDriver.driverLicenseNumber}
+                    placeholder={detailDriver.driverLicenseNumber}
                     value={driverLicenseNumber}
                     onChange={handleChange}
                   />
@@ -748,12 +821,11 @@ export function ButtonsTable({
                   <Select
                     disabled={driverLicenseNumber ? false : true}
                     name={"stateLicense"}
-                    placeholder={currentDriver.stateLicense}
                     value={stateLicense}
                     onChange={handleChange}
                   >
                     <option>
-                      {!driverLicenseNumber
+                      {detailDriver.stateLicense || !driverLicenseNumber
                         ? "Estato de la Licencia"
                         : "*Estato de la Licencia"}
                     </option>
@@ -773,12 +845,11 @@ export function ButtonsTable({
                   <Select
                     disabled={driverLicenseNumber ? false : true}
                     name={"typeLicense"}
-                    placeholder={currentDriver.typeLicense}
                     value={typeLicense}
                     onChange={handleChange}
                   >
                     <option>
-                      {!driverLicenseNumber
+                      {detailDriver.typeLicense || !driverLicenseNumber
                         ? "Tipo de licencia"
                         : "*Tipo de licencia"}
                     </option>
@@ -802,7 +873,7 @@ export function ButtonsTable({
                     type="date"
                     name={"dateLicense"}
                     value={dateLicense}
-                    placeholder={currentDriver.dateLicense}
+                    placeholder={detailDriver.dateLicense}
                     onChange={handleChange}
                   />
                   <Label>
@@ -953,7 +1024,7 @@ export function ButtonsTable({
                     type="text"
                     name={"messageReasonInActive"}
                     value={messageReasonInActive}
-                    placeholder={currentDriver.messageReasonInActive}
+                    placeholder={detailDriver.messageReasonInActive}
                     maxLength={100}
                     disabled={isActive === 1}
                     onChange={handleChange}
@@ -972,7 +1043,6 @@ export function ButtonsTable({
               <SubmitBtn type="submit">Guardar</SubmitBtn>
               <SubmitBtn onClick={() => {
                 setModalIsOpen(false);
-                closeModal();
               }}>
                 Cancelar
               </SubmitBtn>

@@ -7,12 +7,30 @@ Modal.setAppElement("#root");
 export const Detail = (props) => {
   const { id } = props;
   const [detailDriver, setDetailDriver] = useState({});
-  // console.log("detailDriver:", detailDriver);
-
+  const [imageSrc, setImageSrc] = useState(null);
+  
   const [modalIsOpen, setModalIsOpen] = useState(false);
   useEffect(() => {
     axiosDetailDriver(id, setDetailDriver, headers);
   }, [id]);
+
+  useEffect(() => {
+    const loadImage = async () => {
+      try {
+        // Obtén la ruta correcta de la imagen utilizando import.meta.env
+        const imagePath = `../../../assets/img/drivers/${detailDriver.driverPicture}`;
+        // Importa la imagen de manera dinámica
+        const { default: img } = await import(imagePath);
+        setImageSrc(img);
+      } catch (error) {
+        console.error("Error al cargar la imagen:", error);
+      }
+    };
+
+    if (detailDriver.driverPicture) {
+      loadImage();
+    }
+  }, [detailDriver.driverPicture]);
   return (
     <>
       <td>
@@ -24,8 +42,7 @@ export const Detail = (props) => {
           <h2>Consulta conductor</h2>
           <hr />
           <img
-            // src={`data:image/png;base64,${detailDriver.driverPicture}`}
-            // src={`/images/${detailDriver.driverPicture}`}
+            src={imageSrc}
             alt="Foto conductor"
             style={{ maxWidth: "200px" }}
           />
