@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { axiosDetailDriver } from "../../../hooks/drivers/crudDrivers";
 import { headers } from "../../../tools/accessToken";
 import Modal from "react-modal";
+import { loadImage } from "./loadImages";
 Modal.setAppElement("#root");
 
 export const Detail = (props) => {
@@ -18,30 +19,10 @@ export const Detail = (props) => {
   }, [id]);
 
   useEffect(() => {
-    const loadImage = async () => {
-      try {
-        if (driverPicture) {
-          const imagePath = `../../../assets/img/drivers/${driverPicture}`;
-          const { default: img } = await import(imagePath);
-          setFotoConductor(img);
-        }
-        if (frontLicensePicture) {
-          const imagePath = `../../../assets/img/drivers/${frontLicensePicture}`;
-          const { default: img } = await import(imagePath);
-          setFotoFront(img);
-        }
-        if (backLicensePicture) {
-          const imagePath = `../../../assets/img/drivers/${backLicensePicture}`;
-          const { default: img } = await import(imagePath);
-          setFotoBack(img);
-        }
-      } catch (error) {
-        console.error("Error al cargar la imagen:", error);
-      }
-    };
+    // loadImage()
 
     if (driverPicture || frontLicensePicture && backLicensePicture) {
-      loadImage();
+      loadImage(detailDriver, setFotoConductor, setFotoFront, setFotoBack);
     }
   }, [driverPicture, frontLicensePicture, backLicensePicture]);
   return (
