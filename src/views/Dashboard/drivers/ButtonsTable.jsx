@@ -2,10 +2,18 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import editIcon from "../../../assets/img/editIcon.png";
 import deleteIcon from "../../../assets/img/deleteIcon.png";
 import Modal from "react-modal";
-import { validateDriver } from "../../../validations/drivers";
+import {
+  validateDriver,
+  validateUpDateDriver,
+} from "../../../validations/drivers";
 import { headers } from "../../../tools/accessToken";
-import { axiosGetDrivers, axiosPostDriver, axiosPutDriver } from "../../../hooks/drivers/crudDrivers";
-import styled from 'styled-components';
+import {
+  axiosDetailDriver,
+  axiosGetDrivers,
+  axiosPostDriver,
+  axiosPutDriver,
+} from "../../../hooks/drivers/crudDrivers";
+import styled from "styled-components";
 import {
   errorRegister,
   successRegister,
@@ -39,9 +47,10 @@ import {
   GrupoCheck,
   CheckContainer,
   Textarea,
-  TextareaContainer
+  TextareaContainer,
 } from "../../../components/reusable/FormularioModal";
 import { Detail } from "./Detail";
+import { loadImage } from "./loadImages";
 
 Modal.setAppElement("#root");
 
@@ -71,13 +80,13 @@ const InputCheckV1 = styled(InputCheck)`
 `;
 
 const dropzoneContainerStyles = {
-  width: '50%', // Establece el ancho del contenedor
+  width: "50%", // Establece el ancho del contenedor
   //height: '200px', // Establece la altura del contenedor
-  border: '2px dashed #700202',
-  borderRadius: '4px',
-  textAlign: 'center',
-  padding: '20px',
-  cursor: 'pointer',
+  border: "2px dashed #700202",
+  borderRadius: "4px",
+  textAlign: "center",
+  padding: "20px",
+  cursor: "pointer",
 };
 
 const pictureLicence = {
@@ -89,7 +98,7 @@ const Img = styled.img`
   border-radius: 5px;
   size: 5px;
   transition: border-radius 0.5s;
-  &:hover{
+  &:hover {
     border-radius: 25px;
     transition: border-radius 0.5s;
   }
@@ -102,14 +111,58 @@ export function ButtonsTable({
   driver,
   setDriver,
   errorForm,
-  setErrorForm, 
-  limit, 
-  setTotalPages, 
+  setErrorForm,
+  limit,
+  setTotalPages,
   setPage,
 }) {
-  const currentDriver = tDriver.find((item) => item._id === id);
-  const [modifDriver, setModifDriver] = useState({});
-  // console.log("currentDriver:", currentDriver)
+  const [detailDriver, setDetailDriver] = useState({});
+  useEffect(() => {
+    axiosDetailDriver(id, setDetailDriver, headers);
+  }, [id]);
+  const [fotoConductor, setFotoConductor] = useState(null);
+  // console.log("detailDriver:", detailDriver)
+  const [fotoFront, setFotoFront] = useState(null);
+  const [fotoBack, setFotoBack] = useState(null);
+
+  useEffect(() => {
+    setUpdateForm({
+      name: detailDriver.name || "",
+      lastName: detailDriver.lastName || "",
+      zipCode: detailDriver.zipCode || "", // CODIGO POSTAL
+      state: detailDriver.state || "", // ESTADO DE MEXICO
+      city: detailDriver.city || "",
+      colonia: detailDriver.colonia || "",
+      address: detailDriver.address || "",
+      contact: detailDriver.contact || "", // NUMERO DE CONTACTO DEL CONDUCTOR
+      email: detailDriver.email || "",
+      driverPicture: detailDriver.driverPicture || "", //? FOTO DEL CONDUCTOR
+      //! DATOS DE LA LICENCIA DE CONDUCCION
+      driverLicenseNumber: detailDriver.driverLicenseNumber || "", //* NUMERO LICENCIA DEL CONDUCTOR
+      stateLicense: detailDriver.stateLicense || "", // ESTADO DE LA LICENCIA
+      typeLicense: detailDriver.typeLicense || "", // TIPO LICENCIA
+      dateLicense: detailDriver.dateLicense || "", // FECHA - VIGENCIA DE LA LICENCIA
+      frontLicensePicture: detailDriver.frontLicensePicture || "", //? FOTO FRONTAL DE LA LICENCIA
+      backLicensePicture: detailDriver.backLicensePicture || "", //? FOTO REVERSO DE LA LICENCIA
+      //! DATOS DE LA LICENCIA DE CONDUCCION
+      //! AJUSTES DE LA APLICACION
+      allServices: detailDriver.allServices || 1, // TODOS
+      servicesLGBQT: detailDriver.servicesLGBQT || 0, // LGBQT+
+      onlyWomenServices: detailDriver.onlyWomenServices || 0, // MUJERES
+      //! AJUSTES DE LA APLICACION
+      //! ACCESO A LA APLICACION
+      password: "",
+      repeatPassword: "",
+      isActive: detailDriver.isActive || 1,
+      messageReasonInActive: detailDriver.messageReasonInActive || "", // MENSAJE RASON INACTIVO
+      //! ACCESO A LA APLICACION
+      car: detailDriver.car || null,
+      //! NO SE VALIDAN
+      tokenNotification: detailDriver.tokenNotification || "",
+      typePhone: detailDriver.typePhone || "",
+      //! NO SE VALIDAN
+    });
+  }, [detailDriver]);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [sepomex, setSepomex] = useState([]);
@@ -131,50 +184,69 @@ export function ButtonsTable({
 
   const [selectImage, setSelectImage] = useState({});
 
-  const {
-    name,
-    lastName,
-    zipCode, // CODIGO POSTAL
-    state, // ESTADO DE MEXICO
-    city,
-    colonia,
-    address,
-    contact, // NUMERO DE CONTACTO DEL CONDUCTOR
-    email,
-    driverPicture, //* FOTO DEL CONDUCTOR
+  const [upDateForm, setUpdateForm] = useState({
+    name: "",
+    lastName: "",
+    zipCode: "", // CODIGO POSTAL
+    state: "", // ESTADO DE MEXICO
+    city: "",
+    colonia: "",
+    address: "",
+    contact: "", // NUMERO DE CONTACTO DEL CONDUCTOR
+    email: "",
+    driverPicture: "", //* FOTO DEL CONDUCTOR
     //! DATOS DE LA LICENCIA DE CONDUCCION
-    driverLicenseNumber, //* NUMERO LICENCIA DEL CONDUCTOR
-    stateLicense, // ESTADO DE LA LICENCIA
-    typeLicense, // TIPO LICENCIA
-    dateLicense, // FECHA - VIGENCIA DE LA LICENCIA
-    frontLicensePicture, //* FOTO FRONTAL DE LA LICENCIA
-    backLicensePicture, //* FOTO REVERSO DE LA LICENCIA
+    driverLicenseNumber: "", //* NUMERO LICENCIA DEL CONDUCTOR
+    stateLicense: "", // ESTADO DE LA LICENCIA
+    typeLicense: "", // TIPO LICENCIA
+    dateLicense: "", // FECHA - VIGENCIA DE LA LICENCIA
+    frontLicensePicture: "", //* FOTO FRONTAL DE LA LICENCIA
+    backLicensePicture: "", //* FOTO REVERSO DE LA LICENCIA
     //! DATOS DE LA LICENCIA DE CONDUCCION
     //! AJUSTES DE LA APLICACION
-    allServices, // TODOS
-    servicesLGBQT, // LGBQT+
-    onlyWomenServices, // MUJERES
+    allServices: 1, // TODOS
+    servicesLGBQT: 0, // LGBQT+
+    onlyWomenServices: 0, // MUJERES
     //! AJUSTES DE LA APLICACION
     //! ACCESO A LA APLICACION
-    password,
-    repeatPassword,
-    isActive,
-    messageReasonInActive, // MENSAJE RASON INACTIVO
+    password: "",
+    repeatPassword: "",
+    isActive: 1,
+    messageReasonInActive: "", // MENSAJE RASON INACTIVO
     //! ACCESO A LA APLICACION
-    car,
-  } = driver;
-  // console.log("form driver:", driver)
-  
-  const memorySepomes = useMemo(() => sepomex, [sepomex])
-  const memoryLicencias = useMemo(() => licencias, [licencias])
-  
+    car: "" || null,
+    //! NO SE VALIDAN
+    tokenNotification: "",
+    typePhone: "",
+    //! NO SE VALIDAN
+  });
+  // console.log("update driver:", upDateForm);
+
+  useEffect(() => {
+    // Con este codigo pre-visualizo las imagenes guardadas
+    if (
+      detailDriver.driverPicture ||
+      (detailDriver.frontLicensePicture && detailDriver.backLicensePicture)
+    ) {
+      loadImage(detailDriver, setFotoConductor, setFotoFront, setFotoBack);
+    }
+  }, [detailDriver.driverPicture, detailDriver.frontLicensePicture, detailDriver.backLicensePicture]);
+
+  const memorySepomes = useMemo(() => sepomex, [sepomex]);
+  const memoryLicencias = useMemo(() => licencias, [licencias]);
+
   function handleChange(e) {
     const { name, value } = e.target;
     // console.log("name:", name)
-    
-    if (name === "zipCode" && value.length >= 5 || name === "state" || name === "city" || name === "colonia") {
-      const sepomexData = memorySepomes.find(el => el.codigoPostal === value);
-            
+
+    if (
+      (name === "zipCode" && value.length >= 5) ||
+      name === "state" ||
+      name === "city" ||
+      name === "colonia"
+    ) {
+      const sepomexData = memorySepomes.find((el) => el.codigoPostal === value);
+
       if (sepomexData) {
         setZipcode(sepomexData.codigoPostal);
         setEstado(sepomexData.estado);
@@ -182,80 +254,90 @@ export function ButtonsTable({
         setColonias(sepomexData.colonias);
       } else {
         // * ------------ ESTADOS ------------
-        const findState = [...new Set(memorySepomes.map(el => el.estado))]
+        const findState = [...new Set(memorySepomes.map((el) => el.estado))];
         if (findState) {
-          setEstado(findState);
+          setSelectEstado(findState);
         }
         // * ------------ CIUDADES ------------
-        const filterByState = memorySepomes.filter(el => {
+        const filterByState = memorySepomes.filter((el) => {
           if (el.estado === value) {
-            return el.ciudad
+            return el.ciudad;
           }
         });
-        const findCity = [...new Set(filterByState.map(el => el.ciudad))].filter(el => el !== undefined)
+        const findCity = [
+          ...new Set(filterByState.map((el) => el.ciudad)),
+        ].filter((el) => el !== undefined);
         if (findCity) {
-          setCiudad(findCity);
+          setSelectCiudad(findCity);
         }
         // * ------------ COLONIAS ------------
-        const filterByCity = memorySepomes.filter(el => {
+        const filterByCity = memorySepomes.filter((el) => {
           if (el.ciudad === value) {
-            return el.colonias
+            return el.colonias;
           }
         });
-        const findColonia = [...new Set(filterByCity.map(el => el.colonias))].flat(1)
+        const findColonia = [
+          ...new Set(filterByCity.map((el) => el.colonias)),
+        ].flat(1);
         if (findColonia) {
-          setColonias(findColonia);
+          setSelectColonias(findColonia);
         }
       }
     }
 
     if (name === "driverLicenseNumber") {
-      const filteredEstado = memoryLicencias.map(el => el.estado);
+      const filteredEstado = memoryLicencias.map((el) => el.estado);
       setEstados(filteredEstado);
     }
 
     if (name === "stateLicense") {
-      const filteredLicencias = memoryLicencias.map(el => {
-        if (el.estado === value) {
-          return el.tipoDeLicencias;
-        }
-      }).flat(1).filter(el => el !== undefined);
+      const filteredLicencias = memoryLicencias
+        .map((el) => {
+          if (el.estado === value) {
+            return el.tipoDeLicencias;
+          }
+        })
+        .flat(1)
+        .filter((el) => el !== undefined);
       setLicences(filteredLicencias);
     }
 
-    setDriver({
-      ...driver,
+    setUpdateForm({
+      ...upDateForm,
       [name]: value,
     });
     setErrorForm(
-      validateDriver({
-        ...driver,
-        [name]: value,
-      }, selectImage)
+      validateUpDateDriver(
+        {
+          ...upDateForm,
+          [name]: value,
+        },
+        selectImage
+      )
     );
   }
-  
+
   useEffect(() => {
     // SE RESETEAN LOS SIGUIENTES CAMPOS
-    let updatedDriver = {...driver}
-    if (zipCode.length <= 4) {
+    let updatedDriver = { ...upDateForm };
+    if (upDateForm.zipCode.length <= 4) {
       setZipcode("");
       setEstado("");
       setCiudad("");
       setColonias("");
-      localStorage.removeItem("Ciudades");
-      localStorage.removeItem("Colonias");
+      // localStorage.removeItem("Ciudades");
+      // localStorage.removeItem("Colonias");
       setSelectEstado([]);
-      // setSelectCiudad([]);
-      // setSelectColonias([]);
+      setSelectCiudad([]);
+      setSelectColonias([]);
       updatedDriver = {
         ...updatedDriver,
         state: "",
         city: "",
         colonia: "",
-      }
+      };
     }
-    if (driverLicenseNumber.length <= 4) {
+    if (upDateForm.driverLicenseNumber.length <= 4) {
       updatedDriver = {
         ...updatedDriver,
         stateLicense: "",
@@ -263,16 +345,16 @@ export function ButtonsTable({
         dateLicense: "",
         frontLicensePicture: "",
         backLicensePicture: "",
-      }
+      };
     }
 
-    setDriver(updatedDriver);
-  }, [zipCode, driverLicenseNumber]);
+    setUpdateForm(updatedDriver);
+  }, [detailDriver.zipCode, detailDriver.driverLicenseNumber]);
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
 
-    let updatedDriver = { ...driver };
+    let updatedDriver = { ...upDateForm };
 
     if (name === "isActive") {
       updatedDriver.isActive = checked ? 1 : 0;
@@ -298,14 +380,14 @@ export function ButtonsTable({
       }
     }
 
-    setDriver(updatedDriver);
+    setUpdateForm(updatedDriver);
   };
 
   useEffect(() => {
     // Actualizar los valores del formulario cuando estado o ciudad cambien
     if (estado || ciudad) {
       // ACTUALIZAMOS EL FORMULARIO CON LOS CAMPOS QUE SE AUTOCOMPLETAN
-      setDriver(prevState => ({
+      setUpdateForm((prevState) => ({
         ...prevState,
         state: estado,
         city: ciudad,
@@ -315,9 +397,9 @@ export function ButtonsTable({
 
   useEffect(() => {
     // Este codigo permite la sincronización de los mensajes de las imagenes
-    const validationErrors = validateDriver(driver, selectImage);
+    const validationErrors = validateUpDateDriver(upDateForm, selectImage);
     setErrorForm(validationErrors);
-  }, [driver]);
+  }, [upDateForm]);
 
   const {
     nameError,
@@ -355,28 +437,28 @@ export function ButtonsTable({
       convertAndSetImage(file, "driverPicture");
     }
   }, []);
-  
+
   const onFrontLicensePictureDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles.length > 0) {
       const file = acceptedFiles[0];
       convertAndSetImage(file, "frontLicensePicture");
     }
   }, []);
-  
+
   const onBackLicensePictureDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles.length > 0) {
       const file = acceptedFiles[0];
       convertAndSetImage(file, "backLicensePicture");
     }
   }, []);
-  
+
   const convertAndSetImage = (file, fieldName) => {
-    console.log("file:", file)
-    setSelectImage(file)
+    console.log("file:", file);
+    setSelectImage(file);
     const reader = new FileReader();
     reader.onload = () => {
-      const base64String = reader.result.split(',')[1];
-      setDriver(prevState => ({
+      const base64String = reader.result.split(",")[1];
+      setUpdateForm((prevState) => ({
         ...prevState,
         [fieldName]: base64String,
       }));
@@ -384,117 +466,101 @@ export function ButtonsTable({
     reader.readAsDataURL(file);
   };
 
-  const { getRootProps: getDriverRootProps, getInputProps: getDriverInputProps } = useDropzone({
+  const {
+    getRootProps: getDriverRootProps,
+    getInputProps: getDriverInputProps,
+  } = useDropzone({
     onDrop: onDriverPictureDrop,
     // FORMATOS DE IMAGEN PERMITIDA
     accept: {
-     'image/*': ['.jpg', '.png'],
-    },
-    maxFiles: 1, // ARCHIVOS PERMITIDOS
-  });
-  
-  const { getRootProps: getFrontLicenseRootProps, getInputProps: getFrontLicenseInputProps } = useDropzone({
-    onDrop: onFrontLicensePictureDrop,
-    // FORMATOS DE IMAGEN PERMITIDA
-    accept: {
-     'image/*': ['.jpg', '.png'],
-    },
-    maxFiles: 1, // ARCHIVOS PERMITIDOS
-  });
-  
-  const { getRootProps: getBackLicenseRootProps, getInputProps: getBackLicenseInputProps } = useDropzone({
-    onDrop: onBackLicensePictureDrop,
-    // FORMATOS DE IMAGEN PERMITIDA
-    accept: {
-     'image/*': ['.jpg', '.png'],
+      "image/*": [".jpg", ".png"],
     },
     maxFiles: 1, // ARCHIVOS PERMITIDOS
   });
 
-  function closeModal() {
-    setModifDriver({
-      name: currentDriver.name,
-      lastName: currentDriver.lastName,
-      zipCode: currentDriver.zipCode, // CODIGO POSTAL
-      state: currentDriver.state, // ESTADO DE MEXICO
-      city: currentDriver.city,
-      colonia: currentDriver.colonia,
-      address: currentDriver.address,
-      contact: currentDriver.contact, // NUMERO DE CONTACTO DEL CONDUCTOR
-      email: currentDriver.email,
-      driverPicture: currentDriver.driverPicture, //* FOTO DEL CONDUCTOR
-      //! DATOS DE LA LICENCIA DE CONDUCCION
-      driverLicenseNumber: currentDriver.driverLicenseNumber, //* NUMERO LICENCIA DEL CONDUCTOR
-      stateLicense: currentDriver.stateLicense, // ESTADO DE LA LICENCIA
-      typeLicense: currentDriver.typeLicense, // TIPO LICENCIA
-      dateLicense: currentDriver.dateLicense, // FECHA - VIGENCIA DE LA LICENCIA
-      frontLicensePicture: currentDriver.frontLicensePicture, //* FOTO FRONTAL DE LA LICENCIA
-      backLicensePicture: currentDriver.backLicensePicture, //* FOTO REVERSO DE LA LICENCIA
-      //! DATOS DE LA LICENCIA DE CONDUCCION
-      //! AJUSTES DE LA APLICACION
-      allServices: currentDriver.allServices, // TODOS
-      servicesLGBQT: currentDriver.servicesLGBQT, // LGBQT+
-      onlyWomenServices: currentDriver.onlyWomenServices, // MUJERES
-      //! AJUSTES DE LA APLICACION
-      //! ACCESO A LA APLICACION
-      password: '',
-      repeatPassword: '',
-      isActive: currentDriver.isActive,
-      messageReasonInActive: currentDriver.messageReasonInActive, // MENSAJE RASON INACTIVO
-      //! ACCESO A LA APLICACION
-      car: currentDriver.car || null,
-      //! NO SE VALIDAN
-      tokenNotification: currentDriver.tokenNotification,
-      typePhone: currentDriver.typePhone,
-      //! NO SE VALIDAN
-    });
-  }
+  const {
+    getRootProps: getFrontLicenseRootProps,
+    getInputProps: getFrontLicenseInputProps,
+  } = useDropzone({
+    onDrop: onFrontLicensePictureDrop,
+    // FORMATOS DE IMAGEN PERMITIDA
+    accept: {
+      "image/*": [".jpg", ".png"],
+    },
+    maxFiles: 1, // ARCHIVOS PERMITIDOS
+  });
+
+  const {
+    getRootProps: getBackLicenseRootProps,
+    getInputProps: getBackLicenseInputProps,
+  } = useDropzone({
+    onDrop: onBackLicensePictureDrop,
+    // FORMATOS DE IMAGEN PERMITIDA
+    accept: {
+      "image/*": [".jpg", ".png"],
+    },
+    maxFiles: 1, // ARCHIVOS PERMITIDOS
+  });
 
   async function handleSubmit(e) {
     e.preventDefault();
 
     if (
-      name ||
-      lastName ||
-      zipCode ||
-      state ||
-      city ||
-      colonia ||
-      address ||
-      contact ||
-      email ||
-      (allServices === 1 ||
-      servicesLGBQT === 1 ||
-      onlyWomenServices === 1)
+      upDateForm.name ||
+      upDateForm.lastName ||
+      upDateForm.zipCode ||
+      upDateForm.state ||
+      upDateForm.city ||
+      upDateForm.colonia ||
+      upDateForm.address ||
+      upDateForm.contact ||
+      upDateForm.email ||
+      upDateForm.allServices === 1 ||
+      upDateForm.servicesLGBQT === 1 ||
+      upDateForm.onlyWomenServices === 1
     ) {
       if (passwordError && repeatPasswordError) {
-        errorRegister(driver, errorForm);
-      } else if (driverPictureError || frontLicensePictureError && backLicensePictureError) {
-        errorRegister(driver, errorForm);
-      } else if (stateLicenseError || typeLicenseError || dateLicenseError || frontLicensePictureError || backLicensePictureError) {
-        errorRegister(driver, errorForm);
+        errorRegister(upDateForm, errorForm);
+      } else if (
+        driverPictureError ||
+        (frontLicensePictureError && backLicensePictureError)
+      ) {
+        errorRegister(upDateForm, errorForm);
+      } else if (
+        stateLicenseError ||
+        typeLicenseError ||
+        dateLicenseError ||
+        frontLicensePictureError ||
+        backLicensePictureError
+      ) {
+        errorRegister(upDateForm, errorForm);
       } else if (messageReasonInActiveError) {
-        errorRegister(driver, errorForm);
+        errorRegister(upDateForm, errorForm);
       } else {
         try {
-          successRegister(driver);
-          const newDriver = await axiosPutDriver(id, driver, headers);
-          setTDriver([...tDriver, newDriver]);
+          successRegister(upDateForm);
+          const currentDriver = await axiosPutDriver(id, upDateForm, headers);
 
-          await axiosGetDrivers(setTDriver, setTotalPages, headers, 1, limit)
-  
+          // Actualiza la lista en el frontend
+          setTDriver((prev) => {
+            // Reemplaza el upDateForm editado en la lista por el nuevo upDateForm devuelto por el backend
+            const updatedTDrivers = prev.map((item) =>
+              item._id === id ? currentDriver : item
+            );
+            return updatedTDrivers;
+          });
+
           // Cierra el modal después de guardar
           setModalIsOpen(false);
-          closeModal()
 
           // Establece la página en 1 después de agregar un elemento
-          setPage(1);
+          // setPage(1);
         } catch (error) {
-          console.error("Error al guardar el admin:", error);
+          console.error("Error al modificar el conductor:", error);
         }
       }
-    } else  {
-      errorRegister(driver, errorForm);
+    } else {
+      errorRegister(upDateForm, errorForm);
     }
   }
 
@@ -528,8 +594,7 @@ export function ButtonsTable({
                   <Input
                     type="text"
                     name={"name"}
-                    value={name}
-                    placeholder={currentDriver.name}
+                    value={upDateForm.name}
                     onChange={handleChange}
                   />
                   <Label>*Nombre(s): </Label>
@@ -541,8 +606,7 @@ export function ButtonsTable({
                   <Input
                     type="text"
                     name={"lastName"}
-                    placeholder={currentDriver.lastName}
-                    value={lastName}
+                    value={upDateForm.lastName}
                     onChange={handleChange}
                   />
                   <Label>*Apellidos: </Label>
@@ -554,8 +618,7 @@ export function ButtonsTable({
                   <Input
                     type="text"
                     name={"zipCode"}
-                    placeholder={currentDriver.zipCode}
-                    value={zipCode}
+                    value={upDateForm.zipCode}
                     onChange={handleChange}
                   />
                   <Label>*Código postal: </Label>
@@ -565,68 +628,62 @@ export function ButtonsTable({
               </GrupoInput>
 
               <GrupoSelect>
-                {typeof estado !== "string" ? null : (
+                {codigoPostal ? (
                   <SelectContainer>
                     <Select
                       disabled={true}
                       name={"state"}
-                      placeholder={currentDriver.state}
-                      value={state}
+                      value={upDateForm.state}
                       onChange={handleChange}
                     >
-                      <option>{estado || "Selecciona"}</option>
+                      <option>
+                        {!estado ? detailDriver.state : estado || "Selecciona"}
+                      </option>
                     </Select>
                     <Label>*Estado: </Label>
                     {stateError && <Span>{stateError}</Span>}
                   </SelectContainer>
-                )}
-                {!Array.isArray(estado) ? null : (
+                ) : (
                   <SelectContainer>
                     <Select
-                      disabled={false}
+                      disabled={upDateForm.zipCode.length <= 4 ? true : false}
                       name={"state"}
-                      placeholder={currentDriver.state}
-                      value={state}
+                      value={upDateForm.state}
                       onChange={handleChange}
                     >
-                      <option>Selecciona</option>
-                      {estado.map((est, idx) => {
+                      <option>{detailDriver.state || "Selecciona"}</option>
+                      {selectEstado.map((est, idx) => {
                         return <option key={idx}>{est}</option>;
                       })}
                     </Select>
                     <Label>*Estado: </Label>
-                    {/* <br /> */}
                     {stateError && <Span>{stateError}</Span>}
                   </SelectContainer>
                 )}
 
-                {typeof ciudad !== "string" ? null : (
+                {codigoPostal ? (
                   <SelectContainer>
                     <Select
                       disabled={true}
                       name={"city"}
-                      // placeholder={currentDriver.city}
-                      value={city}
+                      value={upDateForm.city}
                       onChange={handleChange}
                     >
-                      <option>{currentDriver.city || "Selecciona"}</option>
+                      <option>{ciudad || "Selecciona"}</option>
                     </Select>
                     <Label>*Ciudad: </Label>
                     {cityError && <Span>{cityError}</Span>}
                   </SelectContainer>
-                )}
-                {!Array.isArray(ciudad) ? null : (
+                ) : (
                   <SelectContainer>
                     <Select
-                      disabled={false}
+                      disabled={upDateForm.zipCode.length <= 4 ? true : false}
                       name={"city"}
-                      placeholder={currentDriver.city}
-                      //value={city}
-                      value={typeof city === "string" && city}
+                      value={upDateForm.city}
                       onChange={handleChange}
                     >
-                      <option>Selecciona</option>
-                      {ciudad.map((cit, idx) => {
+                      <option>{detailDriver.city || "Selecciona"}</option>
+                      {selectCiudad.map((cit, idx) => {
                         return <option key={idx}>{cit}</option>;
                       })}
                     </Select>
@@ -634,25 +691,42 @@ export function ButtonsTable({
                     {cityError && <Span>{cityError}</Span>}
                   </SelectContainer>
                 )}
-                <SelectContainer>
-                  <Select
-                    disabled={
-                      zipCode || codigoPostal === zipCode ? false : true
-                    }
-                    name={"colonia"}
-                    placeholder={currentDriver.colonia}
-                    value={colonia}
-                    onChange={handleChange}
-                  >
-                    <option>Selecciona</option>
-                    {colonias.length >= 1 &&
-                      colonias.map((colonia, idx) => {
-                        return <option key={idx}>{colonia}</option>;
-                      })}
-                  </Select>
-                  <Label>*Colonia: </Label>
-                  {coloniaError && <Span>{coloniaError}</Span>}
-                </SelectContainer>
+
+                {codigoPostal ? (
+                  <SelectContainer>
+                    <Select
+                      disabled={!upDateForm.city ? true : false}
+                      name={"colonia"}
+                      value={upDateForm.colonia}
+                      onChange={handleChange}
+                    >
+                      <option>{detailDriver.colonia || "Selecciona"}</option>
+                      {colonias.length >= 1 &&
+                        colonias.map((colonia, idx) => {
+                          return <option key={idx}>{colonia}</option>;
+                        })}
+                    </Select>
+                    <Label>*Colonia: </Label>
+                    {coloniaError && <Span>{coloniaError}</Span>}
+                  </SelectContainer>
+                ) : (
+                  <SelectContainer>
+                    <Select
+                      disabled={!upDateForm.city ? true : false}
+                      name={"colonia"}
+                      value={upDateForm.colonia}
+                      onChange={handleChange}
+                    >
+                      <option>{detailDriver.colonia || "Selecciona"}</option>
+                      {selectColonias.length >= 1 &&
+                        selectColonias.map((colonia, idx) => {
+                          return <option key={idx}>{colonia}</option>;
+                        })}
+                    </Select>
+                    <Label>*Colonia: </Label>
+                    {coloniaError && <Span>{coloniaError}</Span>}
+                  </SelectContainer>
+                )}
               </GrupoSelect>
 
               <GrupoInput>
@@ -660,8 +734,7 @@ export function ButtonsTable({
                   <Input
                     type="text"
                     name={"address"}
-                    placeholder={currentDriver.address}
-                    value={address}
+                    value={upDateForm.address}
                     onChange={handleChange}
                   />
                   <Label>*Domicilio: </Label>
@@ -673,8 +746,7 @@ export function ButtonsTable({
                   <Input
                     type="text"
                     name={"contact"}
-                    placeholder={currentDriver.contact}
-                    value={contact}
+                    value={upDateForm.contact}
                     onChange={handleChange}
                   />
                   <Label>*Teléfono (Móvil): </Label>
@@ -686,8 +758,7 @@ export function ButtonsTable({
                   <Input
                     type="text"
                     name={"email"}
-                    placeholder={currentDriver.email}
-                    value={email}
+                    value={upDateForm.email}
                     onChange={handleChange}
                   />
                   <Label>*Correo electrónico: </Label>
@@ -707,9 +778,9 @@ export function ButtonsTable({
                     style={dropzoneContainerStyles}
                   >
                     <input {...getDriverInputProps()} />
-                    {driverPicture && (
+                    {upDateForm.driverPicture && (
                       <img
-                        src={`data:image/png;base64,${driverPicture}`}
+                        src={`data:image/png;base64,${upDateForm.driverPicture}`}
                         alt="Foto conductor"
                         style={{ maxWidth: "100px" }}
                       />
@@ -718,6 +789,11 @@ export function ButtonsTable({
                     <br />
                     {driverPictureError && <Span>{driverPictureError}</Span>}
                   </div>
+                  <img
+                    src={fotoConductor}
+                    alt="Foto conductor"
+                    style={{ maxWidth: "100px" }}
+                  />
                 </SubeImgContainer>
               </GrupoImg>
 
@@ -731,8 +807,7 @@ export function ButtonsTable({
                   <Input
                     type="text"
                     name={"driverLicenseNumber"}
-                    placeholder={currentDriver.driverLicenseNumber}
-                    value={driverLicenseNumber}
+                    value={upDateForm.driverLicenseNumber}
                     onChange={handleChange}
                   />
                   <Label>Número de licencia: </Label>
@@ -743,104 +818,83 @@ export function ButtonsTable({
                 </InputContainer>
               </GrupoInput>
 
-              <GrupoSelect>
-                <SelectContainer>
-                  <Select
-                    disabled={driverLicenseNumber ? false : true}
-                    name={"stateLicense"}
-                    placeholder={currentDriver.stateLicense}
-                    value={stateLicense}
-                    onChange={handleChange}
-                  >
-                    <option>
-                      {!driverLicenseNumber
-                        ? "Estato de la Licencia"
-                        : "*Estato de la Licencia"}
-                    </option>
-                    {estados.length >= 1 &&
-                      estados.map((estado, idx) => {
-                        return (
-                          <option key={idx} value={estado}>
-                            {estado}
-                          </option>
-                        );
-                      })}
-                  </Select>
-                  {stateLicenseError && <Span>{stateLicenseError}</Span>}
-                </SelectContainer>
+              {!upDateForm.driverLicenseNumber ? null : (
+                <>
+                  <GrupoSelect>
+                    <SelectContainer>
+                      <Select
+                        disabled={upDateForm.driverLicenseNumber ? false : true}
+                        name={"stateLicense"}
+                        value={upDateForm.stateLicense}
+                        onChange={handleChange}
+                      >
+                        <option>
+                          {detailDriver.stateLicense ||
+                            "*Estato de la Licencia"}
+                        </option>
+                        {estados.length >= 1 &&
+                          estados.map((estado, idx) => {
+                            return (
+                              <option key={idx} value={upDateForm.estado}>
+                                {estado}
+                              </option>
+                            );
+                          })}
+                      </Select>
+                      {stateLicenseError && <Span>{stateLicenseError}</Span>}
+                    </SelectContainer>
+                    <SelectContainer>
+                      <Select
+                        disabled={upDateForm.driverLicenseNumber ? false : true}
+                        name={"typeLicense"}
+                        value={upDateForm.typeLicense}
+                        onChange={handleChange}
+                      >
+                        <option>
+                          {detailDriver.typeLicense || "*Tipo de licencia"}
+                        </option>
+                        {licences.length >= 1 &&
+                          licences.map((licencia, idx) => {
+                            return (
+                              <option key={idx} value={upDateForm.licencia}>
+                                {licencia}
+                              </option>
+                            );
+                          })}
+                      </Select>
+                      {typeLicenseError && <Span>{typeLicenseError}</Span>}
+                    </SelectContainer>
+                  </GrupoSelect>
 
-                <SelectContainer>
-                  <Select
-                    disabled={driverLicenseNumber ? false : true}
-                    name={"typeLicense"}
-                    placeholder={currentDriver.typeLicense}
-                    value={typeLicense}
-                    onChange={handleChange}
-                  >
-                    <option>
-                      {!driverLicenseNumber
-                        ? "Tipo de licencia"
-                        : "*Tipo de licencia"}
-                    </option>
-                    {licences.length >= 1 &&
-                      licences.map((licencia, idx) => {
-                        return (
-                          <option key={idx} value={licencia}>
-                            {licencia}
-                          </option>
-                        );
-                      })}
-                  </Select>
-                  {typeLicenseError && <Span>{typeLicenseError}</Span>}
-                </SelectContainer>
-              </GrupoSelect>
-
-              <GrupoInput>
-                <InputContainer>
-                  <Input
-                    disabled={driverLicenseNumber ? false : true}
-                    type="date"
-                    name={"dateLicense"}
-                    value={dateLicense}
-                    placeholder={currentDriver.dateLicense}
-                    onChange={handleChange}
-                  />
-                  <Label>
-                    {!driverLicenseNumber
-                      ? "Vigencia de licencia: "
-                      : "*Vigencia de licencia: "}
-                  </Label>
-                  {dateLicenseError && <SpanData>{dateLicenseError}</SpanData>}
-                </InputContainer>
-
-                <TituloSeccion>
-                  <hr />
-                  {!driverLicenseNumber
-                    ? "Foto de Licencia (Ambos lados)"
-                    : "*Foto de Licencia (Ambos lados)"}
-                </TituloSeccion>
-                <SubeImgContainer style={pictureLicence}>
-                  <br />
-                  {!driverLicenseNumber ? (
-                    <>
-                      <div style={dropzoneContainerStyles}>
-                        <p>Desabilitado</p>
-                      </div>
-                      <div style={dropzoneContainerStyles}>
-                        <p>Desabilitado</p>
-                      </div>
-                    </>
-                  ) : (
-                    <>
+                  <GrupoInput>
+                    <InputContainer>
+                      <Input
+                        disabled={upDateForm.driverLicenseNumber ? false : true}
+                        type="date"
+                        name={"dateLicense"}
+                        value={upDateForm.dateLicense}
+                        onChange={handleChange}
+                      />
+                      <Label>*Vigencia de licencia</Label>
+                      {dateLicenseError && (
+                        <SpanData>{dateLicenseError}</SpanData>
+                      )}
+                    </InputContainer>
+                    <TituloSeccion>
+                      <hr />
+                      *Foto de Licencia (Ambos lados)
+                    </TituloSeccion>
+                    <SubeImgContainer style={pictureLicence}>
+                      <br />
                       <SubeContainerImg
                         {...getFrontLicenseRootProps()}
                         style={dropzoneContainerStyles}
                       >
                         <ImgSube {...getFrontLicenseInputProps()} />
-                        {frontLicensePicture && (
+                        {upDateForm.frontLicensePicture && (
                           <img
-                            src={`data:image/png;base64,${frontLicensePicture}`}
-                            alt="Foto conductor"
+                            src={`data:image/png;base64,${upDateForm.frontLicensePicture}`}
+                            alt="Foto frontal de la licencia"
                             style={{ maxWidth: "100px" }}
                           />
                         )}
@@ -849,15 +903,20 @@ export function ButtonsTable({
                           <Span>{frontLicensePictureError}</Span>
                         )}
                       </SubeContainerImg>
+                      <img
+                        src={fotoFront}
+                        alt="Foto frontal de la licencia"
+                        style={{ maxWidth: "100px" }}
+                      />
                       <SubeContainerImg
                         {...getBackLicenseRootProps()}
                         style={dropzoneContainerStyles}
                       >
                         <ImgSube {...getBackLicenseInputProps()} />
-                        {backLicensePicture && (
+                        {upDateForm.backLicensePicture && (
                           <Img
-                            src={`data:image/png;base64,${backLicensePicture}`}
-                            alt="Foto conductor"
+                            src={`data:image/png;base64,${upDateForm.backLicensePicture}`}
+                            alt="Foto reverso de la licencia"
                             style={{ maxWidth: "100px" }}
                           />
                         )}
@@ -866,10 +925,15 @@ export function ButtonsTable({
                           <Span>{backLicensePictureError}</Span>
                         )}
                       </SubeContainerImg>
-                    </>
-                  )}
-                </SubeImgContainer>
-              </GrupoInput>
+                      <img
+                        src={fotoBack}
+                        alt="Foto reverso de la licencia"
+                        style={{ maxWidth: "100px" }}
+                      />
+                    </SubeImgContainer>
+                  </GrupoInput>
+                </>
+              )}
 
               <TituloSeccion>
                 <hr />
@@ -880,23 +944,23 @@ export function ButtonsTable({
                 <InputCheck
                   type="checkbox"
                   name="allServices"
-                  checked={allServices === 1}
+                  checked={upDateForm.allServices === 1}
                   onChange={handleCheckboxChange}
                 />
                 Todos
                 <InputCheck
                   type="checkbox"
                   name="servicesLGBQT"
-                  checked={servicesLGBQT === 1}
-                  disabled={allServices === 1 ? true : false}
+                  checked={upDateForm.servicesLGBQT === 1}
+                  disabled={upDateForm.allServices === 1 ? true : false}
                   onChange={handleCheckboxChange}
                 />
                 LGBTQ+
                 <InputCheck
                   type="checkbox"
                   name="onlyWomenServices"
-                  checked={onlyWomenServices === 1}
-                  disabled={allServices === 1 ? true : false}
+                  checked={upDateForm.onlyWomenServices === 1}
+                  disabled={upDateForm.allServices === 1 ? true : false}
                   onChange={handleCheckboxChange}
                 />
                 Sólo mujeres
@@ -912,7 +976,7 @@ export function ButtonsTable({
                   <Input
                     type="password"
                     name={"password"}
-                    value={password}
+                    value={upDateForm.password}
                     onChange={handleChange}
                   />
                   <Label>Contraseña: </Label>
@@ -924,7 +988,7 @@ export function ButtonsTable({
                   <Input
                     type="password"
                     name={"repeatPassword"}
-                    value={repeatPassword}
+                    value={upDateForm.repeatPassword}
                     onChange={handleChange}
                   />
                   <Label>Repetir contraseña: </Label>
@@ -939,7 +1003,7 @@ export function ButtonsTable({
                   <InputCheckV1
                     type="checkbox"
                     name={"isActive"}
-                    checked={isActive === 1}
+                    checked={upDateForm.isActive === 1}
                     onChange={handleCheckboxChange}
                   />
                   <br />
@@ -952,10 +1016,9 @@ export function ButtonsTable({
                   <Textarea
                     type="text"
                     name={"messageReasonInActive"}
-                    value={messageReasonInActive}
-                    placeholder={currentDriver.messageReasonInActive}
+                    value={upDateForm.messageReasonInActive}
                     maxLength={100}
-                    disabled={isActive === 1}
+                    disabled={detailDriver.isActive === 1}
                     onChange={handleChange}
                   />
                   <Label>Motivo de bloqueo: </Label>
@@ -964,16 +1027,14 @@ export function ButtonsTable({
                   <Span>{messageReasonInActiveError}</Span>
                 )}
               </GrupoInput>
-              <br />
-              <br />
-
             </ContainerScroll>
             <ButtonContainer>
               <SubmitBtn type="submit">Guardar</SubmitBtn>
-              <SubmitBtn onClick={() => {
-                setModalIsOpen(false);
-                closeModal();
-              }}>
+              <SubmitBtn
+                onClick={() => {
+                  setModalIsOpen(false);
+                }}
+              >
                 Cancelar
               </SubmitBtn>
             </ButtonContainer>

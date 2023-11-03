@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { axiosDetailDriver } from "../../../hooks/drivers/crudDrivers";
 import { headers } from "../../../tools/accessToken";
 import Modal from "react-modal";
+import { loadImage } from "./loadImages";
 Modal.setAppElement("#root");
 import {
   ContainerModal,
@@ -53,12 +54,23 @@ import {
 export const Detail = (props) => {
   const { id } = props;
   const [detailDriver, setDetailDriver] = useState({});
-  console.log("detailDriver:", detailDriver);
+  const { driverPicture, frontLicensePicture, backLicensePicture } = detailDriver;
+  const [fotoConductor, setFotoConductor] = useState(null);
+  const [fotoFront, setFotoFront] = useState(null);
+  const [fotoBack, setFotoBack] = useState(null);
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   useEffect(() => {
     axiosDetailDriver(id, setDetailDriver, headers);
   }, [id]);
+
+  useEffect(() => {
+    // loadImage()
+
+    if (driverPicture || frontLicensePicture && backLicensePicture) {
+      loadImage(detailDriver, setFotoConductor, setFotoFront, setFotoBack);
+    }
+  }, [driverPicture, frontLicensePicture, backLicensePicture]);
   return (
     <>
       <td>

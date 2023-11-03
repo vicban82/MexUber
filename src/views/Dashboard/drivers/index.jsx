@@ -49,7 +49,6 @@ export const Drivers = () => {
     isActive: 1,
     messageReasonInActive: "", // MENSAJE RASON INACTIVO
     //! ACCESO A LA APLICACION
-    // car: "6518c32a2696272c68e9c540",
     car: "" || null,
     //! NO SE VALIDAN
     tokenNotification: "",
