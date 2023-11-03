@@ -41,7 +41,7 @@ import {
   Textarea,
   TextareaContainer
 } from "../../../components/reusable/FormularioModal";
-import { Detail } from "./detail";
+import { Detail } from "./Detail";
 
 Modal.setAppElement("#root");
 
