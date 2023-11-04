@@ -62,11 +62,9 @@ export const Detail = (props) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   useEffect(() => {
     axiosDetailDriver(id, setDetailDriver, headers);
-  }, [id]);
+  }, [id, detailDriver]);
 
   useEffect(() => {
-    // loadImage()
-
     if (driverPicture || frontLicensePicture && backLicensePicture) {
       loadImage(detailDriver, setFotoConductor, setFotoFront, setFotoBack);
     }
