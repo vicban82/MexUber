@@ -168,6 +168,7 @@ export const SeccionAjustesApp = styled.div`
 
 
 export const SeccionAccesoApp = styled.div`
+      margin-top: -25px;
 
   `;
 
@@ -518,6 +519,12 @@ export const GrupoCheck = styled.div`
     grid-gap: 13px;
     width: 100%;
     font-size: 2vh;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
 `;
 
 export const CheckContainer = styled.div`

@@ -85,12 +85,12 @@ export const Detail = (props) => {
 
           <ContainerScroll>
 
-            <SeccionConductor>              
+            <SeccionConductor>
               <PanelImg>
 
-              <TituloSeccion>
-                <LabelImg>FOTO CONDUCTOR</LabelImg>
-              </TituloSeccion>
+                <TituloSeccion>
+                  <LabelImg>FOTO CONDUCTOR</LabelImg>
+                </TituloSeccion>
 
                 <ContainerImg>
                   <ImgDriver
@@ -155,45 +155,45 @@ export const Detail = (props) => {
 
               </PanelDatosDrive>
             </SeccionConductor>
-              
-              <TituloSeccion>
-                <hr />
-                Licencia de Conducir
-              </TituloSeccion>
+
+            <TituloSeccion>
+              <hr />
+              Licencia de Conducir
+            </TituloSeccion>
 
             <SeccionLicencia>
               <PanelDatosLic>
 
-              <ContentItems>
-                <ContenDatos>
-                  <Label>Número de licencia: </Label>
-                  <TextContent>AS3234-GHGFJHD21{detailDriver.driverLicenseNumber}</TextContent>
-                </ContenDatos>
+                <ContentItems>
+                  <ContenDatos>
+                    <Label>Número de licencia: </Label>
+                    <TextContent>AS3234-GHGFJHD21{detailDriver.driverLicenseNumber}</TextContent>
+                  </ContenDatos>
 
-                <ContenDatos>
-                  <Label>Estado licencia: </Label>
-                  <TextContent>Activo{detailDriver.stateLicense}</TextContent>
-                </ContenDatos>
+                  <ContenDatos>
+                    <Label>Estado licencia: </Label>
+                    <TextContent>Michoacan{detailDriver.stateLicense}</TextContent>
+                  </ContenDatos>
 
-                <ContenDatos>
-                  <Label>Tipo licencia: </Label>
-                  <TextContent>tipo permitido{detailDriver.typeLicense}</TextContent>
-                </ContenDatos>
+                  <ContenDatos>
+                    <Label>Tipo licencia: </Label>
+                    <TextContent>tipo permitido{detailDriver.typeLicense}</TextContent>
+                  </ContenDatos>
 
-                <ContenDatos>
-                  <Label>Vigencia de licencia: </Label>
-                  <TextContent>01/01/2025{detailDriver.dateLicense}</TextContent>
-                </ContenDatos>
-              </ContentItems>
+                  <ContenDatos>
+                    <Label>Vigencia de licencia: </Label>
+                    <TextContent>01/01/2025{detailDriver.dateLicense}</TextContent>
+                  </ContenDatos>
+                </ContentItems>
 
               </PanelDatosLic>
 
               <PanelImgLic>
                 <PanelImgDerecho>
 
-                <TituloSeccion>
-                  <LabelImg>Foto lic. (Anterior)</LabelImg>
-                </TituloSeccion>
+                  <TituloSeccion>
+                    <LabelImg>Foto lic. (Anterior)</LabelImg>
+                  </TituloSeccion>
 
                   <ImgDriver
                     //src={`data:image/png;base64,${detailDriver.driverPicture}`}
@@ -205,9 +205,9 @@ export const Detail = (props) => {
                 </PanelImgDerecho>
                 <PanelImgIsquirdo>
 
-                <TituloSeccion>
-                  <LabelImg>Foto lic. (Posterior)</LabelImg>
-                </TituloSeccion>
+                  <TituloSeccion>
+                    <LabelImg>Foto lic. (Posterior)</LabelImg>
+                  </TituloSeccion>
 
                   <ImgDriver
                     //src={`data:image/png;base64,${detailDriver.driverPicture}`}
@@ -221,19 +221,62 @@ export const Detail = (props) => {
 
             </SeccionLicencia>
 
-              <TituloSeccion>
-                <hr />
-                Ajustas de Aplicacion
-              </TituloSeccion>
+            <TituloSeccion>
+              <hr />
+              Ajustes de Aplicacion
+            </TituloSeccion>
 
-              <SeccionAjustesApp></SeccionAjustesApp>
+            <SeccionAjustesApp>
 
-              <TituloSeccion>
-                <hr />
-                Acceso a la aplicacion
-              </TituloSeccion>
+            <GrupoCheck>
+              <p>Servicio para:</p>
+              <InputCheck
+                type="checkbox"
+                disabled
+                checked={detailDriver.allServices === 1}
+              />
+              Todos
+              <InputCheck
+                type="checkbox"
+                disabled
+                checked={detailDriver.servicesLGBQT === 1}
+              />
+              LGBTQ+
+              <InputCheck
+                type="checkbox"
+                disabled
+                checked={detailDriver.onlyWomenServices === 1}
+              />
+              Sólo mujeres
+              </GrupoCheck>
 
-              <SeccionAccesoApp></SeccionAccesoApp>
+            </SeccionAjustesApp>
+
+            <TituloSeccion>
+              <hr />
+              Acceso a la aplicacion
+            </TituloSeccion>
+
+            <SeccionAccesoApp>
+
+              <ContenDatos>
+                <Label>Activo: </Label>
+                <TextContent>
+                  {detailDriver.isActive === 1 ? "Si" : "NO"}
+                </TextContent>
+              </ContenDatos>
+
+              <ContenDatos>
+                <Label>Motivo de bloqueo:{" "}</Label>
+                <TextContent>
+                  {detailDriver.messageReasonInActive?.length
+                    ? detailDriver.messageReasonInActive
+                    : "Sin comentarios"}
+                </TextContent>
+
+              </ContenDatos>
+
+            </SeccionAccesoApp>
 
           </ContainerScroll>
 
