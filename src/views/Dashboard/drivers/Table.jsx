@@ -20,7 +20,9 @@ export const Table = ({
   return (
     <>
       <ContainerTabla>
-        <StyledTable maxwidth={"12.5%"} minwidth={"12.5%"} width={"12.5%"}>
+        {/* Aqui se dividen entre 100 la cantidad de columnas que tendra la tabla 
+        para que se ajuste de manera variable al contenido */}
+        <StyledTable maxwidth={"12.3%"} minwidth={"12.3%"} width={"12.3%"}>
           <thead>
             <tr>
               {tHeader.map((item, i) => {

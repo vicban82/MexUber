@@ -42,7 +42,7 @@ import {
   Textarea,
   TextareaContainer,
 } from "../../../components/reusable/FormularioModal";
-import { Detail } from "./detail";
+import { Detail } from "./Detail";
 import { loadImage } from "./loadImages";
 import { errorUpDate, successUpDate } from "../../../tools/driverAlerts/upDate";
 

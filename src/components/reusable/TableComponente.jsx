@@ -25,8 +25,13 @@ export const StyledTable = styled.table.withConfig({
   table-layout: fixed;
   border-collapse: collapse;
   background-color: #b8860b;
-  min-width: 885px;
-  font-size: 2.3vh;
+  min-width: 890px;
+  font-size: 2.2vh;
+
+  @media (max-width: 430px) 
+  {
+        font-size: 1.7vh;
+  }
   
   th { 
     text-decoration: underline; 
@@ -43,7 +48,7 @@ export const StyledTable = styled.table.withConfig({
     justify-content: center;
     max-width: ${(props) => (props.maxwidth)};
     min-width: ${(props) => (props.minwidth)};
-    word-break:break-all;
+    word-break: break-all;
     text-align: center;
   }
 

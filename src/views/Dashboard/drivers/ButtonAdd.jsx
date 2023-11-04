@@ -899,7 +899,7 @@ export const ButtonAdd = ({
 
             <TituloSeccion>
               <hr />
-              Servicio para...
+              <LabelCheck>Servicio para...</LabelCheck>
             </TituloSeccion>
             <GrupoCheck>
               <InputCheck
