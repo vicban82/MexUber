@@ -482,8 +482,8 @@ export const ButtonAdd = ({
       } else {
         try {
           successRegister(driver);
-          const newDriver = await axiosPostDriver(driver, headers);
-          setTDriver([...tDriver, newDriver]);
+          await axiosPostDriver(driver, headers);
+          // setTDriver([...tDriver, newDriver]);
 
           await axiosGetDrivers(setTDriver, setTotalPages, headers, 1, limit);
 
