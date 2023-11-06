@@ -53,6 +53,13 @@ import {
 } from "../../../components/reusable/Details";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { styled } from "styled-components";
+
+export const SubmitBtnV1 = styled(SubmitBtn)`
+    width: 40%;
+    margin-left: 0;
+`;
+
 
 export const Detail = (props) => {
   const { id } = props;
@@ -65,7 +72,7 @@ export const Detail = (props) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   useEffect(() => {
     axiosDetailDriver(id, setDetailDriver, headers);
-  }, [id, detailDriver]);
+  }, [id]);
 
   useEffect(() => {
     if (driverPicture || frontLicensePicture && backLicensePicture) {
@@ -284,7 +291,15 @@ export const Detail = (props) => {
 
           </ContainerScroll>
 
-          <ButtonContainer></ButtonContainer>
+          <ButtonContainer>
+            <SubmitBtnV1
+              onClick={() => {
+                setModalIsOpen(false), closeModal();
+              }}
+            >
+              Ok
+            </SubmitBtnV1>
+          </ButtonContainer>
 
         </ContainerModal>
       </td>
