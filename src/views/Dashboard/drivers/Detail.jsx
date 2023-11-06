@@ -27,6 +27,7 @@ import {
   PanelImgDerecho,
   PanelImgIsquirdo,
   LabelImg,
+  ButtonIconDriver,
   FormEdit,
   InputContainer,
   Input,
@@ -50,6 +51,8 @@ import {
   TextareaContainer,
   GrupoInputPass,
 } from "../../../components/reusable/Details";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 
 export const Detail = (props) => {
   const { id } = props;
@@ -72,7 +75,10 @@ export const Detail = (props) => {
   return (
     <>
       <td>
-        <button onClick={() => setModalIsOpen(true)}>Ver</button>
+        {/* Button driver abre vista detalle del conductor */}
+        <ButtonIconDriver onClick={() => setModalIsOpen(true)}>
+            <FontAwesomeIcon icon={faEye}/> 
+        </ButtonIconDriver>
         <ContainerModal
           isOpen={modalIsOpen}
           onRequestClose={() => setModalIsOpen(false)}

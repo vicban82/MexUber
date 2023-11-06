@@ -154,16 +154,21 @@ export const PanelImgLic = styled.div`
   `;
 
 export const PanelImgDerecho = styled.div`
-
+  display: flex;
+  flex-direction: column;
 `;
 
 export const PanelImgIsquirdo = styled.div`
-
+    display: flex;
+    flex-direction: column;
   `;
 
 
 export const SeccionAjustesApp = styled.div`
-
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: -40px;
   `;
 
 
@@ -253,6 +258,9 @@ export const LabelImg = styled.label`
 
 `;
 
+export const ButtonIconDriver = styled.button`
+  font-size: 14px;
+`;
 
 
 
