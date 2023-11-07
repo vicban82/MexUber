@@ -16,68 +16,57 @@ import { Section } from "../../../components/reusable/global";
 export const Cars = () => {
   const tableHeader = ["Propietario", "Placa", "Marca", "Modelo"];
 
-  const [tDriver, setTDriver] = useState([]);
+  const [tCar, setTCar] = useState([]);
 
   //* ESTADO DEL FORMULARIO
-  const [driver, setDriver] = useState({
-    name: "",
-    lastName: "",
-    zipCode: "", // CODIGO POSTAL
-    state: "", // ESTADO DE MEXICO
-    city: "",
+  const [car, setCar] = useState({
+    name: "",// Nombre del propietario
+    lastName: "",// Apellido del propietario
+    zipCode: "",// Código postal del propietario
+    state: "",// Estado del propietario
+    city: "",// Ciudad del propietario
     colonia: "",
-    address: "",
-    contact: "", // NUMERO DE CONTACTO DEL CONDUCTOR
-    email: "",
-    driverPicture: "", //* FOTO DEL CONDUCTOR
-    //! DATOS DE LA LICENCIA DE CONDUCCION
-    driverLicenseNumber: "", //* NUMERO LICENCIA DEL CONDUCTOR
-    stateLicense: "", // ESTADO DE LA LICENCIA
-    typeLicense: "", // TIPO LICENCIA
-    dateLicense: "", // FECHA - VIGENCIA DE LA LICENCIA
-    frontLicensePicture: "", //* FOTO FRONTAL DE LA LICENCIA
-    backLicensePicture: "", //* FOTO REVERSO DE LA LICENCIA
-    //! DATOS DE LA LICENCIA DE CONDUCCION
-    //! AJUSTES DE LA APLICACION
-    allServices: 1, // TODOS
-    servicesLGBQT: 0, // LGBQT+
-    onlyWomenServices: 0, // MUJERES
-    //! AJUSTES DE LA APLICACION
-    //! ACCESO A LA APLICACION
-    password: "",
-    repeatPassword: "",
-    isActive: 1,
-    messageReasonInActive: "", // MENSAJE RASON INACTIVO
-    //! ACCESO A LA APLICACION
-    // car: "6518c32a2696272c68e9c540",
-    car: "" || null,
-    //! NO SE VALIDAN
-    tokenNotification: "",
-    typePhone: "",
-    //! NO SE VALIDAN
+    address: "",// Dirección del propietario
+    contact: "",// Telefono del propietario
+    email: "",// Correo electrónico del propietario
+
+    make: "",// MARCA DEL VEHICULO
+    subMake: "",// SUB-MARCA DEL VEHICULO
+    model: "",
+    color: "",
+    plates: "",// PLACAS DEL VEHICULO
+    numberMotor: "",// NUMERO DE MOTOR
+    trafficCardNumber: "",// NUMERO TARGETA DE CIRCULACION
+    frontImageTraffic: "",// Imagen de la tarjeta de circulación de frente
+    backImageTraffic: "",// Imagen de la tarjeta de circulación por atrás
+    driver : "" || null,//* RELACION CONDUCTOR
+    driverIsOwner: 1 || 0,// Chofer es el propietario 1 = SI, 0 = NO
+    owner : "" || null,//* RELACION CHOFER
   });
+
   const [errorForm, setErrorForm] = useState({
-    nameError: "",
-    lastNameError: "",
-    zipCodeError: "",
-    stateError: "",
-    cityError: "",
-    coloniaError: "",
-    addressError: "",
-    contactError: "",
-    emailError: "",
-    driverPictureError: "",
-    driverLicenseNumberError: "",
-    stateLicenseError: "",
-    typeLicenseError: "",
-    dateLicenseError: "",
-    frontLicensePictureError: "",
-    backLicensePictureError: "",
-    servicesError: "",
-    passwordError: "",
-    repeatPasswordError: "",
-    isActiveError: "",
-    messageReasonInActiveError: "",
+    name: "",// Nombre del propietario
+    lastName: "",// Apellido del propietario
+    zipCode: "",// Código postal del propietario
+    state: "",// Estado del propietario
+    city: "",// Ciudad del propietario
+    colonia: "",
+    address: "",// Dirección del propietario
+    contact: "",// Telefono del propietario
+    email: "",// Correo electrónico del propietario
+
+    make: "",// MARCA DEL VEHICULO
+    subMake: "",// SUB-MARCA DEL VEHICULO
+    model: "",
+    color: "",
+    plates: "",// PLACAS DEL VEHICULO
+    numberMotor: "",// NUMERO DE MOTOR
+    trafficCardNumber: "",// NUMERO TARGETA DE CIRCULACION
+    frontImageTraffic: "",// Imagen de la tarjeta de circulación de frente
+    backImageTraffic: "",// Imagen de la tarjeta de circulación por atrás
+    driver : "" || null,//* RELACION CONDUCTOR
+    driverIsOwner: "",// Chofer es el propietario
+    owner : "" || null,//* RELACION CHOFER
   });
   //* ESTADO DEL FORMULARIO
   
@@ -117,22 +106,22 @@ export const Cars = () => {
 
   useEffect(() => {
     if (searchTerm) {
-      axiosSearchCars(searchTerm, setTDriver, setTotalPages, headers, page, limit);
+      axiosSearchCars(searchTerm, setTCar, setTotalPages, headers, page, limit);
     } else {
-      axiosGetCars(setTDriver, setTotalPages, headers, page, limit);
+      axiosGetCars(setTCar, setTotalPages, headers, page, limit);
     }
   }, [page, limit, searchTerm]);
   //* Consulta
 
   return (
     <Section>
-      {!tDriver || tDriver.length <= 0 ? (
+      {!tCar || tCar.length <= 0 ? (
           <div>
             <ButtonAdd
-              tDriver={tDriver}
-              setTDriver={setTDriver}
-              driver={driver}
-              setDriver={setDriver}
+              tCar={tCar}
+              setTCar={setTCar}
+              car={car}
+              setCar={setCar}
               errorForm={errorForm}
               setErrorForm={setErrorForm}
               limit={limit}
@@ -141,10 +130,10 @@ export const Cars = () => {
             />
             <Table
               tHeader={tableHeader}
-              tDriver={tDriver}
-              setTDriver={setTDriver}
-              driver={driver}
-              setDriver={setDriver}
+              tCar={tCar}
+              setTCar={setTCar}
+              car={car}
+              setCar={setCar}
               errorForm={errorForm}
               setErrorForm={setErrorForm}
             />
@@ -153,10 +142,10 @@ export const Cars = () => {
       ) : (
         <>
           <ButtonAdd
-            tDriver={tDriver}
-            setTDriver={setTDriver}
-            driver={driver}
-            setDriver={setDriver}
+            tCar={tCar}
+            setTCar={setTCar}
+            car={car}
+            setCar={setCar}
             errorForm={errorForm}
             setErrorForm={setErrorForm}
             limit={limit}
@@ -165,10 +154,10 @@ export const Cars = () => {
           />
           <Table
             tHeader={tableHeader}
-            tDriver={tDriver}
-            setTDriver={setTDriver}
-            driver={driver}
-            setDriver={setDriver}
+            tCar={tCar}
+            setTCar={setTCar}
+            car={car}
+            setCar={setCar}
             errorForm={errorForm}
             setErrorForm={setErrorForm}
             limit={limit}

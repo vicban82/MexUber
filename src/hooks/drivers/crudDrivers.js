@@ -3,17 +3,17 @@ import { dataFakeDriver } from "../../data/dataFakeDriver";
 
 export async function axiosGetDrivers(setTDriver, setTotalPages, headers, page, limit) {
   try {
-    //const { data } = (await axios.get(`/api/drivers?page=${page}&limit=${limit}`, { headers }));
+    const { data } = (await axios.get(`/api/drivers?page=${page}&limit=${limit}`, { headers }));
     // console.log('DATA:', data);
-    /* if (typeof data === "object" && data.drivers) {
+    if (typeof data === "object" && data.drivers) {
       setTDriver(data.drivers);
       setTotalPages(data.totalPages);
     } else {
       setTDriver([]);
       setTotalPages(1)
-    } */
-    setTotalPages(2);
-    setTDriver(dataFakeDriver);
+    }
+    // setTotalPages(2);
+    // setTDriver(dataFakeDriver);
   } catch (err) {
     const { error } = err.response.data;
     console.log('ERROR:', error);
@@ -38,7 +38,6 @@ export async function axiosSearchDrivers(search, setTDriver, setTotalPages, head
 }
 
 export async function axiosDetailDriver(id, setDetailDriver, headers) {
-  // console.log("id:", id)
   try {
     const { data } = (await axios.get(`/api/driver/${id}`, { headers }));
     setDetailDriver(data);

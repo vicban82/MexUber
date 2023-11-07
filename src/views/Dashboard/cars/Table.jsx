@@ -6,17 +6,17 @@ import {
 
 export const Table = ({
   tHeader,
-  tDriver,
-  setTDriver,
-  driver,
-  setDriver,
+  tCar,
+  setTCar,
+  car,
+  setCar,
   errorForm,
   setErrorForm,
   limit,
   setTotalPages,
   setPage,
 }) => {
-  // console.log("tDriver:", tHeader)
+  // console.log("tCar:", tHeader)
   return (
     <>
       <ContainerTabla>
@@ -34,57 +34,26 @@ export const Table = ({
             </tr>
           </thead>
           <tbody>
-            {tDriver.length >= 1 &&
-              tDriver.map((data, i) => {
+            {tCar.length >= 1 &&
+              tCar.map((data, i) => {
                 return (
                   <tr key={i}>
                     {Object.values(data).map((item, subI) => {
                       // console.log("TABLE-ITEMS:", item, "IDX:", subI)
                       // SE IGNORA EL "ID"
                       if (subI !== 0) {
-                        // Agregar un campo de tipo "checkbox"
-                        if (subI === 5) {
-                          return (
-                            <td key={subI}>
-                              <div>
-                                <input
-                                  type="checkbox"
-                                  checked={item === 1}
-                                  onChange={(e) => {
-                                    const updatedTBody = [...tDriver];
-                                    console.log("Estado actual del checkbox:", e.target.checked);
-                                    console.log("Valor actual de item:", item);
-                                    updatedTBody[i].isActive = e.target.checked ? 1 : 0;
-                                    console.log("Nuevo valor de isActive:", updatedTBody[i].isActive);
-                                    console.log("OBJETO ACTUALIZADO:", updatedTBody);
-                                    setTDriver(updatedTBody);
-                                  }}
-                                />
-                              </div>
-                            </td>
-                          );
-                        } else if (subI === 6) {
-                          return (
-                            <td key={subI}>
-                              <div>
-                                <p>{!item ? "SIN ASIGNACIÓN" : item}</p>
-                              </div>
-                            </td>
-                          );
-                        } else {
-                          return (
-                            <td key={subI}>
-                              <div>
-                                <p>{item}</p>
-                              </div>
-                            </td>
-                          );
-                        }
+                        return (
+                          <td key={subI}>
+                            <div>
+                              <p>{item}</p>
+                            </div>
+                          </td>
+                        );
                       }
                     })}
-                    <ButtonsTable
+                    {/* <ButtonsTable
                       id={data._id}
-                      tDriver={tDriver}
+                      tCar={tCar}
                       setTDriver={setTDriver}
                       // ESTADO DEL FORMULARIO
                       driver={driver}
@@ -95,7 +64,7 @@ export const Table = ({
                       limit={limit}
                       setTotalPages={setTotalPages}
                       setPage={setPage}
-                    />
+                    /> */}
                   </tr>
                 );
               })}

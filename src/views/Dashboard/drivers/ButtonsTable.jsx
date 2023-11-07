@@ -49,9 +49,11 @@ import {
   Textarea,
   TextareaContainer,
 } from "../../../components/reusable/FormularioModal";
-import { Detail } from "./Detail";
+// import { Detail } from "./Detail";
+import { Detail } from "./detail";
 import { loadImage } from "./loadImages";
-/* import { errorUpDate, successUpDate } from "../../../tools/driverAlerts/upDate"; */
+import { errorUpDate, successUpDate } from "../../../tools/driverAlerts/upDate";
+import { deleteAlert } from "../../../tools/driverAlerts/delete";
 
 Modal.setAppElement("#root");
 
@@ -122,49 +124,56 @@ export function ButtonsTable({
     axiosDetailDriver(id, setDetailDriver, headers);
   }, [id]);
   const [fotoConductor, setFotoConductor] = useState(null);
-  // console.log("detailDriver:", detailDriver)
   const [fotoFront, setFotoFront] = useState(null);
   const [fotoBack, setFotoBack] = useState(null);
 
   useEffect(() => {
-    // console.log("id:", id)
-    setUpdateForm({
-      name: detailDriver.name || "",
-      lastName: detailDriver.lastName || "",
-      zipCode: detailDriver.zipCode || "", // CODIGO POSTAL
-      state: detailDriver.state || "", // ESTADO DE MEXICO
-      city: detailDriver.city || "",
-      colonia: detailDriver.colonia || "",
-      address: detailDriver.address || "",
-      contact: detailDriver.contact || "", // NUMERO DE CONTACTO DEL CONDUCTOR
-      email: detailDriver.email || "",
-      driverPicture: detailDriver.driverPicture || "", //? FOTO DEL CONDUCTOR
-      //! DATOS DE LA LICENCIA DE CONDUCCION
-      driverLicenseNumber: detailDriver.driverLicenseNumber || "", //* NUMERO LICENCIA DEL CONDUCTOR
-      stateLicense: detailDriver.stateLicense || "", // ESTADO DE LA LICENCIA
-      typeLicense: detailDriver.typeLicense || "", // TIPO LICENCIA
-      dateLicense: detailDriver.dateLicense || "", // FECHA - VIGENCIA DE LA LICENCIA
-      frontLicensePicture: detailDriver.frontLicensePicture || "", //? FOTO FRONTAL DE LA LICENCIA
-      backLicensePicture: detailDriver.backLicensePicture || "", //? FOTO REVERSO DE LA LICENCIA
-      //! DATOS DE LA LICENCIA DE CONDUCCION
-      //! AJUSTES DE LA APLICACION
-      allServices: detailDriver.allServices || 1, // TODOS
-      servicesLGBQT: detailDriver.servicesLGBQT || 0, // LGBQT+
-      onlyWomenServices: detailDriver.onlyWomenServices || 0, // MUJERES
-      //! AJUSTES DE LA APLICACION
-      //! ACCESO A LA APLICACION
-      password: "",
-      repeatPassword: "",
-      isActive: detailDriver.isActive || 1,
-      messageReasonInActive: detailDriver.messageReasonInActive || "", // MENSAJE RASON INACTIVO
-      //! ACCESO A LA APLICACION
-      car: detailDriver.car || null,
-      //! NO SE VALIDAN
-      tokenNotification: detailDriver.tokenNotification || "",
-      typePhone: detailDriver.typePhone || "",
-      //! NO SE VALIDAN
-    });
-  }, [detailDriver]);
+    // console.log("detailDriver:", detailDriver);
+    // console.log("ID:", id);
+    if (detailDriver._id === id) {
+      setUpdateForm({
+        name: detailDriver.name || "",
+        lastName: detailDriver.lastName || "",
+        zipCode: detailDriver.zipCode || "", // CODIGO POSTAL
+        state: detailDriver.state || "", // ESTADO DE MEXICO
+        city: detailDriver.city || "",
+        colonia: detailDriver.colonia || "",
+        address: detailDriver.address || "",
+        contact: detailDriver.contact || "", // NUMERO DE CONTACTO DEL CONDUCTOR
+        email: detailDriver.email || "",
+        driverPicture: detailDriver.driverPicture || "", //? FOTO DEL CONDUCTOR
+        //! DATOS DE LA LICENCIA DE CONDUCCION
+        driverLicenseNumber: detailDriver.driverLicenseNumber || "", //* NUMERO LICENCIA DEL CONDUCTOR
+        stateLicense: detailDriver.stateLicense || "", // ESTADO DE LA LICENCIA
+        typeLicense: detailDriver.typeLicense || "", // TIPO LICENCIA
+        dateLicense: detailDriver.dateLicense || "", // FECHA - VIGENCIA DE LA LICENCIA
+        frontLicensePicture: detailDriver.frontLicensePicture || "", //? FOTO FRONTAL DE LA LICENCIA
+        backLicensePicture: detailDriver.backLicensePicture || "", //? FOTO REVERSO DE LA LICENCIA
+        //! DATOS DE LA LICENCIA DE CONDUCCION
+        //! AJUSTES DE LA APLICACION
+        allServices: 1, // TODOS
+        servicesLGBQT: 0, // LGBQT+
+        onlyWomenServices: 0, // MUJERES
+        //! AJUSTES DE LA APLICACION
+        //! ACCESO A LA APLICACION
+        password: "",
+        repeatPassword: "",
+        isActive: detailDriver.isActive === 1 ? 1 : 0,
+        messageReasonInActive: detailDriver.messageReasonInActive || "", // MENSAJE RASON INACTIVO
+        //! ACCESO A LA APLICACION
+        car: detailDriver.car || null,
+        //! NO SE VALIDAN
+        tokenNotification: detailDriver.tokenNotification || "",
+        typePhone: detailDriver.typePhone || "",
+        //! NO SE VALIDAN
+      });
+    }
+  }, [id, detailDriver]);
+
+  const handleDelete = (id) => {
+    const deleteDriver = tDriver.find(el => el._id === id);
+    deleteAlert(deleteDriver, id, tDriver, setTDriver);
+  };
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [sepomex, setSepomex] = useState([]);

@@ -26,3 +26,27 @@ export async function axiosGetLicencias(setLicencias) {
     console.log('ERROR:', error);
   }
 }
+
+export async function axiosGetMarcas(setMarca) {
+  try {
+    const { data } = (await axios.get('/api/marcas'));
+    // console.log('DATA:', data);
+    setMarca(data);
+    return data;
+  } catch (err) {
+    const { error } = err.response.data;
+    console.log('ERROR:', error);
+  }
+}
+
+export async function axiosGetSubMarcas(setSubMarca) {
+  try {
+    const { data } = (await axios.get('/api/sub-marcas'));
+    // console.log('DATA:', data);
+    setSubMarca(data);
+    return data;
+  } catch (err) {
+    const { error } = err.response.data;
+    console.log('ERROR:', error);
+  }
+}

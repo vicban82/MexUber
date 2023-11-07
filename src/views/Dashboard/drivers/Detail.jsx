@@ -33,23 +33,7 @@ import {
   Input,
   SubmitBtn,
   InputCheck,
-  LabelCheck,
-  Titulo,
-  Span,
-  SelectContainer,
-  Select,
-  GrupoInput,
-  GrupoSelect,
-  GrupoImg,
-  SubeImgContainer,
-  SpanData,
-  ImgSube,
-  SubeContainerImg,
   GrupoCheck,
-  CheckContainer,
-  Textarea,
-  TextareaContainer,
-  GrupoInputPass,
 } from "../../../components/reusable/Details";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
@@ -105,11 +89,8 @@ export const Detail = (props) => {
 
                 <ContainerImg>
                   <ImgDriver
-                    //src={`data:image/png;base64,${detailDriver.driverPicture}`}
-                    // src={`/images/${detailDriver.driverPicture}`}
-                    src={"/src/assets/img/photo_perfil.avif"}
-                    alt="Foto conductor"
-                  //style={{ maxWidth: "200px" }}
+                    src={!fotoConductor ? "/src/assets/img/photo_perfil.avif" : fotoConductor}
+                    alt="Foto conductor"  
                   />
                 </ContainerImg>
               </PanelImg>
@@ -119,47 +100,47 @@ export const Detail = (props) => {
                 <ContentItems>
                   <ContenDatos>
                     <Label>Nombre: </Label>
-                    <TextContent>Jose Manuel{detailDriver.name}</TextContent>
+                    <TextContent>{!detailDriver.name ? "Jose Manuel" : detailDriver.name}</TextContent>
                   </ContenDatos>
 
                   <ContenDatos>
                     <Label>Apellidos: </Label>
-                    <TextContent>Gonzalez Santiesteban{detailDriver.lastName}</TextContent>
+                    <TextContent>{!detailDriver.lastName ? "Gonzalez Santiesteban" : detailDriver.lastName}</TextContent>
                   </ContenDatos>
 
                   <ContenDatos>
                     <Label>Código Postal: </Label>
-                    <TextContent>82300{detailDriver.zipCode}</TextContent>
+                    <TextContent>{!detailDriver.zipCode ? "82300" : detailDriver.zipCode}</TextContent>
                   </ContenDatos>
 
                   <ContenDatos>
                     <Label>Estado: </Label>
-                    <TextContent>AGUASCALIENTES{detailDriver.state}</TextContent>
+                    <TextContent>{!detailDriver.state ? "AGUASCALIENTES" : detailDriver.state}</TextContent>
                   </ContenDatos>
 
                   <ContenDatos>
                     <Label>Ciudad: </Label>
-                    <TextContent>Jesús María{detailDriver.city}</TextContent>
+                    <TextContent>{!detailDriver.city ? "Jesús María" : detailDriver.city}</TextContent>
                   </ContenDatos>
 
                   <ContenDatos>
                     <Label>Colonia: </Label>
-                    <TextContent>La Granjita{detailDriver.colonia}</TextContent>
+                    <TextContent>{!detailDriver.colonia ? "La Granjita" : detailDriver.colonia}</TextContent>
                   </ContenDatos>
 
                   <ContenDatos>
                     <Label>Domicilio: </Label>
-                    <TextContent>Calle Pepe Perez #2021 % 1ra y 3ra{detailDriver.address}</TextContent>
+                    <TextContent>{!detailDriver.address ? "Calle Pepe Perez #2021 % 1ra y 3ra" : detailDriver.address}</TextContent>
                   </ContenDatos>
 
                   <ContenDatos>
                     <Label>Teléf (Móvil): </Label>
-                    <TextContent>12345678958{detailDriver.contact}</TextContent>
+                    <TextContent>{!detailDriver.contact ? "12345678958" : detailDriver.contact}</TextContent>
                   </ContenDatos>
 
                   <ContenDatos>
                     <Label>Email: </Label>
-                    <TextContent>josemanuel@gmail.com{detailDriver.email}</TextContent>
+                    <TextContent>{!detailDriver.email ? "josemanuel@gmail.com" : detailDriver.email}</TextContent>
                   </ContenDatos>
 
                 </ContentItems>
@@ -173,62 +154,54 @@ export const Detail = (props) => {
             </TituloSeccion>
 
             <SeccionLicencia>
-              <PanelDatosLic>
-
-                <ContentItems>
-                  <ContenDatos>
-                    <Label>Número de licencia: </Label>
-                    <TextContent>AS3234-GHGFJHD21{detailDriver.driverLicenseNumber}</TextContent>
-                  </ContenDatos>
-
-                  <ContenDatos>
-                    <Label>Estado licencia: </Label>
-                    <TextContent>Michoacan{detailDriver.stateLicense}</TextContent>
-                  </ContenDatos>
-
-                  <ContenDatos>
-                    <Label>Tipo licencia: </Label>
-                    <TextContent>tipo permitido{detailDriver.typeLicense}</TextContent>
-                  </ContenDatos>
-
-                  <ContenDatos>
-                    <Label>Vigencia de licencia: </Label>
-                    <TextContent>01/01/2025{detailDriver.dateLicense}</TextContent>
-                  </ContenDatos>
-                </ContentItems>
-
-              </PanelDatosLic>
-
-              <PanelImgLic>
-                <PanelImgDerecho>
-
-                  <TituloSeccion>
-                    <LabelImg>Foto lic. (Anterior)</LabelImg>
-                  </TituloSeccion>
-
-                  <ImgDriver
-                    //src={`data:image/png;base64,${detailDriver.driverPicture}`}
-                    // src={`/images/${detailDriver.driverPicture}`}
-                    src={"/src/assets/img/photo_perfil.avif"}
-                    alt="Foto conductor"
-                  //style={{ maxWidth: "200px" }}
-                  />
-                </PanelImgDerecho>
-                <PanelImgIsquirdo>
-
-                  <TituloSeccion>
-                    <LabelImg>Foto lic. (Posterior)</LabelImg>
-                  </TituloSeccion>
-
-                  <ImgDriver
-                    //src={`data:image/png;base64,${detailDriver.driverPicture}`}
-                    // src={`/images/${detailDriver.driverPicture}`}
-                    src={"/src/assets/img/photo_perfil.avif"}
-                    alt="Foto conductor"
-                  //style={{ maxWidth: "200px" }}
-                  />
-                </PanelImgIsquirdo>
-              </PanelImgLic>
+              {!detailDriver.driverLicenseNumber ? (
+                <div>
+                  <p>Sin información de momento</p>
+                </div>
+              ) : (
+                <>
+                  <PanelDatosLic>
+                    <ContentItems>
+                      <ContenDatos>
+                        <Label>Número de licencia: </Label>
+                        <TextContent>{!detailDriver.driverLicenseNumber ? "AS3234-GHGFJHD21" : detailDriver.driverLicenseNumber}</TextContent>
+                      </ContenDatos>
+                      <ContenDatos>
+                        <Label>Estado licencia: </Label>
+                        <TextContent>{!detailDriver.stateLicense ? "Michoacan" : detailDriver.stateLicense}</TextContent>
+                      </ContenDatos>
+                      <ContenDatos>
+                        <Label>Tipo licencia: </Label>
+                        <TextContent>{!detailDriver.typeLicense ? "tipo permitido" : detailDriver.typeLicense}</TextContent>
+                      </ContenDatos>
+                      <ContenDatos>
+                        <Label>Vigencia de licencia: </Label>
+                        <TextContent>{!detailDriver.dateLicense ? "01/01/2025" : detailDriver.dateLicense}</TextContent>
+                      </ContenDatos>
+                    </ContentItems>
+                  </PanelDatosLic>
+                  <PanelImgLic>
+                    <PanelImgDerecho>
+                      <TituloSeccion>
+                        <LabelImg>Foto lic. (Anterior)</LabelImg>
+                      </TituloSeccion>
+                      <ImgDriver
+                        src={!fotoFront ? "/src/assets/img/photo_perfil.avif" : fotoFront}
+                        alt="Foto conductor"
+                      />
+                    </PanelImgDerecho>
+                    <PanelImgIsquirdo>
+                      <TituloSeccion>
+                        <LabelImg>Foto lic. (Posterior)</LabelImg>
+                      </TituloSeccion>
+                      <ImgDriver
+                        src={!fotoBack ? "/src/assets/img/photo_perfil.avif" : fotoBack}
+                        alt="Foto conductor"
+                      />
+                    </PanelImgIsquirdo>
+                  </PanelImgLic>
+                </>
+              )}
 
             </SeccionLicencia>
 

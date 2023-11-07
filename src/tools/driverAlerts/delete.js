@@ -13,8 +13,8 @@ export async function deleteAlert(deleteDriver, id, tDriver, setTDriver) {
     title: "Borrar",
     icon: "warning",
     html: `
-      <p>${`¿Deseas borrar al administrador <strong>${name} ${lastName}</strong>?` || ""}</p>
-      <p>${`Esta acción puede ser irreversible y el usuario no podrá ingresar al sistema` || ""}</p>
+      <p>${`¿Deseas borrar al conductor <strong>${name} ${lastName}</strong>?`}</p>
+      <p>${`Esta acción puede ser irreversible y el usuario no podrá ingresar al sistema`}</p>
     `,
     showCancelButton: true,
     confirmButtonText: "Sí",

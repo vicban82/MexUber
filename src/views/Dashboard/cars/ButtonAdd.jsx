@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import { validateDriver } from "../../../validations/drivers";
 import { headers } from "../../../tools/accessToken";
 import {
-  axiosGetDrivers,
+  // axiosGetDrivers,
   axiosPostDriver,
 } from "../../../hooks/drivers/crudDrivers";
 import styled from "styled-components";
@@ -11,7 +11,12 @@ import {
   errorRegister,
   successRegister,
 } from "../../../tools/driverAlerts/register";
-import { axiosGetLicencias, axiosGetSepomex } from "../../../hooks/db/info";
+import {
+  axiosGetLicencias,
+  axiosGetMarcas,
+  axiosGetSepomex,
+  axiosGetSubMarcas,
+} from "../../../hooks/db/info";
 import { useDropzone } from "react-dropzone";
 import {
   ContainerModal,
@@ -43,6 +48,8 @@ import {
   TextareaContainer,
   GrupoInputPass,
 } from "../../../components/reusable/FormularioModal";
+import { axiosDetailDriver, axiosGetDrivers, obtenerAnios } from "./function";
+import {colors} from "./colores"
 
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
@@ -74,34 +81,51 @@ const pictureLicence = {
 };
 
 export const ButtonAdd = ({
-  tDriver,
-  setTDriver,
-  driver,
-  setDriver,
+  tCar,
+  setTCar,
+  car,
+  setCar,
   errorForm,
   setErrorForm,
   limit,
   setTotalPages,
   setPage,
 }) => {
+  const formCar = { ...car };
+  const errorFormCar = { ...errorForm };
+  console.log("formCar:", formCar)
+
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [sepomex, setSepomex] = useState([]);
-  const [licencias, setLicencias] = useState([]);
   //* IINFORMACION DEL VEHICULO
-  const [marca, setMarca] = useState("" || []);
-  const [submarca, setSubMarca] = useState("" || []);
-  const [modelo, setModelo] = useState("" || []);
-  const [color, setColor] = useState("" || []);
-  const [[placa], setPlaca] = useState("" || []);
-  const [[motor], setMotor] = useState("" || []);
+  const [marcas, setMarca] = useState([]);
+  const [subMarcas, setSubMarca] = useState([]);
+  const [selectSubMarcas, setSelectSubMarca] = useState([]);
+  const modelo = obtenerAnios();
 
   //* INFORMACION DEL CONDUCTOR
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  // console.log("apellido:", apellido)
   const [codigoPostal, setZipcode] = useState("");
-  const [estado, setEstado] = useState("" || []);
-  const [ciudad, setCiudad] = useState("" || []);
-  const [colonias, setColonias] = useState([]);
+  // console.log("codigoPostal:", codigoPostal)
+  const [estado, setEstado] = useState("");
+  // console.log("estado:", estado)
+  const [selectEstado, setSelectEstado] = useState([]);
+  const [ciudad, setCiudad] = useState("");
+  const [selectCiudad, setSelectCiudad] = useState([]);
+  const [colonia, setColonia] = useState("");
+  const [selectColonia, setSelectColonia] = useState([]);
+  const [domicilio, setDomicilio] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [email, setEmail] = useState("");
+  const [conductores, setCondurtores] = useState([]);
+  const [value, setValue] = useState("");
+  // console.log("value:", value)
+  
+  const [detailDriver, setDetailDriver] = useState({});
+  // console.log("detailDriver:", detailDriver)
   //* INFORMACION DEL CONDUCTOR
-
+  
   //* LICENCIA DE CONDUCIR
   const [estados, setEstados] = useState([]);
   const [licences, setLicences] = useState([]);
@@ -109,239 +133,110 @@ export const ButtonAdd = ({
 
   const [selectImage, setSelectImage] = useState({});
 
-  const {
-    name,
-    lastName,
-    zipCode, // CODIGO POSTAL
-    state, // ESTADO DE MEXICO
-    city,
-    colonia,
-    address,
-    contact, // NUMERO DE CONTACTO DEL CONDUCTOR
-    email,
-    driverPicture, //* FOTO DEL CONDUCTOR
-    //! DATOS DE LA LICENCIA DE CONDUCCION
-    driverLicenseNumber, //* NUMERO LICENCIA DEL CONDUCTOR
-    stateLicense, // ESTADO DE LA LICENCIA
-    typeLicense, // TIPO LICENCIA
-    dateLicense, // FECHA - VIGENCIA DE LA LICENCIA
-    frontLicensePicture, //* FOTO FRONTAL DE LA LICENCIA
-    backLicensePicture, //* FOTO REVERSO DE LA LICENCIA
-    //! DATOS DE LA LICENCIA DE CONDUCCION
-    //! AJUSTES DE LA APLICACION
-    allServices, // TODOS
-    servicesLGBQT, // LGBQT+
-    onlyWomenServices, // MUJERES
-    //! AJUSTES DE LA APLICACION
-    //! ACCESO A LA APLICACION
-    password,
-    repeatPassword,
-    isActive,
-    messageReasonInActive, // MENSAJE RASON INACTIVO
-    //! ACCESO A LA APLICACION
-    car,
-  } = driver;
-  // console.log("form driver:", driver)
-
-  const memorySepomes = useMemo(() => sepomex, [sepomex]);
-  const memoryLicencias = useMemo(() => licencias, [licencias]);
-
   function handleChange(e) {
     const { name, value } = e.target;
     // console.log("name:", name)
-
-    if (
-      (name === "zipCode" && value.length >= 5) ||
-      name === "state" ||
-      name === "city" ||
-      name === "colonia"
-    ) {
-      const sepomexData = memorySepomes.find((el) => el.codigoPostal === value);
-
-      if (sepomexData) {
-        setZipcode(sepomexData.codigoPostal);
-        setEstado(sepomexData.estado);
-        setCiudad(sepomexData.ciudad);
-        setColonias(sepomexData.colonias);
-      } else {
-        // * ------------ ESTADOS ------------
-        const findState = [...new Set(memorySepomes.map((el) => el.estado))];
-        if (findState) {
-          setEstado(findState);
+    // console.log("value:", value)
+    
+    if (name === "make") {
+      const findById = marcas.find(el => {
+        if (el.marca === value) {
+          return el.marcaId;
         }
-        // * ------------ CIUDADES ------------
-        const filterByState = memorySepomes.filter((el) => {
-          if (el.estado === value) {
-            return el.ciudad;
-          }
-        });
-        const findCity = [
-          ...new Set(filterByState.map((el) => el.ciudad)),
-        ].filter((el) => el !== undefined);
-        if (findCity) {
-          setCiudad(findCity);
-        }
-        // * ------------ COLONIAS ------------
-        const filterByCity = memorySepomes.filter((el) => {
-          if (el.ciudad === value) {
-            return el.colonias;
-          }
-        });
-        const findColonia = [
-          ...new Set(filterByCity.map((el) => el.colonias)),
-        ].flat(1);
-        if (findColonia) {
-          setColonias(findColonia);
-        }
-      }
+      })
+      const filterSubMarcas = subMarcas.filter(el => el.idMarca === findById.marcaId);
+      setSelectSubMarca(filterSubMarcas)
+    }
+    if (name === "driver" && formCar.driverIsOwner === 1) {
+      setValue(value)
+      setNombre(detailDriver.name)
+      setApellido(detailDriver.lastName)
+      setZipcode(detailDriver.zipCode)
+      setEstado(detailDriver.state)
+      setCiudad(detailDriver.city)
+      setColonia(detailDriver.colonia)
+      setDomicilio(detailDriver.address)
+      setTelefono(detailDriver.contact)
+      setEmail(detailDriver.email)
     }
 
-    if (name === "driverLicenseNumber") {
-      const filteredEstado = memoryLicencias.map((el) => el.estado);
-      setEstados(filteredEstado);
-    }
-
-    if (name === "stateLicense") {
-      const filteredLicencias = memoryLicencias
-        .map((el) => {
-          if (el.estado === value) {
-            return el.tipoDeLicencias;
-          }
-        })
-        .flat(1)
-        .filter((el) => el !== undefined);
-      setLicences(filteredLicencias);
-    }
-
-    setDriver({
-      ...driver,
+    setCar({
+      ...car,
       [name]: value,
     });
-    setErrorForm(
-      validateDriver(
-        {
-          ...driver,
-          [name]: value,
-        },
-        selectImage
-      )
-    );
+    // setErrorForm(
+    //   validateDriver(
+    //     {
+    //       ...car,
+    //       [name]: value,
+    //     },
+    //   )
+    // );
   }
-  
-  useEffect(() => {
-    // SE RESETEAN LOS SIGUIENTES CAMPOS
-    let updatedDriver = {...driver}
-    if (zipCode.length <= 4) {
-      setEstado("");
-      setCiudad("");
-      setColonias("");
-      updatedDriver = {
-        ...updatedDriver,
-        state: "",
-        city: "",
-        colonia: "",
+
+  function handleOwnerChange(e) {
+    const { name, checked } = e.target;
+    let updateForm = { ...formCar };
+    if (name === "driverIsOwner") {
+      updateForm.driverIsOwner = checked && 0
+      if (updateForm.driverIsOwner === 0) {
+        updateForm = {
+          ...prevState,
+          name: "",
+          lastName: "",
+          zipCode: "",
+          state: "",
+          city: "",
+          colonia: "",
+          address: "",
+          contact: "",
+          email: "",
+        }
       }
     }
-
-    setDriver(updatedDriver);
-  }, [zipCode]);
-
-  const handleCheckboxChange = (event) => {
-    const { name, checked } = event.target;
-
-    let updatedDriver = { ...driver };
-
-    if (name === "isActive") {
-      updatedDriver.isActive = checked ? 1 : 0;
-      // Resetear el campo messageReasonInActive si isActive se vuelve a bloquear
-      if (updatedDriver.isActive === 1) {
-        updatedDriver.messageReasonInActive = "";
-      }
-    } else if (name === "allServices" && checked) {
-      // Si allServices es seleccionado, desmarca los otros checkboxes
-      updatedDriver = {
-        ...updatedDriver,
-        allServices: 1,
-        servicesLGBQT: 0,
-        onlyWomenServices: 0,
-      };
-    } else {
-      // Si otros checkboxes son seleccionados, actualiza el checkbox correspondiente
-      updatedDriver[name] = checked ? 1 : 0;
-
-      // Si allServices estaba seleccionado, desmárcalo
-      if (updatedDriver.allServices === 1) {
-        updatedDriver.allServices = 0;
-      }
-    }
-
-    setDriver(updatedDriver);
-  };
+    setCar(updateForm)
+  }
 
   useEffect(() => {
-    // Actualizar los valores del formulario cuando estado o ciudad cambien
-    if (typeof estado === "string" || typeof ciudad === "string") {
-      // ACTUALIZAMOS EL FORMULARIO CON LOS CAMPOS QUE SE AUTOCOMPLETAN
-      setDriver((prevState) => ({
+    if (nombre || apellido || codigoPostal || estado || ciudad || colonia || domicilio || telefono || email) {
+      setCar((prevState) => ({
         ...prevState,
+        name: nombre,
+        lastName: apellido,
+        zipCode: codigoPostal,
         state: estado,
         city: ciudad,
-      }));
+        colonia: colonia,
+        address: domicilio,
+        contact: telefono,
+        email: email,
+      }))
     }
-  }, [estado, ciudad]);
+  }, [nombre, apellido, codigoPostal, estado, ciudad, colonia, domicilio, telefono, email]);
 
   useEffect(() => {
-    // Este codigo permite la sincronización de los mensajes de las imagenes
-    const validationErrors = validateDriver(driver, selectImage);
-    setErrorForm(validationErrors);
-  }, [driver]);
-
-  const {
-    nameError,
-    lastNameError,
-    zipCodeError,
-    stateError,
-    cityError,
-    coloniaError,
-    addressError,
-    contactError,
-    emailError,
-    driverPictureError,
-    driverLicenseNumberError,
-    stateLicenseError,
-    typeLicenseError,
-    dateLicenseError,
-    frontLicensePictureError,
-    backLicensePictureError,
-    servicesError,
-    passwordError,
-    repeatPasswordError,
-    isActiveError,
-    messageReasonInActiveError,
-  } = errorForm;
-  // console.log("errorForm:", errorForm)
+    axiosGetMarcas(setMarca);
+    axiosGetSubMarcas(setSubMarca);
+    axiosGetDrivers(setCondurtores, headers);
+  }, []);
 
   useEffect(() => {
-    axiosGetSepomex(setSepomex);
-    axiosGetLicencias(setLicencias);
+    const findById = conductores.find(el => el._id === value)
+    // console.log("id:", findById?._id)
+    // if (findById && findById._id) {
+    // }
+    axiosDetailDriver(findById?._id, setDetailDriver, headers)
   }, []);
 
-  const onDriverPictureDrop = useCallback((acceptedFiles) => {
-    if (acceptedFiles.length > 0) {
-      const file = acceptedFiles[0];
-      convertAndSetImage(file, "driverPicture");
-    }
-  }, []);
-
-  const onFrontLicensePictureDrop = useCallback((acceptedFiles) => {
+  const onFrontImageTrafficDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
-    convertAndSetImage(file, "frontLicensePicture");
-  }, []);
+    convertAndSetImage(file, "frontImageTraffic");
+  };
 
-  const onBackLicensePictureDrop = useCallback((acceptedFiles) => {
+  const onBackImageTrafficDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
-    convertAndSetImage(file, "backLicensePicture");
-  }, []);
+    convertAndSetImage(file, "backImageTraffic");
+  };
 
   const convertAndSetImage = (file, fieldName) => {
     console.log("file:", file);
@@ -349,7 +244,7 @@ export const ButtonAdd = ({
     const reader = new FileReader();
     reader.onload = () => {
       const base64String = reader.result.split(",")[1];
-      setDriver((prevState) => ({
+      setCar((prevState) => ({
         ...prevState,
         [fieldName]: base64String,
       }));
@@ -358,10 +253,10 @@ export const ButtonAdd = ({
   };
 
   const {
-    getRootProps: getDriverRootProps,
-    getInputProps: getDriverInputProps,
+    getRootProps: getFrontImageRootProps,
+    getInputProps: getFrontImageInputProps,
   } = useDropzone({
-    onDrop: onDriverPictureDrop,
+    onDrop: onFrontImageTrafficDrop,
     // FORMATOS DE IMAGEN PERMITIDA
     accept: {
       "image/*": [".jpg", ".png"],
@@ -370,22 +265,10 @@ export const ButtonAdd = ({
   });
 
   const {
-    getRootProps: getFrontLicenseRootProps,
-    getInputProps: getFrontLicenseInputProps,
+    getRootProps: getBackImageRootProps,
+    getInputProps: getBackImageInputProps,
   } = useDropzone({
-    onDrop: onFrontLicensePictureDrop,
-    // FORMATOS DE IMAGEN PERMITIDA
-    accept: {
-      "image/*": [".jpg", ".png"],
-    },
-    maxFiles: 1, // ARCHIVOS PERMITIDOS
-  });
-
-  const {
-    getRootProps: getBackLicenseRootProps,
-    getInputProps: getBackLicenseInputProps,
-  } = useDropzone({
-    onDrop: onBackLicensePictureDrop,
+    onDrop: onBackImageTrafficDrop,
     // FORMATOS DE IMAGEN PERMITIDA
     accept: {
       "image/*": [".jpg", ".png"],
@@ -394,41 +277,28 @@ export const ButtonAdd = ({
   });
 
   function closeModal() {
-    setDriver({
-      name: "",
-      lastName: "",
-      zipCode: "", // CODIGO POSTAL
-      state: "", // ESTADO DE MEXICO
-      city: "",
-      colonia: "",
-      address: "",
-      contact: "", // NUMERO DE CONTACTO DEL CONDUCTOR
-      email: "",
-      driverPicture: "", //* FOTO DEL CONDUCTOR
-      //! DATOS DE LA LICENCIA DE CONDUCCION
-      driverLicenseNumber: "", //* NUMERO LICENCIA DEL CONDUCTOR
-      stateLicense: "", // ESTADO DE LA LICENCIA
-      typeLicense: "", // TIPO LICENCIA
-      dateLicense: "", // FECHA - VIGENCIA DE LA LICENCIA
-      frontLicensePicture: "", //* FOTO FRONTAL DE LA LICENCIA
-      backLicensePicture: "", //* FOTO REVERSO DE LA LICENCIA
-      //! DATOS DE LA LICENCIA DE CONDUCCION
-      //! AJUSTES DE LA APLICACION
-      allServices: 1, // TODOS
-      servicesLGBQT: 0, // LGBQT+
-      onlyWomenServices: 0, // MUJERES
-      //! AJUSTES DE LA APLICACION
-      //! ACCESO A LA APLICACION
-      password: "",
-      repeatPassword: "",
-      isActive: 1,
-      messageReasonInActive: "", // MENSAJE RASON INACTIVO
-      //! ACCESO A LA APLICACION
-      car: "" || null,
-      //! NO SE VALIDAN
-      tokenNotification: "",
-      typePhone: "",
-      //! NO SE VALIDAN
+    setCar({
+      name: "", // Nombre del propietario
+      lastName: "", // Apellido del propietario
+      address: "", // Dirección del propietario
+      city: "", // Ciudad del propietario
+      state: "", // Estado del propietario
+      zipCode: "", // Código postal del propietario
+      contact: "", // Telefono del propietario
+      email: "", // Correo electrónico del propietario
+
+      make: "", // MARCA DEL VEHICULO
+      subMake: "", // SUB-MARCA DEL VEHICULO
+      model: "",
+      colors: "",
+      plates: "", // PLACAS DEL VEHICULO
+      numberMotor: "", // NUMERO DE MOTOR
+      trafficCardNumber: "", // NUMERO TARGETA DE CIRCULACION
+      frontImageTraffic: "", // Imagen de la tarjeta de circulación de frente
+      backImageTraffic: "", // Imagen de la tarjeta de circulación por atrás
+      driver: "" || null, //* RELACION CONDUCTOR
+      driverIsOwner: "", // Chofer es el propietario
+      owner: "" || null, //* RELACION CHOFER
     });
   }
 
@@ -436,29 +306,26 @@ export const ButtonAdd = ({
     e.preventDefault();
 
     if (
-      name &&
-      lastName &&
-      zipCode &&
-      state &&
-      city &&
-      colonia &&
-      address &&
-      contact &&
-      email &&
-      driverPicture &&
-      (allServices === 1 || servicesLGBQT === 1 || onlyWomenServices === 1) &&
-      password &&
-      repeatPassword
+      formCar.make &&
+      formCar.subMake &&
+      formCar.model &&
+      formCar.colors &&
+      formCar.plates &&
+      formCar.numberMotor &&
+      formCar.trafficCardNumber &&
+      formCar.frontImageTraffic &&
+      formCar.backImageTraffic &&
+      formCar.driver &&
+      formCar.driverIsOwner &&
+      formCar.owner
     ) {
       if (
-        stateLicenseError ||
-        typeLicenseError ||
-        dateLicenseError ||
-        frontLicensePictureError ||
-        backLicensePictureError
+        // stateLicenseError ||
+        // typeLicenseError ||
+        // dateLicenseError ||
+        // frontLicensePictureError ||
+        errorFormCar.backLicensePictureError
       ) {
-        errorRegister(driver, errorForm);
-      } else if (messageReasonInActiveError) {
         errorRegister(driver, errorForm);
       } else {
         try {
@@ -466,7 +333,7 @@ export const ButtonAdd = ({
           const newDriver = await axiosPostDriver(driver, headers);
           setTDriver([...tDriver, newDriver]);
 
-          await axiosGetDrivers(setTDriver, setTotalPages, headers, 1, limit);
+          // await axiosGetDrivers(setTDriver, setTotalPages, headers, 1, limit);
 
           // Cierra el modal después de guardar
           setModalIsOpen(false);
@@ -504,489 +371,483 @@ export const ButtonAdd = ({
           </FormHead>
           <br />
           <ContainerScroll>
-
-            <TituloSeccion>  {/* Tarjeta de circulacion */}
+            <TituloSeccion>
+              {/* Tarjeta de circulacion */}
+              Datos del Vehiculo
               <hr />
               Datos del Vehiculo
             </TituloSeccion>
 
             <GrupoSelect>
-                {typeof estado !== "string" ? null : (
-                  <SelectContainer>
-                    <Select
-                      //disabled={true}
-                      name={"marca"}
-                      value={marca}
-                      onChange={handleChange}
-                    >
-                      <option>{estado || "Selecciona"}</option>
-                    </Select>
-                    <Label>*Marca: </Label>
-                    {stateError && <Span>{stateError}</Span>}
-                  </SelectContainer>
-                )}
-                {!Array.isArray(estado) ? null : (
-                  <SelectContainer>
-                    <Select
-                      disabled={false}
-                      name={"state"}
-                      value={state}
-                      onChange={handleChange}
-                    >
-                      <option>Selecciona</option>
-                      {marca.map((est, idx) => {
-                        return <option key={idx}>{est}</option>;
-                      })}
-                    </Select>
-                    <Label>*Marca: </Label>
-                    {stateError && <Span>{stateError}</Span>}
-                  </SelectContainer>
-                )}
-
-                {typeof submarca !== "string" ? null : (
-                  <SelectContainer>
-                    <Select
-                      name={"submarca"}
-                      value={submarca}
-                      onChange={handleChange}
-                    >
-                      <option>{submarca || "Selecciona"}</option>
-                    </Select>
-                    <Label>*Sub-Marca: </Label>
-                    {cityError && <Span>{cityError}</Span>}
-                  </SelectContainer>
-                )}
-                {!Array.isArray(submarca) ? null : (
-                  <SelectContainer>
-
-                    <Select
-                      name={"submarca"}
-                      value={submarca}
-                      onChange={handleChange}
-                    >
-                      <option>Selecciona</option>
-                      {submarca.map((cit, idx) => {
-                        return <option key={idx}>{cit}</option>;
-                      })}
-                    </Select>
-                    <Label>*Sub-Marca: </Label>
-                    {/* <br /> */}
-                    {cityError && <Span>{cityError}</Span>}
-                  </SelectContainer>
-                )}
-
-                {typeof modelo !== "string" ? null : (
-                  <SelectContainer>
-                    <Select
-                      name={"modelo"}
-                      value={modelo}
-                      onChange={handleChange}
-                    >
-                      <option>{modelo || "Selecciona"}</option>
-                    </Select>
-                    <Label>*Modelo: </Label>
-                    {cityError && <Span>{cityError}</Span>}
-                  </SelectContainer>
-                )}
-                {!Array.isArray(modelo) ? null : (
-                  <SelectContainer>
-
-                    <Select
-                      name={"modelo"}
-                      value={modelo}
-                      onChange={handleChange}
-                    >
-                      <option>Selecciona</option>
-                      {modelo.map((cit, idx) => {
-                        return <option key={idx}>{cit}</option>;
-                      })}
-                    </Select>
-                    <Label>*Modelo: </Label>
-                    {/* <br /> */}
-                    {cityError && <Span>{cityError}</Span>}
-                  </SelectContainer>
-                )}
-
-                {typeof color !== "string" ? null : (
-                  <SelectContainer>
-                    <Select
-                      name={"color"}
-                      value={color}
-                      onChange={handleChange}
-                    >
-                      <option>{color || "Selecciona"}</option>
-                    </Select>
-                    <Label>*Color: </Label>
-                    {cityError && <Span>{cityError}</Span>}
-                  </SelectContainer>
-                )}
-                {!Array.isArray(color) ? null : (
-                  <SelectContainer>
-                    <Select
-                      name={"color"}
-                      value={color}
-                      onChange={handleChange}
-                    >
-                      <option>Selecciona</option>
-                      {color.map((cit, idx) => {
-                        return <option key={idx}>{cit}</option>;
-                      })}
-                    </Select>
-                    <Label>*Color: </Label>
-                    {/* <br /> */}
-                    {cityError && <Span>{cityError}</Span>}
-                  </SelectContainer>
-                )}
-            </GrupoSelect>
-
-            <GrupoInput> {/* Placa y Motor */}
-                <InputContainer>  {/* placa */}
-                  <Input
-                    color={"transparent"}
-                    type="text"
-                    name={"placa"}
-                    value={placa}
-                    placeholder="a"
-                    onChange={handleChange}
-                  />
-                  <Label>*Placa: </Label>
-                  <br />
-                  {nameError && <Span>{nameError}</Span>}
-                </InputContainer>
-
-                <InputContainer>  {/* motor */}
-                  <Input
-                    color={"transparent"}
-                    type="text"
-                    name={"motor"}
-                    value={motor}
-                    placeholder="a"
-                    onChange={handleChange}
-                  />
-                  <Label>*Número Motor: </Label>
-                  <br />
-                  {nameError && <Span>{nameError}</Span>}
-                </InputContainer>
-            </GrupoInput>
-
-            <TituloSeccion>  {/* Tarjeta de circulacion */}
-                  <hr />
-                  Tarjeta de circulacion
-            </TituloSeccion>
-
-            <GrupoInput>
-              <InputContainer> {/* Número de Tarjeta */}
-                  <Input
-                    color={"transparent"}
-                    type="text"
-                    name={"motor"}
-                    value={motor}
-                    placeholder="a"
-                    onChange={handleChange}
-                  />
-                  <Label>*Número de Tarjeta: </Label>
-                  <br />
-                  {nameError && <Span>{nameError}</Span>}
-              </InputContainer>
-            </GrupoInput>
-
-
-            <SubeImgContainer style={pictureLicence}> {/* Img delante y Atras */}
-                <br />
-                {!driverLicenseNumber ? (
-                  <>
-                    <div style={dropzoneContainerStyles}>
-                      <p>Desabilitado</p>
-                    </div>
-                    <div style={dropzoneContainerStyles}>
-                      <p>Desabilitado</p>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <SubeContainerImg
-                      {...getFrontLicenseRootProps()}
-                      style={dropzoneContainerStyles}
-                    >
-                      <ImgSube {...getFrontLicenseInputProps()} />
-                      {frontLicensePicture && (
-                        <img
-                          src={`data:image/png;base64,${frontLicensePicture}`}
-                          alt="Foto conductor"
-                          style={{ maxWidth: "100px" }}
-                        />
-                      )}
-                      Frente
-                      {frontLicensePictureError && (
-                        <Span>{frontLicensePictureError}</Span>
-                      )}
-                    </SubeContainerImg>
-                    <SubeContainerImg
-                      {...getBackLicenseRootProps()}
-                      style={dropzoneContainerStyles}
-                    >
-                      <ImgSube {...getBackLicenseInputProps()} />
-                      {backLicensePicture && (
-                        <img
-                          src={`data:image/png;base64,${backLicensePicture}`}
-                          alt="Foto conductor"
-                          style={{ maxWidth: "100px" }}
-                        />
-                      )}
-                      Atrás
-                      {backLicensePictureError && (
-                        <Span>{backLicensePictureError}</Span>
-                      )}
-                    </SubeContainerImg>
-                  </>
-                )}
-            </SubeImgContainer>
-
-            <TituloSeccion>  {/* Conductor */}
-                <hr />
-                Conductor
-            </TituloSeccion>
-
-            <GrupoSelect> {/* Conductor Asignado */}
-                {typeof estado !== "string" ? null : (
-                  <SelectContainer>
-                    <Select
-                      //disabled={true}
-                      name={"marca"}
-                      value={state}
-                      onChange={handleChange}
-                    >
-                      <option>{estado || "Selecciona"}</option>
-                    </Select>
-                    <Label>*Conductor Asignado: </Label>
-                    {stateError && <Span>{stateError}</Span>}
-                  </SelectContainer>
-                )}
-                {!Array.isArray(estado) ? null : (
-                  <SelectContainer>
-                    <Select
-                      disabled={false}
-                      name={"state"}
-                      value={state}
-                      onChange={handleChange}
-                    >
-                      <option>Selecciona</option>
-                      {estado.map((est, idx) => {
-                        return <option key={idx}>{est}</option>;
-                      })}
-                    </Select>
-                    <Label>*Conductor Asignado: </Label>
-                    {stateError && <Span>{stateError}</Span>}
-                  </SelectContainer>
-                )}
-            </GrupoSelect>
-
-            <GrupoCheck> {/* Es el propietario? */}
-
-                <label>Es el propietario?</label>
-                <InputCheck
-                  type="checkbox"
-                  name="servicesLGBQT"
-                  checked={servicesLGBQT === 1}
-                  //disabled={allServices === 1 ? true : false}
-                  onChange={handleCheckboxChange}
-                />
-                SI
-                <InputCheck
-                  type="checkbox"
-                  name="onlyWomenServices"
-                  checked={onlyWomenServices === 1}
-                  //disabled={allServices === 1 ? true : false}
-                  onChange={handleCheckboxChange}
-                />
-                NO
-            </GrupoCheck>
-            {servicesError && <Span>{servicesError}</Span>}
-
-            <TituloSeccion>  {/* Propietario */}
-                <hr />
-                Propietario
-            </TituloSeccion>
-
-            <GrupoInput> {/* Propietario */}
-              <InputContainer>
-                <Input
-                  color={"transparent"}
-                  type="text"
-                  name={"name"}
-                  value={name}
-                  placeholder="a"
-                  onChange={handleChange}
-                />
-                <Label>*Nombre(s): </Label>
-                <br />
-                {nameError && <Span>{nameError}</Span>}
-              </InputContainer>
-
-              <InputContainer>
-                <Input
-                  color={"transparent"}
-                  type="text"
-                  name={"lastName"}
-                  placeholder="a"
-                  value={lastName}
-                  onChange={handleChange}
-                />
-                <Label>*Apellidos: </Label>
-                <br />
-                {lastNameError && <Span>{lastNameError}</Span>}
-              </InputContainer>
-
-              <InputContainer>
-                <Input
-                  color={"transparent"}
-                  type="text"
-                  name={"zipCode"}
-                  placeholder="a"
-                  value={zipCode}
-                  onChange={handleChange}
-                />
-                <Label>*Código postal: </Label>
-                <br />
-                {zipCodeError && <Span>{zipCodeError}</Span>}
-              </InputContainer>
-            </GrupoInput>
-
-            <GrupoSelect> {/* Estado, Ciudad y Colonia */}
-              {typeof estado !== "string" ? null : (
-                <SelectContainer>
-                  <Select
-                    //disabled={true}
-                    name={"marca"}
-                    value={state}
-                    onChange={handleChange}
-                  >
-                    <option>{estado || "Selecciona"}</option>
-                  </Select>
-                  <Label>*Estado: </Label>
-                  {stateError && <Span>{stateError}</Span>}
-                </SelectContainer>
-              )}
-              {!Array.isArray(estado) ? null : (
-                <SelectContainer>
-                  <Select
-                    disabled={false}
-                    name={"state"}
-                    value={state}
-                    onChange={handleChange}
-                  >
-                    <option>Selecciona</option>
-                    {estado.map((est, idx) => {
-                      return <option key={idx}>{est}</option>;
-                    })}
-                  </Select>
-                  <Label>*Estado: </Label>
-                  {stateError && <Span>{stateError}</Span>}
-                </SelectContainer>
-              )}
-
-              {typeof ciudad !== "string" ? null : (
-                <SelectContainer>
-
-                  <Select
-                    disabled={true}
-                    name={"city"}
-                    value={city}
-                    onChange={handleChange}
-                  >
-                    <option>{ciudad || "Selecciona"}</option>
-                  </Select>
-                  <Label>*Ciudad: </Label>
-                  {cityError && <Span>{cityError}</Span>}
-                </SelectContainer>
-              )}
-              {!Array.isArray(ciudad) ? null : (
-                <SelectContainer>
-
-                  <Select
-                    disabled={false}
-                    name={"city"}
-                    value={city}
-                    onChange={handleChange}
-                  >
-                    <option>Selecciona</option>
-                    {ciudad.map((cit, idx) => {
-                      return <option key={idx}>{cit}</option>;
-                    })}
-                  </Select>
-                  <Label>*Ciudad: </Label>
-                  {/* <br /> */}
-                  {cityError && <Span>{cityError}</Span>}
-                </SelectContainer>
-              )}
-
               <SelectContainer>
-
                 <Select
-                  disabled={zipCode || codigoPostal === zipCode ? false : true}
-                  name={"colonia"}
-                  value={colonia}
+                  name={"make"}
+                  value={formCar.make}
                   onChange={handleChange}
                 >
                   <option>Selecciona</option>
-                  {colonias.length >= 1 &&
-                    colonias.map((colonia, idx) => {
-                      return (
-                        <option key={idx} value={colonia}>
-                          {colonia}
-                        </option>
-                      );
+                  {marcas.length &&
+                    marcas.map((el, idx) => {
+                      // console.log("el:", el.marca);
+                      return <option key={idx}>{el.marca}</option>;
                     })}
                 </Select>
-                <Label>*Colonia: </Label>
-                {coloniaError && <Span>{coloniaError}</Span>}
+                <Label>*Marca: </Label>
+                {errorFormCar.make && <Span>{errorFormCar.make}</Span>}
+              </SelectContainer>
+
+              <SelectContainer>
+                <Select
+                  name={"subMake"}
+                  value={formCar.subMake}
+                  onChange={handleChange}
+                >
+                  <option>Selecciona</option>
+                  {selectSubMarcas.length &&
+                    selectSubMarcas.map((el, idx) => {
+                      return <option key={idx}>{el.subMarca}</option>;
+                    })}
+                </Select>
+                <Label>*Sub-Marca: </Label>
+                {errorFormCar.subMake && <Span>{errorFormCar.subMake}</Span>}
+              </SelectContainer>
+
+              <SelectContainer>
+                <Select
+                  name={"model"}
+                  value={formCar.model}
+                  onChange={handleChange}
+                >
+                  <option>Selecciona</option>
+                  {modelo.length &&
+                    modelo.map((mol, idx) => {
+                      return <option key={idx}>{mol}</option>;
+                    })}
+                </Select>
+                <Label>*Modelo: </Label>
+                {errorFormCar.model && <Span>{errorFormCar.model}</Span>}
+              </SelectContainer>
+
+              <SelectContainer>
+                <Select
+                  name={"color"}
+                  value={formCar.color}
+                  onChange={handleChange}
+                >
+                  <option>Selecciona</option>
+                  {colors.length &&
+                    colors.map((el, idx) => {
+                      return <option key={idx}>{el.descripcion}</option>;
+                    })}
+                </Select>
+                <Label>*Color: </Label>
+                {errorFormCar.color && <Span>{errorFormCar.color}</Span>}
               </SelectContainer>
             </GrupoSelect>
 
-            <GrupoInput> {/* Domicilio, Telefono y Email */}
+            <GrupoInput>
+              {/* Placa y Motor */}
               <InputContainer>
+                {/* placa */}
                 <Input
                   color={"transparent"}
                   type="text"
-                  name={"address"}
+                  name={"plates"}
+                  value={formCar.plates}
                   placeholder="a"
-                  value={address}
                   onChange={handleChange}
                 />
-                <Label>*Domicilio: </Label>
+                <Label>*Placa: </Label>
                 <br />
-                {addressError && <Span>{addressError}</Span>}
+                {errorFormCar.plates && <Span>{errorFormCar.plates}</Span>}
               </InputContainer>
-
               <InputContainer>
+                {/* motor */}
                 <Input
                   color={"transparent"}
                   type="text"
-                  name={"contact"}
-                  value={contact}
+                  name={"numberMotor"}
+                  value={formCar.numberMotor}
                   placeholder="a"
                   onChange={handleChange}
                 />
-                <Label>*Teléfono (Móvil): </Label>
+                <Label>*Número Motor: </Label>
                 <br />
-                {contactError && <Span>{contactError}</Span>}
-              </InputContainer>
-
-              <InputContainer>
-                <Input
-                  color={"transparent"}
-                  type="text"
-                  name={"email"}
-                  value={email}
-                  placeholder="a"
-                  onChange={handleChange}
-                />
-                <Label>*Correo electrónico: </Label>
-                <br />
-                {emailError && <Span>{emailError}</Span>}
+                {errorFormCar.numberMotor && (
+                  <Span>{errorFormCar.numberMotor}</Span>
+                )}
               </InputContainer>
             </GrupoInput>
-            
+
+            <TituloSeccion>
+              {/* Tarjeta de circulacion */}
+              <hr />
+              Tarjeta de circulacion
+            </TituloSeccion>
+
+            <GrupoInput>
+              <InputContainer>
+                {/* Número de Tarjeta */}
+                <Input
+                  color={"transparent"}
+                  type="text"
+                  name={"trafficCardNumber"}
+                  value={formCar.trafficCardNumber}
+                  placeholder="a"
+                  onChange={handleChange}
+                />
+                <Label>*Número de Tarjeta: </Label>
+                <br />
+                {errorFormCar.trafficCardNumber && (
+                  <Span>{errorFormCar.trafficCardNumber}</Span>
+                )}
+              </InputContainer>
+            </GrupoInput>
+
+            <SubeImgContainer style={pictureLicence}>
+              {/* Img delante y Atras */}
+              <br />
+              <SubeContainerImg
+                {...getFrontImageRootProps()}
+                style={dropzoneContainerStyles}
+              >
+                <ImgSube {...getFrontImageInputProps()} />
+                {formCar.frontImageTraffic && (
+                  <img
+                    src={`data:image/png;base64,${formCar.frontImageTraffic}`}
+                    alt="Foto conductor"
+                    style={{ maxWidth: "100px" }}
+                  />
+                )}
+                Frente
+                {errorFormCar.frontImageTraffic && (
+                  <Span>{errorFormCar.frontImageTraffic}</Span>
+                )}
+              </SubeContainerImg>
+              <SubeContainerImg
+                {...getBackImageRootProps()}
+                style={dropzoneContainerStyles}
+              >
+                <ImgSube {...getBackImageInputProps()} />
+                {formCar.backImageTraffic && (
+                  <img
+                    src={`data:image/png;base64,${formCar.backImageTraffic}`}
+                    alt="Foto conductor"
+                    style={{ maxWidth: "100px" }}
+                  />
+                )}
+                Atrás
+                {errorFormCar.backImageTraffic && (
+                  <Span>{errorFormCar.backImageTraffic}</Span>
+                )}
+              </SubeContainerImg>
+            </SubeImgContainer>
+
+            <TituloSeccion>
+              {/* Conductor */}
+              <hr />
+              Conductor
+            </TituloSeccion>
+
+            <GrupoSelect>
+              {/* Conductor Asignado */}
+              <SelectContainer>
+                <Select
+                  name={"driver"}
+                  // value={formCar.driver}
+                  onChange={handleChange}
+                >
+                  <option>Selecciona</option>
+                  {conductores.length &&
+                    conductores.map((conductor, idx) => {
+                      return <option key={idx} value={conductor._id}>{`${conductor.name} ${conductor.lastName}`}</option>;
+                    })}
+                </Select>
+                <Label>*Conductor Asignado: </Label>
+                {errorFormCar.driver && <Span>{errorFormCar.driver}</Span>}
+              </SelectContainer>
+            </GrupoSelect>
+
+            <GrupoCheck>
+              {/* Es el propietario? */}
+              <label>Es el propietario?</label>
+              <InputCheck
+                type="radio"
+                name="driverIsOwner"
+                checked={formCar.driverIsOwner === 1}
+                onChange={handleChange}
+              />
+              SI
+              <InputCheck
+                type="radio"
+                name="driverIsOwner"
+                checked={formCar.driverIsOwner === 0}
+                onChange={handleOwnerChange}
+              />
+              NO
+            </GrupoCheck>
+            {errorFormCar.driverIsOwner && (
+              <Span>{errorFormCar.driverIsOwner}</Span>
+            )}
+
+            <TituloSeccion>
+              {/* Propietario */}
+              <hr />
+              Propietario
+            </TituloSeccion>
+
+            {formCar.driverIsOwner === 1 ? (
+              <>
+                <GrupoInput>
+                  {/* Propietario */}
+                  <InputContainer>
+                    <Input
+                      color={"transparent"}
+                      type="text"
+                      name={"name"}
+                      value={formCar.name}
+                      placeholder="a"
+                      onChange={handleChange}
+                      disabled={true}
+                    />
+                    <Label>{!nombre ? "*Nombre(s): " : nombre}</Label>
+                    <br />
+                    {errorFormCar.name && <Span>{errorFormCar.name}</Span>}
+                  </InputContainer>
+                  <InputContainer>
+                    <Input
+                      color={"transparent"}
+                      type="text"
+                      name={"lastName"}
+                      placeholder="a"
+                      value={formCar.lastName}
+                      onChange={handleChange}
+                      disabled={true}
+                    />
+                    <Label>{!apellido ? "*Apellidos: " : apellido}</Label>
+                    <br />
+                    {errorFormCar.lastName && (
+                      <Span>{errorFormCar.lastName}</Span>
+                    )}
+                  </InputContainer>
+                  <InputContainer>
+                    <Input
+                      color={"transparent"}
+                      type="text"
+                      name={"zipCode"}
+                      placeholder="a"
+                      value={formCar.zipCode}
+                      onChange={handleChange}
+                      disabled={true}
+                    />
+                    <Label>{!codigoPostal ? `*Código postal: ` : codigoPostal}</Label>
+                    <br />
+                    {errorFormCar.zipCode && (
+                      <Span>{errorFormCar.zipCode}</Span>
+                    )}
+                  </InputContainer>
+                </GrupoInput>
+                <GrupoSelect>
+                  {/* Estado, Ciudad y Colonia */}
+                    <SelectContainer>
+                      <Select
+                        disabled={true}
+                        name={"state"}
+                        value={formCar.state}
+                        onChange={handleChange}
+                      >
+                        <option>{estado || "Selecciona"}</option>
+                      </Select>
+                      <Label>*Estado: </Label>
+                      {errorFormCar.state && <Span>{errorFormCar.state}</Span>}
+                    </SelectContainer>
+
+                      <SelectContainer>
+                        <Select
+                          disabled={true}
+                          name={"city"}
+                          value={formCar.city}
+                          onChange={handleChange}
+                        >
+                          <option>{ciudad || "Selecciona"}</option>
+                        </Select>
+                        <Label>*Ciudad: </Label>
+                        {errorFormCar.city && <Span>{errorFormCar.city}</Span>}
+                      </SelectContainer>
+
+                  <SelectContainer>
+                    <Select
+                      disabled={true}
+                      name={"colonia"}
+                      value={formCar.colonia}
+                      onChange={handleChange}
+                    >
+                      <option>{colonia || "Selecciona"}</option>
+                    </Select>
+                    <Label>*Colonia: </Label>
+                    {errorFormCar.colonia && (
+                      <Span>{errorFormCar.colonia}</Span>
+                    )}
+                  </SelectContainer>
+                </GrupoSelect>
+
+                <GrupoInput>
+                  {/* Domicilio, Telefono y Email */}
+                  <InputContainer>
+                    <Input
+                      color={"transparent"}
+                      type="text"
+                      name={"address"}
+                      placeholder="a"
+                      value={formCar.address}
+                      onChange={handleChange}
+                      disabled={true}
+                    />
+                    <Label>{domicilio || "*Domicilio: "}</Label>
+                    <br />
+                    {errorFormCar.address && (
+                      <Span>{errorFormCar.address}</Span>
+                    )}
+                  </InputContainer>
+                  <InputContainer>
+                    <Input
+                      color={"transparent"}
+                      type="text"
+                      name={"contact"}
+                      value={formCar.contact}
+                      placeholder="a"
+                      onChange={handleChange}
+                      disabled={true}
+                    />
+                    <Label>{telefono || "*Teléfono (Móvil): "}</Label>
+                    <br />
+                    {errorFormCar.contact && (
+                      <Span>{errorFormCar.contact}</Span>
+                    )}
+                  </InputContainer>
+                  <InputContainer>
+                    <Input
+                      color={"transparent"}
+                      type="text"
+                      name={"email"}
+                      value={formCar.email}
+                      placeholder="a"
+                      onChange={handleChange}
+                      disabled={true}
+                    />
+                    <Label>{email || "*Correo electrónico: "}</Label>
+                    <br />
+                    {errorFormCar.email && <Span>{errorFormCar.email}</Span>}
+                  </InputContainer>
+                </GrupoInput>
+              </>
+            ) : (
+              <>
+                <GrupoSelect>
+                  {/* Estado, Ciudad y Colonia */}
+                    <SelectContainer>
+                      <Select
+                        disabled={false}
+                        name={"state"}
+                        value={formCar.state}
+                        onChange={handleChange}
+                      >
+                        <option>Selecciona</option>
+                        {selectEstado.length && selectEstado.map((est, idx) => {
+                          return <option key={idx}>{est}</option>;
+                        })}
+                      </Select>
+                      <Label>*Estado: </Label>
+                      {errorFormCar.state && <Span>{errorFormCar.state}</Span>}
+                    </SelectContainer>
+
+                    <SelectContainer>
+                      <Select
+                        disabled={false}
+                        name={"city"}
+                        value={formCar.city}
+                        onChange={handleChange}
+                      >
+                        <option>Selecciona</option>
+                        {selectCiudad.length && selectCiudad.map((cit, idx) => {
+                          return <option key={idx}>{cit}</option>;
+                        })}
+                      </Select>
+                      <Label>*Ciudad: </Label>
+                      {errorFormCar.city && <Span>{errorFormCar.city}</Span>}
+                    </SelectContainer>
+
+                  <SelectContainer>
+                    <Select
+                      name={"colonia"}
+                      value={formCar.colonia}
+                      onChange={handleChange}
+                    >
+                      <option>Selecciona</option>
+                      {selectColonia.length >= 1 &&
+                        selectColonia.map((colonia, idx) => {
+                          return (
+                            <option key={idx} value={colonia}>
+                              {colonia}
+                            </option>
+                          );
+                        })}
+                    </Select>
+                    <Label>*Colonia: </Label>
+                    {errorFormCar.colonia && (
+                      <Span>{errorFormCar.colonia}</Span>
+                    )}
+                  </SelectContainer>
+
+                </GrupoSelect>
+                <GrupoInput>
+                  {/* Domicilio, Telefono y Email */}
+                  <InputContainer>
+                    <Input
+                      color={"transparent"}
+                      type="text"
+                      name={"address"}
+                      placeholder="a"
+                      value={formCar.address}
+                      onChange={handleChange}
+                    />
+                    <Label>*Domicilio: </Label>
+                    <br />
+                    {errorFormCar.address && (
+                      <Span>{errorFormCar.address}</Span>
+                    )}
+                  </InputContainer>
+                  <InputContainer>
+                    <Input
+                      color={"transparent"}
+                      type="text"
+                      name={"contact"}
+                      value={formCar.contact}
+                      placeholder="a"
+                      onChange={handleChange}
+                    />
+                    <Label>*Teléfono (Móvil): </Label>
+                    <br />
+                    {errorFormCar.contact && (
+                      <Span>{errorFormCar.contact}</Span>
+                    )}
+                  </InputContainer>
+                  <InputContainer>
+                    <Input
+                      color={"transparent"}
+                      type="text"
+                      name={"email"}
+                      value={formCar.email}
+                      placeholder="a"
+                      onChange={handleChange}
+                    />
+                    <Label>*Correo electrónico: </Label>
+                    <br />
+                    {errorFormCar.email && <Span>{errorFormCar.email}</Span>}
+                  </InputContainer>
+                </GrupoInput>
+              </>
+            )}
             <br />
             <br />
           </ContainerScroll>
