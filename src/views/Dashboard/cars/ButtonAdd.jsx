@@ -48,7 +48,8 @@ import {
   TextareaContainer,
   GrupoInputPass,
 } from "../../../components/reusable/FormularioModal";
-import axios from "axios";
+import { axiosDetailDriver, axiosGetDrivers, obtenerAnios } from "./function";
+import {colors} from "./colores"
 
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
@@ -79,24 +80,6 @@ const pictureLicence = {
   display: "flex",
 };
 
-export async function axiosGetDrivers(setTCar, headers) {
-  try {
-    const { data } = await axios.get(`/api/drivers`, { headers });
-    // console.log('DATA:', data);
-    if (typeof data === "object" && data.drivers) {
-      setTCar(data.drivers);
-      return data.drivers;
-    } else {
-      setTCar([]);
-    }
-    // setTotalPages(2);
-    // setTDriver(dataFakeDriver);
-  } catch (err) {
-    const { error } = err.response.data;
-    console.log("ERROR:", error);
-  }
-}
-
 export const ButtonAdd = ({
   tCar,
   setTCar,
@@ -117,22 +100,32 @@ export const ButtonAdd = ({
   const [marcas, setMarca] = useState([]);
   const [subMarcas, setSubMarca] = useState([]);
   const [selectSubMarcas, setSelectSubMarca] = useState([]);
-  const [modelo, setModelo] = useState([]);
-  const [colors, setColor] = useState([]);
-  const [placa, setPlaca] = useState("");
-  const [motor, setMotor] = useState("");
+  const modelo = obtenerAnios();
 
   //* INFORMACION DEL CONDUCTOR
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  // console.log("apellido:", apellido)
   const [codigoPostal, setZipcode] = useState("");
+  // console.log("codigoPostal:", codigoPostal)
   const [estado, setEstado] = useState("");
+  // console.log("estado:", estado)
   const [selectEstado, setSelectEstado] = useState([]);
   const [ciudad, setCiudad] = useState("");
   const [selectCiudad, setSelectCiudad] = useState([]);
-  const [colonias, setColonias] = useState([]);
+  const [colonia, setColonia] = useState("");
+  const [selectColonia, setSelectColonia] = useState([]);
+  const [domicilio, setDomicilio] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [email, setEmail] = useState("");
   const [conductores, setCondurtores] = useState([]);
-  // console.log("conductores:", conductores)
+  const [value, setValue] = useState("");
+  // console.log("value:", value)
+  
+  const [detailDriver, setDetailDriver] = useState({});
+  // console.log("detailDriver:", detailDriver)
   //* INFORMACION DEL CONDUCTOR
-
+  
   //* LICENCIA DE CONDUCIR
   const [estados, setEstados] = useState([]);
   const [licences, setLicences] = useState([]);
@@ -143,6 +136,7 @@ export const ButtonAdd = ({
   function handleChange(e) {
     const { name, value } = e.target;
     // console.log("name:", name)
+    // console.log("value:", value)
     
     if (name === "make") {
       const findById = marcas.find(el => {
@@ -150,10 +144,20 @@ export const ButtonAdd = ({
           return el.marcaId;
         }
       })
-      // console.log("findById:", findById)
       const filterSubMarcas = subMarcas.filter(el => el.idMarca === findById.marcaId);
-      // console.log("filterSubMarcas:", filterSubMarcas)
       setSelectSubMarca(filterSubMarcas)
+    }
+    if (name === "driver" && formCar.driverIsOwner === 1) {
+      setValue(value)
+      setNombre(detailDriver.name)
+      setApellido(detailDriver.lastName)
+      setZipcode(detailDriver.zipCode)
+      setEstado(detailDriver.state)
+      setCiudad(detailDriver.city)
+      setColonia(detailDriver.colonia)
+      setDomicilio(detailDriver.address)
+      setTelefono(detailDriver.contact)
+      setEmail(detailDriver.email)
     }
 
     setCar({
@@ -170,17 +174,58 @@ export const ButtonAdd = ({
     // );
   }
 
-  function handleSelectChange(e) {
-    const { name, value } = e.target;
-    const updateForm = { ...formCar };
-    if (name === "make") {}
-
+  function handleOwnerChange(e) {
+    const { name, checked } = e.target;
+    let updateForm = { ...formCar };
+    if (name === "driverIsOwner") {
+      updateForm.driverIsOwner = checked && 0
+      if (updateForm.driverIsOwner === 0) {
+        updateForm = {
+          ...prevState,
+          name: "",
+          lastName: "",
+          zipCode: "",
+          state: "",
+          city: "",
+          colonia: "",
+          address: "",
+          contact: "",
+          email: "",
+        }
+      }
+    }
+    setCar(updateForm)
   }
+
+  useEffect(() => {
+    if (nombre || apellido || codigoPostal || estado || ciudad || colonia || domicilio || telefono || email) {
+      setCar((prevState) => ({
+        ...prevState,
+        name: nombre,
+        lastName: apellido,
+        zipCode: codigoPostal,
+        state: estado,
+        city: ciudad,
+        colonia: colonia,
+        address: domicilio,
+        contact: telefono,
+        email: email,
+      }))
+    }
+  }, [nombre, apellido, codigoPostal, estado, ciudad, colonia, domicilio, telefono, email]);
 
   useEffect(() => {
     axiosGetMarcas(setMarca);
     axiosGetSubMarcas(setSubMarca);
     axiosGetDrivers(setCondurtores, headers);
+  }, []);
+
+  useEffect(() => {
+    const findById = conductores.find(el => el._id === value)
+    // console.log("id:", findById?._id)
+    // if (findById && findById._id) {
+    // }
+    axiosDetailDriver(findById?._id, setDetailDriver, headers)
   }, []);
 
   const onFrontImageTrafficDrop = (acceptedFiles) => {
@@ -390,8 +435,8 @@ export const ButtonAdd = ({
                 >
                   <option>Selecciona</option>
                   {colors.length &&
-                    colors.map((color, idx) => {
-                      return <option key={idx}>{color}</option>;
+                    colors.map((el, idx) => {
+                      return <option key={idx}>{el.descripcion}</option>;
                     })}
                 </Select>
                 <Label>*Color: </Label>
@@ -526,17 +571,17 @@ export const ButtonAdd = ({
               {/* Es el propietario? */}
               <label>Es el propietario?</label>
               <InputCheck
-                type="checkbox"
+                type="radio"
                 name="driverIsOwner"
                 checked={formCar.driverIsOwner === 1}
                 onChange={handleChange}
               />
               SI
               <InputCheck
-                type="checkbox"
+                type="radio"
                 name="driverIsOwner"
                 checked={formCar.driverIsOwner === 0}
-                onChange={handleChange}
+                onChange={handleOwnerChange}
               />
               NO
             </GrupoCheck>
@@ -562,8 +607,9 @@ export const ButtonAdd = ({
                       value={formCar.name}
                       placeholder="a"
                       onChange={handleChange}
+                      disabled={true}
                     />
-                    <Label>*Nombre(s): </Label>
+                    <Label>{!nombre ? "*Nombre(s): " : nombre}</Label>
                     <br />
                     {errorFormCar.name && <Span>{errorFormCar.name}</Span>}
                   </InputContainer>
@@ -575,8 +621,9 @@ export const ButtonAdd = ({
                       placeholder="a"
                       value={formCar.lastName}
                       onChange={handleChange}
+                      disabled={true}
                     />
-                    <Label>*Apellidos: </Label>
+                    <Label>{!apellido ? "*Apellidos: " : apellido}</Label>
                     <br />
                     {errorFormCar.lastName && (
                       <Span>{errorFormCar.lastName}</Span>
@@ -590,8 +637,9 @@ export const ButtonAdd = ({
                       placeholder="a"
                       value={formCar.zipCode}
                       onChange={handleChange}
+                      disabled={true}
                     />
-                    <Label>*Código postal: </Label>
+                    <Label>{!codigoPostal ? `*Código postal: ` : codigoPostal}</Label>
                     <br />
                     {errorFormCar.zipCode && (
                       <Span>{errorFormCar.zipCode}</Span>
@@ -600,7 +648,6 @@ export const ButtonAdd = ({
                 </GrupoInput>
                 <GrupoSelect>
                   {/* Estado, Ciudad y Colonia */}
-                  {typeof estado !== "string" ? null : (
                     <SelectContainer>
                       <Select
                         disabled={true}
@@ -613,9 +660,7 @@ export const ButtonAdd = ({
                       <Label>*Estado: </Label>
                       {errorFormCar.state && <Span>{errorFormCar.state}</Span>}
                     </SelectContainer>
-                  )}
 
-                    {typeof ciudad !== "string" ? null : (
                       <SelectContainer>
                         <Select
                           disabled={true}
@@ -628,24 +673,15 @@ export const ButtonAdd = ({
                         <Label>*Ciudad: </Label>
                         {errorFormCar.city && <Span>{errorFormCar.city}</Span>}
                       </SelectContainer>
-                    )}
 
                   <SelectContainer>
                     <Select
-                      disabled={false}
+                      disabled={true}
                       name={"colonia"}
                       value={formCar.colonia}
                       onChange={handleChange}
                     >
-                      <option>Selecciona</option>
-                      {colonias.length >= 1 &&
-                        colonias.map((colonia, idx) => {
-                          return (
-                            <option key={idx} value={colonia}>
-                              {colonia}
-                            </option>
-                          );
-                        })}
+                      <option>{colonia || "Selecciona"}</option>
                     </Select>
                     <Label>*Colonia: </Label>
                     {errorFormCar.colonia && (
@@ -664,8 +700,9 @@ export const ButtonAdd = ({
                       placeholder="a"
                       value={formCar.address}
                       onChange={handleChange}
+                      disabled={true}
                     />
-                    <Label>*Domicilio: </Label>
+                    <Label>{domicilio || "*Domicilio: "}</Label>
                     <br />
                     {errorFormCar.address && (
                       <Span>{errorFormCar.address}</Span>
@@ -679,8 +716,9 @@ export const ButtonAdd = ({
                       value={formCar.contact}
                       placeholder="a"
                       onChange={handleChange}
+                      disabled={true}
                     />
-                    <Label>*Teléfono (Móvil): </Label>
+                    <Label>{telefono || "*Teléfono (Móvil): "}</Label>
                     <br />
                     {errorFormCar.contact && (
                       <Span>{errorFormCar.contact}</Span>
@@ -694,8 +732,9 @@ export const ButtonAdd = ({
                       value={formCar.email}
                       placeholder="a"
                       onChange={handleChange}
+                      disabled={true}
                     />
-                    <Label>*Correo electrónico: </Label>
+                    <Label>{email || "*Correo electrónico: "}</Label>
                     <br />
                     {errorFormCar.email && <Span>{errorFormCar.email}</Span>}
                   </InputContainer>
@@ -705,7 +744,7 @@ export const ButtonAdd = ({
               <>
                 <GrupoSelect>
                   {/* Estado, Ciudad y Colonia */}
-                    {/* <SelectContainer>
+                    <SelectContainer>
                       <Select
                         disabled={false}
                         name={"state"}
@@ -713,15 +752,15 @@ export const ButtonAdd = ({
                         onChange={handleChange}
                       >
                         <option>Selecciona</option>
-                        {estado.length && estado.map((est, idx) => {
+                        {selectEstado.length && selectEstado.map((est, idx) => {
                           return <option key={idx}>{est}</option>;
                         })}
                       </Select>
                       <Label>*Estado: </Label>
                       {errorFormCar.state && <Span>{errorFormCar.state}</Span>}
-                    </SelectContainer> */}
+                    </SelectContainer>
 
-                    {/* <SelectContainer>
+                    <SelectContainer>
                       <Select
                         disabled={false}
                         name={"city"}
@@ -729,23 +768,23 @@ export const ButtonAdd = ({
                         onChange={handleChange}
                       >
                         <option>Selecciona</option>
-                        {ciudad.length && ciudad.map((cit, idx) => {
+                        {selectCiudad.length && selectCiudad.map((cit, idx) => {
                           return <option key={idx}>{cit}</option>;
                         })}
                       </Select>
                       <Label>*Ciudad: </Label>
                       {errorFormCar.city && <Span>{errorFormCar.city}</Span>}
-                    </SelectContainer> */}
+                    </SelectContainer>
 
-                  {/* <SelectContainer>
+                  <SelectContainer>
                     <Select
                       name={"colonia"}
                       value={formCar.colonia}
                       onChange={handleChange}
                     >
                       <option>Selecciona</option>
-                      {colonias.length >= 1 &&
-                        colonias.map((colonia, idx) => {
+                      {selectColonia.length >= 1 &&
+                        selectColonia.map((colonia, idx) => {
                           return (
                             <option key={idx} value={colonia}>
                               {colonia}
@@ -757,7 +796,7 @@ export const ButtonAdd = ({
                     {errorFormCar.colonia && (
                       <Span>{errorFormCar.colonia}</Span>
                     )}
-                  </SelectContainer> */}
+                  </SelectContainer>
 
                 </GrupoSelect>
                 <GrupoInput>
