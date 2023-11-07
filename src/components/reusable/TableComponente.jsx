@@ -97,6 +97,11 @@ export const StyledTable = styled.table.withConfig({
       transition: 0.5s;
     }
 
+    &::-webkit-scrollbar-thumb:hover {
+      background: #4a47f1;
+      transition: 0.5s;
+    }
+
 
     tr {
       width: 100%;

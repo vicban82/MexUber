@@ -525,8 +525,8 @@ export const ButtonAdd = ({
           <ContainerScroll>
             {/*//* INFORMACION DEL CONDUCTOR */}
             <TituloSeccion>
-              Datos Personales
               <hr />
+              Datos Personales
             </TituloSeccion>
             <GrupoInput>
               <InputContainer>

@@ -506,8 +506,8 @@ export const ButtonAdd = ({
           <ContainerScroll>
 
             <TituloSeccion>  {/* Tarjeta de circulacion */}
-              Datos del Vehiculo
               <hr />
+              Datos del Vehiculo
             </TituloSeccion>
 
             <GrupoSelect>

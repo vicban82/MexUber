@@ -590,8 +590,8 @@ export function ButtonsTable({
             <ContainerScroll>
               {/*//* INFORMACION DEL CONDUCTOR */}
               <TituloSeccion>
-                Datos Personales
                 <hr />
+                Datos Personales
               </TituloSeccion>
               <GrupoInput>
                 <InputContainer>

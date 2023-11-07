@@ -359,6 +359,10 @@ export const GrupoCheck = styled.div`
     grid-gap: 13px;
     width: 100%;
     font-size: 2vh;
+    @media (max-width: 768px) {
+     //Mostrar el ícono de menú en pantallas pequeñas (como dispositivos móviles) 
+     flex-direction: column;
+  }
 `;
 
 export const CheckContainer = styled.div`

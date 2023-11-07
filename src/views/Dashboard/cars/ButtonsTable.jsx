@@ -478,11 +478,10 @@ export function ButtonsTable({
             </FormHead>
             <br />
             <ContainerScroll>
-              {/*//* INFORMACION DEL CONDUCTOR */}
-              <TituloSeccion>
-                Datos Personales
+{/*               <TituloSeccion>
                 <hr />
-              </TituloSeccion>
+                Datos Personales
+              </TituloSeccion> */}
               <GrupoInput>
                 <InputContainer>
                   <Input
