@@ -76,40 +76,27 @@ export const StyledTable = styled.table.withConfig({
       justify-content: space-around;
       align-items: center;
       text-align: center;
-      padding-right: 2vh;
+      padding-right: 3px;
     }
   }
   tbody {
     display: flex;
     overflow: auto;
-    //width: 100vh;
     max-height: 260px;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
-    overflow-y: scroll;
+    scrollbar-width: thin;
 
     &::-webkit-scrollbar {
-        background-color: #cab7b7;
-        width: 2vh;
-        height: 10px;
+      width: 3px;
     }
 
     &::-webkit-scrollbar-thumb {
-      background: #686868;
+      background: #ffffff;
       transition: 0.5s;
     }
 
-    &::-webkit-scrollbar-thumb:hover {
-      background: #797979;
-      transition: 0.5s;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: #424242;
-      border-left: 1px solid $dark-blue-o-20;
-      border-radius: 2px;
-    }
 
     tr {
       width: 100%;

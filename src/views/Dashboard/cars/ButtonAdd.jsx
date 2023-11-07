@@ -67,7 +67,7 @@ const ButtonV1 = styled.button`
 
 const dropzoneContainerStyles = {
   width: "50%", // Establece el ancho del contenedor
-  height: "200px", // Establece la altura del contenedor
+  //height: "200px", // Establece la altura del contenedor
   border: "2px dashed #700202",
   borderRadius: "4px",
   textAlign: "center",

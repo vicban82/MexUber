@@ -3,15 +3,21 @@ import editIcon from "../../../assets/img/editIcon.png";
 import deleteIcon from "../../../assets/img/deleteIcon.png";
 import Modal from "react-modal";
 import {
+  validateDriver,
   validateUpDateDriver,
 } from "../../../validations/drivers";
 import { headers } from "../../../tools/accessToken";
 import {
   axiosDetailDriver,
   axiosGetDrivers,
+  axiosPostDriver,
   axiosPutDriver,
 } from "../../../hooks/drivers/crudDrivers";
 import styled from "styled-components";
+import {
+  errorRegister,
+  successRegister,
+} from "../../../tools/driverAlerts/register";
 import { axiosGetLicencias, axiosGetSepomex } from "../../../hooks/db/info";
 import { useDropzone } from "react-dropzone";
 import {
@@ -26,6 +32,7 @@ import {
   ButtonContainer,
   InputCheck,
   LabelCheck,
+  Titulo,
   Span,
   SelectContainer,
   Select,
@@ -239,7 +246,7 @@ export function ButtonsTable({
   const memorySepomes = useMemo(() => sepomex, [sepomex]);
   const memoryLicencias = useMemo(() => licencias, [licencias]);
 
-  const prevColonias = memorySepomes.find((el) => el.ciudad === upDateForm?.city)
+  /* const prevColonias = memorySepomes.find((el) => el.ciudad === upDateForm?.city) eliminado*/
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -512,26 +519,26 @@ export function ButtonsTable({
     e.preventDefault();
 
     if (
-      upDateForm.name &&
-      upDateForm.lastName &&
-      upDateForm.zipCode &&
-      upDateForm.state &&
-      upDateForm.city &&
-      upDateForm.colonia &&
-      upDateForm.address &&
-      upDateForm.contact &&
-      upDateForm.email &&
-      (upDateForm.allServices === 1 ||
+      upDateForm.name ||
+      upDateForm.lastName ||
+      upDateForm.zipCode ||
+      upDateForm.state ||
+      upDateForm.city ||
+      upDateForm.colonia ||
+      upDateForm.address ||
+      upDateForm.contact ||
+      upDateForm.email ||
+      upDateForm.allServices === 1 ||
       upDateForm.servicesLGBQT === 1 ||
-      upDateForm.onlyWomenServices === 1)
+      upDateForm.onlyWomenServices === 1
     ) {
-      if (passwordError || repeatPasswordError) {
-        errorUpDate(upDateForm, errorForm);
+      if (passwordError && repeatPasswordError) {
+        errorRegister(upDateForm, errorForm);
       } else if (
         driverPictureError ||
         (frontLicensePictureError && backLicensePictureError)
       ) {
-        errorUpDate(upDateForm, errorForm);
+        errorRegister(upDateForm, errorForm);
       } else if (
         stateLicenseError ||
         typeLicenseError ||
@@ -539,28 +546,34 @@ export function ButtonsTable({
         frontLicensePictureError ||
         backLicensePictureError
       ) {
-        errorUpDate(upDateForm, errorForm);
+        errorRegister(upDateForm, errorForm);
       } else if (messageReasonInActiveError) {
-        errorUpDate(upDateForm, errorForm);
+        errorRegister(upDateForm, errorForm);
       } else {
         try {
-          successUpDate(upDateForm);
-          await axiosPutDriver(id, upDateForm, headers);
+          successRegister(upDateForm);
+          const currentDriver = await axiosPutDriver(id, upDateForm, headers);
 
-          // Se obtiene nuevamente los datos para actualizar la tabla
-          await axiosGetDrivers(setTDriver, setTotalPages, headers, 1, limit)
+          // Actualiza la lista en el frontend
+          setTDriver((prev) => {
+            // Reemplaza el upDateForm editado en la lista por el nuevo upDateForm devuelto por el backend
+            const updatedTDrivers = prev.map((item) =>
+              item._id === id ? currentDriver : item
+            );
+            return updatedTDrivers;
+          });
 
           // Cierra el modal después de guardar
           setModalIsOpen(false);
 
           // Establece la página en 1 después de agregar un elemento
-          setPage(1);
+          // setPage(1);
         } catch (error) {
           console.error("Error al modificar el conductor:", error);
         }
       }
     } else {
-      errorUpDate(upDateForm, errorForm);
+      errorRegister(upDateForm, errorForm);
     }
   }
 
@@ -718,15 +731,11 @@ export function ButtonsTable({
                       onChange={handleChange}
                     >
                       <option>{detailDriver.colonia || "Selecciona"}</option>
-                      {!selectColonias.length ? (
-                        prevColonias && prevColonias.colonias.map((el, id) => {
-                          return <option key={id} >{el}</option>
-                        })
-                      ) : (
+                      {selectColonias.length >= 1 &&
                         selectColonias.map((colonia, idx) => {
                           return <option key={idx}>{colonia}</option>;
-                        })
-                      )}
+                        })}
+
                     </Select>
                     <Label>*Colonia: </Label>
                     {coloniaError && <Span>{coloniaError}</Span>}
@@ -775,7 +784,7 @@ export function ButtonsTable({
               <GrupoImg>
                 <TituloSeccion>
                   <hr />
-                  *Foto del Conductor
+                  Foto del Conductor
                 </TituloSeccion>
                 <SubeImgContainer>
                   <div
@@ -783,9 +792,9 @@ export function ButtonsTable({
                     style={dropzoneContainerStyles}
                   >
                     <input {...getDriverInputProps()} />
-                    {![".jpg", ".jpeg", ".png"].some(el => upDateForm.driverPicture.includes(el)) && (
+                    {upDateForm.driverPicture && (
                       <img
-                        src={`data:image/png;base64,${upDateForm.driverPicture}`}
+                        src={fotoConductor}
                         alt="Foto conductor"
                         style={{ maxWidth: "100px" }}
                       />
@@ -794,11 +803,11 @@ export function ButtonsTable({
                     <br />
                     {driverPictureError && <Span>{driverPictureError}</Span>}
                   </div>
-                  <img
+                  {/* <img
                     src={fotoConductor}
                     alt="Foto conductor"
                     style={{ maxWidth: "100px" }}
-                  />
+                  /> */}
                 </SubeImgContainer>
               </GrupoImg>
 
@@ -891,8 +900,8 @@ export function ButtonsTable({
                     </TituloSeccion>
                     <SubeImgContainer style={pictureLicence}>
                       <br />
-                      {fotoFront === null && fotoBack === null ? (
-                        <>
+                      {/* {fotoFront === null && fotoBack === null ? (
+                        <> */}
                           <SubeContainerImg
                             {...getFrontLicenseRootProps()}
                             style={dropzoneContainerStyles}
@@ -916,7 +925,7 @@ export function ButtonsTable({
                           >
                             <ImgSube {...getBackLicenseInputProps()} />
                             {upDateForm.backLicensePicture && (
-                              <Img
+                              <img
                                 src={`data:image/png;base64,${upDateForm.backLicensePicture}`}
                                 alt="Foto reverso de la licencia"
                                 style={{ maxWidth: "100px" }}
@@ -927,9 +936,9 @@ export function ButtonsTable({
                               <Span>{backLicensePictureError}</Span>
                             )}
                           </SubeContainerImg>
-                        </>
-                      ) : (
-                        <>
+                      {/*   </> */}
+                      {/* ) : (
+                        <> */}
                           <SubeContainerImg
                             {...getFrontLicenseRootProps()}
                             style={dropzoneContainerStyles}
@@ -937,7 +946,7 @@ export function ButtonsTable({
                             <ImgSube {...getFrontLicenseInputProps()} />
                             {![".jpg", ".jpeg", ".png"].some(el => upDateForm.frontLicensePicture.includes(el)) && (
                               <img
-                                src={`data:image/png;base64,${upDateForm.frontLicensePicture}`}
+                                src={fotoFront}
                                 alt="Foto frontal de la licencia"
                                 style={{ maxWidth: "100px" }}
                               />
@@ -947,19 +956,14 @@ export function ButtonsTable({
                               <Span>{frontLicensePictureError}</Span>
                             )}
                           </SubeContainerImg>
-                          <img
-                            src={fotoFront}
-                            alt="Foto frontal de la licencia"
-                            style={{ maxWidth: "100px" }}
-                          />
                           <SubeContainerImg
                             {...getBackLicenseRootProps()}
                             style={dropzoneContainerStyles}
                           >
                             <ImgSube {...getBackLicenseInputProps()} />
-                            {![".jpg", ".jpeg", ".png"].some(el => upDateForm.backLicensePicture.includes(el)) && (
-                              <Img
-                                src={`data:image/png;base64,${upDateForm.backLicensePicture}`}
+                            {upDateForm.backLicensePicture && (
+                              <img
+                                src={fotoBack}
                                 alt="Foto reverso de la licencia"
                                 style={{ maxWidth: "100px" }}
                               />
@@ -969,13 +973,8 @@ export function ButtonsTable({
                               <Span>{backLicensePictureError}</Span>
                             )}
                           </SubeContainerImg>
-                          <img
-                            src={fotoBack}
-                            alt="Foto reverso de la licencia"
-                            style={{ maxWidth: "100px" }}
-                          />
-                        </>
-                      )}
+                     {/*    </> */}
+                    {/*   )} */}
                     </SubeImgContainer>
                   </GrupoInput>
                 </>
@@ -1064,7 +1063,7 @@ export function ButtonsTable({
                     name={"messageReasonInActive"}
                     value={upDateForm.messageReasonInActive}
                     maxLength={100}
-                    disabled={upDateForm.isActive === 1}
+                    disabled={detailDriver.isActive === 1}
                     onChange={handleChange}
                   />
                   <Label>Motivo de bloqueo: </Label>
