@@ -105,7 +105,7 @@ export const ButtonAdd = ({
   //* INFORMACION DEL CONDUCTOR
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
-  // console.log("apellido:", apellido)
+  console.log("apellido:", apellido)
   const [codigoPostal, setZipcode] = useState("");
   // console.log("codigoPostal:", codigoPostal)
   const [estado, setEstado] = useState("");
@@ -119,6 +119,7 @@ export const ButtonAdd = ({
   const [telefono, setTelefono] = useState("");
   const [email, setEmail] = useState("");
   const [conductores, setCondurtores] = useState([]);
+  // console.log("conductores:", conductores)
   const [value, setValue] = useState("");
   // console.log("value:", value)
   
@@ -134,7 +135,7 @@ export const ButtonAdd = ({
   const [selectImage, setSelectImage] = useState({});
 
   function handleChange(e) {
-    const { name, value } = e.target;
+    const { name, value, type, } = e.target;
     // console.log("name:", name)
     // console.log("value:", value)
     
@@ -147,23 +148,27 @@ export const ButtonAdd = ({
       const filterSubMarcas = subMarcas.filter(el => el.idMarca === findById.marcaId);
       setSelectSubMarca(filterSubMarcas)
     }
-    if (name === "driver" && formCar.driverIsOwner === 1) {
+    if (name === "driver") {
+      // console.log("value:", value)
       setValue(value)
-      setNombre(detailDriver.name)
-      setApellido(detailDriver.lastName)
-      setZipcode(detailDriver.zipCode)
-      setEstado(detailDriver.state)
-      setCiudad(detailDriver.city)
-      setColonia(detailDriver.colonia)
-      setDomicilio(detailDriver.address)
-      setTelefono(detailDriver.contact)
-      setEmail(detailDriver.email)
+    }
+    
+    if (type === 'radio') {
+      setCar((prevCar) => ({
+        ...prevCar,
+        [name]: parseInt(value, 10),
+      }));
+    } else {
+      setCar((prevCar) => ({
+        ...prevCar,
+        [name]: value,
+      }));
     }
 
-    setCar({
-      ...car,
-      [name]: value,
-    });
+    // setCar({
+    //   ...car,
+    //   [name]: value,
+    // });
     // setErrorForm(
     //   validateDriver(
     //     {
@@ -172,29 +177,6 @@ export const ButtonAdd = ({
     //     },
     //   )
     // );
-  }
-
-  function handleOwnerChange(e) {
-    const { name, checked } = e.target;
-    let updateForm = { ...formCar };
-    if (name === "driverIsOwner") {
-      updateForm.driverIsOwner = checked && 0
-      if (updateForm.driverIsOwner === 0) {
-        updateForm = {
-          ...prevState,
-          name: "",
-          lastName: "",
-          zipCode: "",
-          state: "",
-          city: "",
-          colonia: "",
-          address: "",
-          contact: "",
-          email: "",
-        }
-      }
-    }
-    setCar(updateForm)
   }
 
   useEffect(() => {
@@ -221,12 +203,83 @@ export const ButtonAdd = ({
   }, []);
 
   useEffect(() => {
+    let updateFormCar = { ...formCar }
+    if (formCar.driverIsOwner === 1) {
+      console.log("formCar.driverIsOwner:", formCar.driverIsOwner)
+      // setValue(value)
+      setNombre(detailDriver.name)
+      setApellido(detailDriver.lastName)
+      setZipcode(detailDriver.zipCode)
+      setEstado(detailDriver.state)
+      setCiudad(detailDriver.city)
+      setColonia(detailDriver.colonia)
+      setDomicilio(detailDriver.address)
+      setTelefono(detailDriver.contact)
+      setEmail(detailDriver.email)
+    } else {
+      console.log("formCar.driverIsOwner:", formCar.driverIsOwner)
+      setNombre("")
+      setApellido("")
+      setZipcode("")
+      setEstado("")
+      setCiudad("")
+      setColonia("")
+      setDomicilio("")
+      setTelefono("")
+      setEmail("")
+      updateFormCar = {
+        ...car,
+        name: "",
+        lastName: "",
+        zipCode: "",
+        state: "",
+        city: "",
+        colonia: "",
+        address: "",
+        contact: "",
+        email: "",
+      };
+    }
+    setCar(updateFormCar)
+  }, [formCar.driverIsOwner]);
+
+  useEffect(() => {
+    let updateFormCar = { ...formCar }
+    setNombre("")
+    setApellido("")
+    setZipcode("")
+    setEstado("")
+    setCiudad("")
+    setColonia("")
+    setDomicilio("")
+    setTelefono("")
+    setEmail("")
+    updateFormCar = {
+      ...car,
+      driverIsOwner: 0,
+      name: "",
+      lastName: "",
+      zipCode: "",
+      state: "",
+      city: "",
+      colonia: "",
+      address: "",
+      contact: "",
+      email: "",
+    };
+    setCar(updateFormCar)
+  }, [formCar.driver]);
+
+  useEffect(() => {
     const findById = conductores.find(el => el._id === value)
-    // console.log("id:", findById?._id)
-    // if (findById && findById._id) {
-    // }
-    axiosDetailDriver(findById?._id, setDetailDriver, headers)
-  }, []);
+    console.log("id:", findById?._id)
+    if (findById) {
+      axiosDetailDriver(findById._id, setDetailDriver, headers)
+    } else {
+      // Reiniciar el estado del detalle del conductor si no se encuentra el conductor seleccionado
+      setDetailDriver({});
+    }
+  }, [value]);
 
   const onFrontImageTrafficDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -573,6 +626,7 @@ export const ButtonAdd = ({
               <InputCheck
                 type="radio"
                 name="driverIsOwner"
+                value={"1"}
                 checked={formCar.driverIsOwner === 1}
                 onChange={handleChange}
               />
@@ -580,8 +634,9 @@ export const ButtonAdd = ({
               <InputCheck
                 type="radio"
                 name="driverIsOwner"
+                value={"0"}
                 checked={formCar.driverIsOwner === 0}
-                onChange={handleOwnerChange}
+                onChange={handleChange}
               />
               NO
             </GrupoCheck>
@@ -742,6 +797,53 @@ export const ButtonAdd = ({
               </>
             ) : (
               <>
+                <GrupoInput>
+                  {/* Propietario */}
+                  <InputContainer>
+                    <Input
+                      color={"transparent"}
+                      type="text"
+                      name={"name"}
+                      value={formCar.name}
+                      placeholder="a"
+                      onChange={handleChange}
+                    />
+                    <Label>{nombre || "*Nombre(s): "}</Label>
+                    <br />
+                    {errorFormCar.name && <Span>{errorFormCar.name}</Span>}
+                  </InputContainer>
+                  <InputContainer>
+                    <Input
+                      color={"transparent"}
+                      type="text"
+                      name={"lastName"}
+                      placeholder="a"
+                      value={formCar.lastName}
+                      onChange={handleChange}
+                    />
+                    <Label>{"*Apellidos: "}</Label>
+                    <br />
+                    {errorFormCar.lastName && (
+                      <Span>{errorFormCar.lastName}</Span>
+                    )}
+                  </InputContainer>
+                  <InputContainer>
+                    <Input
+                      color={"transparent"}
+                      type="text"
+                      name={"zipCode"}
+                      placeholder="a"
+                      value={formCar.zipCode}
+                      onChange={handleChange}
+                    />
+                    <Label>{`*Código postal: `}</Label>
+                    <br />
+                    {errorFormCar.zipCode && (
+                      <Span>{errorFormCar.zipCode}</Span>
+                    )}
+                  </InputContainer>
+                </GrupoInput>
+                
                 <GrupoSelect>
                   {/* Estado, Ciudad y Colonia */}
                     <SelectContainer>
