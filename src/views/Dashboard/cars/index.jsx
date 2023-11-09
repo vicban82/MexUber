@@ -30,6 +30,7 @@ export const Cars = () => {
     contact: "",// Telefono del propietario
     email: "",// Correo electrónico del propietario
 
+    typeOfVehicle: "",// TIPO DE VEHICULO
     make: "",// MARCA DEL VEHICULO
     subMake: "",// SUB-MARCA DEL VEHICULO
     model: "",
@@ -55,6 +56,7 @@ export const Cars = () => {
     contact: "",// Telefono del propietario
     email: "",// Correo electrónico del propietario
 
+    typeOfVehicle: "",// TIPO DE VEHICULO
     make: "",// MARCA DEL VEHICULO
     subMake: "",// SUB-MARCA DEL VEHICULO
     model: "",
