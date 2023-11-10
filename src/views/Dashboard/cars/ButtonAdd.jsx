@@ -92,7 +92,7 @@ export const ButtonAdd = ({
 }) => {
   const formCar = { ...car };
   const errorFormCar = { ...errorForm };
-  console.log("formCar:", formCar)
+  // console.log("formCar:", formCar)
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   //* INFORMACION DEL VEHICULO
@@ -116,6 +116,7 @@ export const ButtonAdd = ({
   // console.log("detailDriver:", detailDriver)
   const [value, setValue] = useState("");
   // console.log("value:", value)
+  const [name, setName] = useState("");
   //* RELACION CONDUCTOR
 
   //* INFORMACION DEL CONDUCTOR
@@ -123,7 +124,7 @@ export const ButtonAdd = ({
   const [apellido, setApellido] = useState("");
   // console.log("apellido:", apellido)
   const [codigoPostal, setCodigoPostal] = useState("");
-  console.log("codigoPostal:", codigoPostal)
+  // console.log("codigoPostal:", codigoPostal)
   const [estado, setEstado] = useState("");
   // console.log("estado:", estado)
   const [selectEstado, setSelectEstado] = useState([]);
@@ -214,6 +215,7 @@ export const ButtonAdd = ({
         // Seteo todos los value del combo "zipCode"
         // console.log("value:", value)
         setValue(value)
+        setName(name)
       }
     }
 
@@ -331,10 +333,10 @@ export const ButtonAdd = ({
   }, [formCar.driver]);
 
   useEffect(() => {
-    // Este codigo resetea los ultimos campos si se cambia de conductor
     //! Pendiente arreglar
     let updateFormCar = { ...formCar }
     if (formCar.zipCode.length <= 4) {
+      // SE RESETEAN LOS CAMPOS AL CAMBIAR DE CODIGO POSTAL
       setCodigoPostal("")
       setEstado("");
       setCiudad("");
@@ -346,8 +348,23 @@ export const ButtonAdd = ({
         colonia: "",
       }
     }
+    if (name === "state") {
+      // SE RESETEAN LOS CAMPOS SI CAMBIA DE ESTADO
+      updateFormCar = {
+        ...updateFormCar,
+        city: "",
+        colonia: "",
+      }
+    }
+    if (name === "city") {
+      // SE RESETEAN LOS CAMPOS SI CAMBIA DE CIUDAD
+      updateFormCar = {
+        ...updateFormCar,
+        colonia: "",
+      }
+    }
     setCar(updateFormCar)
-  }, [formCar.zipCode]);
+  }, [formCar.zipCode, formCar.state, formCar.city]);
 
   const onFrontImageTrafficDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
