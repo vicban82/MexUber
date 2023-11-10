@@ -123,15 +123,15 @@ export const ButtonAdd = ({
   const [apellido, setApellido] = useState("");
   // console.log("apellido:", apellido)
   const [codigoPostal, setCodigoPostal] = useState("");
-  // console.log("codigoPostal:", codigoPostal)
+  console.log("codigoPostal:", codigoPostal)
   const [estado, setEstado] = useState("");
   // console.log("estado:", estado)
   const [selectEstado, setSelectEstado] = useState([]);
   const [ciudad, setCiudad] = useState("");
   // console.log("selectColonia:", selectColonia)
   const [selectCiudad, setSelectCiudad] = useState([]);
-  // const [colonia, setSelectColonia] = useState("");
-  const [selectColonia, setSelectColonia] = useState("" || []);
+  const [colonia, setColonia] = useState("");
+  const [selectColonia, setSelectColonia] = useState([]);
   const [domicilio, setDomicilio] = useState("");
   const [telefono, setTelefono] = useState("");
   const [email, setEmail] = useState("");
@@ -212,7 +212,7 @@ export const ButtonAdd = ({
         setSelectColonia(sepomexData.colonias);
       } else {
         // Seteo todos los value del combo "zipCode"
-        console.log("value:", value)
+        // console.log("value:", value)
         setValue(value)
       }
     }
@@ -254,31 +254,35 @@ export const ButtonAdd = ({
     axiosGetSubMarcas(setSubMarca);
     axiosGetDrivers(setCondurtores, headers);
     axiosGetSepomex(setSepomex);
-  }, []);
+    const findById = conductores.find(el => el._id === value)
+    // console.log("id:", findById?._id)
+    if (findById) {
+      axiosDetailDriver(findById._id, setDetailDriver, headers)
+    } 
+  }, [value]);
 
   useEffect(() => {
     // Este codigo me sirve para autocompleta o resetear la seccion de propietario
     let updateFormCar = { ...formCar }
     if (formCar.driverIsOwner === 1) {
-      console.log("formCar.driverIsOwner:", formCar.driverIsOwner)
-      // setValue(value)
+      // console.log("formCar.driverIsOwner:", formCar.driverIsOwner)
       setNombre(detailDriver.name)
       setApellido(detailDriver.lastName)
       setCodigoPostal(detailDriver.zipCode)
       setEstado(detailDriver.state)
       setCiudad(detailDriver.city)
-      setSelectColonia(detailDriver.colonia)
+      setColonia(detailDriver.colonia)
       setDomicilio(detailDriver.address)
       setTelefono(detailDriver.contact)
       setEmail(detailDriver.email)
     } else {
-      console.log("formCar.driverIsOwner:", formCar.driverIsOwner)
+      // console.log("formCar.driverIsOwner:", formCar.driverIsOwner)
       setNombre("")
       setApellido("")
       setCodigoPostal("")
       setEstado("")
       setCiudad("")
-      setSelectColonia("")
+      setColonia("")
       setDomicilio("")
       setTelefono("")
       setEmail("")
@@ -306,7 +310,7 @@ export const ButtonAdd = ({
     setCodigoPostal("")
     setEstado("")
     setCiudad("")
-    setSelectColonia("")
+    setColonia("")
     setDomicilio("")
     setTelefono("")
     setEmail("")
@@ -330,10 +334,10 @@ export const ButtonAdd = ({
   //   // Este codigo resetea los ultimos campos si se cambia de conductor
   //   //! Pendiente arreglar
   //   let updateFormCar = { ...formCar }
-  //   if (formCar.zipCode.length <= 1) {
+  //   if (formCar.zipCode.length <= 4) {
   //     setEstado("");
   //     setCiudad("");
-  //     setSelectColonia("");
+  //     setColonia("");
   //     updateFormCar = {
   //       ...updateFormCar,
   //       state: "",
@@ -343,17 +347,6 @@ export const ButtonAdd = ({
   //   }
   //   setCar(updateFormCar)
   // }, [formCar.zipCode]);
-
-  useEffect(() => {
-    const findById = conductores.find(el => el._id === value)
-    console.log("id:", findById?._id)
-    if (findById) {
-      axiosDetailDriver(findById._id, setDetailDriver, headers)
-    } else {
-      // Reiniciar el estado del detalle del conductor si no se encuentra el conductor seleccionado
-      setDetailDriver({});
-    }
-  }, [value]);
 
   const onFrontImageTrafficDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -753,7 +746,7 @@ export const ButtonAdd = ({
                       onChange={handleChange}
                       disabled={true}
                     />
-                    <Label>{!nombre ? "*Nombre(s): " : nombre}</Label>
+                    <Label>{"*Nombre(s): "}</Label>
                     <br />
                     {errorFormCar.name && <Span>{errorFormCar.name}</Span>}
                   </InputContainer>
@@ -767,7 +760,7 @@ export const ButtonAdd = ({
                       onChange={handleChange}
                       disabled={true}
                     />
-                    <Label>{!apellido ? "*Apellidos: " : apellido}</Label>
+                    <Label>{"*Apellidos: "}</Label>
                     <br />
                     {errorFormCar.lastName && (
                       <Span>{errorFormCar.lastName}</Span>
@@ -783,7 +776,7 @@ export const ButtonAdd = ({
                       onChange={handleChange}
                       disabled={true}
                     />
-                    <Label>{!codigoPostal ? `*Código postal: ` : codigoPostal}</Label>
+                    <Label>{`*Código postal: `}</Label>
                     <br />
                     {errorFormCar.zipCode && (
                       <Span>{errorFormCar.zipCode}</Span>
@@ -846,7 +839,7 @@ export const ButtonAdd = ({
                       onChange={handleChange}
                       disabled={true}
                     />
-                    <Label>{domicilio || "*Domicilio: "}</Label>
+                    <Label>{"*Domicilio: "}</Label>
                     <br />
                     {errorFormCar.address && (
                       <Span>{errorFormCar.address}</Span>
@@ -862,7 +855,7 @@ export const ButtonAdd = ({
                       onChange={handleChange}
                       disabled={true}
                     />
-                    <Label>{telefono || "*Teléfono (Móvil): "}</Label>
+                    <Label>{"*Teléfono (Móvil): "}</Label>
                     <br />
                     {errorFormCar.contact && (
                       <Span>{errorFormCar.contact}</Span>
@@ -878,7 +871,7 @@ export const ButtonAdd = ({
                       onChange={handleChange}
                       disabled={true}
                     />
-                    <Label>{email || "*Correo electrónico: "}</Label>
+                    <Label>{"*Correo electrónico: "}</Label>
                     <br />
                     {errorFormCar.email && <Span>{errorFormCar.email}</Span>}
                   </InputContainer>
