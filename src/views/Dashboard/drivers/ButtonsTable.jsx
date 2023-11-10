@@ -50,14 +50,14 @@ import {
   TextareaContainer,
 } from "../../../components/reusable/FormularioModal";
 // import { Detail } from "./Detail";
-import { Detail } from "./detail";
+import { Detail } from "./Detail";
 import { loadImage } from "./loadImages";
 import { errorUpDate, successUpDate } from "../../../tools/driverAlerts/upDate";
 import { deleteAlert } from "../../../tools/driverAlerts/delete";
 
 Modal.setAppElement("#root");
 
-const ButtonV1 = styled.button`
+/* const ButtonV1 = styled.button`
   color: #646cff;
   border-radius: 8px;
   border: 1px solid transparent;
@@ -65,10 +65,10 @@ const ButtonV1 = styled.button`
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #14a101;
   cursor: pointer;
   transition: border-color 0.25s;
-`;
+`; */
 
 const GrupoInputV1 = styled(GrupoInput)`
   grid-gap: 60px;
@@ -84,7 +84,6 @@ const InputCheckV1 = styled(InputCheck)`
 
 const dropzoneContainerStyles = {
   width: "50%", // Establece el ancho del contenedor
-  //height: '200px', // Establece la altura del contenedor
   border: "2px dashed #700202",
   borderRadius: "4px",
   textAlign: "center",

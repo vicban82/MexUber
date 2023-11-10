@@ -59,7 +59,7 @@ const Sidebar = ({ isOpen, setIsOpen, sesion }) => {
 
             <SidebarItem>
               <div>
-                <FontAwesomeIcon icon={faHome} color= {pathActivo()=="home" ? "#8a2be2" : "white"}/>
+                <FontAwesomeIcon icon={faHome} color= {pathActivo()=="home" ? "var(--color-morado)" : "var(--color-ico)"}/>
               </div>
               <SidebarLink to="/dashboard/home"  onClick={handleMenuItemClick} isOpen={isOpen}>
                 Home
@@ -67,7 +67,7 @@ const Sidebar = ({ isOpen, setIsOpen, sesion }) => {
             </SidebarItem>
             <SidebarItem>
               <div>
-                <FontAwesomeIcon icon={faCog} color= {pathActivo()=="admins" ? "#8a2be2" : "white"}/>
+                <FontAwesomeIcon icon={faCog} color= {pathActivo()=="admins" ? "var(--color-morado)" : "var(--color-ico)"}/>
               </div>
               <SidebarLink to="/dashboard/admins" onClick={handleMenuItemClick} isOpen={isOpen} >
                 Administradores
@@ -75,7 +75,7 @@ const Sidebar = ({ isOpen, setIsOpen, sesion }) => {
             </SidebarItem>
             <SidebarItem>
               <div>
-                <FontAwesomeIcon icon={faCreditCard} color= {pathActivo()=="drivers" ? "#8a2be2" : "white"}/>
+                <FontAwesomeIcon icon={faCreditCard} color= {pathActivo()=="drivers" ? "var(--color-morado)" : "var(--color-ico)"}/>
               </div>
               <SidebarLink to="/dashboard/drivers" onClick={handleMenuItemClick} isOpen={isOpen}>
                 Conductores
@@ -83,7 +83,7 @@ const Sidebar = ({ isOpen, setIsOpen, sesion }) => {
             </SidebarItem>
             <SidebarItem>
               <div>
-                <FontAwesomeIcon icon={faCarRear} color={pathActivo() == "cars" ? "#8a2be2" : "white"} />
+                <FontAwesomeIcon icon={faCarRear} color={pathActivo() == "cars" ? "var(--color-morado)" : "var(--color-ico)"} />
               </div>
               <SidebarLink to="/dashboard/cars" onClick={handleMenuItemClick} isOpen={isOpen}>
                 Vehículos
@@ -91,7 +91,7 @@ const Sidebar = ({ isOpen, setIsOpen, sesion }) => {
             </SidebarItem>
             <SidebarItem>
               <div>
-                <FontAwesomeIcon icon={faUserCheck} color={pathActivo() == "clients" ? "#8a2be2" : "white"} />
+                <FontAwesomeIcon icon={faUserCheck} color={pathActivo() == "clients" ? "var(--color-morado)" : "var(--color-ico)"} />
               </div>
               <SidebarLink to="/dashboard/clients" onClick={handleMenuItemClick} isOpen={isOpen}>
                 Clientes
@@ -99,7 +99,7 @@ const Sidebar = ({ isOpen, setIsOpen, sesion }) => {
             </SidebarItem>
             <SidebarItem>
               <div>
-                <FontAwesomeIcon icon={faPaperPlane} color={pathActivo() == "trips" ? "#8a2be2" : "white"} />
+                <FontAwesomeIcon icon={faPaperPlane} color={pathActivo() == "trips" ? "var(--color-morado)" : "var(--color-ico)"} />
               </div>
               <SidebarLink to="/dashboard/trips" onClick={handleMenuItemClick} isOpen={isOpen}>
                 Viajes

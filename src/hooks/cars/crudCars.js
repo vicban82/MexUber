@@ -7,8 +7,8 @@ export async function axiosGetCars(setTBody, setTotalPages, page, limit, headers
     console.log('DATA:', data);
     setTBody(data.cars);
     setTotalPages(data.totalPages)
-    // setTotalPages(2);
-    // setTBody(dataFakeCars);
+     //setTotalPages(2);
+     //setTBody(dataFakeCars);
   } catch (err) {
     const { error } = err.response.data;
     console.log('ERROR:', error);

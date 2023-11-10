@@ -32,16 +32,16 @@ export const Button = styled.button`
   align-content: space-between;
   padding-top: 2rem;
   background-color: #3d3e47;
-  color: white;
+  color: var(--color-ico);
   border: none;
   cursor: pointer;
   width: 170px;
   height: 10rem;
   border-radius: 20px;
   border: solid 8px;
-  border-color: #333333;
+  border-color: var(--color-button-border);
   &:hover {
-    background-color: #11121a;
+    background-color: var(--color-hover-button-main);
   }
  
 `;

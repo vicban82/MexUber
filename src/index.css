@@ -6,12 +6,50 @@
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
+  --background-color-buttonV1: #1a1a1a;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  /* --------------------Navbar---------------------- */
+  --color-navbar-background: #333;
+  --background-color-button-close-sesion: #b7b7b7;
+  --background-color-dropdown: #f0f0f0;
+  --color-dropdown: #000000;
+  --background-color-search: #555;
+
+  /* --------------------cars-------------------------- */
+  --border-dropzoneContainerStyles: #700202;
+
+
+  /* --------------------seccion main---------------------- */
+  --color-ico: #ffffff;
+  --color-morado: #8a2be2;
+  --color-hover-button-main: #11121a;
+  --color-button-border: #333333;
+
+  /* -----------------------Tabla-------------------------------- */
+  --color-amarillo: #b8860b;
+  --color-gris-1: #5f5a5a;
+  --background-color-thead: #333;
+  --color-text-table: #FDFDFD;
+
+  /* --------------------------Modal----------------------------- */
+  --background-color-SubmitBtn: #800080; 
+  --color-text-SubmitBtn: #ffffff;
+  --background-color-Label: #ffffff;
+  --color-text-Label: #a7acb5;
+  --color-text: #000000;
+
+  /*-----------------------glovales---------------------------------- */
+  --color-placeholder: #999;
+  --color-header: #000000;
+  --background-color-line: #808080;
+  --border-color-ImgSube: #ff0000;
+  --color-text-span: #ff0000;
 }
 
 a {
@@ -98,14 +136,3 @@ button:focus, button:focus-visible {
 .ReactModalPortal .ReactModal__Overlay--before-close {
   opacity: 0;
 }
-
-/* .modal {
-  background: white;
-  border-radius: 5px;
-  color: rgb(51, 51, 51);
-  display: inline;
-  max-height: 100%;
-  max-width: 100%;
-  outline: none;
-  padding: 10px;
-} */

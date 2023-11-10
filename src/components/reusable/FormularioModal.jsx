@@ -62,8 +62,8 @@ export const SubmitBtn = styled.button`
   display: block;
   margin-left: auto;
   border: none;
-  background-color: purple;
-  color: white;
+  background-color: var(--background-color-SubmitBtn);
+  color: var(--color-text-SubmitBtn);
   border-radius: 6px;
   cursor: pointer;
   font-size: 16px;
@@ -101,8 +101,8 @@ export const Label = styled.label`
   top: 15px;
   left: 15px;
   padding: 0 4px;
-  background-color: white;
-  color: #a7acb5;
+  background-color: var(--background-color-Label);
+  color: var(--color-text-Label);
   font-size: 16px;
   transition: 0.5s;
   font-size: 2vh;
@@ -116,7 +116,7 @@ export const Input = styled.input`
   height: 95%;
   width: 100%;
   border: 1px solid #73809d;
-  color: black;
+  color: var(--color-text);
   border-radius: 7px;
   font-size: 14px;
   outline: none;
@@ -202,7 +202,7 @@ export const InputCheck = styled.input`
 `;
 
 export const LabelCheck = styled.label`
-  color: black;
+  color: var(--color-text);
   font-weight: bold;
   padding-left: 8px;
   font-size: 2vh;
@@ -228,7 +228,7 @@ export const Titulo = styled.div`
 
 
 export const Span = styled.span`
-    color: red;
+    color: var(--color-text-span);
 
   `;
 
@@ -273,7 +273,7 @@ export const Select = styled.select`
   }
 
   &:not(:empty) {
-    color: black;
+    color: var(--color-text);
   }
 
   &:-webkit-autofill,
@@ -308,7 +308,7 @@ export const GrupoInput = styled.div`
 export const GrupoSelect = styled.div`
     display: flex;
     flex-direction: column;
-    color: black;
+    color: var(--color-text);
     grid-gap: 27px;
 `;
 
@@ -323,24 +323,24 @@ export const SubeImgContainer = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: center;
-    color: black;
+    color: var(--color-text);
     width: 100%;
 `;
 
 export const TituloSeccion = styled.h2`
     text-align: center;
-    color: black;
+    color: var(--color-text);
     margin-bottom: 0px;
     margin-top: 0px;
 `;
 
 export const SpanData = styled.span`
     margin-top: 107px;
-    color: red;
+    color: var(--border-color-ImgSube);
 `;
 
 export const ImgSube = styled.input`
-  border-color: red;
+  border-color: var(--border-color-ImgSube);
 `;
 
 export const SubeContainerImg = styled.div`
@@ -353,7 +353,7 @@ export const SubeContainerImg = styled.div`
 export const GrupoCheck = styled.div`
     display: flex;
     flex-direction: row;
-    color: black;
+    color: var(--color-text);
     align-items: center;
     justify-content: center;
     grid-gap: 13px;
@@ -368,7 +368,7 @@ export const GrupoCheck = styled.div`
 export const CheckContainer = styled.div`
     display: flex;
     flex-direction: row;
-    color: black;
+    color: var(--color-text);
     align-items: center;
     grid-gap: 13px;
 `;
@@ -382,7 +382,7 @@ export const Textarea = styled.textarea`
   padding-left: 13px;
   height: 70px;
   border: 1px solid #73809d;
-  color: black;
+  color: var(--color-text);
   border-radius: 7px;
   font-size: 16px;
   outline: none;
@@ -400,7 +400,7 @@ export const Textarea = styled.textarea`
   z-index: 10;
   font-size: 14px;
   font-weight: 600;
-  color: purple;
+  color: var(--color-morado);
   }
 
   &:focus {

@@ -54,14 +54,14 @@ import {colors} from "./colores"
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
 const ButtonV1 = styled.button`
-  color: #646cff;
+  color: var(--color-morado);
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--background-color-buttonV1);
   cursor: pointer;
   transition: border-color 0.25s;
 `;
@@ -69,7 +69,7 @@ const ButtonV1 = styled.button`
 const dropzoneContainerStyles = {
   width: "50%", // Establece el ancho del contenedor
   //height: "200px", // Establece la altura del contenedor
-  border: "2px dashed #700202",
+  border: "2px dashed var(--border-dropzoneContainerStyles)",
   borderRadius: "4px",
   textAlign: "center",
   padding: "20px",
