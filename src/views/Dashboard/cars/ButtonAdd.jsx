@@ -92,7 +92,7 @@ export const ButtonAdd = ({
 }) => {
   const formCar = { ...car };
   const errorFormCar = { ...errorForm };
-  // console.log("formCar:", formCar)
+  console.log("formCar:", formCar)
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   //* INFORMACION DEL VEHICULO
@@ -330,23 +330,24 @@ export const ButtonAdd = ({
     setCar(updateFormCar)
   }, [formCar.driver]);
 
-  // useEffect(() => {
-  //   // Este codigo resetea los ultimos campos si se cambia de conductor
-  //   //! Pendiente arreglar
-  //   let updateFormCar = { ...formCar }
-  //   if (formCar.zipCode.length <= 4) {
-  //     setEstado("");
-  //     setCiudad("");
-  //     setColonia("");
-  //     updateFormCar = {
-  //       ...updateFormCar,
-  //       state: "",
-  //       city: "",
-  //       colonia: "",
-  //     }
-  //   }
-  //   setCar(updateFormCar)
-  // }, [formCar.zipCode]);
+  useEffect(() => {
+    // Este codigo resetea los ultimos campos si se cambia de conductor
+    //! Pendiente arreglar
+    let updateFormCar = { ...formCar }
+    if (formCar.zipCode.length <= 4) {
+      setCodigoPostal("")
+      setEstado("");
+      setCiudad("");
+      setColonia("");
+      updateFormCar = {
+        ...updateFormCar,
+        state: "",
+        city: "",
+        colonia: "",
+      }
+    }
+    setCar(updateFormCar)
+  }, [formCar.zipCode]);
 
   const onFrontImageTrafficDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -931,7 +932,7 @@ export const ButtonAdd = ({
                     {/* Estado, Ciudad y Colonia */}
                       <SelectContainer>
                         <Select
-                          disabled={!formCar.zipCode ? true : false}
+                          disabled={formCar.zipCode.length <= 4 ? true : false}
                           name={"state"}
                           value={formCar.state}
                           onChange={handleChange}
@@ -995,9 +996,6 @@ export const ButtonAdd = ({
                           onChange={handleChange}
                         >
                           <option>{estado || "Selecciona"}</option>
-                          {/* {byState.length && byState.map((est, idx) => {
-                            return <option key={idx}>{est}</option>;
-                          })} */}
                         </Select>
                         <Label>*Estado: </Label>
                         {errorFormCar.state && <Span>{errorFormCar.state}</Span>}
@@ -1011,9 +1009,6 @@ export const ButtonAdd = ({
                           onChange={handleChange}
                         >
                           <option>{ciudad || "Selecciona"}</option>
-                          {/* {byCity.length && byCity.map((cit, idx) => {
-                            return <option key={idx}>{cit}</option>;
-                          })} */}
                         </Select>
                         <Label>*Ciudad: </Label>
                         {errorFormCar.city && <Span>{errorFormCar.city}</Span>}
