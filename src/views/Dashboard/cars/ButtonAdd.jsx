@@ -12,7 +12,6 @@ import {
   successRegister,
 } from "../../../tools/driverAlerts/register";
 import {
-  axiosGetLicencias,
   axiosGetMarcas,
   axiosGetSepomex,
   axiosGetSubMarcas,
@@ -96,45 +95,80 @@ export const ButtonAdd = ({
   console.log("formCar:", formCar)
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  //* IINFORMACION DEL VEHICULO
+  //* INFORMACION DEL VEHICULO
+  const tipoDeVehiculo = [
+    "Motocicleta", "Automovil",
+  ];
   const [marcas, setMarca] = useState([]);
   const [subMarcas, setSubMarca] = useState([]);
   const [selectSubMarcas, setSelectSubMarca] = useState([]);
   const modelo = obtenerAnios();
+  //* INFORMACION DEL VEHICULO
+  
+  //* TARJETA DE CIRCULACION
+  const [selectImage, setSelectImage] = useState({});
+  //* TARJETA DE CIRCULACION
+  
+  //* RELACION CONDUCTOR
+  const [conductores, setCondurtores] = useState([]);
+  // console.log("conductores:", conductores)
+  const [detailDriver, setDetailDriver] = useState({});
+  // console.log("detailDriver:", detailDriver)
+  const [value, setValue] = useState("");
+  // console.log("value:", value)
+  const [name, setName] = useState("");
+  //* RELACION CONDUCTOR
 
   //* INFORMACION DEL CONDUCTOR
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   // console.log("apellido:", apellido)
-  const [codigoPostal, setZipcode] = useState("");
+  const [codigoPostal, setCodigoPostal] = useState("");
   // console.log("codigoPostal:", codigoPostal)
   const [estado, setEstado] = useState("");
   // console.log("estado:", estado)
   const [selectEstado, setSelectEstado] = useState([]);
   const [ciudad, setCiudad] = useState("");
+  // console.log("selectColonia:", selectColonia)
   const [selectCiudad, setSelectCiudad] = useState([]);
   const [colonia, setColonia] = useState("");
   const [selectColonia, setSelectColonia] = useState([]);
   const [domicilio, setDomicilio] = useState("");
   const [telefono, setTelefono] = useState("");
   const [email, setEmail] = useState("");
-  const [conductores, setCondurtores] = useState([]);
-  const [value, setValue] = useState("");
-  // console.log("value:", value)
-  
-  const [detailDriver, setDetailDriver] = useState({});
-  // console.log("detailDriver:", detailDriver)
   //* INFORMACION DEL CONDUCTOR
   
-  //* LICENCIA DE CONDUCIR
-  const [estados, setEstados] = useState([]);
-  const [licences, setLicences] = useState([]);
-  //* LICENCIA DE CONDUCIR
+  //* INFO DB
+  const [sepomex, setSepomex] = useState([]);
+  // console.log("sepomex:", sepomex)
+  //* INFO DB
 
-  const [selectImage, setSelectImage] = useState({});
+  // * ------------ ESTADOS ------------
+  const byState = [...new Set(sepomex.map((el) => el.estado))];
+  // console.log("byState:", byState)
+
+  // * ------------ CIUDADES ------------
+  const filterByState = sepomex.filter((el) => {
+    if (el.estado === formCar.state) {
+      return el.ciudad;
+    }
+  });
+  // console.log("formCar - zipCode:", formCar.zipCode)
+  
+  const byCity = [...new Set(filterByState.map((el) => el.ciudad))]
+  // console.log("byCity:", byCity)
+
+  // * ------------ COLONIAS ------------
+  const filterByCity = sepomex.filter((el) => {
+    if (el.ciudad === formCar.city) {
+      return el.colonias;
+    }
+  });
+  const byColonia = [...new Set(filterByCity.map((el) => el.colonias))].flat(1);
+  // console.log("byColonia:", byColonia)
 
   function handleChange(e) {
-    const { name, value } = e.target;
+    const { name, value, type, } = e.target;
     // console.log("name:", name)
     // console.log("value:", value)
     
@@ -147,23 +181,56 @@ export const ButtonAdd = ({
       const filterSubMarcas = subMarcas.filter(el => el.idMarca === findById.marcaId);
       setSelectSubMarca(filterSubMarcas)
     }
-    if (name === "driver" && formCar.driverIsOwner === 1) {
+    if (name === "driver") {
+      // console.log("value:", value)
       setValue(value)
-      setNombre(detailDriver.name)
-      setApellido(detailDriver.lastName)
-      setZipcode(detailDriver.zipCode)
-      setEstado(detailDriver.state)
-      setCiudad(detailDriver.city)
-      setColonia(detailDriver.colonia)
-      setDomicilio(detailDriver.address)
-      setTelefono(detailDriver.contact)
-      setEmail(detailDriver.email)
+    }
+    
+    if (type === 'radio') {
+      setCar((prevCar) => ({
+        ...prevCar,
+        [name]: parseInt(value, 10),
+      }));
+    } else {
+      setCar((prevCar) => ({
+        ...prevCar,
+        [name]: value,
+      }));
     }
 
-    setCar({
-      ...car,
-      [name]: value,
-    });
+    if (
+      name === "zipCode" ||
+      name === "state" ||
+      name === "city" ||
+      name === "colonia"
+    ) {
+      const sepomexData = sepomex.find((el) => el.codigoPostal === value);
+
+      if (sepomexData) {
+        setCodigoPostal(sepomexData.codigoPostal);
+        setEstado(sepomexData.estado);
+        setCiudad(sepomexData.ciudad);
+        setSelectColonia(sepomexData.colonias);
+      } else {
+        // Seteo todos los value del combo "zipCode"
+        // console.log("value:", value)
+        setValue(value)
+        setName(name)
+      }
+      //* SE GUARDA EL "ESTADO" Y LA "CIUDAD" SI EL CP EXISTE EN LA DB
+      if (codigoPostal) {
+        setCar((prevState) => ({
+          ...prevState,
+          state: estado,
+          city: ciudad,
+        }))
+      }
+    }
+
+    // setCar({
+    //   ...car,
+    //   [name]: value,
+    // });
     // setErrorForm(
     //   validateDriver(
     //     {
@@ -174,31 +241,9 @@ export const ButtonAdd = ({
     // );
   }
 
-  function handleOwnerChange(e) {
-    const { name, checked } = e.target;
-    let updateForm = { ...formCar };
-    if (name === "driverIsOwner") {
-      updateForm.driverIsOwner = checked && 0
-      if (updateForm.driverIsOwner === 0) {
-        updateForm = {
-          ...prevState,
-          name: "",
-          lastName: "",
-          zipCode: "",
-          state: "",
-          city: "",
-          colonia: "",
-          address: "",
-          contact: "",
-          email: "",
-        }
-      }
-    }
-    setCar(updateForm)
-  }
-
   useEffect(() => {
-    if (nombre || apellido || codigoPostal || estado || ciudad || colonia || domicilio || telefono || email) {
+    // Este codigo me sirve para autocompletar todos los campos en relacion al conductor
+    if (nombre || apellido || codigoPostal || estado || ciudad || selectColonia || domicilio || telefono || email) {
       setCar((prevState) => ({
         ...prevState,
         name: nombre,
@@ -206,27 +251,127 @@ export const ButtonAdd = ({
         zipCode: codigoPostal,
         state: estado,
         city: ciudad,
-        colonia: colonia,
+        colonia: selectColonia,
         address: domicilio,
         contact: telefono,
         email: email,
       }))
     }
-  }, [nombre, apellido, codigoPostal, estado, ciudad, colonia, domicilio, telefono, email]);
+  }, [nombre, apellido, codigoPostal, estado, ciudad, selectColonia, domicilio, telefono, email]);
 
   useEffect(() => {
     axiosGetMarcas(setMarca);
     axiosGetSubMarcas(setSubMarca);
     axiosGetDrivers(setCondurtores, headers);
-  }, []);
-
-  useEffect(() => {
+    axiosGetSepomex(setSepomex);
     const findById = conductores.find(el => el._id === value)
     // console.log("id:", findById?._id)
-    // if (findById && findById._id) {
-    // }
-    axiosDetailDriver(findById?._id, setDetailDriver, headers)
-  }, []);
+    if (findById) {
+      axiosDetailDriver(findById._id, setDetailDriver, headers)
+    } 
+  }, [value]);
+
+  useEffect(() => {
+    // Este codigo me sirve para autocompleta o resetear la seccion de propietario
+    let updateFormCar = { ...formCar }
+    if (formCar.driverIsOwner === 1) {
+      // console.log("formCar.driverIsOwner:", formCar.driverIsOwner)
+      setNombre(detailDriver.name)
+      setApellido(detailDriver.lastName)
+      setCodigoPostal(detailDriver.zipCode)
+      setEstado(detailDriver.state)
+      setCiudad(detailDriver.city)
+      setColonia(detailDriver.colonia)
+      setDomicilio(detailDriver.address)
+      setTelefono(detailDriver.contact)
+      setEmail(detailDriver.email)
+    } else {
+      // console.log("formCar.driverIsOwner:", formCar.driverIsOwner)
+      setNombre("")
+      setApellido("")
+      setCodigoPostal("")
+      setEstado("")
+      setCiudad("")
+      setColonia("")
+      setDomicilio("")
+      setTelefono("")
+      setEmail("")
+      updateFormCar = {
+        ...car,
+        name: "",
+        lastName: "",
+        zipCode: "",
+        state: "",
+        city: "",
+        colonia: "",
+        address: "",
+        contact: "",
+        email: "",
+      };
+    }
+    setCar(updateFormCar)
+  }, [formCar.driverIsOwner]);
+
+  useEffect(() => {
+    // Este codigo resetea los ultimos campos si se cambia de conductor
+    let updateFormCar = { ...formCar }
+    setNombre("")
+    setApellido("")
+    setCodigoPostal("")
+    setEstado("")
+    setCiudad("")
+    setColonia("")
+    setDomicilio("")
+    setTelefono("")
+    setEmail("")
+    updateFormCar = {
+      ...car,
+      driverIsOwner: 0,
+      name: "",
+      lastName: "",
+      zipCode: "",
+      state: "",
+      city: "",
+      colonia: "",
+      address: "",
+      contact: "",
+      email: "",
+    };
+    setCar(updateFormCar)
+  }, [formCar.driver]);
+
+  useEffect(() => {
+    let updateFormCar = { ...formCar }
+    if (formCar.zipCode.length <= 4) {
+      // SE RESETEAN LOS CAMPOS AL CAMBIAR DE CODIGO POSTAL
+      setCodigoPostal("")
+      setEstado("");
+      setCiudad("");
+      setColonia("");
+      updateFormCar = {
+        ...updateFormCar,
+        state: "",
+        city: "",
+        colonia: "",
+      }
+    }
+    if (name === "state") {
+      // SE RESETEAN LOS CAMPOS SI CAMBIA DE ESTADO
+      updateFormCar = {
+        ...updateFormCar,
+        city: "",
+        colonia: "",
+      }
+    }
+    if (name === "city") {
+      // SE RESETEAN LOS CAMPOS SI CAMBIA DE CIUDAD
+      updateFormCar = {
+        ...updateFormCar,
+        colonia: "",
+      }
+    }
+    setCar(updateFormCar)
+  }, [formCar.zipCode, formCar.state, formCar.city]);
 
   const onFrontImageTrafficDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -379,6 +524,22 @@ export const ButtonAdd = ({
             </TituloSeccion>
 
             <GrupoSelect>
+
+              <SelectContainer>
+                <Select
+                  name={"typeOfVehicle"}
+                  value={formCar.typeOfVehicle}
+                  onChange={handleChange}
+                >
+                  <option>Selecciona</option>
+                  {tipoDeVehiculo.map((el, idx) => {
+                    return <option key={idx}>{el}</option>;
+                  })}
+                </Select>
+                <Label>*Tipo de vehículo: </Label>
+                {errorFormCar.typeOfVehicle && <Span>{errorFormCar.typeOfVehicle}</Span>}
+              </SelectContainer>
+
               <SelectContainer>
                 <Select
                   name={"make"}
@@ -388,7 +549,6 @@ export const ButtonAdd = ({
                   <option>Selecciona</option>
                   {marcas.length &&
                     marcas.map((el, idx) => {
-                      // console.log("el:", el.marca);
                       return <option key={idx}>{el.marca}</option>;
                     })}
                 </Select>
@@ -574,6 +734,7 @@ export const ButtonAdd = ({
               <InputCheck
                 type="radio"
                 name="driverIsOwner"
+                value={"1"}
                 checked={formCar.driverIsOwner === 1}
                 onChange={handleChange}
               />
@@ -581,8 +742,9 @@ export const ButtonAdd = ({
               <InputCheck
                 type="radio"
                 name="driverIsOwner"
+                value={"0"}
                 checked={formCar.driverIsOwner === 0}
-                onChange={handleOwnerChange}
+                onChange={handleChange}
               />
               NO
             </GrupoCheck>
@@ -610,7 +772,7 @@ export const ButtonAdd = ({
                       onChange={handleChange}
                       disabled={true}
                     />
-                    <Label>{!nombre ? "*Nombre(s): " : nombre}</Label>
+                    <Label>{"*Nombre(s): "}</Label>
                     <br />
                     {errorFormCar.name && <Span>{errorFormCar.name}</Span>}
                   </InputContainer>
@@ -624,7 +786,7 @@ export const ButtonAdd = ({
                       onChange={handleChange}
                       disabled={true}
                     />
-                    <Label>{!apellido ? "*Apellidos: " : apellido}</Label>
+                    <Label>{"*Apellidos: "}</Label>
                     <br />
                     {errorFormCar.lastName && (
                       <Span>{errorFormCar.lastName}</Span>
@@ -640,7 +802,7 @@ export const ButtonAdd = ({
                       onChange={handleChange}
                       disabled={true}
                     />
-                    <Label>{!codigoPostal ? `*Código postal: ` : codigoPostal}</Label>
+                    <Label>{`*Código postal: `}</Label>
                     <br />
                     {errorFormCar.zipCode && (
                       <Span>{errorFormCar.zipCode}</Span>
@@ -703,7 +865,7 @@ export const ButtonAdd = ({
                       onChange={handleChange}
                       disabled={true}
                     />
-                    <Label>{domicilio || "*Domicilio: "}</Label>
+                    <Label>{"*Domicilio: "}</Label>
                     <br />
                     {errorFormCar.address && (
                       <Span>{errorFormCar.address}</Span>
@@ -719,7 +881,7 @@ export const ButtonAdd = ({
                       onChange={handleChange}
                       disabled={true}
                     />
-                    <Label>{telefono || "*Teléfono (Móvil): "}</Label>
+                    <Label>{"*Teléfono (Móvil): "}</Label>
                     <br />
                     {errorFormCar.contact && (
                       <Span>{errorFormCar.contact}</Span>
@@ -735,7 +897,7 @@ export const ButtonAdd = ({
                       onChange={handleChange}
                       disabled={true}
                     />
-                    <Label>{email || "*Correo electrónico: "}</Label>
+                    <Label>{"*Correo electrónico: "}</Label>
                     <br />
                     {errorFormCar.email && <Span>{errorFormCar.email}</Span>}
                   </InputContainer>
@@ -743,63 +905,165 @@ export const ButtonAdd = ({
               </>
             ) : (
               <>
-                <GrupoSelect>
-                  {/* Estado, Ciudad y Colonia */}
-                    <SelectContainer>
-                      <Select
-                        disabled={false}
-                        name={"state"}
-                        value={formCar.state}
-                        onChange={handleChange}
-                      >
-                        <option>Selecciona</option>
-                        {selectEstado.length && selectEstado.map((est, idx) => {
-                          return <option key={idx}>{est}</option>;
-                        })}
-                      </Select>
-                      <Label>*Estado: </Label>
-                      {errorFormCar.state && <Span>{errorFormCar.state}</Span>}
-                    </SelectContainer>
-
-                    <SelectContainer>
-                      <Select
-                        disabled={false}
-                        name={"city"}
-                        value={formCar.city}
-                        onChange={handleChange}
-                      >
-                        <option>Selecciona</option>
-                        {selectCiudad.length && selectCiudad.map((cit, idx) => {
-                          return <option key={idx}>{cit}</option>;
-                        })}
-                      </Select>
-                      <Label>*Ciudad: </Label>
-                      {errorFormCar.city && <Span>{errorFormCar.city}</Span>}
-                    </SelectContainer>
-
-                  <SelectContainer>
-                    <Select
-                      name={"colonia"}
-                      value={formCar.colonia}
+                <GrupoInput>
+                  {/* Propietario */}
+                  <InputContainer>
+                    <Input
+                      color={"transparent"}
+                      type="text"
+                      name={"name"}
+                      value={formCar.name}
+                      placeholder="a"
                       onChange={handleChange}
-                    >
-                      <option>Selecciona</option>
-                      {selectColonia.length >= 1 &&
-                        selectColonia.map((colonia, idx) => {
-                          return (
-                            <option key={idx} value={colonia}>
-                              {colonia}
-                            </option>
-                          );
-                        })}
-                    </Select>
-                    <Label>*Colonia: </Label>
-                    {errorFormCar.colonia && (
-                      <Span>{errorFormCar.colonia}</Span>
+                    />
+                    <Label>{nombre || "*Nombre(s): "}</Label>
+                    <br />
+                    {errorFormCar.name && <Span>{errorFormCar.name}</Span>}
+                  </InputContainer>
+                  <InputContainer>
+                    <Input
+                      color={"transparent"}
+                      type="text"
+                      name={"lastName"}
+                      placeholder="a"
+                      value={formCar.lastName}
+                      onChange={handleChange}
+                    />
+                    <Label>{"*Apellidos: "}</Label>
+                    <br />
+                    {errorFormCar.lastName && (
+                      <Span>{errorFormCar.lastName}</Span>
                     )}
-                  </SelectContainer>
+                  </InputContainer>
+                  <InputContainer>
+                    <Input
+                      color={"transparent"}
+                      type="text"
+                      name={"zipCode"}
+                      placeholder="a"
+                      value={formCar.zipCode}
+                      onChange={handleChange}
+                    />
+                    <Label>{`*Código postal: `}</Label>
+                    <br />
+                    {errorFormCar.zipCode && (
+                      <Span>{errorFormCar.zipCode}</Span>
+                    )}
+                  </InputContainer>
+                </GrupoInput>
 
-                </GrupoSelect>
+                {!codigoPostal ? (
+                  <GrupoSelect>
+                    {/* Estado, Ciudad y Colonia */}
+                      <SelectContainer>
+                        <Select
+                          disabled={formCar.zipCode.length <= 4 ? true : false}
+                          name={"state"}
+                          value={formCar.state}
+                          onChange={handleChange}
+                        >
+                          <option>Selecciona</option>
+                          {byState.length && byState.map((est, idx) => {
+                            return <option key={idx}>{est}</option>;
+                          })}
+                        </Select>
+                        <Label>*Estado: </Label>
+                        {errorFormCar.state && <Span>{errorFormCar.state}</Span>}
+                      </SelectContainer>
+
+                      <SelectContainer>
+                        <Select
+                          disabled={!formCar.state ? true : false}
+                          name={"city"}
+                          value={formCar.city}
+                          onChange={handleChange}
+                        >
+                          <option>Selecciona</option>
+                          {byCity.length && byCity.map((cit, idx) => {
+                            return <option key={idx}>{cit}</option>;
+                          })}
+                        </Select>
+                        <Label>*Ciudad: </Label>
+                        {errorFormCar.city && <Span>{errorFormCar.city}</Span>}
+                      </SelectContainer>
+
+                    <SelectContainer>
+                      <Select
+                        disabled={!formCar.city ? true : false}
+                        name={"colonia"}
+                        value={formCar.colonia}
+                        onChange={handleChange}
+                      >
+                        <option>Selecciona</option>
+                        {byColonia.length >= 1 &&
+                          byColonia.map((colonia, idx) => {
+                            return (
+                              <option key={idx} value={colonia}>
+                                {colonia}
+                              </option>
+                            );
+                          })}
+                      </Select>
+                      <Label>*Colonia: </Label>
+                      {errorFormCar.colonia && (
+                        <Span>{errorFormCar.colonia}</Span>
+                      )}
+                    </SelectContainer>
+                  </GrupoSelect>
+                ) : (
+                  <GrupoSelect>
+                    {/* Estado, Ciudad y Colonia */}
+                      <SelectContainer>
+                        <Select
+                          disabled={true}
+                          name={"state"}
+                          value={formCar.state}
+                          onChange={handleChange}
+                        >
+                          <option>{estado || "Selecciona"}</option>
+                        </Select>
+                        <Label>*Estado: </Label>
+                        {errorFormCar.state && <Span>{errorFormCar.state}</Span>}
+                      </SelectContainer>
+  
+                      <SelectContainer>
+                        <Select
+                          disabled={true}
+                          name={"city"}
+                          value={formCar.city}
+                          onChange={handleChange}
+                        >
+                          <option>{ciudad || "Selecciona"}</option>
+                        </Select>
+                        <Label>*Ciudad: </Label>
+                        {errorFormCar.city && <Span>{errorFormCar.city}</Span>}
+                      </SelectContainer>
+  
+                    <SelectContainer>
+                      <Select
+                        disabled={!ciudad ? true : false}
+                        name={"colonia"}
+                        // value={formCar.colonia}
+                        onChange={handleChange}
+                      >
+                        <option>Selecciona</option>
+                        {selectColonia.length >= 1 &&
+                          selectColonia.map((colonia, idx) => {
+                            return (
+                              <option key={idx} value={colonia}>
+                                {colonia}
+                              </option>
+                            );
+                          })}
+                      </Select>
+                      <Label>*Colonia: </Label>
+                      {errorFormCar.colonia && (
+                        <Span>{errorFormCar.colonia}</Span>
+                      )}
+                    </SelectContainer>
+  
+                  </GrupoSelect>
+                )}
                 <GrupoInput>
                   {/* Domicilio, Telefono y Email */}
                   <InputContainer>

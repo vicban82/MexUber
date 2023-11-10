@@ -30,6 +30,7 @@ export const Cars = () => {
     contact: "",// Telefono del propietario
     email: "",// Correo electrónico del propietario
 
+    typeOfVehicle: "",// TIPO DE VEHICULO
     make: "",// MARCA DEL VEHICULO
     subMake: "",// SUB-MARCA DEL VEHICULO
     model: "",
@@ -40,7 +41,7 @@ export const Cars = () => {
     frontImageTraffic: "",// Imagen de la tarjeta de circulación de frente
     backImageTraffic: "",// Imagen de la tarjeta de circulación por atrás
     driver : "" || null,//* RELACION CONDUCTOR
-    driverIsOwner: 1 || 0,// Chofer es el propietario 1 = SI, 0 = NO
+    driverIsOwner: 0,// Chofer es el propietario 1 = SI, 0 = NO
     owner : "" || null,//* RELACION CHOFER
   });
 
@@ -55,6 +56,7 @@ export const Cars = () => {
     contact: "",// Telefono del propietario
     email: "",// Correo electrónico del propietario
 
+    typeOfVehicle: "",// TIPO DE VEHICULO
     make: "",// MARCA DEL VEHICULO
     subMake: "",// SUB-MARCA DEL VEHICULO
     model: "",
