@@ -92,7 +92,7 @@ export const ButtonAdd = ({
 }) => {
   const formCar = { ...car };
   const errorFormCar = { ...errorForm };
-  // console.log("formCar:", formCar)
+  console.log("formCar:", formCar)
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   //* INFORMACION DEL VEHICULO
@@ -217,6 +217,14 @@ export const ButtonAdd = ({
         setValue(value)
         setName(name)
       }
+      //* SE GUARDA EL "ESTADO" Y LA "CIUDAD" SI EL CP EXISTE EN LA DB
+      if (codigoPostal) {
+        setCar((prevState) => ({
+          ...prevState,
+          state: estado,
+          city: ciudad,
+        }))
+      }
     }
 
     // setCar({
@@ -333,7 +341,6 @@ export const ButtonAdd = ({
   }, [formCar.driver]);
 
   useEffect(() => {
-    //! Pendiente arreglar
     let updateFormCar = { ...formCar }
     if (formCar.zipCode.length <= 4) {
       // SE RESETEAN LOS CAMPOS AL CAMBIAR DE CODIGO POSTAL
