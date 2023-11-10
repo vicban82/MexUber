@@ -931,6 +931,7 @@ export const ButtonAdd = ({
                     {/* Estado, Ciudad y Colonia */}
                       <SelectContainer>
                         <Select
+                          disabled={!formCar.zipCode ? true : false}
                           name={"state"}
                           value={formCar.state}
                           onChange={handleChange}
@@ -946,6 +947,7 @@ export const ButtonAdd = ({
 
                       <SelectContainer>
                         <Select
+                          disabled={!formCar.state ? true : false}
                           name={"city"}
                           value={formCar.city}
                           onChange={handleChange}
@@ -961,6 +963,7 @@ export const ButtonAdd = ({
 
                     <SelectContainer>
                       <Select
+                        disabled={!formCar.city ? true : false}
                         name={"colonia"}
                         value={formCar.colonia}
                         onChange={handleChange}
