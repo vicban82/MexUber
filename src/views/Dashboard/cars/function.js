@@ -39,3 +39,20 @@ export async function axiosDetailDriver(id, setDetailDriver, headers) {
     console.log('ERROR:', error);
   }
 }
+
+export async function axiosGetAllCars(setTCar, headers) {
+  try {
+    const { data } = (await axios.get(`/api/cars`, { headers }));
+    // console.log('DATA:', data);
+    if (data && data.cars.length >= 1) {
+      setTCar(data.cars);
+    } else {
+      setTCar([]);
+    }
+    // setTotalPages(2);
+    // setTCar(dataFakeCars);
+  } catch (err) {
+    const { error } = err.response.data;
+    console.log('ERROR:', error);
+  }
+}

@@ -96,17 +96,17 @@ const Img = styled.img`
 
 export function ButtonsTable({
   id,
-  tDriver,
-  setTDriver,
-  driver,
-  setDriver,
+  tCar,
+  setTCar,
+  car,
+  setCar,
   errorForm,
   setErrorForm, 
   limit, 
   setTotalPages, 
   setPage,
 }) {
-  const currentDriver = tDriver.find((item) => item._id === id);
+  const currentDriver = tCar.find((item) => item._id === id);
   const [modifDriver, setModifDriver] = useState({});
   // console.log("currentDriver:", currentDriver)
 
@@ -157,9 +157,9 @@ export function ButtonsTable({
     isActive,
     messageReasonInActive, // MENSAJE RASON INACTIVO
     //! ACCESO A LA APLICACION
-    car,
-  } = driver;
-  // console.log("form driver:", driver)
+    // car,
+  } = car;
+  // console.log("form car:", car)
   
   const memorySepomes = useMemo(() => sepomex, [sepomex])
   const memoryLicencias = useMemo(() => licencias, [licencias])
@@ -167,7 +167,7 @@ export function ButtonsTable({
   function handleChange(e) {
     const { name, value } = e.target;
     // console.log("name:", name)
-    let updatedDriver = {...driver}
+    let updatedDriver = {...car}
     
     if (name === "zipCode" && value.length >= 5 || name === "state" || name === "city" || name === "colonia") {
       const sepomexData = memorySepomes.find(el => el.codigoPostal === value);
@@ -220,13 +220,13 @@ export function ButtonsTable({
       setLicences(filteredLicencias);
     }
 
-    setDriver({
-      ...driver,
+    setCar({
+      ...car,
       [name]: value,
     });
     setErrorForm(
       validateDriver({
-        ...driver,
+        ...car,
         [name]: value,
       }, selectImage)
     );
@@ -235,7 +235,7 @@ export function ButtonsTable({
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
 
-    let updatedDriver = { ...driver };
+    let updatedDriver = { ...car };
 
     if (name === "isActive") {
       updatedDriver.isActive = checked ? 1 : 0;
@@ -261,14 +261,14 @@ export function ButtonsTable({
       }
     }
 
-    setDriver(updatedDriver);
+    setCar(updatedDriver);
   };
 
   useEffect(() => {
     // Actualizar los valores del formulario cuando estado o ciudad cambien
     if (typeof estado === "string" || typeof ciudad === "string") {
       // ACTUALIZAMOS EL FORMULARIO CON LOS CAMPOS QUE SE AUTOCOMPLETAN
-      setDriver(prevState => ({
+      setCar(prevState => ({
         ...prevState,
         state: estado,
         city: ciudad,
@@ -278,9 +278,9 @@ export function ButtonsTable({
 
   useEffect(() => {
     // Este codigo permite la sincronización de los mensajes de las imagenes
-    const validationErrors = validateDriver(driver, selectImage);
+    const validationErrors = validateDriver(car, selectImage);
     setErrorForm(validationErrors);
-  }, [driver]);
+  }, [car]);
 
   const {
     nameError,
@@ -335,7 +335,7 @@ export function ButtonsTable({
     const reader = new FileReader();
     reader.onload = () => {
       const base64String = reader.result.split(',')[1];
-      setDriver(prevState => ({
+      setCar(prevState => ({
         ...prevState,
         [fieldName]: base64String,
       }));
@@ -429,20 +429,20 @@ export function ButtonsTable({
       repeatPassword
     ) {
       if (passwordError && repeatPasswordError) {
-        errorRegister(driver, errorForm);
+        errorRegister(car, errorForm);
       } else if (driverPictureError || frontLicensePictureError && backLicensePictureError) {
-        errorRegister(driver, errorForm);
+        errorRegister(car, errorForm);
       } else if (stateLicenseError || typeLicenseError || dateLicenseError || frontLicensePictureError || backLicensePictureError) {
-        errorRegister(driver, errorForm);
+        errorRegister(car, errorForm);
       } else if (messageReasonInActiveError) {
-        errorRegister(driver, errorForm);
+        errorRegister(car, errorForm);
       } else {
         try {
-          successRegister(driver);
-          const newDriver = await axiosPutDriver(id, driver, headers);
-          setTDriver([...tDriver, newDriver]);
+          successRegister(car);
+          const newDriver = await axiosPutDriver(id, car, headers);
+          setTCar([...tCar, newDriver]);
 
-          await axiosGetDrivers(setTDriver, setTotalPages, headers, 1, limit)
+          await axiosGetDrivers(setTCar, setTotalPages, headers, 1, limit)
   
           // Cierra el modal después de guardar
           setModalIsOpen(false);
@@ -455,7 +455,7 @@ export function ButtonsTable({
         }
       }
     } else  {
-      errorRegister(driver, errorForm);
+      errorRegister(car, errorForm);
     }
   }
 

@@ -47,8 +47,9 @@ import {
   TextareaContainer,
   GrupoInputPass,
 } from "../../../components/reusable/FormularioModal";
-import { axiosDetailDriver, axiosGetDrivers, obtenerAnios } from "./function";
+import { axiosDetailDriver, axiosGetAllCars, axiosGetDrivers, obtenerAnios } from "./function";
 import {colors} from "./colores"
+import { axiosGetCars, axiosPostCars } from "../../../hooks/cars/crudCars";
 
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
@@ -92,7 +93,7 @@ export const ButtonAdd = ({
 }) => {
   const formCar = { ...car };
   const errorFormCar = { ...errorForm };
-  console.log("formCar:", formCar)
+  // console.log("formCar:", formCar)
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   //* INFORMACION DEL VEHICULO
@@ -111,6 +112,12 @@ export const ButtonAdd = ({
   
   //* RELACION CONDUCTOR
   const [conductores, setCondurtores] = useState([]);
+  const [vehiculos, setVehiculos] = useState([]);
+  const thereIsDriver = conductores.filter(el => {
+    if (el.car !== "Sin conductores") {
+      return el
+    }
+  })
   // console.log("conductores:", conductores)
   const [detailDriver, setDetailDriver] = useState({});
   // console.log("detailDriver:", detailDriver)
@@ -263,6 +270,7 @@ export const ButtonAdd = ({
     axiosGetMarcas(setMarca);
     axiosGetSubMarcas(setSubMarca);
     axiosGetDrivers(setCondurtores, headers);
+    axiosGetAllCars(setVehiculos, headers);
     axiosGetSepomex(setSepomex);
     const findById = conductores.find(el => el._id === value)
     // console.log("id:", findById?._id)
@@ -449,8 +457,21 @@ export const ButtonAdd = ({
 
   async function handleSubmit(e) {
     e.preventDefault();
+    // await axiosPostCars(formCar, headers);
+    // await axiosGetCars(1, limit, headers, setTCar, setTotalPages)
+    // // setTCar([...tCar, newCar]);
+
+    // // await axiosGetDrivers(setTDriver, setTotalPages, headers, 1, limit);
+
+    // // Cierra el modal después de guardar
+    // setModalIsOpen(false);
+    // closeModal();
+
+    // // Establece la página en 1 después de agregar un elemento
+    // setPage(1);
 
     if (
+      formCar.typeOfVehicle &&
       formCar.make &&
       formCar.subMake &&
       formCar.model &&
@@ -460,38 +481,31 @@ export const ButtonAdd = ({
       formCar.trafficCardNumber &&
       formCar.frontImageTraffic &&
       formCar.backImageTraffic &&
-      formCar.driver &&
-      formCar.driverIsOwner &&
-      formCar.owner
+      formCar.driver
     ) {
-      if (
-        // stateLicenseError ||
-        // typeLicenseError ||
-        // dateLicenseError ||
-        // frontLicensePictureError ||
-        errorFormCar.backLicensePictureError
-      ) {
-        errorRegister(driver, errorForm);
+      if (formCar.driverIsOwner === 0) {
+        // SE EVALUAN LOS CAMPOS "PROPIETARIO" EN CASO QUE EL CONDUCTOR NO LO SEA
+        errorRegister(formCar, errorFormCar);
       } else {
         try {
-          successRegister(driver);
-          const newDriver = await axiosPostDriver(driver, headers);
-          setTDriver([...tDriver, newDriver]);
-
+          successRegister(formCar);
+          await axiosPostCars(formCar, headers);
+          await axiosGetCars(1, limit, headers, setTCar, setTotalPages)
+  
           // await axiosGetDrivers(setTDriver, setTotalPages, headers, 1, limit);
-
+  
           // Cierra el modal después de guardar
           setModalIsOpen(false);
           closeModal();
-
+  
           // Establece la página en 1 después de agregar un elemento
           setPage(1);
         } catch (error) {
-          console.error("Error al guardar el automovíl:", error);
+          console.error("Error al guardar el vehículo:", error);
         }
       }
     } else {
-      errorRegister(driver, errorForm);
+      errorRegister(formCar, errorFormCar);
     }
   }
 
@@ -717,10 +731,23 @@ export const ButtonAdd = ({
                   onChange={handleChange}
                 >
                   <option>Selecciona</option>
-                  {conductores.length &&
-                    conductores.map((conductor, idx) => {
-                      return <option key={idx} value={conductor._id}>{`${conductor.name} ${conductor.lastName}`}</option>;
-                    })}
+                  {/* <option key={"Sin_asignar"} value={"Sin asignar"}>{"Sin asignar"}</option> */}
+                  {/* {conductores.length && (
+                      conductores.map((conductor, idx) => {
+                        return <option key={idx} value={conductor._id}>{`${conductor.name} ${conductor.lastName}`}</option>;
+                      })
+                    )} */}
+
+                  {!conductores.length ? (
+                      <option key={"Sin_conductores"} value={"Sin conductores"}>{"Sin conductores"}</option>
+                    ) : (
+                      <>
+                        <option key={"Sin_asignar"} value={"Sin asignar"}>{"Sin asignar"}</option>
+                        {conductores.map((conductor, idx) => {
+                          return <option key={idx} value={conductor._id}>{`${conductor.name} ${conductor.lastName}`}</option>;
+                        })}
+                      </>
+                    )}
                 </Select>
                 <Label>*Conductor Asignado: </Label>
                 {errorFormCar.driver && <Span>{errorFormCar.driver}</Span>}
