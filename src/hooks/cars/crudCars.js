@@ -3,12 +3,12 @@ import { dataFakeCars } from "../../data/dataFakeCars.js";
 
 export async function axiosGetCars(setTBody, setTotalPages, page, limit, headers) {
   try {
-    const { data } = (await axios.get(`/api/cars?page=${page}&limit=${limit}`, { headers }));
+    /* const { data } = (await axios.get(`/api/cars?page=${page}&limit=${limit}`, { headers }));
     console.log('DATA:', data);
     setTBody(data.cars);
-    setTotalPages(data.totalPages)
-     //setTotalPages(2);
-     //setTBody(dataFakeCars);
+    setTotalPages(data.totalPages) */
+     setTotalPages(2);
+     setTBody(dataFakeCars);
   } catch (err) {
     const { error } = err.response.data;
     console.log('ERROR:', error);
