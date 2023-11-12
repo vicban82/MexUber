@@ -115,45 +115,32 @@ export const ButtonAdd = ({
   const [vehiculos, setVehiculos] = useState([]);
   // EN ESTA FUNCION VERIFICA SI HAY CONDUCTORES CON VEHICULOS
   const hayConductores = disponible(conductores, vehiculos)
-  // console.log("hayConductores:", hayConductores)
   // ACA SE OBTIENEN TODOS LOS CONUDCTORES QUE NO HAN SIDO ASIGNADOS
   const conductoresDisponibles = conductores.filter(el => !hayConductores.includes(el._id))
-  // console.log("conductoresDisponibles:", conductoresDisponibles)
-  // console.log("conductores:", conductores)
   const [detailDriver, setDetailDriver] = useState({});
-  // console.log("detailDriver:", detailDriver)
   const [value, setValue] = useState("");
-  // console.log("value:", value)
   const [name, setName] = useState("");
   //* RELACION CONDUCTOR
 
-  //* INFORMACION DEL CONDUCTOR
+  //* INFORMACION DEL CONDUCTOR SI TAMBIEN ES EL PROPIETARIO
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
-  // console.log("apellido:", apellido)
   const [codigoPostal, setCodigoPostal] = useState("");
-  // console.log("codigoPostal:", codigoPostal)
   const [estado, setEstado] = useState("");
-  // console.log("estado:", estado)
-  const [selectEstado, setSelectEstado] = useState([]);
   const [ciudad, setCiudad] = useState("");
-  // console.log("selectColonia:", selectColonia)
-  const [selectCiudad, setSelectCiudad] = useState([]);
   const [colonia, setColonia] = useState("");
   const [selectColonia, setSelectColonia] = useState([]);
   const [domicilio, setDomicilio] = useState("");
   const [telefono, setTelefono] = useState("");
   const [email, setEmail] = useState("");
-  //* INFORMACION DEL CONDUCTOR
+  //* INFORMACION DEL CONDUCTOR SI TAMBIEN ES EL PROPIETARIO
   
   //* INFO DB
   const [sepomex, setSepomex] = useState([]);
-  // console.log("sepomex:", sepomex)
   //* INFO DB
 
   // * ------------ ESTADOS ------------
   const byState = [...new Set(sepomex.map((el) => el.estado))];
-  // console.log("byState:", byState)
 
   // * ------------ CIUDADES ------------
   const filterByState = sepomex.filter((el) => {
@@ -161,10 +148,8 @@ export const ButtonAdd = ({
       return el.ciudad;
     }
   });
-  // console.log("formCar - zipCode:", formCar.zipCode)
   
-  const byCity = [...new Set(filterByState.map((el) => el.ciudad))]
-  // console.log("byCity:", byCity)
+  const byCity = [...new Set(filterByState.map((el) => el.ciudad))];
 
   // * ------------ COLONIAS ------------
   const filterByCity = sepomex.filter((el) => {
@@ -173,12 +158,9 @@ export const ButtonAdd = ({
     }
   });
   const byColonia = [...new Set(filterByCity.map((el) => el.colonias))].flat(1);
-  // console.log("byColonia:", byColonia)
 
   function handleChange(e) {
     const { name, value, type, } = e.target;
-    // console.log("name:", name)
-    // console.log("value:", value)
     
     if (name === "make") {
       const findById = marcas.find(el => {
@@ -190,7 +172,7 @@ export const ButtonAdd = ({
       setSelectSubMarca(filterSubMarcas)
     }
     if (name === "driver") {
-      // console.log("value:", value)
+      // SE USA EL VALUE PARA LA RELACION CON EL CONDUCTOR
       setValue(value)
     }
     
@@ -221,7 +203,6 @@ export const ButtonAdd = ({
         setSelectColonia(sepomexData.colonias);
       } else {
         // Seteo todos los value del combo "zipCode"
-        // console.log("value:", value)
         setValue(value)
         setName(name)
       }
@@ -274,7 +255,6 @@ export const ButtonAdd = ({
     axiosGetAllCars(setVehiculos, headers);
     axiosGetSepomex(setSepomex);
     const findById = conductores.find(el => el._id === value)
-    // console.log("id:", findById?._id)
     if (findById) {
       axiosDetailDriver(findById._id, setDetailDriver, headers)
     } 
@@ -284,7 +264,6 @@ export const ButtonAdd = ({
     // Este codigo me sirve para autocompleta o resetear la seccion de propietario
     let updateFormCar = { ...formCar }
     if (formCar.driverIsOwner === 1) {
-      // console.log("formCar.driverIsOwner:", formCar.driverIsOwner)
       setNombre(detailDriver.name)
       setApellido(detailDriver.lastName)
       setCodigoPostal(detailDriver.zipCode)
@@ -295,7 +274,6 @@ export const ButtonAdd = ({
       setTelefono(detailDriver.contact)
       setEmail(detailDriver.email)
     } else {
-      // console.log("formCar.driverIsOwner:", formCar.driverIsOwner)
       setNombre("")
       setApellido("")
       setCodigoPostal("")
@@ -471,43 +449,52 @@ export const ButtonAdd = ({
     // Establece la página en 1 después de agregar un elemento
     setPage(1);
 
-    // if (
-    //   formCar.typeOfVehicle &&
-    //   formCar.make &&
-    //   formCar.subMake &&
-    //   formCar.model &&
-    //   formCar.colors &&
-    //   formCar.plates &&
-    //   formCar.numberMotor &&
-    //   formCar.trafficCardNumber &&
-    //   formCar.frontImageTraffic &&
-    //   formCar.backImageTraffic &&
-    //   formCar.driver
-    // ) {
-    //   if (formCar.driverIsOwner === 0) {
-    //     // SE EVALUAN LOS CAMPOS "PROPIETARIO" EN CASO QUE EL CONDUCTOR NO LO SEA
-    //     errorRegister(formCar, errorFormCar);
-    //   } else {
-    //     try {
-    //       successRegister(formCar);
-    //       await axiosPostCars(formCar, headers);
-    //       await axiosGetCars(1, limit, headers, setTCar, setTotalPages)
+    if (
+      formCar.typeOfVehicle &&
+      formCar.make &&
+      formCar.subMake &&
+      formCar.model &&
+      formCar.colors &&
+      formCar.plates &&
+      formCar.numberMotor &&
+      // formCar.trafficCardNumber &&
+      // formCar.frontImageTraffic &&
+      // formCar.backImageTraffic &&
+      formCar.driver
+    ) {
+      if (
+        formCar.driverIsOwner === 0 &&
+        (errorFormCar.name &&
+        errorFormCar.lastName &&
+        errorFormCar.zipCode &&
+        errorFormCar.state &&
+        errorFormCar.city &&
+        errorFormCar.colonia &&
+        errorFormCar.address &&
+        errorFormCar.contact &&
+        errorFormCar.email)
+      ) {
+        // SE EVALUAN LOS CAMPOS "PROPIETARIO" EN CASO QUE EL CONDUCTOR NO LO SEA
+        errorRegister(formCar, errorFormCar);
+      } else {
+        try {
+          successRegister(formCar);
+          await axiosPostCars(formCar, headers);
+          await axiosGetCars(1, limit, headers, setTCar, setTotalPages);
   
-    //       // await axiosGetDrivers(setTDriver, setTotalPages, headers, 1, limit);
+          // Cierra el modal después de guardar
+          setModalIsOpen(false);
+          closeModal();
   
-    //       // Cierra el modal después de guardar
-    //       setModalIsOpen(false);
-    //       closeModal();
-  
-    //       // Establece la página en 1 después de agregar un elemento
-    //       setPage(1);
-    //     } catch (error) {
-    //       console.error("Error al guardar el vehículo:", error);
-    //     }
-    //   }
-    // } else {
-    //   errorRegister(formCar, errorFormCar);
-    // }
+          // Establece la página en 1 después de agregar un elemento
+          setPage(1);
+        } catch (error) {
+          console.error("Error al guardar el vehículo:", error);
+        }
+      }
+    } else {
+      errorRegister(formCar, errorFormCar);
+    }
   }
 
   return (
@@ -733,12 +720,6 @@ export const ButtonAdd = ({
                   onChange={handleChange}
                 >
                   <option>Selecciona</option>
-                  {/* <option key={"Sin_asignar"} value={"Sin asignar"}>{"Sin asignar"}</option> */}
-                  {/* {conductores.length && (
-                      conductores.map((conductor, idx) => {
-                        return <option key={idx} value={conductor._id}>{`${conductor.name} ${conductor.lastName}`}</option>;
-                      })
-                    )} */}
 
                   {!conductoresDisponibles.length ? (
                       <option key={"Sin_conductores"} value={"Sin conductores"}>{"Sin conductores"}</option>

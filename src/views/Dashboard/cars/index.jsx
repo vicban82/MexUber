@@ -30,7 +30,6 @@ export const Cars = () => {
     address: "",// Dirección del propietario
     contact: "",// Telefono del propietario
     email: "",// Correo electrónico del propietario
-    cars: [],//* RELACION VEHÍCULOS
 
     typeOfVehicle: "",// TIPO DE VEHICULO
     make: "",// MARCA DEL VEHICULO
@@ -42,9 +41,9 @@ export const Cars = () => {
     trafficCardNumber: "",// NUMERO TARGETA DE CIRCULACION
     frontImageTraffic: "",// Imagen de la tarjeta de circulación de frente
     backImageTraffic: "",// Imagen de la tarjeta de circulación por atrás
-    driver : "" || null,//* RELACION CONDUCTOR
+    driver: "" || null,//* RELACION CONDUCTOR
     driverIsOwner: 0,// Chofer es el propietario 1 = SI, 0 = NO
-    owner : "" || null,//* RELACION CHOFER
+    owner: "" || null,//* RELACION PROPIETARIO
   });
 
   const [errorForm, setErrorForm] = useState({

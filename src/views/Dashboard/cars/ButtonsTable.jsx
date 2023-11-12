@@ -1,16 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import editIcon from "../../../assets/img/editIcon.png";
 import deleteIcon from "../../../assets/img/deleteIcon.png";
 import Modal from "react-modal";
-import { validateDriver } from "../../../validations/drivers";
 import { headers } from "../../../tools/accessToken";
-import { axiosGetDrivers, axiosPostDriver, axiosPutDriver } from "../../../hooks/drivers/crudDrivers";
-import styled from 'styled-components';
+import styled from "styled-components";
 import {
   errorRegister,
   successRegister,
 } from "../../../tools/driverAlerts/register";
-import { axiosGetLicencias, axiosGetSepomex } from "../../../hooks/db/info";
+import { axiosGetMarcas, axiosGetSepomex, axiosGetSubMarcas } from "../../../hooks/db/info";
 import { useDropzone } from "react-dropzone";
 import {
   ContainerModal,
@@ -39,8 +37,11 @@ import {
   GrupoCheck,
   CheckContainer,
   Textarea,
-  TextareaContainer
+  TextareaContainer,
 } from "../../../components/reusable/FormularioModal";
+import { axiosDetailDriver, axiosGetAllCars, axiosGetDrivers, disponible, obtenerAnios } from "./function";
+import { axiosDetailCar } from "../../../hooks/cars/crudCars";
+import { colors } from "./colores";
 
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
@@ -57,13 +58,13 @@ const InputCheckV1 = styled(InputCheck)`
 `;
 
 const dropzoneContainerStyles = {
-  width: '50%', // Establece el ancho del contenedor
+  width: "50%", // Establece el ancho del contenedor
   //height: '200px', // Establece la altura del contenedor
-  border: '2px dashed #700202',
-  borderRadius: '4px',
-  textAlign: 'center',
-  padding: '20px',
-  cursor: 'pointer',
+  border: "2px dashed #700202",
+  borderRadius: "4px",
+  textAlign: "center",
+  padding: "20px",
+  cursor: "pointer",
 };
 
 const pictureLicence = {
@@ -75,7 +76,7 @@ const Img = styled.img`
   border-radius: 5px;
   size: 5px;
   transition: border-radius 0.5s;
-  &:hover{
+  &:hover {
     border-radius: 25px;
     transition: border-radius 0.5s;
   }
@@ -88,241 +89,403 @@ export function ButtonsTable({
   car,
   setCar,
   errorForm,
-  setErrorForm, 
-  limit, 
-  setTotalPages, 
+  setErrorForm,
+  limit,
+  setTotalPages,
   setPage,
 }) {
-  const currentDriver = tCar.find((item) => item._id === id);
-  const [modifDriver, setModifDriver] = useState({});
-  // console.log("currentDriver:", currentDriver)
+  const [detailCar, setDetailCar] = useState({});
+  // console.log("detailCar:", detailCar)
+  useEffect(() => {
+    axiosDetailCar(id, setDetailCar, headers);
+  }, [id]);
+
+  useEffect(() => {
+    if (detailCar._id === id) {
+      setUpdateForm({
+        name: detailCar.owner.name,// Nombre del propietario
+        lastName: detailCar.owner.lastName,// Apellido del propietario
+        zipCode: detailCar.owner.zipCode,// Código postal del propietario
+        state: detailCar.owner.state,// Estado del propietario
+        city: detailCar.owner.city,// Ciudad del propietario
+        colonia: detailCar.owner.colonia,
+        address: detailCar.owner.address,// Dirección del propietario
+        contact: detailCar.owner.contact,// Telefono del propietario
+        email: detailCar.owner.email,// Correo electrónico del propietario
+    
+        typeOfVehicle: detailCar.typeOfVehicle,// TIPO DE VEHICULO
+        make: detailCar.make,// MARCA DEL VEHICULO
+        subMake: detailCar.subMake,// SUB-MARCA DEL VEHICULO
+        model: detailCar.model,
+        color: detailCar.color,
+        plates: detailCar.plates,// PLACAS DEL VEHICULO
+        numberMotor: detailCar.numberMotor,// NUMERO DE MOTOR
+        trafficCardNumber: detailCar.trafficCardNumber,// NUMERO TARGETA DE CIRCULACION
+        frontImageTraffic: detailCar.frontImageTraffic,// Imagen de la tarjeta de circulación de frente
+        backImageTraffic: detailCar.backImageTraffic,// Imagen de la tarjeta de circulación por atrás
+        driver: `${detailCar.driver.name} ${detailCar.driver.lastName}` || null,//* RELACION CONDUCTOR
+        driverIsOwner: detailCar.driverIsOwner,// Chofer es el propietario 1 = SI, 0 = NO
+      });
+    }
+  }, [detailCar]);
+
+  const [upDateForm, setUpdateForm] = useState({
+    name: "",// Nombre del propietario
+    lastName: "",// Apellido del propietario
+    zipCode: "",// Código postal del propietario
+    state: "",// Estado del propietario
+    city: "",// Ciudad del propietario
+    colonia: "",
+    address: "",// Dirección del propietario
+    contact: "",// Telefono del propietario
+    email: "",// Correo electrónico del propietario
+
+    typeOfVehicle: "",// TIPO DE VEHICULO
+    make: "",// MARCA DEL VEHICULO
+    subMake: "",// SUB-MARCA DEL VEHICULO
+    model: "",
+    color: "",
+    plates: "",// PLACAS DEL VEHICULO
+    numberMotor: "",// NUMERO DE MOTOR
+    trafficCardNumber: "",// NUMERO TARGETA DE CIRCULACION
+    frontImageTraffic: "",// Imagen de la tarjeta de circulación de frente
+    backImageTraffic: "",// Imagen de la tarjeta de circulación por atrás
+    driver: "" || null,//* RELACION CONDUCTOR
+    driverIsOwner: 0,// Chofer es el propietario 1 = SI, 0 = NO
+    owner: "" || null,//* RELACION CHOFER
+  });
+  // console.log("upDateForm:", upDateForm)
+
+  const [errorFormCar, setErrorFormCar] = useState({
+    name: "",// Nombre del propietario
+    lastName: "",// Apellido del propietario
+    zipCode: "",// Código postal del propietario
+    state: "",// Estado del propietario
+    city: "",// Ciudad del propietario
+    colonia: "",
+    address: "",// Dirección del propietario
+    contact: "",// Telefono del propietario
+    email: "",// Correo electrónico del propietario
+
+    typeOfVehicle: "",// TIPO DE VEHICULO
+    make: "",// MARCA DEL VEHICULO
+    subMake: "",// SUB-MARCA DEL VEHICULO
+    model: "",
+    color: "",
+    plates: "",// PLACAS DEL VEHICULO
+    numberMotor: "",// NUMERO DE MOTOR
+    trafficCardNumber: "",// NUMERO TARGETA DE CIRCULACION
+    frontImageTraffic: "",// Imagen de la tarjeta de circulación de frente
+    backImageTraffic: "",// Imagen de la tarjeta de circulación por atrás
+    driver: "" || null,//* RELACION CONDUCTOR
+    driverIsOwner: 0,// Chofer es el propietario 1 = SI, 0 = NO
+    owner: "" || null,//* RELACION CHOFER
+  });
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [sepomex, setSepomex] = useState([]);
-  const [licencias, setLicencias] = useState([]);
-  //* INFORMACION DEL CONDUCTOR
-  const [codigoPostal, setZipcode] = useState('');
-  const [estado, setEstado] = useState('');
-  const [ciudad, setCiudad] = useState('');
-  const [colonias, setColonias] = useState([]);
-  //* INFORMACION DEL CONDUCTOR
+  //* INFORMACION DEL VEHICULO
+  const tipoDeVehiculo = ["Motocicleta", "Automovil"];
+  const [marcas, setMarca] = useState([]);
+  const [subMarcas, setSubMarca] = useState([]);
+  const [selectSubMarcas, setSelectSubMarca] = useState([]);
+  const modelo = obtenerAnios();
+  //* INFORMACION DEL VEHICULO
 
-  //* LICENCIA DE CONDUCIR
-  const [estados, setEstados] = useState([]);
-  const [licences, setLicences] = useState([]);
-  //* LICENCIA DE CONDUCIR
-
+  //* TARJETA DE CIRCULACION
   const [selectImage, setSelectImage] = useState({});
+  //* TARJETA DE CIRCULACION
 
-  const {
-    name,
-    lastName,
-    zipCode, // CODIGO POSTAL
-    state, // ESTADO DE MEXICO
-    city,
-    colonia,
-    address,
-    contact, // NUMERO DE CONTACTO DEL CONDUCTOR
-    email,
-    driverPicture, //* FOTO DEL CONDUCTOR
-    //! DATOS DE LA LICENCIA DE CONDUCCION
-    driverLicenseNumber, //* NUMERO LICENCIA DEL CONDUCTOR
-    stateLicense, // ESTADO DE LA LICENCIA
-    typeLicense, // TIPO LICENCIA
-    dateLicense, // FECHA - VIGENCIA DE LA LICENCIA
-    frontLicensePicture, //* FOTO FRONTAL DE LA LICENCIA
-    backLicensePicture, //* FOTO REVERSO DE LA LICENCIA
-    //! DATOS DE LA LICENCIA DE CONDUCCION
-    //! AJUSTES DE LA APLICACION
-    allServices, // TODOS
-    servicesLGBQT, // LGBQT+
-    onlyWomenServices, // MUJERES
-    //! AJUSTES DE LA APLICACION
-    //! ACCESO A LA APLICACION
-    password,
-    repeatPassword,
-    isActive,
-    messageReasonInActive, // MENSAJE RASON INACTIVO
-    //! ACCESO A LA APLICACION
-    // car,
-  } = car;
-  // console.log("form car:", car)
-  
-  const memorySepomes = useMemo(() => sepomex, [sepomex])
-  const memoryLicencias = useMemo(() => licencias, [licencias])
-  
+  //* RELACION CONDUCTOR
+  const [conductores, setCondurtores] = useState([]);
+  const [vehiculos, setVehiculos] = useState([]);
+  // EN ESTA FUNCION VERIFICA SI HAY CONDUCTORES CON VEHICULOS
+  const hayConductores = disponible(conductores, vehiculos);
+  // ACA SE OBTIENEN TODOS LOS CONUDCTORES QUE NO HAN SIDO ASIGNADOS
+  const conductoresDisponibles = conductores.filter((el) => {
+    return !hayConductores.includes(el._id);
+  });
+  const [detailDriver, setDetailDriver] = useState({});
+  const [value, setValue] = useState("");
+  const [name, setName] = useState("");
+  //* RELACION CONDUCTOR
+
+  //* INFORMACION DEL CONDUCTOR SI TAMBIEN ES EL PROPIETARIO
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [codigoPostal, setCodigoPostal] = useState("");
+  const [estado, setEstado] = useState("");
+  const [ciudad, setCiudad] = useState("");
+  const [colonia, setColonia] = useState("");
+  const [selectColonia, setSelectColonia] = useState([]);
+  const [domicilio, setDomicilio] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [email, setEmail] = useState("");
+  //* INFORMACION DEL CONDUCTOR SI TAMBIEN ES EL PROPIETARIO
+
+  //* INFO DB
+  const [sepomex, setSepomex] = useState([]);
+  //* INFO DB
+
+  // * ------------ ESTADOS ------------
+  const byState = [...new Set(sepomex.map((el) => el.estado))];
+
+  // * ------------ CIUDADES ------------
+  const filterByState = sepomex.filter((el) => {
+    if (el.estado === upDateForm.state) {
+      return el.ciudad;
+    }
+  });
+
+  const byCity = [...new Set(filterByState.map((el) => el.ciudad))];
+
+  // * ------------ COLONIAS ------------
+  const filterByCity = sepomex.filter((el) => {
+    if (el.ciudad === upDateForm.city) {
+      return el.colonias;
+    }
+  });
+  const byColonia = [...new Set(filterByCity.map((el) => el.colonias))].flat(1);
+
   function handleChange(e) {
-    const { name, value } = e.target;
-    // console.log("name:", name)
-    let updatedDriver = {...car}
-    
-    if (name === "zipCode" && value.length >= 5 || name === "state" || name === "city" || name === "colonia") {
-      const sepomexData = memorySepomes.find(el => el.codigoPostal === value);
-            
-      if (sepomexData) {
-        setZipcode(sepomexData.codigoPostal);
-        setEstado(sepomexData.estado);
-        setCiudad(sepomexData.ciudad);
-        setColonias(sepomexData.colonias);
-      } else {
-        // * ------------ ESTADOS ------------
-        const findState = [...new Set(memorySepomes.map(el => el.estado))]
-        if (findState) {
-          setEstado(findState);
+    const { name, value, type } = e.target;
+
+    if (name === "make") {
+      const findById = marcas.find((el) => {
+        if (el.marca === value) {
+          return el.marcaId;
         }
-        // * ------------ CIUDADES ------------
-        const filterByState = memorySepomes.filter(el => {
-          if (el.estado === value) {
-            return el.ciudad
-          }
-        });
-        const findCity = [...new Set(filterByState.map(el => el.ciudad))].filter(el => el !== undefined)
-        if (findCity) {
-          setCiudad(findCity);
-        }
-        // * ------------ COLONIAS ------------
-        const filterByCity = memorySepomes.filter(el => {
-          if (el.ciudad === value) {
-            return el.colonias
-          }
-        });
-        const findColonia = [...new Set(filterByCity.map(el => el.colonias))].flat(1)
-        if (findColonia) {
-          setColonias(findColonia);
-        }
-      }
+      });
+      const filterSubMarcas = subMarcas.filter(
+        (el) => el.idMarca === findById.marcaId
+      );
+      setSelectSubMarca(filterSubMarcas);
+    }
+    if (name === "driver") {
+      // SE USA EL VALUE PARA LA RELACION CON EL CONDUCTOR
+      setValue(value);
     }
 
-    if (name === "driverLicenseNumber") {
-      const filteredEstado = memoryLicencias.map(el => el.estado);
-      setEstados(filteredEstado);
-    }
-
-    if (name === "stateLicense") {
-      const filteredLicencias = memoryLicencias.map(el => {
-        if (el.estado === value) {
-          return el.tipoDeLicencias;
-        }
-      }).flat(1).filter(el => el !== undefined);
-      setLicences(filteredLicencias);
-    }
-
-    setCar({
-      ...car,
-      [name]: value,
-    });
-    setErrorForm(
-      validateDriver({
-        ...car,
-        [name]: value,
-      }, selectImage)
-    );
-  }
-
-  const handleCheckboxChange = (event) => {
-    const { name, checked } = event.target;
-
-    let updatedDriver = { ...car };
-
-    if (name === "isActive") {
-      updatedDriver.isActive = checked ? 1 : 0;
-      // Resetear el campo messageReasonInActive si isActive se vuelve a bloquear
-      if (updatedDriver.isActive === 1) {
-        updatedDriver.messageReasonInActive = "";
-      }
-    } else if (name === "allServices" && checked) {
-      // Si allServices es seleccionado, desmarca los otros checkboxes
-      updatedDriver = {
-        ...updatedDriver,
-        allServices: 1,
-        servicesLGBQT: 0,
-        onlyWomenServices: 0,
-      };
+    if (type === "radio") {
+      setCar((prevCar) => ({
+        ...prevCar,
+        [name]: parseInt(value, 10),
+      }));
     } else {
-      // Si otros checkboxes son seleccionados, actualiza el checkbox correspondiente
-      updatedDriver[name] = checked ? 1 : 0;
-
-      // Si allServices estaba seleccionado, desmárcalo
-      if (updatedDriver.allServices === 1) {
-        updatedDriver.allServices = 0;
-      }
-    }
-
-    setCar(updatedDriver);
-  };
-
-  useEffect(() => {
-    // Actualizar los valores del formulario cuando estado o ciudad cambien
-    if (typeof estado === "string" || typeof ciudad === "string") {
-      // ACTUALIZAMOS EL FORMULARIO CON LOS CAMPOS QUE SE AUTOCOMPLETAN
-      setCar(prevState => ({
-        ...prevState,
-        state: estado,
-        city: ciudad,
+      setCar((prevCar) => ({
+        ...prevCar,
+        [name]: value,
       }));
     }
-  }, [estado, ciudad]);
 
-  useEffect(() => {
-    // Este codigo permite la sincronización de los mensajes de las imagenes
-    const validationErrors = validateDriver(car, selectImage);
-    setErrorForm(validationErrors);
-  }, [car]);
+    if (
+      name === "zipCode" ||
+      name === "state" ||
+      name === "city" ||
+      name === "colonia"
+    ) {
+      const sepomexData = sepomex.find((el) => el.codigoPostal === value);
 
-  const {
-    nameError,
-    lastNameError,
-    zipCodeError,
-    stateError,
-    cityError,
-    coloniaError,
-    addressError,
-    contactError,
-    emailError,
-    driverPictureError,
-    driverLicenseNumberError,
-    stateLicenseError,
-    typeLicenseError,
-    dateLicenseError,
-    frontLicensePictureError,
-    backLicensePictureError,
-    servicesError,
-    passwordError,
-    repeatPasswordError,
-    isActiveError,
-    messageReasonInActiveError,
-  } = errorForm;
-  // console.log("errorForm:", errorForm)
-
-  useEffect(() => {
-    axiosGetSepomex(setSepomex);
-    axiosGetLicencias(setLicencias);
-  }, []);
-
-  const onDriverPictureDrop = useCallback(acceptedFiles => {
-    if (acceptedFiles.length > 0) {
-      const file = acceptedFiles[0];
-      convertAndSetImage(file, "driverPicture");
+      if (sepomexData) {
+        setCodigoPostal(sepomexData.codigoPostal);
+        setEstado(sepomexData.estado);
+        setCiudad(sepomexData.ciudad);
+        setSelectColonia(sepomexData.colonias);
+      } else {
+        // Seteo todos los value del combo "zipCode"
+        setValue(value);
+        setName(name);
+      }
+      //* SE GUARDA EL "ESTADO" Y LA "CIUDAD" SI EL CP EXISTE EN LA DB
+      if (codigoPostal) {
+        setCar((prevState) => ({
+          ...prevState,
+          state: estado,
+          city: ciudad,
+        }));
+      }
     }
-  }, []);
-  
-  const onFrontLicensePictureDrop = useCallback(acceptedFiles => {
+
+    // setCar({
+    //   ...car,
+    //   [name]: value,
+    // });
+    // setErrorForm(
+    //   validateDriver(
+    //     {
+    //       ...car,
+    //       [name]: value,
+    //     },
+    //   )
+    // );
+  }
+
+  useEffect(() => {
+    // Este codigo me sirve para autocompletar todos los campos en relacion al conductor
+    if (
+      nombre ||
+      apellido ||
+      codigoPostal ||
+      estado ||
+      ciudad ||
+      selectColonia ||
+      domicilio ||
+      telefono ||
+      email
+    ) {
+      setCar((prevState) => ({
+        ...prevState,
+        name: nombre,
+        lastName: apellido,
+        zipCode: codigoPostal,
+        state: estado,
+        city: ciudad,
+        colonia: selectColonia,
+        address: domicilio,
+        contact: telefono,
+        email: email,
+      }));
+    }
+  }, [
+    nombre,
+    apellido,
+    codigoPostal,
+    estado,
+    ciudad,
+    selectColonia,
+    domicilio,
+    telefono,
+    email,
+  ]);
+
+  useEffect(() => {
+    axiosGetMarcas(setMarca);
+    axiosGetSubMarcas(setSubMarca);
+    axiosGetDrivers(setCondurtores, headers);
+    axiosGetAllCars(setVehiculos, headers);
+    axiosGetSepomex(setSepomex);
+    const findById = conductores.find((el) => el._id === value);
+    if (findById) {
+      axiosDetailDriver(findById._id, setDetailDriver, headers);
+    }
+  }, [value]);
+
+  useEffect(() => {
+    // Este codigo me sirve para autocompleta o resetear la seccion de propietario
+    let updateFormCar = { ...upDateForm };
+    if (upDateForm.driverIsOwner === 1) {
+      setNombre(detailDriver.name);
+      setApellido(detailDriver.lastName);
+      setCodigoPostal(detailDriver.zipCode);
+      setEstado(detailDriver.state);
+      setCiudad(detailDriver.city);
+      setColonia(detailDriver.colonia);
+      setDomicilio(detailDriver.address);
+      setTelefono(detailDriver.contact);
+      setEmail(detailDriver.email);
+    } else {
+      setNombre("");
+      setApellido("");
+      setCodigoPostal("");
+      setEstado("");
+      setCiudad("");
+      setColonia("");
+      setDomicilio("");
+      setTelefono("");
+      setEmail("");
+      updateFormCar = {
+        ...car,
+        name: "",
+        lastName: "",
+        zipCode: "",
+        state: "",
+        city: "",
+        colonia: "",
+        address: "",
+        contact: "",
+        email: "",
+      };
+    }
+    setCar(updateFormCar);
+  }, [upDateForm.driverIsOwner]);
+
+  useEffect(() => {
+    // Este codigo resetea los ultimos campos si se cambia de conductor
+    let updateFormCar = { ...upDateForm };
+    setNombre("");
+    setApellido("");
+    setCodigoPostal("");
+    setEstado("");
+    setCiudad("");
+    setColonia("");
+    setDomicilio("");
+    setTelefono("");
+    setEmail("");
+    updateFormCar = {
+      ...car,
+      driverIsOwner: 0,
+      name: "",
+      lastName: "",
+      zipCode: "",
+      state: "",
+      city: "",
+      colonia: "",
+      address: "",
+      contact: "",
+      email: "",
+    };
+    setCar(updateFormCar);
+  }, [upDateForm.driver]);
+
+  useEffect(() => {
+    let updateFormCar = { ...upDateForm };
+    if (upDateForm.zipCode.length <= 4) {
+      // SE RESETEAN LOS CAMPOS AL CAMBIAR DE CODIGO POSTAL
+      setCodigoPostal("");
+      setEstado("");
+      setCiudad("");
+      setColonia("");
+      updateFormCar = {
+        ...updateFormCar,
+        state: "",
+        city: "",
+        colonia: "",
+      };
+    }
+    if (name === "state") {
+      // SE RESETEAN LOS CAMPOS SI CAMBIA DE ESTADO
+      updateFormCar = {
+        ...updateFormCar,
+        city: "",
+        colonia: "",
+      };
+    }
+    if (name === "city") {
+      // SE RESETEAN LOS CAMPOS SI CAMBIA DE CIUDAD
+      updateFormCar = {
+        ...updateFormCar,
+        colonia: "",
+      };
+    }
+    setCar(updateFormCar);
+  }, [upDateForm.zipCode, upDateForm.state, upDateForm.city]);
+
+  const onFrontImageTrafficDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
-    convertAndSetImage(file, "frontLicensePicture");
-  }, []);
-  
-  const onBackLicensePictureDrop = useCallback(acceptedFiles => {
+    convertAndSetImage(file, "frontImageTraffic");
+  };
+
+  const onBackImageTrafficDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
-    convertAndSetImage(file, "backLicensePicture");
-  }, []);
-  
+    convertAndSetImage(file, "backImageTraffic");
+  };
+
   const convertAndSetImage = (file, fieldName) => {
-    console.log("file:", file)
-    setSelectImage(file)
+    console.log("file:", file);
+    setSelectImage(file);
     const reader = new FileReader();
     reader.onload = () => {
-      const base64String = reader.result.split(',')[1];
-      setCar(prevState => ({
+      const base64String = reader.result.split(",")[1];
+      setCar((prevState) => ({
         ...prevState,
         [fieldName]: base64String,
       }));
@@ -330,69 +493,54 @@ export function ButtonsTable({
     reader.readAsDataURL(file);
   };
 
-  const { getRootProps: getDriverRootProps, getInputProps: getDriverInputProps } = useDropzone({
-    onDrop: onDriverPictureDrop,
+  const {
+    getRootProps: getFrontImageRootProps,
+    getInputProps: getFrontImageInputProps,
+  } = useDropzone({
+    onDrop: onFrontImageTrafficDrop,
     // FORMATOS DE IMAGEN PERMITIDA
     accept: {
-     'image/*': ['.jpg', '.png'],
+      "image/*": [".jpg", ".png"],
     },
     maxFiles: 1, // ARCHIVOS PERMITIDOS
   });
-  
-  const { getRootProps: getFrontLicenseRootProps, getInputProps: getFrontLicenseInputProps } = useDropzone({
-    onDrop: onFrontLicensePictureDrop,
+
+  const {
+    getRootProps: getBackImageRootProps,
+    getInputProps: getBackImageInputProps,
+  } = useDropzone({
+    onDrop: onBackImageTrafficDrop,
     // FORMATOS DE IMAGEN PERMITIDA
     accept: {
-     'image/*': ['.jpg', '.png'],
-    },
-    maxFiles: 1, // ARCHIVOS PERMITIDOS
-  });
-  
-  const { getRootProps: getBackLicenseRootProps, getInputProps: getBackLicenseInputProps } = useDropzone({
-    onDrop: onBackLicensePictureDrop,
-    // FORMATOS DE IMAGEN PERMITIDA
-    accept: {
-     'image/*': ['.jpg', '.png'],
+      "image/*": [".jpg", ".png"],
     },
     maxFiles: 1, // ARCHIVOS PERMITIDOS
   });
 
   function closeModal() {
-    setModifDriver({
-      name: currentDriver.name,
-      lastName: currentDriver.lastName,
-      zipCode: currentDriver.zipCode, // CODIGO POSTAL
-      state: currentDriver.state, // ESTADO DE MEXICO
-      city: currentDriver.city,
-      colonia: currentDriver.colonia,
-      address: currentDriver.address,
-      contact: currentDriver.contact, // NUMERO DE CONTACTO DEL CONDUCTOR
-      email: currentDriver.email,
-      driverPicture: currentDriver.driverPicture, //* FOTO DEL CONDUCTOR
-      //! DATOS DE LA LICENCIA DE CONDUCCION
-      driverLicenseNumber: currentDriver.driverLicenseNumber, //* NUMERO LICENCIA DEL CONDUCTOR
-      stateLicense: currentDriver.stateLicense, // ESTADO DE LA LICENCIA
-      typeLicense: currentDriver.typeLicense, // TIPO LICENCIA
-      dateLicense: currentDriver.dateLicense, // FECHA - VIGENCIA DE LA LICENCIA
-      frontLicensePicture: currentDriver.frontLicensePicture, //* FOTO FRONTAL DE LA LICENCIA
-      backLicensePicture: currentDriver.backLicensePicture, //* FOTO REVERSO DE LA LICENCIA
-      //! DATOS DE LA LICENCIA DE CONDUCCION
-      //! AJUSTES DE LA APLICACION
-      allServices: currentDriver.allServices, // TODOS
-      servicesLGBQT: currentDriver.servicesLGBQT, // LGBQT+
-      onlyWomenServices: currentDriver.onlyWomenServices, // MUJERES
-      //! AJUSTES DE LA APLICACION
-      //! ACCESO A LA APLICACION
-      password: '',
-      repeatPassword: '',
-      isActive: currentDriver.isActive,
-      messageReasonInActive: currentDriver.messageReasonInActive, // MENSAJE RASON INACTIVO
-      //! ACCESO A LA APLICACION
-      car: currentDriver.car || null,
-      //! NO SE VALIDAN
-      tokenNotification: currentDriver.tokenNotification,
-      typePhone: currentDriver.typePhone,
-      //! NO SE VALIDAN
+    setCar({
+      name: detailCar.owner.name,// Nombre del propietario
+      lastName: detailCar.owner.lastName,// Apellido del propietario
+      zipCode: detailCar.owner.zipCode,// Código postal del propietario
+      state: detailCar.owner.state,// Estado del propietario
+      city: detailCar.owner.city,// Ciudad del propietario
+      colonia: detailCar.owner.colonia,
+      address: detailCar.owner.address,// Dirección del propietario
+      contact: detailCar.owner.contact,// Telefono del propietario
+      email: detailCar.owner.email,// Correo electrónico del propietario
+  
+      typeOfVehicle: detailCar.typeOfVehicle,// TIPO DE VEHICULO
+      make: detailCar.make,// MARCA DEL VEHICULO
+      subMake: detailCar.subMake,// SUB-MARCA DEL VEHICULO
+      model: detailCar.model,
+      color: detailCar.color,
+      plates: detailCar.plates,// PLACAS DEL VEHICULO
+      numberMotor: detailCar.numberMotor,// NUMERO DE MOTOR
+      trafficCardNumber: detailCar.trafficCardNumber,// NUMERO TARGETA DE CIRCULACION
+      frontImageTraffic: detailCar.frontImageTraffic,// Imagen de la tarjeta de circulación de frente
+      backImageTraffic: detailCar.backImageTraffic,// Imagen de la tarjeta de circulación por atrás
+      driver: `${detailCar.driver.name} ${detailCar.driver.lastName}` || null,//* RELACION CONDUCTOR
+      driverIsOwner: detailCar.driverIsOwner,// Chofer es el propietario 1 = SI, 0 = NO
     });
   }
 
@@ -400,49 +548,58 @@ export function ButtonsTable({
     e.preventDefault();
 
     if (
-      name ||
-      lastName ||
-      zipCode ||
-      state ||
-      city ||
-      colonia ||
-      address ||
-      contact ||
-      email ||
-      (allServices === 1 ||
-      servicesLGBQT === 1 ||
-      onlyWomenServices === 1) ||
-      password ||
-      repeatPassword
+      upDateForm.typeOfVehicle &&
+      upDateForm.make &&
+      upDateForm.subMake &&
+      upDateForm.model &&
+      upDateForm.colors &&
+      upDateForm.plates &&
+      upDateForm.numberMotor &&
+      // upDateForm.trafficCardNumber &&
+      upDateForm.driver
     ) {
-      if (passwordError && repeatPasswordError) {
-        errorRegister(car, errorForm);
-      } else if (driverPictureError || frontLicensePictureError && backLicensePictureError) {
-        errorRegister(car, errorForm);
-      } else if (stateLicenseError || typeLicenseError || dateLicenseError || frontLicensePictureError || backLicensePictureError) {
-        errorRegister(car, errorForm);
-      } else if (messageReasonInActiveError) {
-        errorRegister(car, errorForm);
+      if (
+        upDateForm.driverIsOwner === 0 &&
+        errorFormCar.name &&
+        errorFormCar.lastName &&
+        errorFormCar.zipCode &&
+        errorFormCar.state &&
+        errorFormCar.city &&
+        errorFormCar.colonia &&
+        errorFormCar.address &&
+        errorFormCar.contact &&
+        errorFormCar.email
+      ) {
+        // SE EVALUAN LOS CAMPOS "PROPIETARIO" EN CASO QUE EL CONDUCTOR NO LO SEA
+        errorRegister(upDateForm, errorFormCar);
+      } else if (errorFormCar.frontImageTraffic && errorFormCar.backImageTraffic) {
+        errorRegister(upDateForm, errorFormCar);
       } else {
         try {
-          successRegister(car);
-          const newDriver = await axiosPutDriver(id, car, headers);
-          setTCar([...tCar, newDriver]);
+          successRegister(upDateForm);
+          const currentCar = await axiosPutCars(id, upDateForm, headers);
 
-          await axiosGetDrivers(setTCar, setTotalPages, headers, 1, limit)
-  
+          // Actualiza la lista en el frontend
+          setTCar((prev) => {
+            // Reemplaza el upDateForm editado en la lista por el nuevo upDateForm devuelto por el backend
+            const updatedTCar = prev.map((item) =>
+              item._id === id ? currentCar : item
+            );
+            return updatedTCar;
+          });
+
           // Cierra el modal después de guardar
           setModalIsOpen(false);
-          closeModal()
+          closeModal();
 
           // Establece la página en 1 después de agregar un elemento
           setPage(1);
         } catch (error) {
-          console.error("Error al guardar el admin:", error);
+          console.error("Error al guardar el vehículo:", error);
         }
       }
-    } else  {
-      errorRegister(car, errorForm);
+    } else {
+      errorRegister(upDateForm, errorFormCar);
     }
   }
 
@@ -461,465 +618,640 @@ export function ButtonsTable({
         >
           <FormEdit onSubmit={handleSubmit}>
             <FormHead>
-              <h2>Modificar Vehiculo</h2>
+              <h2>Modificar Vehículo</h2>
             </FormHead>
             <br />
             <ContainerScroll>
-{/*               <TituloSeccion>
+              <TituloSeccion>
+                {/* Tarjeta de circulacion */}
                 <hr />
-                Datos Personales
-              </TituloSeccion> */}
-              <GrupoInput>
-                <InputContainer>
-                  <Input
-                    type="text"
-                    name={"name"}
-                    value={name}
-                    placeholder={currentDriver.name}
-                    onChange={handleChange}
-                  />
-                  <Label>*Nombre(s): </Label>
-                  <br />
-                  {nameError && <Span>{nameError}</Span>}
-                </InputContainer>
-
-                <InputContainer>
-                  <Input
-                    type="text"
-                    name={"lastName"}
-                    placeholder={currentDriver.lastName}
-                    value={lastName}
-                    onChange={handleChange}
-                  />
-                  <Label>*Apellidos: </Label>
-                  <br />
-                  {lastNameError && <Span>{lastNameError}</Span>}
-                </InputContainer>
-
-                <InputContainer>
-                  <Input
-                    type="text"
-                    name={"zipCode"}
-                    placeholder={currentDriver.zipCode}
-                    value={zipCode}
-                    onChange={handleChange}
-                  />
-                  <Label>*Código postal: </Label>
-                  <br />
-                  {zipCodeError && <Span>{zipCodeError}</Span>}
-                </InputContainer>
-              </GrupoInput>
+                Datos del Vehiculo
+              </TituloSeccion>
 
               <GrupoSelect>
-                {typeof estado !== "string" ? null : (
-                  <SelectContainer>
-                    <Select
-                      disabled={true}
-                      name={"state"}
-                      placeholder={currentDriver.state}
-                      value={state}
-                      onChange={handleChange}
-                    >
-                      <option>{estado || "Selecciona"}</option>
-                    </Select>
-                    <Label>*Estado: </Label>
-                    {stateError && <Span>{stateError}</Span>}
-                  </SelectContainer>
-                )}
-                {!Array.isArray(estado) ? null : (
-                  <SelectContainer>
-                    <Select
-                      disabled={false}
-                      name={"state"}
-                      placeholder={currentDriver.state}
-                      value={state}
-                      onChange={handleChange}
-                    >
-                      <option>Selecciona</option>
-                      {estado.map((est, idx) => {
-                        return <option key={idx}>{est}</option>;
-                      })}
-                    </Select>
-                    <Label>*Estado: </Label>
-                    {/* <br /> */}
-                    {stateError && <Span>{stateError}</Span>}
-                  </SelectContainer>
-                )}
-
-                {typeof ciudad !== "string" ? null : (
-                  <SelectContainer>
-                    <Select
-                      disabled={true}
-                      name={"city"}
-                      // placeholder={currentDriver.city}
-                      value={city}
-                      onChange={handleChange}
-                    >
-                      <option>{currentDriver.city || "Selecciona"}</option>
-                    </Select>
-                    <Label>*Ciudad: </Label>
-                    {cityError && <Span>{cityError}</Span>}
-                  </SelectContainer>
-                )}
-                {!Array.isArray(ciudad) ? null : (
-                  <SelectContainer>
-                    <Select
-                      disabled={false}
-                      name={"city"}
-                      placeholder={currentDriver.city}
-                      //value={city}
-                      value={typeof city === "string" && city}
-                      onChange={handleChange}
-                    >
-                      <option>Selecciona</option>
-                      {ciudad.map((cit, idx) => {
-                        return <option key={idx}>{cit}</option>;
-                      })}
-                    </Select>
-                    <Label>*Ciudad: </Label>
-                    {cityError && <Span>{cityError}</Span>}
-                  </SelectContainer>
-                )}
                 <SelectContainer>
                   <Select
-                    disabled={
-                      zipCode || codigoPostal === zipCode ? false : true
-                    }
-                    name={"colonia"}
-                    placeholder={currentDriver.colonia}
-                    value={colonia}
+                    name={"typeOfVehicle"}
+                    value={upDateForm.typeOfVehicle}
                     onChange={handleChange}
                   >
                     <option>Selecciona</option>
-                    {colonias.length >= 1 &&
-                      colonias.map((colonia, idx) => {
-                        return <option key={idx}>{colonia}</option>;
-                      })}
+                    {tipoDeVehiculo.map((el, idx) => {
+                      return <option key={idx}>{el}</option>;
+                    })}
                   </Select>
-                  <Label>*Colonia: </Label>
-                  {coloniaError && <Span>{coloniaError}</Span>}
-                </SelectContainer>
-              </GrupoSelect>
-
-              <GrupoInput>
-                <InputContainer>
-                  <Input
-                    type="text"
-                    name={"address"}
-                    placeholder={currentDriver.address}
-                    value={address}
-                    onChange={handleChange}
-                  />
-                  <Label>*Domicilio: </Label>
-                  <br />
-                  {addressError && <Span>{addressError}</Span>}
-                </InputContainer>
-
-                <InputContainer>
-                  <Input
-                    type="text"
-                    name={"contact"}
-                    placeholder={currentDriver.contact}
-                    value={contact}
-                    onChange={handleChange}
-                  />
-                  <Label>*Teléfono (Móvil): </Label>
-                  <br />
-                  {contactError && <Span>{contactError}</Span>}
-                </InputContainer>
-
-                <InputContainer>
-                  <Input
-                    type="text"
-                    name={"email"}
-                    placeholder={currentDriver.email}
-                    value={email}
-                    onChange={handleChange}
-                  />
-                  <Label>*Correo electrónico: </Label>
-                  <br />
-                  {emailError && <Span>{emailError}</Span>}
-                </InputContainer>
-              </GrupoInput>
-
-              <GrupoImg>
-                <TituloSeccion>
-                  <hr />
-                  Foto del Conductor
-                </TituloSeccion>
-                <SubeImgContainer>
-                  <div
-                    {...getDriverRootProps()}
-                    style={dropzoneContainerStyles}
-                  >
-                    <input {...getDriverInputProps()} />
-                    {driverPicture && (
-                      <img
-                        src={`data:image/png;base64,${driverPicture}`}
-                        alt="Foto conductor"
-                        style={{ maxWidth: "100px" }}
-                      />
-                    )}
-                    <p>Frente</p>
-                    <br />
-                    {driverPictureError && <Span>{driverPictureError}</Span>}
-                  </div>
-                </SubeImgContainer>
-              </GrupoImg>
-
-              <GrupoInput>
-                <TituloSeccion>
-                  <hr />
-                  Licencia de conducir
-                </TituloSeccion>
-
-                <InputContainer>
-                  <Input
-                    type="text"
-                    name={"driverLicenseNumber"}
-                    placeholder={currentDriver.driverLicenseNumber}
-                    value={driverLicenseNumber}
-                    onChange={handleChange}
-                  />
-                  <Label>Número de licencia: </Label>
-                  <br />
-                  {driverLicenseNumberError && (
-                    <Span>{driverLicenseNumberError}</Span>
+                  <Label>*Tipo de vehículo: </Label>
+                  {errorFormCar.typeOfVehicle && (
+                    <Span>{errorFormCar.typeOfVehicle}</Span>
                   )}
-                </InputContainer>
-              </GrupoInput>
-
-              <GrupoSelect>
-                <SelectContainer>
-                  <Select
-                    disabled={driverLicenseNumber ? false : true}
-                    name={"stateLicense"}
-                    placeholder={currentDriver.stateLicense}
-                    value={stateLicense}
-                    onChange={handleChange}
-                  >
-                    <option>
-                      {!driverLicenseNumber
-                        ? "Estato de la Licencia"
-                        : "*Estato de la Licencia"}
-                    </option>
-                    {estados.length >= 1 &&
-                      estados.map((estado, idx) => {
-                        return (
-                          <option key={idx} value={estado}>
-                            {estado}
-                          </option>
-                        );
-                      })}
-                  </Select>
-                  {stateLicenseError && <Span>{stateLicenseError}</Span>}
                 </SelectContainer>
 
                 <SelectContainer>
                   <Select
-                    disabled={driverLicenseNumber ? false : true}
-                    name={"typeLicense"}
-                    placeholder={currentDriver.typeLicense}
-                    value={typeLicense}
+                    name={"make"}
+                    value={upDateForm.make}
                     onChange={handleChange}
                   >
-                    <option>
-                      {!driverLicenseNumber
-                        ? "Tipo de licencia"
-                        : "*Tipo de licencia"}
-                    </option>
-                    {licences.length >= 1 &&
-                      licences.map((licencia, idx) => {
-                        return (
-                          <option key={idx} value={licencia}>
-                            {licencia}
-                          </option>
-                        );
+                    <option>Selecciona</option>
+                    {marcas.length &&
+                      marcas.map((el, idx) => {
+                        return <option key={idx}>{el.marca}</option>;
                       })}
                   </Select>
-                  {typeLicenseError && <Span>{typeLicenseError}</Span>}
+                  <Label>*Marca: </Label>
+                  {errorFormCar.make && <Span>{errorFormCar.make}</Span>}
+                </SelectContainer>
+
+                <SelectContainer>
+                  <Select
+                    name={"subMake"}
+                    value={upDateForm.subMake}
+                    onChange={handleChange}
+                  >
+                    <option>Selecciona</option>
+                    {selectSubMarcas.length &&
+                      selectSubMarcas.map((el, idx) => {
+                        return <option key={idx}>{el.subMarca}</option>;
+                      })}
+                  </Select>
+                  <Label>*Sub-Marca: </Label>
+                  {errorFormCar.subMake && <Span>{errorFormCar.subMake}</Span>}
+                </SelectContainer>
+
+                <SelectContainer>
+                  <Select
+                    name={"model"}
+                    value={upDateForm.model}
+                    onChange={handleChange}
+                  >
+                    <option>Selecciona</option>
+                    {modelo.length &&
+                      modelo.map((mol, idx) => {
+                        return <option key={idx}>{mol}</option>;
+                      })}
+                  </Select>
+                  <Label>*Modelo: </Label>
+                  {errorFormCar.model && <Span>{errorFormCar.model}</Span>}
+                </SelectContainer>
+
+                <SelectContainer>
+                  <Select
+                    name={"color"}
+                    value={upDateForm.color}
+                    onChange={handleChange}
+                  >
+                    <option>Selecciona</option>
+                    {colors.length &&
+                      colors.map((el, idx) => {
+                        return <option key={idx}>{el.descripcion}</option>;
+                      })}
+                  </Select>
+                  <Label>*Color: </Label>
+                  {errorFormCar.color && <Span>{errorFormCar.color}</Span>}
                 </SelectContainer>
               </GrupoSelect>
 
               <GrupoInput>
+                {/* Placa y Motor */}
                 <InputContainer>
+                  {/* placa */}
                   <Input
-                    disabled={driverLicenseNumber ? false : true}
-                    type="date"
-                    name={"dateLicense"}
-                    value={dateLicense}
-                    placeholder={currentDriver.dateLicense}
+                    color={"transparent"}
+                    type="text"
+                    name={"plates"}
+                    value={upDateForm.plates}
+                    placeholder="a"
                     onChange={handleChange}
                   />
-                  <Label>
-                    {!driverLicenseNumber
-                      ? "Vigencia de licencia: "
-                      : "*Vigencia de licencia: "}
-                  </Label>
-                  {dateLicenseError && <SpanData>{dateLicenseError}</SpanData>}
-                </InputContainer>
-
-                <TituloSeccion>
-                  <hr />
-                  {!driverLicenseNumber
-                    ? "Foto de Licencia (Ambos lados)"
-                    : "*Foto de Licencia (Ambos lados)"}
-                </TituloSeccion>
-                <SubeImgContainer style={pictureLicence}>
+                  <Label>*Placa: </Label>
                   <br />
-                  {!driverLicenseNumber ? (
-                    <>
-                      <div style={dropzoneContainerStyles}>
-                        <p>Desabilitado</p>
-                      </div>
-                      <div style={dropzoneContainerStyles}>
-                        <p>Desabilitado</p>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <SubeContainerImg
-                        {...getFrontLicenseRootProps()}
-                        style={dropzoneContainerStyles}
-                      >
-                        <ImgSube {...getFrontLicenseInputProps()} />
-                        {frontLicensePicture && (
-                          <img
-                            src={`data:image/png;base64,${frontLicensePicture}`}
-                            alt="Foto conductor"
-                            style={{ maxWidth: "100px" }}
-                          />
-                        )}
-                        Frente
-                        {frontLicensePictureError && (
-                          <Span>{frontLicensePictureError}</Span>
-                        )}
-                      </SubeContainerImg>
-                      <SubeContainerImg
-                        {...getBackLicenseRootProps()}
-                        style={dropzoneContainerStyles}
-                      >
-                        <ImgSube {...getBackLicenseInputProps()} />
-                        {backLicensePicture && (
-                          <Img
-                            src={`data:image/png;base64,${backLicensePicture}`}
-                            alt="Foto conductor"
-                            style={{ maxWidth: "100px" }}
-                          />
-                        )}
-                        Atrás
-                        {backLicensePictureError && (
-                          <Span>{backLicensePictureError}</Span>
-                        )}
-                      </SubeContainerImg>
-                    </>
+                  {errorFormCar.plates && <Span>{errorFormCar.plates}</Span>}
+                </InputContainer>
+                <InputContainer>
+                  {/* motor */}
+                  <Input
+                    color={"transparent"}
+                    type="text"
+                    name={"numberMotor"}
+                    value={upDateForm.numberMotor}
+                    placeholder="a"
+                    onChange={handleChange}
+                  />
+                  <Label>*Número Motor: </Label>
+                  <br />
+                  {errorFormCar.numberMotor && (
+                    <Span>{errorFormCar.numberMotor}</Span>
                   )}
-                </SubeImgContainer>
+                </InputContainer>
               </GrupoInput>
 
               <TituloSeccion>
+                {/* Tarjeta de circulacion */}
                 <hr />
-                Ajustes en la aplicación
+                Tarjeta de circulacion
               </TituloSeccion>
-              <GrupoCheck>
-                <LabelCheck>Servicio para: </LabelCheck>
-                <InputCheck
-                  type="checkbox"
-                  name="allServices"
-                  checked={allServices === 1}
-                  onChange={handleCheckboxChange}
-                />
-                Todos
-                <InputCheck
-                  type="checkbox"
-                  name="servicesLGBQT"
-                  checked={servicesLGBQT === 1}
-                  disabled={allServices === 1 ? true : false}
-                  onChange={handleCheckboxChange}
-                />
-                LGBTQ+
-                <InputCheck
-                  type="checkbox"
-                  name="onlyWomenServices"
-                  checked={onlyWomenServices === 1}
-                  disabled={allServices === 1 ? true : false}
-                  onChange={handleCheckboxChange}
-                />
-                Sólo mujeres
-              </GrupoCheck>
-              {servicesError && <Span>{servicesError}</Span>}
-
-              <GrupoInputV1>
-                <TituloSeccion>
-                  <hr />
-                  Acceso a la aplicación
-                </TituloSeccion>
-                <InputContainerV1>
-                  <Input
-                    type="password"
-                    name={"password"}
-                    value={password}
-                    onChange={handleChange}
-                  />
-                  <Label>Contraseña: </Label>
-                  <br />
-                  {passwordError && <Span>{passwordError}</Span>}
-                </InputContainerV1>
-
-                <InputContainerV1>
-                  <Input
-                    type="password"
-                    name={"repeatPassword"}
-                    value={repeatPassword}
-                    onChange={handleChange}
-                  />
-                  <Label>Repetir contraseña: </Label>
-                  <br />
-                  {repeatPasswordError && <Span>{repeatPasswordError}</Span>}
-                </InputContainerV1>
-              </GrupoInputV1>
-
-              <GrupoCheck>
-                <CheckContainer>
-                  <LabelCheck>Activo: </LabelCheck>
-                  <InputCheckV1
-                    type="checkbox"
-                    name={"isActive"}
-                    checked={isActive === 1}
-                    onChange={handleCheckboxChange}
-                  />
-                  <br />
-                  {isActiveError && <Span>{isActiveError}</Span>}
-                </CheckContainer>
-              </GrupoCheck>
 
               <GrupoInput>
-                <TextareaContainer>
-                  <Textarea
+                <InputContainer>
+                  {/* Número de Tarjeta */}
+                  <Input
+                    color={"transparent"}
                     type="text"
-                    name={"messageReasonInActive"}
-                    value={messageReasonInActive}
-                    placeholder={currentDriver.messageReasonInActive}
-                    maxLength={100}
-                    disabled={isActive === 1}
+                    name={"trafficCardNumber"}
+                    value={upDateForm.trafficCardNumber}
+                    placeholder="a"
                     onChange={handleChange}
                   />
-                  <Label>Motivo de bloqueo: </Label>
-                </TextareaContainer>
-                {messageReasonInActiveError && (
-                  <Span>{messageReasonInActiveError}</Span>
-                )}
+                  <Label>*Número de Tarjeta: </Label>
+                  <br />
+                  {errorFormCar.trafficCardNumber && (
+                    <Span>{errorFormCar.trafficCardNumber}</Span>
+                  )}
+                </InputContainer>
               </GrupoInput>
-              <br />
-              <br />
 
+              <SubeImgContainer style={pictureLicence}>
+                {/* Img delante y Atras */}
+                <br />
+                <SubeContainerImg
+                  {...getFrontImageRootProps()}
+                  style={dropzoneContainerStyles}
+                >
+                  <ImgSube {...getFrontImageInputProps()} />
+                  {upDateForm.frontImageTraffic && (
+                    <img
+                      src={`data:image/png;base64,${upDateForm.frontImageTraffic}`}
+                      alt="Foto conductor"
+                      style={{ maxWidth: "100px" }}
+                    />
+                  )}
+                  Frente
+                  {errorFormCar.frontImageTraffic && (
+                    <Span>{errorFormCar.frontImageTraffic}</Span>
+                  )}
+                </SubeContainerImg>
+                <SubeContainerImg
+                  {...getBackImageRootProps()}
+                  style={dropzoneContainerStyles}
+                >
+                  <ImgSube {...getBackImageInputProps()} />
+                  {upDateForm.backImageTraffic && (
+                    <img
+                      src={`data:image/png;base64,${upDateForm.backImageTraffic}`}
+                      alt="Foto conductor"
+                      style={{ maxWidth: "100px" }}
+                    />
+                  )}
+                  Atrás
+                  {errorFormCar.backImageTraffic && (
+                    <Span>{errorFormCar.backImageTraffic}</Span>
+                  )}
+                </SubeContainerImg>
+              </SubeImgContainer>
+
+              <TituloSeccion>
+                {/* Conductor */}
+                <hr />
+                Conductor
+              </TituloSeccion>
+
+              <GrupoSelect>
+                {/* Conductor Asignado */}
+                <SelectContainer>
+                  <Select
+                    name={"driver"}
+                    value={upDateForm.driver}
+                    onChange={handleChange}
+                  >
+                    <option>Selecciona</option>
+
+                    {!conductoresDisponibles.length ? (
+                      <option key={"Sin_conductores"} value={"Sin conductores"}>
+                        {"Sin conductores"}
+                      </option>
+                    ) : (
+                      <>
+                        <option key={"Sin_asignar"} value={"Sin asignar"}>
+                          {"Sin asignar"}
+                        </option>
+                        {conductoresDisponibles.map((conductor, idx) => {
+                          return (
+                            <option
+                              key={idx}
+                              value={conductor._id}
+                            >
+                              {`${conductor.name} ${conductor.lastName}`}
+                            </option>
+                          );
+                        })}
+                      </>
+                    )}
+                  </Select>
+                  <Label>*Conductor Asignado: </Label>
+                  {errorFormCar.driver && <Span>{errorFormCar.driver}</Span>}
+                </SelectContainer>
+              </GrupoSelect>
+
+              <GrupoCheck>
+                {/* Es el propietario? */}
+                <label>Es el propietario?</label>
+                <InputCheck
+                  type="radio"
+                  name="driverIsOwner"
+                  value={"1"}
+                  checked={upDateForm.driverIsOwner === 1}
+                  onChange={handleChange}
+                />
+                SI
+                <InputCheck
+                  type="radio"
+                  name="driverIsOwner"
+                  value={"0"}
+                  checked={upDateForm.driverIsOwner === 0}
+                  onChange={handleChange}
+                />
+                NO
+              </GrupoCheck>
+              {errorFormCar.driverIsOwner && (
+                <Span>{errorFormCar.driverIsOwner}</Span>
+              )}
+
+              <TituloSeccion>
+                {/* Propietario */}
+                <hr />
+                Propietario
+              </TituloSeccion>
+
+              {upDateForm.driverIsOwner === 1 ? (
+                <>
+                  <GrupoInput>
+                    {/* Propietario */}
+                    <InputContainer>
+                      <Input
+                        color={"transparent"}
+                        type="text"
+                        name={"name"}
+                        value={upDateForm.name}
+                        placeholder="a"
+                        onChange={handleChange}
+                        disabled={true}
+                      />
+                      <Label>{"*Nombre(s): "}</Label>
+                      <br />
+                      {errorFormCar.name && <Span>{errorFormCar.name}</Span>}
+                    </InputContainer>
+                    <InputContainer>
+                      <Input
+                        color={"transparent"}
+                        type="text"
+                        name={"lastName"}
+                        placeholder="a"
+                        value={upDateForm.lastName}
+                        onChange={handleChange}
+                        disabled={true}
+                      />
+                      <Label>{"*Apellidos: "}</Label>
+                      <br />
+                      {errorFormCar.lastName && (
+                        <Span>{errorFormCar.lastName}</Span>
+                      )}
+                    </InputContainer>
+                    <InputContainer>
+                      <Input
+                        color={"transparent"}
+                        type="text"
+                        name={"zipCode"}
+                        placeholder="a"
+                        value={upDateForm.zipCode}
+                        onChange={handleChange}
+                        disabled={true}
+                      />
+                      <Label>{`*Código postal: `}</Label>
+                      <br />
+                      {errorFormCar.zipCode && (
+                        <Span>{errorFormCar.zipCode}</Span>
+                      )}
+                    </InputContainer>
+                  </GrupoInput>
+                  <GrupoSelect>
+                    {/* Estado, Ciudad y Colonia */}
+                    <SelectContainer>
+                      <Select
+                        disabled={true}
+                        name={"state"}
+                        value={upDateForm.state}
+                        onChange={handleChange}
+                      >
+                        <option>{estado || "Selecciona"}</option>
+                      </Select>
+                      <Label>*Estado: </Label>
+                      {errorFormCar.state && <Span>{errorFormCar.state}</Span>}
+                    </SelectContainer>
+
+                    <SelectContainer>
+                      <Select
+                        disabled={true}
+                        name={"city"}
+                        value={upDateForm.city}
+                        onChange={handleChange}
+                      >
+                        <option>{ciudad || "Selecciona"}</option>
+                      </Select>
+                      <Label>*Ciudad: </Label>
+                      {errorFormCar.city && <Span>{errorFormCar.city}</Span>}
+                    </SelectContainer>
+
+                    <SelectContainer>
+                      <Select
+                        disabled={true}
+                        name={"colonia"}
+                        value={upDateForm.colonia}
+                        onChange={handleChange}
+                      >
+                        <option>{colonia || "Selecciona"}</option>
+                      </Select>
+                      <Label>*Colonia: </Label>
+                      {errorFormCar.colonia && (
+                        <Span>{errorFormCar.colonia}</Span>
+                      )}
+                    </SelectContainer>
+                  </GrupoSelect>
+
+                  <GrupoInput>
+                    {/* Domicilio, Telefono y Email */}
+                    <InputContainer>
+                      <Input
+                        color={"transparent"}
+                        type="text"
+                        name={"address"}
+                        placeholder="a"
+                        value={upDateForm.address}
+                        onChange={handleChange}
+                        disabled={true}
+                      />
+                      <Label>{"*Domicilio: "}</Label>
+                      <br />
+                      {errorFormCar.address && (
+                        <Span>{errorFormCar.address}</Span>
+                      )}
+                    </InputContainer>
+                    <InputContainer>
+                      <Input
+                        color={"transparent"}
+                        type="text"
+                        name={"contact"}
+                        value={upDateForm.contact}
+                        placeholder="a"
+                        onChange={handleChange}
+                        disabled={true}
+                      />
+                      <Label>{"*Teléfono (Móvil): "}</Label>
+                      <br />
+                      {errorFormCar.contact && (
+                        <Span>{errorFormCar.contact}</Span>
+                      )}
+                    </InputContainer>
+                    <InputContainer>
+                      <Input
+                        color={"transparent"}
+                        type="text"
+                        name={"email"}
+                        value={upDateForm.email}
+                        placeholder="a"
+                        onChange={handleChange}
+                        disabled={true}
+                      />
+                      <Label>{"*Correo electrónico: "}</Label>
+                      <br />
+                      {errorFormCar.email && <Span>{errorFormCar.email}</Span>}
+                    </InputContainer>
+                  </GrupoInput>
+                </>
+              ) : (
+                <>
+                  <GrupoInput>
+                    {/* Propietario */}
+                    <InputContainer>
+                      <Input
+                        color={"transparent"}
+                        type="text"
+                        name={"name"}
+                        value={upDateForm.name}
+                        placeholder="a"
+                        onChange={handleChange}
+                      />
+                      <Label>{nombre || "*Nombre(s): "}</Label>
+                      <br />
+                      {errorFormCar.name && <Span>{errorFormCar.name}</Span>}
+                    </InputContainer>
+                    <InputContainer>
+                      <Input
+                        color={"transparent"}
+                        type="text"
+                        name={"lastName"}
+                        placeholder="a"
+                        value={upDateForm.lastName}
+                        onChange={handleChange}
+                      />
+                      <Label>{"*Apellidos: "}</Label>
+                      <br />
+                      {errorFormCar.lastName && (
+                        <Span>{errorFormCar.lastName}</Span>
+                      )}
+                    </InputContainer>
+                    <InputContainer>
+                      <Input
+                        color={"transparent"}
+                        type="text"
+                        name={"zipCode"}
+                        placeholder="a"
+                        value={upDateForm.zipCode}
+                        onChange={handleChange}
+                      />
+                      <Label>{`*Código postal: `}</Label>
+                      <br />
+                      {errorFormCar.zipCode && (
+                        <Span>{errorFormCar.zipCode}</Span>
+                      )}
+                    </InputContainer>
+                  </GrupoInput>
+
+                  {!codigoPostal ? (
+                    <GrupoSelect>
+                      {/* Estado, Ciudad y Colonia */}
+                      <SelectContainer>
+                        <Select
+                          disabled={upDateForm.zipCode.length <= 4 ? true : false}
+                          name={"state"}
+                          value={upDateForm.state}
+                          onChange={handleChange}
+                        >
+                          <option>Selecciona</option>
+                          {byState.length &&
+                            byState.map((est, idx) => {
+                              return <option key={idx}>{est}</option>;
+                            })}
+                        </Select>
+                        <Label>*Estado: </Label>
+                        {errorFormCar.state && (
+                          <Span>{errorFormCar.state}</Span>
+                        )}
+                      </SelectContainer>
+
+                      <SelectContainer>
+                        <Select
+                          disabled={!upDateForm.state ? true : false}
+                          name={"city"}
+                          value={upDateForm.city}
+                          onChange={handleChange}
+                        >
+                          <option>Selecciona</option>
+                          {byCity.length &&
+                            byCity.map((cit, idx) => {
+                              return <option key={idx}>{cit}</option>;
+                            })}
+                        </Select>
+                        <Label>*Ciudad: </Label>
+                        {errorFormCar.city && <Span>{errorFormCar.city}</Span>}
+                      </SelectContainer>
+
+                      <SelectContainer>
+                        <Select
+                          disabled={!upDateForm.city ? true : false}
+                          name={"colonia"}
+                          value={upDateForm.colonia}
+                          onChange={handleChange}
+                        >
+                          <option>Selecciona</option>
+                          {byColonia.length >= 1 &&
+                            byColonia.map((colonia, idx) => {
+                              return (
+                                <option key={idx} value={colonia}>
+                                  {colonia}
+                                </option>
+                              );
+                            })}
+                        </Select>
+                        <Label>*Colonia: </Label>
+                        {errorFormCar.colonia && (
+                          <Span>{errorFormCar.colonia}</Span>
+                        )}
+                      </SelectContainer>
+                    </GrupoSelect>
+                  ) : (
+                    <GrupoSelect>
+                      {/* Estado, Ciudad y Colonia */}
+                      <SelectContainer>
+                        <Select
+                          disabled={true}
+                          name={"state"}
+                          value={upDateForm.state}
+                          onChange={handleChange}
+                        >
+                          <option>{estado || "Selecciona"}</option>
+                        </Select>
+                        <Label>*Estado: </Label>
+                        {errorFormCar.state && (
+                          <Span>{errorFormCar.state}</Span>
+                        )}
+                      </SelectContainer>
+
+                      <SelectContainer>
+                        <Select
+                          disabled={true}
+                          name={"city"}
+                          value={upDateForm.city}
+                          onChange={handleChange}
+                        >
+                          <option>{ciudad || "Selecciona"}</option>
+                        </Select>
+                        <Label>*Ciudad: </Label>
+                        {errorFormCar.city && <Span>{errorFormCar.city}</Span>}
+                      </SelectContainer>
+
+                      <SelectContainer>
+                        <Select
+                          disabled={!ciudad ? true : false}
+                          name={"colonia"}
+                          // value={upDateForm.colonia}
+                          onChange={handleChange}
+                        >
+                          <option>Selecciona</option>
+                          {selectColonia.length >= 1 &&
+                            selectColonia.map((colonia, idx) => {
+                              return (
+                                <option key={idx} value={colonia}>
+                                  {colonia}
+                                </option>
+                              );
+                            })}
+                        </Select>
+                        <Label>*Colonia: </Label>
+                        {errorFormCar.colonia && (
+                          <Span>{errorFormCar.colonia}</Span>
+                        )}
+                      </SelectContainer>
+                    </GrupoSelect>
+                  )}
+                  <GrupoInput>
+                    {/* Domicilio, Telefono y Email */}
+                    <InputContainer>
+                      <Input
+                        color={"transparent"}
+                        type="text"
+                        name={"address"}
+                        placeholder="a"
+                        value={upDateForm.address}
+                        onChange={handleChange}
+                      />
+                      <Label>*Domicilio: </Label>
+                      <br />
+                      {errorFormCar.address && (
+                        <Span>{errorFormCar.address}</Span>
+                      )}
+                    </InputContainer>
+                    <InputContainer>
+                      <Input
+                        color={"transparent"}
+                        type="text"
+                        name={"contact"}
+                        value={upDateForm.contact}
+                        placeholder="a"
+                        onChange={handleChange}
+                      />
+                      <Label>*Teléfono (Móvil): </Label>
+                      <br />
+                      {errorFormCar.contact && (
+                        <Span>{errorFormCar.contact}</Span>
+                      )}
+                    </InputContainer>
+                    <InputContainer>
+                      <Input
+                        color={"transparent"}
+                        type="text"
+                        name={"email"}
+                        value={upDateForm.email}
+                        placeholder="a"
+                        onChange={handleChange}
+                      />
+                      <Label>*Correo electrónico: </Label>
+                      <br />
+                      {errorFormCar.email && <Span>{errorFormCar.email}</Span>}
+                    </InputContainer>
+                  </GrupoInput>
+                </>
+              )}
+              <br />
+              <br />
             </ContainerScroll>
+
             <ButtonContainer>
               <SubmitBtn type="submit">Guardar</SubmitBtn>
-              <SubmitBtn onClick={() => {
-                setModalIsOpen(false);
-                closeModal();
-              }}>
+              <SubmitBtn
+                onClick={() => {
+                  setModalIsOpen(false), closeModal();
+                }}
+              >
                 Cancelar
               </SubmitBtn>
             </ButtonContainer>
