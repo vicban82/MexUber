@@ -47,7 +47,7 @@ import {
   TextareaContainer,
   GrupoInputPass,
 } from "../../../components/reusable/FormularioModal";
-import { axiosDetailDriver, axiosGetAllCars, axiosGetDrivers, obtenerAnios } from "./function";
+import { axiosDetailDriver, axiosGetAllCars, axiosGetDrivers, disponible, obtenerAnios } from "./function";
 import {colors} from "./colores"
 import { axiosGetCars, axiosPostCars } from "../../../hooks/cars/crudCars";
 
@@ -113,11 +113,12 @@ export const ButtonAdd = ({
   //* RELACION CONDUCTOR
   const [conductores, setCondurtores] = useState([]);
   const [vehiculos, setVehiculos] = useState([]);
-  const thereIsDriver = conductores.filter(el => {
-    if (el.car !== "Sin conductores") {
-      return el
-    }
-  })
+  // EN ESTA FUNCION VERIFICA SI HAY CONDUCTORES CON VEHICULOS
+  const hayConductores = disponible(conductores, vehiculos)
+  // console.log("hayConductores:", hayConductores)
+  // ACA SE OBTIENEN TODOS LOS CONUDCTORES QUE NO HAN SIDO ASIGNADOS
+  const conductoresDisponibles = conductores.filter(el => !hayConductores.includes(el._id))
+  // console.log("conductoresDisponibles:", conductoresDisponibles)
   // console.log("conductores:", conductores)
   const [detailDriver, setDetailDriver] = useState({});
   // console.log("detailDriver:", detailDriver)
@@ -457,56 +458,56 @@ export const ButtonAdd = ({
 
   async function handleSubmit(e) {
     e.preventDefault();
-    // await axiosPostCars(formCar, headers);
-    // await axiosGetCars(1, limit, headers, setTCar, setTotalPages)
-    // // setTCar([...tCar, newCar]);
+    await axiosPostCars(formCar, headers);
+    await axiosGetCars(1, limit, headers, setTCar, setTotalPages)
+    // setTCar([...tCar, newCar]);
 
-    // // await axiosGetDrivers(setTDriver, setTotalPages, headers, 1, limit);
+    // await axiosGetDrivers(setTDriver, setTotalPages, headers, 1, limit);
 
-    // // Cierra el modal después de guardar
-    // setModalIsOpen(false);
-    // closeModal();
+    // Cierra el modal después de guardar
+    setModalIsOpen(false);
+    closeModal();
 
-    // // Establece la página en 1 después de agregar un elemento
-    // setPage(1);
+    // Establece la página en 1 después de agregar un elemento
+    setPage(1);
 
-    if (
-      formCar.typeOfVehicle &&
-      formCar.make &&
-      formCar.subMake &&
-      formCar.model &&
-      formCar.colors &&
-      formCar.plates &&
-      formCar.numberMotor &&
-      formCar.trafficCardNumber &&
-      formCar.frontImageTraffic &&
-      formCar.backImageTraffic &&
-      formCar.driver
-    ) {
-      if (formCar.driverIsOwner === 0) {
-        // SE EVALUAN LOS CAMPOS "PROPIETARIO" EN CASO QUE EL CONDUCTOR NO LO SEA
-        errorRegister(formCar, errorFormCar);
-      } else {
-        try {
-          successRegister(formCar);
-          await axiosPostCars(formCar, headers);
-          await axiosGetCars(1, limit, headers, setTCar, setTotalPages)
+    // if (
+    //   formCar.typeOfVehicle &&
+    //   formCar.make &&
+    //   formCar.subMake &&
+    //   formCar.model &&
+    //   formCar.colors &&
+    //   formCar.plates &&
+    //   formCar.numberMotor &&
+    //   formCar.trafficCardNumber &&
+    //   formCar.frontImageTraffic &&
+    //   formCar.backImageTraffic &&
+    //   formCar.driver
+    // ) {
+    //   if (formCar.driverIsOwner === 0) {
+    //     // SE EVALUAN LOS CAMPOS "PROPIETARIO" EN CASO QUE EL CONDUCTOR NO LO SEA
+    //     errorRegister(formCar, errorFormCar);
+    //   } else {
+    //     try {
+    //       successRegister(formCar);
+    //       await axiosPostCars(formCar, headers);
+    //       await axiosGetCars(1, limit, headers, setTCar, setTotalPages)
   
-          // await axiosGetDrivers(setTDriver, setTotalPages, headers, 1, limit);
+    //       // await axiosGetDrivers(setTDriver, setTotalPages, headers, 1, limit);
   
-          // Cierra el modal después de guardar
-          setModalIsOpen(false);
-          closeModal();
+    //       // Cierra el modal después de guardar
+    //       setModalIsOpen(false);
+    //       closeModal();
   
-          // Establece la página en 1 después de agregar un elemento
-          setPage(1);
-        } catch (error) {
-          console.error("Error al guardar el vehículo:", error);
-        }
-      }
-    } else {
-      errorRegister(formCar, errorFormCar);
-    }
+    //       // Establece la página en 1 después de agregar un elemento
+    //       setPage(1);
+    //     } catch (error) {
+    //       console.error("Error al guardar el vehículo:", error);
+    //     }
+    //   }
+    // } else {
+    //   errorRegister(formCar, errorFormCar);
+    // }
   }
 
   return (
@@ -738,12 +739,12 @@ export const ButtonAdd = ({
                       })
                     )} */}
 
-                  {!conductores.length ? (
+                  {!conductoresDisponibles.length ? (
                       <option key={"Sin_conductores"} value={"Sin conductores"}>{"Sin conductores"}</option>
                     ) : (
                       <>
                         <option key={"Sin_asignar"} value={"Sin asignar"}>{"Sin asignar"}</option>
-                        {conductores.map((conductor, idx) => {
+                        {conductoresDisponibles.map((conductor, idx) => {
                           return <option key={idx} value={conductor._id}>{`${conductor.name} ${conductor.lastName}`}</option>;
                         })}
                       </>
