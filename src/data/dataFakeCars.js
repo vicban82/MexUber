@@ -5,6 +5,7 @@ export const dataFakeCars = [
     placa: "MX323",
     marca: "Toyota",
     modelo: "GR86",
+    ver: "sdsd",
   },
   {
     id: 2,
@@ -12,6 +13,7 @@ export const dataFakeCars = [
     placa: "MX323",
     marca: "Toyota",
     modelo: "GR86",
+    ver: "sdsd",
   },
   {
     id: 3,
@@ -19,5 +21,22 @@ export const dataFakeCars = [
     placa: "MX323",
     marca: "Toyota",
     modelo: "GR86",
+    ver: "sdsd",
+  },
+  {
+    id: 4,
+    propietario: "Jose Perez Ramirez",
+    placa: "MX323",
+    marca: "Toyota",
+    modelo: "GR86",
+    ver: "sdsd",
+  },
+  {
+    id: 5,
+    propietario: "Jose Perez Ramirez",
+    placa: "MX323",
+    marca: "Toyota",
+    modelo: "GR86",
+    ver: "sdsd",
   },
 ];
