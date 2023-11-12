@@ -33,7 +33,7 @@ export const Table = ({
                 );
               })}
               <th>Ver</th>
-              <th>Editar/Eliminar</th>
+              <th>Viajes</th>
             </tr>
           </thead>
           <tbody>

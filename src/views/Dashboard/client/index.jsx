@@ -14,7 +14,7 @@ import { DivPages, ContentPages, DivButtonPages, DivGrupPage } from "../../../co
 import { Section } from "../../../components/reusable/global";
 
 export const Client = () => {
-  const tableHeader = ["Nombres", "Apellidos", "Correo", "Teléfono", "Viajes"];
+  const tableHeader = ["Nombres", "Apellidos", "Correo", "Teléfono"];
 
   const [tDriver, setTDriver] = useState([]);
 

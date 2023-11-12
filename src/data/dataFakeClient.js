@@ -5,7 +5,6 @@ export const dataFakeClient = [
         lastName: "Apellido1 Apellido2",
         email: "correo@gmail.com",
         contact: "5355567624",
-        viajes: "vijes",
     },
     {
         id: 1,
@@ -13,7 +12,6 @@ export const dataFakeClient = [
         lastName: "Apellido1 Apellido2",
         email: "correo@gmail.com",
         contact: "5355567624",
-        viajes: "vijes",
     },
     {
         id: 1,
@@ -21,7 +19,6 @@ export const dataFakeClient = [
         lastName: "Apellido1 Apellido2",
         email: "correo@gmail.com",
         contact: "5355567624",
-        viajes: "vijes",
     },
     {
         id: 1,
@@ -29,7 +26,6 @@ export const dataFakeClient = [
         lastName: "Apellido1 Apellido2",
         email: "correo@gmail.com",
         contact: "5355567624",
-        viajes: "vijes",
     },
     {
         id: 1,
@@ -37,6 +33,5 @@ export const dataFakeClient = [
         lastName: "Apellido1 Apellido2",
         email: "correo@gmail.com",
         contact: "5355567624",
-        viajes: "vijes",
     },
   ];
