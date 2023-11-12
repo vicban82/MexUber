@@ -1,26 +1,36 @@
 import axios from "axios";
 import { dataFakeCars } from "../../data/dataFakeCars.js";
 
-export async function axiosGetCars(setTBody, setTotalPages, page, limit, headers) {
+export async function axiosGetCars(page, limit, headers, setTCar, setTotalPages) {
   try {
-    /* const { data } = (await axios.get(`/api/cars?page=${page}&limit=${limit}`, { headers }));
-    console.log('DATA:', data);
-    setTBody(data.cars);
-    setTotalPages(data.totalPages) */
-     setTotalPages(2);
-     setTBody(dataFakeCars);
+    const { data } = (await axios.get(`/api/cars?page=${page}&limit=${limit}`, { headers }));
+    // console.log('DATA:', data);
+    if (data && data.cars.length >= 1) {
+      setTCar(data.cars);
+      setTotalPages(data.totalPages);
+    } else {
+      setTCar([]);
+      setTotalPages(1)
+    }
+    // setTotalPages(2);
+    // setTCar(dataFakeCars);
   } catch (err) {
     const { error } = err.response.data;
     console.log('ERROR:', error);
   }
 }
 
-export async function axiosSearchCars(search, setTBody, setTotalPages, page, limit, headers) {
+export async function axiosSearchCars(search, setTCar, setTotalPages, page, limit, headers) {
   try {
     const { data } = (await axios.get(`/api/cars?search=${search}&page=${page}&limit=${limit}`, { headers }));
     // console.log('DATA:', data);
-    setTBody(data.admins);
-    setTotalPages(data.totalPages)
+    if (data && data.cars.length >= 1) {
+      setTCar(data.cars);
+      setTotalPages(data.totalPages);
+    } else {
+      setTCar([]);
+      setTotalPages(1)
+    }
     // setTBody(dataFakeAdmin);
   } catch (err) {
     const { error } = err.response.data;
@@ -28,9 +38,9 @@ export async function axiosSearchCars(search, setTBody, setTotalPages, page, lim
   }
 }
 
-export async function axiosPostCars(admin, headers) {
+export async function axiosPostCars(formCar, headers) {
   try {
-    const { data } = (await axios.post('/api/cars', admin, { headers }));
+    const { data } = (await axios.post('/api/car', formCar, { headers }));
     console.log('POST:', data);
     return data;
   } catch (err) {
@@ -41,7 +51,7 @@ export async function axiosPostCars(admin, headers) {
 
 export async function axiosPutCars(id, admin, headers, setErrorForm) {
   try {
-    const { data } = (await axios.put(`/api/cars/${id}`, admin, { headers }));
+    const { data } = (await axios.put(`/api/car/${id}`, admin, { headers }));
     console.log('PUT:', data);
     return data;
   } catch (err) {

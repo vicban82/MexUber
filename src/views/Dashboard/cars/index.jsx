@@ -17,6 +17,7 @@ export const Cars = () => {
   const tableHeader = ["Propietario", "Placa", "Marca", "Modelo"];
 
   const [tCar, setTCar] = useState([]);
+  // console.log('tCar:', tCar);
 
   //* ESTADO DEL FORMULARIO
   const [car, setCar] = useState({
@@ -29,6 +30,7 @@ export const Cars = () => {
     address: "",// Dirección del propietario
     contact: "",// Telefono del propietario
     email: "",// Correo electrónico del propietario
+    cars: [],//* RELACION VEHÍCULOS
 
     typeOfVehicle: "",// TIPO DE VEHICULO
     make: "",// MARCA DEL VEHICULO
@@ -110,14 +112,14 @@ export const Cars = () => {
     if (searchTerm) {
       axiosSearchCars(searchTerm, setTCar, setTotalPages, headers, page, limit);
     } else {
-      axiosGetCars(setTCar, setTotalPages, headers, page, limit);
+      axiosGetCars(page, limit, headers, setTCar, setTotalPages);
     }
   }, [page, limit, searchTerm]);
   //* Consulta
 
   return (
     <Section>
-      {!tCar || tCar.length <= 0 ? (
+      {!Array.isArray(tCar) || tCar.length <= 0 ? (
           <div>
             <ButtonAdd
               tCar={tCar}

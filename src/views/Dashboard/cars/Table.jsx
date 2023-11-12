@@ -16,7 +16,7 @@ export const Table = ({
   setTotalPages,
   setPage,
 }) => {
-  // console.log("tCar:", tHeader)
+  // console.log("tCar:", tCar)
   return (
     <>
       <ContainerTabla>
@@ -30,44 +30,46 @@ export const Table = ({
                   </th>
                 );
               })}
+              <th>Ver</th>
               <th>Editar/Eliminar</th>
             </tr>
           </thead>
           <tbody>
-            {tCar.length >= 1 &&
-              tCar.map((data, i) => {
-                return (
-                  <tr key={i}>
-                    {Object.values(data).map((item, subI) => {
-                      // console.log("TABLE-ITEMS:", item, "IDX:", subI)
-                      // SE IGNORA EL "ID"
-                      if (subI !== 0) {
-                        return (
-                          <td key={subI}>
-                            <div>
-                              <p>{item}</p>
-                            </div>
-                          </td>
-                        );
-                      }
-                    })}
-                    {/* <ButtonsTable
-                      id={data._id}
-                      tCar={tCar}
-                      setTDriver={setTDriver}
-                      // ESTADO DEL FORMULARIO
-                      driver={driver}
-                      setDriver={setDriver}
-                      // ESTADO DEL FORMULARIO
-                      errorForm={errorForm}
-                      setErrorForm={setErrorForm}
-                      limit={limit}
-                      setTotalPages={setTotalPages}
-                      setPage={setPage}
-                    /> */}
-                  </tr>
-                );
-              })}
+            {(Array.isArray(tCar) && tCar.length >= 1) && (
+                tCar.map((data, i) => {
+                  return (
+                    <tr key={i}>
+                      {Object.values(data).map((item, subI) => {
+                        // console.log("TABLE-ITEMS:", item, "IDX:", subI)
+                        // SE IGNORA EL "ID"
+                        if (subI !== 0) {
+                          return (
+                            <td key={subI}>
+                              <div>
+                                <p>{item}</p>
+                              </div>
+                            </td>
+                          );
+                        }
+                      })}
+                      <ButtonsTable
+                        id={data._id}
+                        tCar={tCar}
+                        setTCar={setTCar}
+                        // ESTADO DEL FORMULARIO
+                        car={car}
+                        setCar={setCar}
+                        // ESTADO DEL FORMULARIO
+                        errorForm={errorForm}
+                        setErrorForm={setErrorForm}
+                        limit={limit}
+                        setTotalPages={setTotalPages}
+                        setPage={setPage}
+                      />
+                    </tr>
+                  );
+                })
+              )}
           </tbody>
         </StyledTable>
       </ContainerTabla>
