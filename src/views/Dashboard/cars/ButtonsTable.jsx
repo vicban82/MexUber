@@ -44,19 +44,6 @@ import {
 
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
-const ButtonV1 = styled.button`
-  color: #646cff;
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-`;
-
 const GrupoInputV1 = styled(GrupoInput)`
   grid-gap: 60px;
 `;
@@ -478,11 +465,10 @@ export function ButtonsTable({
             </FormHead>
             <br />
             <ContainerScroll>
-              {/*//* INFORMACION DEL CONDUCTOR */}
-              <TituloSeccion>
-                Datos Personales
+{/*               <TituloSeccion>
                 <hr />
-              </TituloSeccion>
+                Datos Personales
+              </TituloSeccion> */}
               <GrupoInput>
                 <InputContainer>
                   <Input

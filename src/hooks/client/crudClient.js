@@ -1,7 +1,7 @@
 import axios from "axios";
-import { dataFakeDriver } from "../../data/dataFakeDriver";
+import { dataFakeClient } from "../../data/dataFakeClient";
 
-export async function axiosGetDrivers(setTDriver, setTotalPages, headers, page, limit) {
+export async function axiosGetClient(setTDriver, setTotalPages, headers, page, limit) {
   try {
     /* const { data } = (await axios.get(`/api/drivers?page=${page}&limit=${limit}`, { headers }));
      console.log('DATA:', data);
@@ -13,14 +13,14 @@ export async function axiosGetDrivers(setTDriver, setTotalPages, headers, page, 
       setTotalPages(1)
     } */
      setTotalPages(2);
-     setTDriver(dataFakeDriver);
+     setTDriver(dataFakeClient);
   } catch (err) {
     const { error } = err.response.data;
     console.log('ERROR:', error);
   }
 }
 
-export async function axiosSearchDrivers(search, setTDriver, setTotalPages, headers, page, limit) {
+export async function axiosSearchClient(search, setTDriver, setTotalPages, headers, page, limit) {
   try {
     const { data } = (await axios.get(`/api/drivers?search=${search}&page=${page}&limit=${limit}`, { headers }));
     // console.log("DATA:", data);
@@ -37,7 +37,7 @@ export async function axiosSearchDrivers(search, setTDriver, setTotalPages, head
   }
 }
 
-export async function axiosDetailDriver(id, setDetailDriver, headers) {
+export async function axiosDetailClient(id, setDetailDriver, headers) {
   try {
     const { data } = (await axios.get(`/api/driver/${id}`, { headers }));
     setDetailDriver(data);
@@ -48,7 +48,7 @@ export async function axiosDetailDriver(id, setDetailDriver, headers) {
   }
 }
 
-export async function axiosPostDriver(driver, headers) {
+export async function axiosPostClient(driver, headers) {
   try {
     const { data } = (await axios.post('/api/driver', driver, { headers }));
     console.log('POST:', data);
@@ -59,7 +59,7 @@ export async function axiosPostDriver(driver, headers) {
   }
 }
 
-export async function axiosPutDriver(id, driver, headers) {
+export async function axiosPutClient(id, driver, headers) {
   try {
     const { data } = (await axios.put(`/api/driver/${id}`, driver, { headers }));
     console.log('PUT:', data);
@@ -70,7 +70,7 @@ export async function axiosPutDriver(id, driver, headers) {
   }
 }
 
-export async function axiosDeleteDriver(id, headers) {
+export async function axiosDeleteCleint(id, headers) {
   try {
     const { data } = (await axios.delete(`/api/driver/${id}`, { headers }));
     console.log('DELETE:', data);

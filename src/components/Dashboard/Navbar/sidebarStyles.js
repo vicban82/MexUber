@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 export const SidebarWrapper = styled.div`
-  background-color: #333;
-  color: #fff;
+  background-color: var(--color-navbar-background);
+  color: var(-color-ico);
   width: 250px;
   height: 100%;
   position: fixed;
@@ -33,13 +33,13 @@ export const SidebarItem = styled.li`
 
 export const SidebarLink = styled(Link)`
   text-decoration: none;
-  color: #fff;
+  color: var(--color-ico);
   font-size: 18px;
   margin-left: 20px;
   visibility: ${(props) => (props.isOpen === true ? "hidden" : "visible")};
-  color: ${(props) => (props.isOpen === true ? "#ff0000" : "#fff")};
+  color: ${(props) => (props.isOpen === true ? "var(--color-morado)" : "var(-color-ico)")};
   &:hover {
-    color: #ff5733;
+    color: var(--color-morado);
   }
 `;
 
@@ -49,10 +49,6 @@ export const MenuIcon = styled.div`
   font-size: 24px;
   margin-top: 15px;
   margin-right: 25px;
-  /* @media (max-width: 768px) {
-    display: block;
-    font-size: 24px;
-  } */
 `;
 
 export const ContentImgMenu = styled.div`

@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import editIcon from "../../../assets/img/editIcon.png";
-import deleteIcon from "../../../assets/img/deleteIcon.png";
+/* import editIcon from "../../../assets/img/editIcon.png";
+import deleteIcon from "../../../assets/img/deleteIcon.png"; */
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import Modal from "react-modal";
 import {
   validateDriver,
@@ -582,7 +584,7 @@ export function ButtonsTable({
       <td>
         {/* The button to open modal */}
         <button onClick={() => setModalIsOpen(true)}>
-          <Img src={editIcon} alt="Edición" />
+          <FontAwesomeIcon icon={faMapMarkerAlt}/>
         </button>
 
         {/* Modal */}
@@ -1085,9 +1087,6 @@ export function ButtonsTable({
             </ButtonContainer>
           </FormEdit>
         </ContainerModal>
-        <button onClick={() => handleDelete(id)}>
-          <Img src={deleteIcon} alt="Delete" />
-        </button>
       </td>
     </>
   );

@@ -16,8 +16,8 @@ const NavbarContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #333;
-  color: #fff;
+  background-color: var(--color-navbar-background);
+  color: var(--color-ico);
   padding: 10px 0px;
   width: 100%;
   position: fixed; /* Fijar el Navbar en la parte superior de la pantalla */
@@ -39,8 +39,8 @@ const SearchInput = styled.input`
   padding-left: 15px;
   padding-right: 20%;
   border: none;
-  background-color: #555;
-  color: #fff;
+  background-color: var(--background-color-search);
+  color: var(--color-ico);
   border-radius: 32px;
   height: 20px;
 `;
@@ -54,14 +54,11 @@ const SearchIcon = styled.div`
 const UserProfileButton = styled.div`
   display: flex;
   position: relative;
-  //background-color: aqua;
   width: 33.33%;
   justify-content: flex-end;
   UserProfileButton:focus-visible {
-  //border: 0px dashed crimson;
   outline: 0px;
-
-}
+  }
 `;
 
 const Button = styled.button`
@@ -76,16 +73,15 @@ const Button = styled.button`
 
 const ButtonPerfil = styled(Button)`
   outline: none;
-  //background-color: black;
 `;
 
 const Dropdown = styled.div`
   display: ${(props) => (props.isOpen === true ? "flex" : "none")};
   flex-direction: column;
   position: absolute;
-  background-color: #f0f0f0;
-  color: black;
-  border: 1px solid #ccc;
+  background-color: var(--background-color-dropdown);
+  color: var(--color-dropdown);
+  border: 1px solid #cccccc;
   z-index: 1;
   margin-top: 56px;
   padding: 10px;
@@ -127,12 +123,12 @@ const ListItem = styled.div`
     grid-gap: 8px;
 
   &:hover {
-    background-color: #b7b7b7;
+    background-color: var(--background-color-button-close-sesion);
   }
 `;
 
 const CerrarSesion = styled.span`
-    color: #8a2be2;
+    color: var(--color-morado);
     font-weight: 900;
 `;
 
@@ -148,7 +144,8 @@ const MenuIcon = styled.div`
     font-size: 24px;
   }
 `;
-const LogoutButton = styled.button`
+
+/* const LogoutButton = styled.button`
   display: block;
   background-color: red;
   color: white;
@@ -156,7 +153,7 @@ const LogoutButton = styled.button`
   padding: 5px 10px;
   margin-top: 10px;
   cursor: pointer;
-`;
+`; */
 
 
 const ContFlexRowCenter01 = styled(ContFlexRowCenter)`

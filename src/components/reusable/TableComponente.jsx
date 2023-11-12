@@ -24,7 +24,7 @@ export const StyledTable = styled.table.withConfig({
   width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
-  background-color: #b8860b;
+  background-color: var(--color-amarillo);
   min-width: 890px;
   font-size: 2.2vh;
 
@@ -66,8 +66,8 @@ export const StyledTable = styled.table.withConfig({
     display: flex;
     //width: 100vh;
     justify-content: space-around;
-    background-color: #333;
-    color: #FDFDFD;
+    background-color: var(--background-color-thead);
+    color: var(--color-text-table);
     height: 40px;
     tr {
       display: flex;
@@ -97,6 +97,11 @@ export const StyledTable = styled.table.withConfig({
       transition: 0.5s;
     }
 
+    &::-webkit-scrollbar-thumb:hover {
+      background: #4a47f1;
+      transition: 0.5s;
+    }
+
 
     tr {
       width: 100%;
@@ -108,7 +113,7 @@ export const StyledTable = styled.table.withConfig({
     }
 
     tr:nth-child(even) {
-      background-color: #5f5a5a;
+      background-color: var(--color-gris-1);
       width: 100%;
       display: flex;
       justify-content: space-around;

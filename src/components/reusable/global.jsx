@@ -41,7 +41,7 @@ export const CenteredContainer = styled.div`
 export const Line = styled.hr`
   border: none;
   height: 1px;
-  background-color: gray; /* Puedes ajustar el color según tus preferencias */
+  background-color: var(--background-color-line); /* Puedes ajustar el color según tus preferencias */
   margin: 20px 0;
 `;
 
@@ -51,7 +51,7 @@ export const Header = styled.header`
   text-align: center;
   margin-bottom: 1.5rem;
   margin-top: -2.5rem;
-  color: #000000;
+  color: var(--color-header);
 `;
 
 export const Form = styled.form`
@@ -73,7 +73,7 @@ export const Input = styled.input`
   &::placeholder {
     font-size: 16px; /* Tamaño de fuente del placeholder */
     padding: 0; /* Elimina el relleno del placeholder */
-    color: #999; /* Color del texto del placeholder */
+    color: var(--color-placeholder); /* Color del texto del placeholder */
     left: 40px;
   }
   &:focus {
@@ -102,7 +102,7 @@ export const ContainerForm = styled.div`
 
 export const InputButton = styled.input`
   width: 100%;
-  color: #fff;
+  color: var(--color-ico);
   font-size: 1.2rem;
   font-weight: 500;
   letter-spacing: 1px;

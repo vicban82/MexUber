@@ -3,9 +3,9 @@ import Modal from "react-modal";
 import { validateDriver } from "../../../validations/drivers";
 import { headers } from "../../../tools/accessToken";
 import {
-  axiosGetDrivers,
-  axiosPostDriver,
-} from "../../../hooks/drivers/crudDrivers";
+  axiosGetTrips,
+  axiosPostTrips,
+} from "../../../hooks/trips/crudTrips";
 import styled from "styled-components";
 import {
   errorRegister,
@@ -482,10 +482,10 @@ export const ButtonAdd = ({
       } else {
         try {
           successRegister(driver);
-          await axiosPostDriver(driver, headers);
+          await axiosPostTrips(driver, headers);
           // setTDriver([...tDriver, newDriver]);
 
-          await axiosGetDrivers(setTDriver, setTotalPages, headers, 1, limit);
+          await axiosGetTrips(setTDriver, setTotalPages, headers, 1, limit);
 
           // Cierra el modal después de guardar
           setModalIsOpen(false);
@@ -507,7 +507,7 @@ export const ButtonAdd = ({
       <Titulo>
         <div>
           <h2>
-            Conductores
+            Viajes
             <br />
           </h2>
         </div>
