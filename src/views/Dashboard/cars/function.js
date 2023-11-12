@@ -20,6 +20,7 @@ export function disponible(conductores, vehiculos) {
   }
 }
 
+// SE USA ESTA FUNCION PARA LA RELACION CON EL VEHICULO
 export async function axiosGetDrivers(setTCar, headers) {
   try {
     const { data } = await axios.get(`/api/drivers`, { headers });
@@ -38,6 +39,7 @@ export async function axiosGetDrivers(setTCar, headers) {
   }
 }
 
+// SE USA ESTA FUNCION PARA OBTENER LA INFORMACION DEL CONDUCTOR SI ES EL MISMO PROPIETARIO
 export async function axiosDetailDriver(id, setDetailDriver, headers) {
   try {
     const { data } = (await axios.get(`/api/driver/${id}`, { headers }));
