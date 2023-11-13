@@ -42,6 +42,8 @@ import {
 import { axiosDetailDriver, axiosGetAllCars, axiosGetDrivers, disponible, obtenerAnios } from "./function";
 import { axiosDetailCar } from "../../../hooks/cars/crudCars";
 import { colors } from "./colores";
+//-----------------------Para uso en local
+import { dataFakeCarsDetails } from "../../../data/dataFakeCarsDetails.js";
 
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
@@ -94,10 +96,15 @@ export function ButtonsTable({
   setTotalPages,
   setPage,
 }) {
-  const [detailCar, setDetailCar] = useState({});
-  // console.log("detailCar:", detailCar)
+  //------------------------------------------------ Acceso a API ------------------------>
+  //const [detailCar, setDetailCar] = useState({});
+  //----------------------------------------------------En local--------------------------->
+  const [detailCar, setDetailCar] = useState(dataFakeCarsDetails);
+  
+  
+
   useEffect(() => {
-    axiosDetailCar(id, setDetailCar, headers);
+    //axiosDetailCar(id, setDetailCar, headers); 
   }, [id]);
 
   useEffect(() => {
@@ -852,9 +859,14 @@ export function ButtonsTable({
                 </SelectContainer>
               </GrupoSelect>
 
+              <TituloSeccion>
+                {/* Conductor */}
+                <hr />
+                Es el propietario?
+              </TituloSeccion>
+
               <GrupoCheck>
                 {/* Es el propietario? */}
-                <label>Es el propietario?</label>
                 <InputCheck
                   type="radio"
                   name="driverIsOwner"

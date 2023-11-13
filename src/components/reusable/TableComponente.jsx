@@ -26,7 +26,7 @@ export const StyledTable = styled.table.withConfig({
   border-collapse: collapse;
   background-color: var(--color-amarillo);
   min-width: 890px;
-  font-size: 2.2vh;
+  font-size: 2vh;
 
   @media (max-width: 430px) 
   {
