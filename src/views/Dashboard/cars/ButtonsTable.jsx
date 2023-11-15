@@ -4,6 +4,7 @@ import deleteIcon from "../../../assets/img/deleteIcon.png";
 import Modal from "react-modal";
 import { headers } from "../../../tools/accessToken";
 import styled from "styled-components";
+import { Detail } from "./Detail";
 import {
   errorRegister,
   successRegister,
@@ -612,6 +613,7 @@ export function ButtonsTable({
 
   return (
     <>
+      <Detail />
       <td>
         {/* The button to open modal */}
         <button onClick={() => setModalIsOpen(true)}>

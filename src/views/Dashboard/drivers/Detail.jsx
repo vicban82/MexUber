@@ -34,7 +34,7 @@ import {
   SubmitBtn,
   InputCheck,
   GrupoCheck,
-} from "../../../components/reusable/Details";
+} from "../../../components/Driver/DetailsDriver";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { styled } from "styled-components";
@@ -89,7 +89,7 @@ export const Detail = (props) => {
 
                 <ContainerImg>
                   <ImgDriver
-                    src={!fotoConductor ? "/src/assets/img/photo_perfil.avif" : fotoConductor}
+                    src={!fotoConductor ? "/src/assets/img/img.png" : fotoConductor}
                     alt="Foto conductor"  
                   />
                 </ContainerImg>
@@ -186,7 +186,7 @@ export const Detail = (props) => {
                         <LabelImg>Foto lic. (Anterior)</LabelImg>
                       </TituloSeccion>
                       <ImgDriver
-                        src={!fotoFront ? "/src/assets/img/photo_perfil.avif" : fotoFront}
+                        src={!fotoFront ? "/src/assets/img/img.png" : fotoFront}
                         alt="Foto conductor"
                       />
                     </PanelImgDerecho>
@@ -195,7 +195,7 @@ export const Detail = (props) => {
                         <LabelImg>Foto lic. (Posterior)</LabelImg>
                       </TituloSeccion>
                       <ImgDriver
-                        src={!fotoBack ? "/src/assets/img/photo_perfil.avif" : fotoBack}
+                        src={!fotoBack ? "/src/assets/img/img.png" : fotoBack}
                         alt="Foto conductor"
                       />
                     </PanelImgIsquirdo>

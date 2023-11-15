@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { axiosDetailDriver } from "../../../hooks/drivers/crudDrivers";
 import { headers } from "../../../tools/accessToken";
 import Modal from "react-modal";
-import { loadImage } from "./loadImages";
+//import { loadImage } from "./loadImages";
 Modal.setAppElement("#root");
 import {
   ContainerModal,
@@ -10,7 +10,6 @@ import {
   Cabezera,
   TituloSeccion,
   ButtonContainer,
-  SeccionConductor,
   PanelDatosDrive,
   PanelImg,
   ImgDriver,
@@ -34,15 +33,24 @@ import {
   SubmitBtn,
   InputCheck,
   GrupoCheck,
-} from "../../../components/Driver/DetailsDriver";
+  SeccionVehiculo,
+  PanelVehiculoDerecho,
+  PanelVehiculoIsq,
+  SeccionConductor,
+  PanelConductorDerecho,
+  PanelConductorIsq,
+  SeccionTarjeta,
+} from "../../../components/Car/DetailsCars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { styled } from "styled-components";
 
-export const SubmitBtnV1 = styled(SubmitBtn)`
+const SubmitBtnV1 = styled(SubmitBtn)`
     width: 40%;
     margin-left: 0;
 `;
+
+
 
 
 export const Detail = (props) => {
@@ -60,7 +68,7 @@ export const Detail = (props) => {
 
   useEffect(() => {
     if (driverPicture || frontLicensePicture && backLicensePicture) {
-      loadImage(detailDriver, setFotoConductor, setFotoFront, setFotoBack);
+      //loadImage(detailDriver, setFotoConductor, setFotoFront, setFotoBack);
     }
   }, [driverPicture, frontLicensePicture, backLicensePicture]);
   return (
@@ -68,72 +76,95 @@ export const Detail = (props) => {
       <td>
         {/* Button driver abre vista detalle del conductor */}
         <ButtonIconDriver onClick={() => setModalIsOpen(true)}>
-            <FontAwesomeIcon icon={faEye}/> 
+          <FontAwesomeIcon icon={faEye} />
         </ButtonIconDriver>
         <ContainerModal
           isOpen={modalIsOpen}
           onRequestClose={() => setModalIsOpen(false)}
         >
           <Cabezera>
-            <h2>Consulta conductor</h2>
+            <h2>Consulta de Vehiculo</h2>
           </Cabezera>
 
           <ContainerScroll>
 
-            <SeccionConductor>
-              <PanelImg>
-
-                <TituloSeccion>
-                  <LabelImg>FOTO CONDUCTOR</LabelImg>
-                </TituloSeccion>
-
-                <ContainerImg>
-                  <ImgDriver
-                    src={!fotoConductor ? "/src/assets/img/img.png" : fotoConductor}
-                    alt="Foto conductor"  
-                  />
-                </ContainerImg>
-              </PanelImg>
-
-              <PanelDatosDrive>
-
+            <SeccionVehiculo>
+              {/* --------------------------------------------->Panel derecho */}
+              <PanelVehiculoDerecho>
                 <ContentItems>
                   <ContenDatos>
-                    <Label>Nombre: </Label>
+                    <Label>Marca: </Label>
                     <TextContent>{!detailDriver.name ? "Jose Manuel" : detailDriver.name}</TextContent>
                   </ContenDatos>
 
                   <ContenDatos>
-                    <Label>Apellidos: </Label>
+                    <Label>Sub-marca: </Label>
                     <TextContent>{!detailDriver.lastName ? "Gonzalez Santiesteban" : detailDriver.lastName}</TextContent>
                   </ContenDatos>
 
                   <ContenDatos>
-                    <Label>Código Postal: </Label>
+                    <Label>Modelo: </Label>
                     <TextContent>{!detailDriver.zipCode ? "82300" : detailDriver.zipCode}</TextContent>
                   </ContenDatos>
 
                   <ContenDatos>
-                    <Label>Estado: </Label>
+                    <Label>Color: </Label>
                     <TextContent>{!detailDriver.state ? "AGUASCALIENTES" : detailDriver.state}</TextContent>
                   </ContenDatos>
 
                   <ContenDatos>
-                    <Label>Ciudad: </Label>
+                    <Label>Placa: </Label>
                     <TextContent>{!detailDriver.city ? "Jesús María" : detailDriver.city}</TextContent>
                   </ContenDatos>
 
                   <ContenDatos>
-                    <Label>Colonia: </Label>
+                    <Label>Numero motor: </Label>
                     <TextContent>{!detailDriver.colonia ? "La Granjita" : detailDriver.colonia}</TextContent>
                   </ContenDatos>
 
+                  
+
+                </ContentItems>
+              </PanelVehiculoDerecho>
+              {/* --------------------------------------------->Panel isquierdo */}
+              <PanelVehiculoIsq>
+                <ContentItems>
                   <ContenDatos>
-                    <Label>Domicilio: </Label>
-                    <TextContent>{!detailDriver.address ? "Calle Pepe Perez #2021 % 1ra y 3ra" : detailDriver.address}</TextContent>
+                    <Label>Propietario: </Label>
+                    <TextContent>{!detailDriver.name ? "Nombre y Apellidos" : detailDriver.name}</TextContent>
                   </ContenDatos>
 
                   <ContenDatos>
+                    <Label>Estado: </Label>
+                    <TextContent>{!detailDriver.lastName ? "Nombre del Estado" : detailDriver.lastName}</TextContent>
+                  </ContenDatos>
+
+                  <ContenDatos>
+                    <Label>Ciudad : </Label>
+                    <TextContent>{!detailDriver.zipCode ? "Nombre Ciudad" : detailDriver.zipCode}</TextContent>
+                  </ContenDatos>
+
+                  <ContenDatos>
+                    <Label>Colonia : </Label>
+                    <TextContent>{!detailDriver.state ? "Nombre Colonia" : detailDriver.state}</TextContent>
+                  </ContenDatos>
+
+                  <ContenDatos>
+                    <Label>Direccion : </Label>
+                    <TextContent>{!detailDriver.city ? "Direccion Postal" : detailDriver.city}</TextContent>
+                  </ContenDatos>
+
+                  <ContenDatos>
+                    <Label>Telefono : </Label>
+                    <TextContent>{!detailDriver.colonia ? "123456789" : detailDriver.colonia}</TextContent>
+                  </ContenDatos>
+
+                  <ContenDatos>
+                    <Label>Correo : </Label>
+                    <TextContent>{!detailDriver.address ? "correo@gmail.com" : detailDriver.address}</TextContent>
+                  </ContenDatos>
+
+                  {/* <ContenDatos>
                     <Label>Teléf (Móvil): </Label>
                     <TextContent>{!detailDriver.contact ? "12345678958" : detailDriver.contact}</TextContent>
                   </ContenDatos>
@@ -141,25 +172,128 @@ export const Detail = (props) => {
                   <ContenDatos>
                     <Label>Email: </Label>
                     <TextContent>{!detailDriver.email ? "josemanuel@gmail.com" : detailDriver.email}</TextContent>
-                  </ContenDatos>
+                  </ContenDatos> */}
 
                 </ContentItems>
+              </PanelVehiculoIsq>
+              {/* -------------------------------------------------------> END */}
+            </SeccionVehiculo>
 
-              </PanelDatosDrive>
+            <TituloSeccion>
+              <hr />
+              Conductor
+            </TituloSeccion>
+
+            <SeccionConductor>
+              <PanelConductorDerecho>
+                <ContentItems>
+                  <ContenDatos>
+                    <Label>Conductor: </Label>
+                    <TextContent>{!detailDriver.name ? "Nombre y Apellidos" : detailDriver.name}</TextContent>
+                  </ContenDatos>
+                </ContentItems>
+              </PanelConductorDerecho>
+              <PanelConductorIsq>
+                <ContentItems>
+                  <ContenDatos>
+                    <Label>Es propietario ? : </Label>
+                    <TextContent>{!detailDriver.name ? "Si o No" : detailDriver.name}</TextContent>
+                  </ContenDatos>
+                </ContentItems>
+              </PanelConductorIsq>
             </SeccionConductor>
 
             <TituloSeccion>
               <hr />
-              Licencia de Conducir
+              Tarjeta de circulacion
             </TituloSeccion>
 
-            <SeccionLicencia>
-              {!detailDriver.driverLicenseNumber ? (
-                <div>
-                  <p>Sin información de momento</p>
-                </div>
-              ) : (
-                <>
+            <SeccionTarjeta>
+                  {/* --------------------------------------------- */}
+                  <PanelDatosLic>
+                    <ContentItems>
+                      <ContenDatos>
+                        <Label>Número de tarjeta: </Label>
+                        <TextContent>{!detailDriver.driverLicenseNumber ? "AS3234-GHGFJHD21" : detailDriver.driverLicenseNumber}</TextContent>
+                      </ContenDatos>
+                    </ContentItems>
+                  </PanelDatosLic>
+                  {/* --------------------------------------------- */}
+                  <PanelImgLic>
+                    <PanelImgDerecho>
+                      <TituloSeccion>
+                        <LabelImg>Foto lic. (Anterior)</LabelImg>
+                      </TituloSeccion>
+                      <ImgDriver
+                        src={!fotoFront ? "/src/assets/img/img.png" : fotoFront}
+                        alt="Foto conductor"
+                      />
+                    </PanelImgDerecho>
+                    <PanelImgIsquirdo>
+                      <TituloSeccion>
+                        <LabelImg>Foto lic. (Posterior)</LabelImg>
+                      </TituloSeccion>
+                      <ImgDriver
+                        src={!fotoBack ? "/src/assets/img/img.png" : fotoBack}
+                        alt="Foto conductor"
+                      />
+                    </PanelImgIsquirdo>
+                  </PanelImgLic>
+                  {/* --------------------------------------------- */}
+            </SeccionTarjeta>
+            <br />
+
+ {/*            <TituloSeccion>
+              <hr />
+              Acceso a la aplicacion
+            </TituloSeccion>
+
+            <SeccionAccesoApp>
+
+              <ContenDatos>
+                <Label>Activo: </Label>
+                <TextContent>
+                  {detailDriver.isActive === 1 ? "Si" : "NO"}
+                </TextContent>
+              </ContenDatos>
+
+              <ContenDatos>
+                <Label>Motivo de bloqueo:{" "}</Label>
+                <TextContent>
+                  {detailDriver.messageReasonInActive?.length
+                    ? detailDriver.messageReasonInActive
+                    : "Sin comentarios"}
+                </TextContent>
+
+              </ContenDatos>
+
+            </SeccionAccesoApp> */}
+
+          </ContainerScroll>
+
+          <ButtonContainer>
+            <SubmitBtnV1
+              onClick={() => {
+                setModalIsOpen(false), closeModal();
+              }}
+            >
+              Ok
+            </SubmitBtnV1>
+          </ButtonContainer>
+
+        </ContainerModal>
+      </td>
+    </>
+  );
+};
+
+
+{/* <TituloSeccion>
+              <hr />
+              Conductor
+            </TituloSeccion>
+
+            <PanelConductor>
                   <PanelDatosLic>
                     <ContentItems>
                       <ContenDatos>
@@ -186,7 +320,7 @@ export const Detail = (props) => {
                         <LabelImg>Foto lic. (Anterior)</LabelImg>
                       </TituloSeccion>
                       <ImgDriver
-                        src={!fotoFront ? "/src/assets/img/img.png" : fotoFront}
+                        src={!fotoFront ? "/src/assets/img/photo_perfil.avif" : fotoFront}
                         alt="Foto conductor"
                       />
                     </PanelImgDerecho>
@@ -195,15 +329,12 @@ export const Detail = (props) => {
                         <LabelImg>Foto lic. (Posterior)</LabelImg>
                       </TituloSeccion>
                       <ImgDriver
-                        src={!fotoBack ? "/src/assets/img/img.png" : fotoBack}
+                        src={!fotoBack ? "/src/assets/img/photo_perfil.avif" : fotoBack}
                         alt="Foto conductor"
                       />
                     </PanelImgIsquirdo>
                   </PanelImgLic>
-                </>
-              )}
-
-            </SeccionLicencia>
+            </PanelConductor>
 
             <TituloSeccion>
               <hr />
@@ -262,20 +393,14 @@ export const Detail = (props) => {
 
             </SeccionAccesoApp>
 
-          </ContainerScroll>
+          </ContainerScroll >
 
-          <ButtonContainer>
-            <SubmitBtnV1
-              onClick={() => {
-                setModalIsOpen(false), closeModal();
-              }}
-            >
-              Ok
-            </SubmitBtnV1>
-          </ButtonContainer>
-
-        </ContainerModal>
-      </td>
-    </>
-  );
-};
+  <ButtonContainer>
+    <SubmitBtnV1
+      onClick={() => {
+        setModalIsOpen(false), closeModal();
+      }}
+    >
+      Ok
+    </SubmitBtnV1>
+  </ButtonContainer> */}

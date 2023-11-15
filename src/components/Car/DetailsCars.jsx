@@ -2,14 +2,20 @@ import { styled } from "styled-components";
 import Modal from "react-modal";
 
 export const ContainerModal = styled(Modal)`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 85vh;
-    max-height: 530px;
-    width: 55vh;
-    justify-content: center;
-    align-content: center;
+  width: 80vh;
+  height: 85vh;
+  max-height: 530px;
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px 30px;
+  font-size: 2.2vh;
+  box-shadow: 0 10px 25px rgba(92, 99, 105, 0.2);
+  
+  @media (max-width: 768px) {
+     //Mostrar el ícono de menú en pantallas pequeñas (como dispositivos móviles) 
+     width: 40vh;
+     font-size: 2.5vh;
+  }
 
 `;
 
@@ -19,9 +25,12 @@ export const ContainerScroll = styled.div`
     grid-gap: 40px;
     overflow-y: scroll;
     max-height: 72%;
-    padding: 9px 13px 10px 0px;
-    width: 100%;
+    margin-top: 15px;
+    //padding: 9px 13px 10px 0px;
+    padding-right: 8px;
+    width: 98%;
     margin-bottom: 4%;
+    color: black;
     &::-webkit-scrollbar {
         background-color: #e9dada;
         width: 7px;
@@ -62,8 +71,8 @@ export const SubmitBtn = styled.button`
   display: block;
   margin-left: auto;
   border: none;
-  background-color: var(--background-color-SubmitBtn);
-  color: var(--color-text-SubmitBtn);
+  background-color: purple;
+  color: white;
   border-radius: 6px;
   cursor: pointer;
   font-size: 16px;
@@ -71,16 +80,192 @@ export const SubmitBtn = styled.button`
   height: 100%;
 `;
 
-export const FormHead = styled.div`
+export const Cabezera = styled.div`
   display: flex;
   align-content: center;
   align-items: center;
   justify-content: center;
   color: #e5e5e5;
   background-color: #333333;
+  margin-bottom: 30px;
   width: 100%;
   height: 40px;
 `;
+
+
+export const TituloSeccion = styled.h2`
+      text-align: center;
+      color: black;
+      //margin-bottom: 7px;
+      margin-top: 0px;
+  `;
+
+
+export const SeccionConductorAAA = styled.div`
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      @media (max-width: 768px) {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        grid-gap: 20px;
+      }
+  `;
+
+export const PanelDatosDrive = styled.div`
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      //padding-left: 5px;
+      width: 60%;
+
+  `;
+
+export const PanelImg = styled.div`
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-right: 5px;
+      width: 40%;
+  `;
+
+export const SeccionLicencia = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-top: -26px;
+
+  `;
+
+export const PanelDatosLic = styled.div`
+    display: flex;
+    flex-direction: row;
+`;
+
+
+
+export const PanelImgLic = styled.div`
+    display: flex;
+    flex-direction: row;
+    grid-gap: 39px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+  `;
+
+export const PanelImgDerecho = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const PanelImgIsquirdo = styled.div`
+    display: flex;
+    flex-direction: column;
+  `;
+
+
+export const SeccionAjustesApp = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: -40px;
+  `;
+
+
+export const SeccionAccesoApp = styled.div`
+      margin-top: -25px;
+
+  `;
+
+
+export const ContentItems = styled.div`
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+  `;
+
+
+export const ContenDatos = styled.div`
+      display: flex;
+      flex-direction: row;
+      //padding-left: 5px;
+      grid-gap: 10px;
+      width: 100%;
+      word-break: break-word;
+
+      @media (max-width: 768px) {
+        display: flex;
+        flex-direction: column;
+        grid-gap: 0px;
+        align-items: center;
+        width: 100%;
+      }
+  `;
+
+
+export const ContainerImg = styled.div`
+    //width:150px;
+    //height:150px;
+`;
+
+export const ImgDriver = styled.img`
+    object-fit: cover;
+    width:100%;
+    height:100%;
+  `;
+
+export const TextContent = styled.div`
+      display: flex;
+      flex-direction: row;
+      justify-content: start;
+      text-align: start;
+      word-break: break-word;
+      margin-bottom: 15px;
+      //margin-right: 10px;
+      width: 50%;
+      
+      @media (max-width: 768px) {
+        justify-content: center;
+        text-align: center;
+        width: 95%;
+      }
+  `;
+
+export const Label = styled.label`
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  text-align: end;
+  font-weight: bold;
+  width: 50%;
+  word-break: break-word;
+  @media (max-width: 768px) {
+        justify-content: center;
+        text-align: center;
+        width: 95%;
+  }
+`;
+
+export const LabelImg = styled.label`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  font-weight: bold;
+  word-break: break-word;
+  font-size: 2vh;
+
+`;
+
+export const ButtonIconDriver = styled.button`
+  font-size: 14px;
+`;
+
+
+
+
+
 
 export const InputContainer = styled.div`
     display: flex;
@@ -96,18 +281,7 @@ export const InputContainer = styled.div`
     font-size: 2vh;
 `;
 
-export const Label = styled.label`
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  padding: 0 4px;
-  background-color: var(--background-color-Label);
-  color: var(--color-text-Label);
-  font-size: 16px;
-  transition: 0.5s;
-  font-size: 2vh;
-  z-index: 0;
-`;
+
 
 export const Input = styled.input`
   position: absolute;
@@ -116,7 +290,7 @@ export const Input = styled.input`
   height: 95%;
   width: 100%;
   border: 1px solid #73809d;
-  color: var(--color-text);
+  color: black;
   border-radius: 7px;
   font-size: 14px;
   outline: none;
@@ -132,7 +306,7 @@ export const Input = styled.input`
 
 
   ${props => {
-        if (props.color != 'transparent') return `
+    if (props.color != 'transparent') return `
         & + ${Label} {
           top: -7px;
           left: 3px;
@@ -141,7 +315,7 @@ export const Input = styled.input`
           font-weight: 600;
           color: purple;
         }`
-    }}
+  }}
 
   &:focus + ${Label} {
     top: -7px;
@@ -202,7 +376,7 @@ export const InputCheck = styled.input`
 `;
 
 export const LabelCheck = styled.label`
-  color: var(--color-text);
+  color: black;
   font-weight: bold;
   padding-left: 8px;
   font-size: 2vh;
@@ -228,7 +402,7 @@ export const Titulo = styled.div`
 
 
 export const Span = styled.span`
-    color: var(--color-text-span);
+    color: red;
 
   `;
 
@@ -273,7 +447,7 @@ export const Select = styled.select`
   }
 
   &:not(:empty) {
-    color: var(--color-text);
+    color: black;
   }
 
   &:-webkit-autofill,
@@ -308,7 +482,7 @@ export const GrupoInput = styled.div`
 export const GrupoSelect = styled.div`
     display: flex;
     flex-direction: column;
-    color: var(--color-text);
+    color: black;
     grid-gap: 27px;
 `;
 
@@ -323,54 +497,48 @@ export const SubeImgContainer = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: center;
-    color: var(--color-text);
+    color: black;
     width: 100%;
 `;
 
-export const TituloSeccion = styled.h2`
-    text-align: center;
-    color: var(--color-text);
-    margin-bottom: 0px;
-    margin-top: 0px;
-`;
 
 export const SpanData = styled.span`
     margin-top: 107px;
-    color: var(--border-color-ImgSube);
+    color: red;
 `;
 
 export const ImgSube = styled.input`
-  border-color: var(--border-color-ImgSube);
+  border-color: red;
 `;
 
 export const SubeContainerImg = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* background-image: url("/src/assets/img/img.png") center;
-  object-fit: scale-down; */
   width: 50%;
 `;
 
 export const GrupoCheck = styled.div`
     display: flex;
     flex-direction: row;
-    color: var(--color-text);
+    color: black;
     align-items: center;
     justify-content: center;
     grid-gap: 13px;
     width: 100%;
     font-size: 2vh;
+
     @media (max-width: 768px) {
-     //Mostrar el ícono de menú en pantallas pequeñas (como dispositivos móviles) 
-     flex-direction: column;
-  }
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
 `;
 
 export const CheckContainer = styled.div`
     display: flex;
     flex-direction: row;
-    color: var(--color-text);
+    color: black;
     align-items: center;
     grid-gap: 13px;
 `;
@@ -384,7 +552,7 @@ export const Textarea = styled.textarea`
   padding-left: 13px;
   height: 70px;
   border: 1px solid #73809d;
-  color: var(--color-text);
+  color: black;
   border-radius: 7px;
   font-size: 16px;
   outline: none;
@@ -402,7 +570,7 @@ export const Textarea = styled.textarea`
   z-index: 10;
   font-size: 14px;
   font-weight: 600;
-  color: var(--color-morado);
+  color: purple;
   }
 
   &:focus {
@@ -447,4 +615,47 @@ export const InputContainerPass = styled(InputContainer)`
 
 export const GrupoInputPass = styled(GrupoInput)`
   grid-gap: 60px;
+`;
+/* ---------------------------------------------------------------------- */
+
+export const SeccionVehiculo = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+export const PanelVehiculoDerecho = styled.div`
+  display: flex;
+  flex-direction: column; 
+  width: 50%;
+`;
+
+export const PanelVehiculoIsq = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+`;
+
+export const SeccionConductor = styled.div`
+  display: flex;
+  flex-direction: row;  
+  margin-top: -17px;
+`;
+
+export const PanelConductorDerecho = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+`;
+
+export const PanelConductorIsq = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+`;
+
+export const SeccionTarjeta = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: -17px;
+
 `;

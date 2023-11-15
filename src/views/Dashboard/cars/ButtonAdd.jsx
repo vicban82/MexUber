@@ -394,6 +394,9 @@ export const ButtonAdd = ({
       "image/*": [".jpg", ".png"],
     },
     maxFiles: 1, // ARCHIVOS PERMITIDOS
+
+     
+
   });
 
   const {
@@ -522,7 +525,6 @@ export const ButtonAdd = ({
               {/* Tarjeta de circulacion */}
               Datos del Vehiculo
               <hr />
-              Datos del Vehiculo
             </TituloSeccion>
 
             <GrupoSelect>
@@ -678,9 +680,14 @@ export const ButtonAdd = ({
                   <img
                     src={`data:image/png;base64,${formCar.frontImageTraffic}`}
                     alt="Foto conductor"
+                    /* onError={({ currentTarget }) => {
+                      currentTarget.onerror = null; // prevents looping
+                      currentTarget.src="/src/assets/img/img.png";
+                    }} */
                     style={{ maxWidth: "100px" }}
                   />
                 )}
+                {/* <img src="/src/assets/img/img.png" alt="" /> */}
                 Frente
                 {errorFormCar.frontImageTraffic && (
                   <Span>{errorFormCar.frontImageTraffic}</Span>
@@ -737,9 +744,15 @@ export const ButtonAdd = ({
               </SelectContainer>
             </GrupoSelect>
 
+            <TituloSeccion>
+                {/* Conductor */}
+                <hr />
+                Es el propietario?
+              </TituloSeccion>
+
             <GrupoCheck>
               {/* Es el propietario? */}
-              <label>Es el propietario?</label>
+              {/* <label>Es el propietario?</label> */}
               <InputCheck
                 type="radio"
                 name="driverIsOwner"
