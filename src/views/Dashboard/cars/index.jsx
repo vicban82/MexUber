@@ -21,16 +21,7 @@ export const Cars = () => {
 
   //* ESTADO DEL FORMULARIO
   const [car, setCar] = useState({
-    name: "",// Nombre del propietario
-    lastName: "",// Apellido del propietario
-    zipCode: "",// Código postal del propietario
-    state: "",// Estado del propietario
-    city: "",// Ciudad del propietario
-    colonia: "",
-    address: "",// Dirección del propietario
-    contact: "",// Telefono del propietario
-    email: "",// Correo electrónico del propietario
-
+    // PROPIEDADES DEL VEHICULO
     typeOfVehicle: "",// TIPO DE VEHICULO
     make: "",// MARCA DEL VEHICULO
     subMake: "",// SUB-MARCA DEL VEHICULO
@@ -44,9 +35,8 @@ export const Cars = () => {
     driver: "" || null,//* RELACION CONDUCTOR
     driverIsOwner: 0,// Chofer es el propietario 1 = SI, 0 = NO
     owner: "" || null,//* RELACION PROPIETARIO
-  });
-
-  const [errorForm, setErrorForm] = useState({
+        
+    // PROPIEDADES DEL PROPIETARIO
     name: "",// Nombre del propietario
     lastName: "",// Apellido del propietario
     zipCode: "",// Código postal del propietario
@@ -56,7 +46,10 @@ export const Cars = () => {
     address: "",// Dirección del propietario
     contact: "",// Telefono del propietario
     email: "",// Correo electrónico del propietario
+  });
 
+  const [errorForm, setErrorForm] = useState({
+    // PROPIEDADES DEL VEHICULO
     typeOfVehicle: "",// TIPO DE VEHICULO
     make: "",// MARCA DEL VEHICULO
     subMake: "",// SUB-MARCA DEL VEHICULO
@@ -67,9 +60,20 @@ export const Cars = () => {
     trafficCardNumber: "",// NUMERO TARGETA DE CIRCULACION
     frontImageTraffic: "",// Imagen de la tarjeta de circulación de frente
     backImageTraffic: "",// Imagen de la tarjeta de circulación por atrás
-    driver : "" || null,//* RELACION CONDUCTOR
-    driverIsOwner: "",// Chofer es el propietario
-    owner : "" || null,//* RELACION CHOFER
+    driver: "",//* RELACION CONDUCTOR
+    driverIsOwner: "",// Chofer es el propietario 1 = SI, 0 = NO
+    owner: "",//* RELACION PROPIETARIO
+        
+    // PROPIEDADES DEL PROPIETARIO
+    name: "",// Nombre del propietario
+    lastName: "",// Apellido del propietario
+    zipCode: "",// Código postal del propietario
+    state: "",// Estado del propietario
+    city: "",// Ciudad del propietario
+    colonia: "",
+    address: "",// Dirección del propietario
+    contact: "",// Telefono del propietario
+    email: "",// Correo electrónico del propietario
   });
   //* ESTADO DEL FORMULARIO
   

@@ -37,10 +37,11 @@ export const Table = ({
           <tbody>
             {(Array.isArray(tCar) && tCar.length >= 1) && (
                 tCar.map((data, i) => {
+                  // console.log("TABLE-data:", data, "I:", i)
                   return (
                     <tr key={i}>
                       {Object.values(data).map((item, subI) => {
-                        // console.log("TABLE-ITEMS:", item, "IDX:", subI)
+                        // console.log("TABLE-ITEMS:", item, "typeof:", typeof item)
                         // SE IGNORA EL "ID"
                         if (subI !== 0) {
                           return (
