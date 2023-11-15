@@ -1,4 +1,5 @@
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export function obtenerAnios() {
   const anioActual = new Date().getFullYear();
@@ -11,12 +12,13 @@ export function obtenerAnios() {
   return aniosAnteriores;
 }
 
-export function disponible(conductores, vehiculos) {
-  if (Array.isArray(conductores) || Array.isArray(vehiculos)) {
+export function disponible(vehiculos) {
+  if (Array.isArray(vehiculos)) {
     //* ACA SE VERIFICA SI AL CONDUCTOR YA SE LE ASIGNO UN VEHICULO
-    const conjunto_1 = conductores.map(el => el._id);
-    const conjunto_2 = vehiculos.map(el => el.driver);
-    return Array.from(conjunto_1.filter(el => new Set(conjunto_2).has(el)))
+    const conductoresAsignados = vehiculos.map(el => el.driver);
+    return conductoresAsignados
+    // return [...new Set([...conductoresAsignados])]
+    // return Array.from(conjunto_1.map(el => new Set(conjunto_2).has(el)))
   }
 }
 

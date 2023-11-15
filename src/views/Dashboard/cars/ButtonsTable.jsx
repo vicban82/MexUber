@@ -41,10 +41,8 @@ import {
   TextareaContainer,
 } from "../../../components/reusable/FormularioModal";
 import { axiosDetailDriver, axiosGetAllCars, axiosGetDrivers, disponible, obtenerAnios } from "./function";
-import { axiosDetailCar } from "../../../hooks/cars/crudCars";
+import { axiosDetailCar, axiosGetCars, axiosPutCars } from "../../../hooks/cars/crudCars";
 import { colors } from "./colores";
-//-----------------------Para uso en local
-import { dataFakeCarsDetails } from "../../../data/dataFakeCarsDetails.js";
 
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
@@ -97,30 +95,18 @@ export function ButtonsTable({
   setTotalPages,
   setPage,
 }) {
-  //------------------------------------------------ Acceso a API ------------------------>
-  //const [detailCar, setDetailCar] = useState({});
-  //----------------------------------------------------En local--------------------------->
-  const [detailCar, setDetailCar] = useState(dataFakeCarsDetails);
-  
-  
-
+  const [detailCar, setDetailCar] = useState({});
+  // console.log("detailCar:", detailCar)
   useEffect(() => {
-    //axiosDetailCar(id, setDetailCar, headers); 
+    axiosDetailCar(id, setDetailCar, headers);
   }, [id]);
 
   useEffect(() => {
-    if (detailCar._id === id) {
+    console.log("detailCar:", detailCar);
+    console.log("ID:", id);
+    if (detailCar && detailCar._id === id) {
       setUpdateForm({
-        name: detailCar.owner.name,// Nombre del propietario
-        lastName: detailCar.owner.lastName,// Apellido del propietario
-        zipCode: detailCar.owner.zipCode,// Código postal del propietario
-        state: detailCar.owner.state,// Estado del propietario
-        city: detailCar.owner.city,// Ciudad del propietario
-        colonia: detailCar.owner.colonia,
-        address: detailCar.owner.address,// Dirección del propietario
-        contact: detailCar.owner.contact,// Telefono del propietario
-        email: detailCar.owner.email,// Correo electrónico del propietario
-    
+        // PROPIEDADES DEL VEHICULO
         typeOfVehicle: detailCar.typeOfVehicle,// TIPO DE VEHICULO
         make: detailCar.make,// MARCA DEL VEHICULO
         subMake: detailCar.subMake,// SUB-MARCA DEL VEHICULO
@@ -131,23 +117,26 @@ export function ButtonsTable({
         trafficCardNumber: detailCar.trafficCardNumber,// NUMERO TARGETA DE CIRCULACION
         frontImageTraffic: detailCar.frontImageTraffic,// Imagen de la tarjeta de circulación de frente
         backImageTraffic: detailCar.backImageTraffic,// Imagen de la tarjeta de circulación por atrás
-        driver: `${detailCar.driver.name} ${detailCar.driver.lastName}` || null,//* RELACION CONDUCTOR
+        driver: !detailCar.driver ? null : detailCar.driver._id,//* RELACION CONDUCTOR
         driverIsOwner: detailCar.driverIsOwner,// Chofer es el propietario 1 = SI, 0 = NO
+        
+        // PROPIEDADES DEL PROPIETARIO
+        name: detailCar.owner.name,// Nombre del propietario
+        lastName: detailCar.owner.lastName,// Apellido del propietario
+        zipCode: detailCar.owner.zipCode,// Código postal del propietario
+        state: detailCar.owner.state,// Estado del propietario
+        city: detailCar.owner.city,// Ciudad del propietario
+        colonia: detailCar.owner.colonia,
+        address: detailCar.owner.address,// Dirección del propietario
+        contact: detailCar.owner.contact,// Telefono del propietario
+        email: detailCar.owner.email,// Correo electrónico del propietario
       });
+      // console.log("upDateForm:", upDateForm)
     }
   }, [detailCar]);
 
   const [upDateForm, setUpdateForm] = useState({
-    name: "",// Nombre del propietario
-    lastName: "",// Apellido del propietario
-    zipCode: "",// Código postal del propietario
-    state: "",// Estado del propietario
-    city: "",// Ciudad del propietario
-    colonia: "",
-    address: "",// Dirección del propietario
-    contact: "",// Telefono del propietario
-    email: "",// Correo electrónico del propietario
-
+    // PROPIEDADES DEL VEHICULO
     typeOfVehicle: "",// TIPO DE VEHICULO
     make: "",// MARCA DEL VEHICULO
     subMake: "",// SUB-MARCA DEL VEHICULO
@@ -160,21 +149,23 @@ export function ButtonsTable({
     backImageTraffic: "",// Imagen de la tarjeta de circulación por atrás
     driver: "" || null,//* RELACION CONDUCTOR
     driverIsOwner: 0,// Chofer es el propietario 1 = SI, 0 = NO
-    owner: "" || null,//* RELACION CHOFER
+    owner: "" || null,//* RELACION PROPIETARIO
+        
+    // PROPIEDADES DEL PROPIETARIO
+    name: "",// Nombre del propietario
+    lastName: "",// Apellido del propietario
+    zipCode: "",// Código postal del propietario
+    state: "",// Estado del propietario
+    city: "",// Ciudad del propietario
+    colonia: "",
+    address: "",// Dirección del propietario
+    contact: "",// Telefono del propietario
+    email: "",// Correo electrónico del propietario
   });
   // console.log("upDateForm:", upDateForm)
 
   const [errorFormCar, setErrorFormCar] = useState({
-    name: "",// Nombre del propietario
-    lastName: "",// Apellido del propietario
-    zipCode: "",// Código postal del propietario
-    state: "",// Estado del propietario
-    city: "",// Ciudad del propietario
-    colonia: "",
-    address: "",// Dirección del propietario
-    contact: "",// Telefono del propietario
-    email: "",// Correo electrónico del propietario
-
+    // PROPIEDADES DEL VEHICULO
     typeOfVehicle: "",// TIPO DE VEHICULO
     make: "",// MARCA DEL VEHICULO
     subMake: "",// SUB-MARCA DEL VEHICULO
@@ -185,9 +176,20 @@ export function ButtonsTable({
     trafficCardNumber: "",// NUMERO TARGETA DE CIRCULACION
     frontImageTraffic: "",// Imagen de la tarjeta de circulación de frente
     backImageTraffic: "",// Imagen de la tarjeta de circulación por atrás
-    driver: "" || null,//* RELACION CONDUCTOR
-    driverIsOwner: 0,// Chofer es el propietario 1 = SI, 0 = NO
-    owner: "" || null,//* RELACION CHOFER
+    driver: "",//* RELACION CONDUCTOR
+    driverIsOwner: "",// Chofer es el propietario 1 = SI, 0 = NO
+    owner: "",//* RELACION PROPIETARIO
+        
+    // PROPIEDADES DEL PROPIETARIO
+    name: "",// Nombre del propietario
+    lastName: "",// Apellido del propietario
+    zipCode: "",// Código postal del propietario
+    state: "",// Estado del propietario
+    city: "",// Ciudad del propietario
+    colonia: "",
+    address: "",// Dirección del propietario
+    contact: "",// Telefono del propietario
+    email: "",// Correo electrónico del propietario
   });
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -208,10 +210,46 @@ export function ButtonsTable({
   const [vehiculos, setVehiculos] = useState([]);
   // EN ESTA FUNCION VERIFICA SI HAY CONDUCTORES CON VEHICULOS
   const hayConductores = disponible(conductores, vehiculos);
+  const handleDriverChange = async (selectedDriverId) => {
+    console.log("selectedDriverId:", selectedDriverId)
+    if (selectedDriverId === "Sin asignar") {
+      setUpdateForm({
+        ...upDateForm,
+        driver: null,
+      });
+    } else if (hayConductores.includes(selectedDriverId)) {
+      const result = await Swal.fire({
+        title: "Re-asignar",
+        text: "¿Deseas re-asignar?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí",
+        cancelButtonText: "No",
+        showConfirmButton: true,
+      });
+
+      if (result.isConfirmed) {
+        setUpdateForm({
+          ...upDateForm,
+          driver: selectedDriverId,
+        });
+      } else if (result.isDismissed) {
+        setUpdateForm({
+          ...upDateForm,
+          driver: null,
+        });
+      }
+    } else {
+      setUpdateForm({
+        ...upDateForm,
+        driver: selectedDriverId,
+      });
+    }
+  };
   // ACA SE OBTIENEN TODOS LOS CONUDCTORES QUE NO HAN SIDO ASIGNADOS
-  const conductoresDisponibles = conductores.filter((el) => {
-    return !hayConductores.includes(el._id);
-  });
+  // const conductoresDisponibles = conductores.filter((el) => {
+  //   return !hayConductores.includes(el._id);
+  // });
   const [detailDriver, setDetailDriver] = useState({});
   const [value, setValue] = useState("");
   const [name, setName] = useState("");
@@ -223,7 +261,9 @@ export function ButtonsTable({
   const [codigoPostal, setCodigoPostal] = useState("");
   const [estado, setEstado] = useState("");
   const [ciudad, setCiudad] = useState("");
+  // SI EL "CONDUCTOR" ES EL MISMO "PROPIETARIO" LO AUTOCOMPLETA
   const [colonia, setColonia] = useState("");
+  // SI EL "PROPIETARIO" NO ES EL MISMO "CONDUCTOR"
   const [selectColonia, setSelectColonia] = useState([]);
   const [domicilio, setDomicilio] = useState("");
   const [telefono, setTelefono] = useState("");
@@ -234,10 +274,10 @@ export function ButtonsTable({
   const [sepomex, setSepomex] = useState([]);
   //* INFO DB
 
-  // * ------------ ESTADOS ------------
+  // * ------------ SELECT ESTADOS ------------
   const byState = [...new Set(sepomex.map((el) => el.estado))];
 
-  // * ------------ CIUDADES ------------
+  // * ------------ SELECT CIUDADES ------------
   const filterByState = sepomex.filter((el) => {
     if (el.estado === upDateForm.state) {
       return el.ciudad;
@@ -246,7 +286,7 @@ export function ButtonsTable({
 
   const byCity = [...new Set(filterByState.map((el) => el.ciudad))];
 
-  // * ------------ COLONIAS ------------
+  // * ------------ SELECT COLONIAS ------------
   const filterByCity = sepomex.filter((el) => {
     if (el.ciudad === upDateForm.city) {
       return el.colonias;
@@ -263,9 +303,9 @@ export function ButtonsTable({
           return el.marcaId;
         }
       });
-      const filterSubMarcas = subMarcas.filter(
-        (el) => el.idMarca === findById.marcaId
-      );
+      const filterSubMarcas = subMarcas.filter((el) => {
+        return el.idMarca === findById.marcaId;
+      });
       setSelectSubMarca(filterSubMarcas);
     }
     if (name === "driver") {
@@ -274,12 +314,12 @@ export function ButtonsTable({
     }
 
     if (type === "radio") {
-      setCar((prevCar) => ({
+      setUpdateForm((prevCar) => ({
         ...prevCar,
         [name]: parseInt(value, 10),
       }));
     } else {
-      setCar((prevCar) => ({
+      setUpdateForm((prevCar) => ({
         ...prevCar,
         [name]: value,
       }));
@@ -305,7 +345,7 @@ export function ButtonsTable({
       }
       //* SE GUARDA EL "ESTADO" Y LA "CIUDAD" SI EL CP EXISTE EN LA DB
       if (codigoPostal) {
-        setCar((prevState) => ({
+        setUpdateForm((prevState) => ({
           ...prevState,
           state: estado,
           city: ciudad,
@@ -313,7 +353,7 @@ export function ButtonsTable({
       }
     }
 
-    // setCar({
+    // setUpdateForm({
     //   ...car,
     //   [name]: value,
     // });
@@ -340,7 +380,7 @@ export function ButtonsTable({
       telefono ||
       email
     ) {
-      setCar((prevState) => ({
+      setUpdateForm((prevState) => ({
         ...prevState,
         name: nombre,
         lastName: apellido,
@@ -371,49 +411,59 @@ export function ButtonsTable({
     axiosGetDrivers(setCondurtores, headers);
     axiosGetAllCars(setVehiculos, headers);
     axiosGetSepomex(setSepomex);
-    const findById = conductores.find((el) => el._id === value);
+    const findById = conductores.find((el) => el._id === upDateForm.driver);
     if (findById) {
       axiosDetailDriver(findById._id, setDetailDriver, headers);
     }
-  }, [value]);
+  }, [upDateForm.driver]);
 
   useEffect(() => {
     // Este codigo me sirve para autocompleta o resetear la seccion de propietario
     let updateFormCar = { ...upDateForm };
     if (upDateForm.driverIsOwner === 1) {
-      setNombre(detailDriver.name);
-      setApellido(detailDriver.lastName);
-      setCodigoPostal(detailDriver.zipCode);
-      setEstado(detailDriver.state);
-      setCiudad(detailDriver.city);
-      setColonia(detailDriver.colonia);
-      setDomicilio(detailDriver.address);
-      setTelefono(detailDriver.contact);
-      setEmail(detailDriver.email);
-    } else {
-      setNombre("");
-      setApellido("");
-      setCodigoPostal("");
-      setEstado("");
-      setCiudad("");
-      setColonia("");
-      setDomicilio("");
-      setTelefono("");
-      setEmail("");
-      updateFormCar = {
-        ...car,
-        name: "",
-        lastName: "",
-        zipCode: "",
-        state: "",
-        city: "",
-        colonia: "",
-        address: "",
-        contact: "",
-        email: "",
-      };
+      setNombre(detailDriver.owner.name);
+      setApellido(detailDriver.owner.lastName);
+      setCodigoPostal(detailDriver.owner.zipCode);
+      setEstado(detailDriver.owner.state);
+      setCiudad(detailDriver.owner.city);
+      setColonia(detailDriver.owner.colonia);
+      setDomicilio(detailDriver.owner.address);
+      setTelefono(detailDriver.owner.contact);
+      setEmail(detailDriver.owner.email);
+    } else if (upDateForm.driver === null && upDateForm.driverIsOwner === 0) {
+      // setNombre(detailDriver.owner.name);
+      // setApellido(detailDriver.owner.lastName);
+      // setCodigoPostal(detailDriver.owner.zipCode);
+      // setEstado(detailDriver.owner.state);
+      // setCiudad(detailDriver.owner.city);
+      // setColonia(detailDriver.owner.colonia);
+      // setDomicilio(detailDriver.owner.address);
+      // setTelefono(detailDriver.owner.contact);
+      // setEmail(detailDriver.owner.email);
+
+      // setNombre("");
+      // setApellido("");
+      // setCodigoPostal("");
+      // setEstado("");
+      // setCiudad("");
+      // setColonia("");
+      // setDomicilio("");
+      // setTelefono("");
+      // setEmail("");
+      // updateFormCar = {
+      //   ...updateFormCar,
+      //   name: "",
+      //   lastName: "",
+      //   zipCode: "",
+      //   state: "",
+      //   city: "",
+      //   colonia: "",
+      //   address: "",
+      //   contact: "",
+      //   email: "",
+      // };
     }
-    setCar(updateFormCar);
+    setUpdateForm(updateFormCar);
   }, [upDateForm.driverIsOwner]);
 
   useEffect(() => {
@@ -429,7 +479,7 @@ export function ButtonsTable({
     setTelefono("");
     setEmail("");
     updateFormCar = {
-      ...car,
+      ...updateFormCar,
       driverIsOwner: 0,
       name: "",
       lastName: "",
@@ -441,7 +491,7 @@ export function ButtonsTable({
       contact: "",
       email: "",
     };
-    setCar(updateFormCar);
+    setUpdateForm(updateFormCar);
   }, [upDateForm.driver]);
 
   useEffect(() => {
@@ -474,7 +524,7 @@ export function ButtonsTable({
         colonia: "",
       };
     }
-    setCar(updateFormCar);
+    setUpdateForm(updateFormCar);
   }, [upDateForm.zipCode, upDateForm.state, upDateForm.city]);
 
   const onFrontImageTrafficDrop = (acceptedFiles) => {
@@ -493,7 +543,7 @@ export function ButtonsTable({
     const reader = new FileReader();
     reader.onload = () => {
       const base64String = reader.result.split(",")[1];
-      setCar((prevState) => ({
+      setUpdateForm((prevState) => ({
         ...prevState,
         [fieldName]: base64String,
       }));
@@ -526,17 +576,8 @@ export function ButtonsTable({
   });
 
   function closeModal() {
-    setCar({
-      name: detailCar.owner.name,// Nombre del propietario
-      lastName: detailCar.owner.lastName,// Apellido del propietario
-      zipCode: detailCar.owner.zipCode,// Código postal del propietario
-      state: detailCar.owner.state,// Estado del propietario
-      city: detailCar.owner.city,// Ciudad del propietario
-      colonia: detailCar.owner.colonia,
-      address: detailCar.owner.address,// Dirección del propietario
-      contact: detailCar.owner.contact,// Telefono del propietario
-      email: detailCar.owner.email,// Correo electrónico del propietario
-  
+    setUpdateForm({
+      // PROPIEDADES DEL VEHICULO
       typeOfVehicle: detailCar.typeOfVehicle,// TIPO DE VEHICULO
       make: detailCar.make,// MARCA DEL VEHICULO
       subMake: detailCar.subMake,// SUB-MARCA DEL VEHICULO
@@ -547,8 +588,19 @@ export function ButtonsTable({
       trafficCardNumber: detailCar.trafficCardNumber,// NUMERO TARGETA DE CIRCULACION
       frontImageTraffic: detailCar.frontImageTraffic,// Imagen de la tarjeta de circulación de frente
       backImageTraffic: detailCar.backImageTraffic,// Imagen de la tarjeta de circulación por atrás
-      driver: `${detailCar.driver.name} ${detailCar.driver.lastName}` || null,//* RELACION CONDUCTOR
+      driver: detailCar.driver ? `${detailCar.driver.name} ${detailCar.driver.lastName}` : null,//* RELACION CONDUCTOR
       driverIsOwner: detailCar.driverIsOwner,// Chofer es el propietario 1 = SI, 0 = NO
+  
+      // PROPIEDADES DEL PROPIETARIO
+      name: detailCar.owner.name,// Nombre del propietario
+      lastName: detailCar.owner.lastName,// Apellido del propietario
+      zipCode: detailCar.owner.zipCode,// Código postal del propietario
+      state: detailCar.owner.state,// Estado del propietario
+      city: detailCar.owner.city,// Ciudad del propietario
+      colonia: detailCar.owner.colonia,
+      address: detailCar.owner.address,// Dirección del propietario
+      contact: detailCar.owner.contact,// Telefono del propietario
+      email: detailCar.owner.email,// Correo electrónico del propietario  
     });
   }
 
@@ -560,12 +612,13 @@ export function ButtonsTable({
       upDateForm.make &&
       upDateForm.subMake &&
       upDateForm.model &&
-      upDateForm.colors &&
+      upDateForm.color &&
       upDateForm.plates &&
-      upDateForm.numberMotor &&
+      upDateForm.numberMotor 
       // upDateForm.trafficCardNumber &&
-      upDateForm.driver
+      // upDateForm.driver
     ) {
+      console.log("ENTRO:")
       if (
         upDateForm.driverIsOwner === 0 &&
         errorFormCar.name &&
@@ -586,6 +639,7 @@ export function ButtonsTable({
         try {
           successRegister(upDateForm);
           const currentCar = await axiosPutCars(id, upDateForm, headers);
+          console.log('currentCar:', currentCar);
 
           // Actualiza la lista en el frontend
           setTCar((prev) => {
@@ -593,8 +647,10 @@ export function ButtonsTable({
             const updatedTCar = prev.map((item) =>
               item._id === id ? currentCar : item
             );
+            // console.log('updatedTCar:', updatedTCar);
             return updatedTCar;
           });
+          // await axiosGetCars(1, limit, headers, setTCar, setTotalPages)
 
           // Cierra el modal después de guardar
           setModalIsOpen(false);
@@ -614,6 +670,9 @@ export function ButtonsTable({
   return (
     <>
       <Detail />
+      <td>
+        <button>Ver</button>
+      </td>
       <td>
         {/* The button to open modal */}
         <button onClick={() => setModalIsOpen(true)}>
@@ -674,10 +733,10 @@ export function ButtonsTable({
                 <SelectContainer>
                   <Select
                     name={"subMake"}
-                    value={upDateForm.subMake}
+                    // value={upDateForm.subMake}
                     onChange={handleChange}
                   >
-                    <option>Selecciona</option>
+                    <option>{upDateForm.subMake || "Selecciona"}</option>
                     {selectSubMarcas.length &&
                       selectSubMarcas.map((el, idx) => {
                         return <option key={idx}>{el.subMarca}</option>;
@@ -829,32 +888,28 @@ export function ButtonsTable({
                 <SelectContainer>
                   <Select
                     name={"driver"}
-                    value={upDateForm.driver}
-                    onChange={handleChange}
+                    // value={upDateForm.driver}
+                    onChange={(e) => handleDriverChange(e.target.value)}
                   >
-                    <option>Selecciona</option>
-
-                    {!conductoresDisponibles.length ? (
-                      <option key={"Sin_conductores"} value={"Sin conductores"}>
-                        {"Sin conductores"}
-                      </option>
-                    ) : (
-                      <>
-                        <option key={"Sin_asignar"} value={"Sin asignar"}>
-                          {"Sin asignar"}
+                    <option>{upDateForm.driver === null ? "Sin asignar" : `${detailCar.driver?.name} ${detailCar.driver?.lastName}`}</option>
+                    {!conductores.length ? (
+                        <option key={"Sin_conductores"} value={"Sin conductores"}>
+                          {"Sin conductores"}
                         </option>
-                        {conductoresDisponibles.map((conductor, idx) => {
-                          return (
-                            <option
-                              key={idx}
-                              value={conductor._id}
-                            >
-                              {`${conductor.name} ${conductor.lastName}`}
-                            </option>
-                          );
-                        })}
-                      </>
-                    )}
+                      ) : (
+                        <>
+                          <option key={null} value={null}>
+                            {"Sin asignar"}
+                          </option>
+                          {conductores.map((conductor, idx) => {
+                            return (
+                              <option key={idx} value={conductor._id}>
+                                {`${conductor.name} ${conductor.lastName}`}
+                              </option>
+                            )
+                          })}
+                        </>
+                      )}
                   </Select>
                   <Label>*Conductor Asignado: </Label>
                   {errorFormCar.driver && <Span>{errorFormCar.driver}</Span>}
@@ -874,6 +929,7 @@ export function ButtonsTable({
                   name="driverIsOwner"
                   value={"1"}
                   checked={upDateForm.driverIsOwner === 1}
+                  disabled={upDateForm.driver === null}
                   onChange={handleChange}
                 />
                 SI
@@ -1054,7 +1110,7 @@ export function ButtonsTable({
                         placeholder="a"
                         onChange={handleChange}
                       />
-                      <Label>{nombre || "*Nombre(s): "}</Label>
+                      <Label>{"*Nombre(s): "}</Label>
                       <br />
                       {errorFormCar.name && <Span>{errorFormCar.name}</Span>}
                     </InputContainer>
@@ -1136,7 +1192,8 @@ export function ButtonsTable({
                           value={upDateForm.colonia}
                           onChange={handleChange}
                         >
-                          <option>Selecciona</option>
+                          <option>{"Selecciona"}</option>
+                          {/* <option>{detailCar.owner.colonia || "Selecciona"}</option> */}
                           {byColonia.length >= 1 &&
                             byColonia.map((colonia, idx) => {
                               return (
@@ -1255,8 +1312,6 @@ export function ButtonsTable({
                   </GrupoInput>
                 </>
               )}
-              <br />
-              <br />
             </ContainerScroll>
 
             <ButtonContainer>
