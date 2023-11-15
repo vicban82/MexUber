@@ -50,7 +50,6 @@ import {
 import { axiosDetailDriver, axiosGetAllCars, axiosGetDrivers, disponible, obtenerAnios } from "./function";
 import {colors} from "./colores"
 import { axiosGetCars, axiosPostCars } from "../../../hooks/cars/crudCars";
-import Swal from "sweetalert2";
 
 Modal.setAppElement("#root"); // Reemplaza '#root' con el ID de tu elemento raíz de la aplicación
 
@@ -95,7 +94,6 @@ export const ButtonAdd = ({
   const formCar = { ...car };
   const errorFormCar = { ...errorForm };
   // console.log("formCar:", formCar)
-  // console.log("errorFormCar:", errorFormCar)
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   //* INFORMACION DEL VEHICULO
@@ -116,46 +114,9 @@ export const ButtonAdd = ({
   const [conductores, setCondurtores] = useState([]);
   const [vehiculos, setVehiculos] = useState([]);
   // EN ESTA FUNCION VERIFICA SI HAY CONDUCTORES CON VEHICULOS
-  const hayConductores = disponible(vehiculos);
-  const handleDriverChange = async (selectedDriverId) => {
-    console.log("selectedDriverId:", selectedDriverId)
-    if (selectedDriverId === "Sin asignar") {
-      setCar({
-        ...formCar,
-        driver: null,
-      });
-    } else if (hayConductores.includes(selectedDriverId)) {
-      const result = await Swal.fire({
-        title: "Re-asignar",
-        text: "¿Deseas re-asignar?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Sí",
-        cancelButtonText: "No",
-        showConfirmButton: true,
-      });
-
-      if (result.isConfirmed) {
-        setCar({
-          ...formCar,
-          driver: selectedDriverId,
-        });
-      } else if (result.isDismissed) {
-        setCar({
-          ...formCar,
-          driver: null,
-        });
-      }
-    } else {
-      setCar({
-        ...formCar,
-        driver: selectedDriverId,
-      });
-    }
-  };
+  const hayConductores = disponible(conductores, vehiculos)
   // ACA SE OBTIENEN TODOS LOS CONUDCTORES QUE NO HAN SIDO ASIGNADOS
-  // const conductoresDisponibles = asignacion(conductores, hayConductores)
-  // const conductoresDisponibles = conductores.filter(el => !hayConductores.includes(el._id))
+  const conductoresDisponibles = conductores.filter(el => !hayConductores.includes(el._id))
   const [detailDriver, setDetailDriver] = useState({});
   const [value, setValue] = useState("");
   const [name, setName] = useState("");
@@ -293,11 +254,11 @@ export const ButtonAdd = ({
     axiosGetDrivers(setCondurtores, headers);
     axiosGetAllCars(setVehiculos, headers);
     axiosGetSepomex(setSepomex);
-    const findById = conductores.find(el => el._id === formCar.driver);
+    const findById = conductores.find(el => el._id === value)
     if (findById) {
       axiosDetailDriver(findById._id, setDetailDriver, headers)
     } 
-  }, [formCar.driver]);
+  }, [value]);
 
   useEffect(() => {
     // Este codigo me sirve para autocompleta o resetear la seccion de propietario
@@ -351,7 +312,7 @@ export const ButtonAdd = ({
     setTelefono("")
     setEmail("")
     updateFormCar = {
-      ...updateFormCar,
+      ...car,
       driverIsOwner: 0,
       name: "",
       lastName: "",
@@ -452,7 +413,6 @@ export const ButtonAdd = ({
 
   function closeModal() {
     setCar({
-      // PROPIEDADES DEL VEHICULO
       name: "", // Nombre del propietario
       lastName: "", // Apellido del propietario
       address: "", // Dirección del propietario
@@ -461,9 +421,7 @@ export const ButtonAdd = ({
       zipCode: "", // Código postal del propietario
       contact: "", // Telefono del propietario
       email: "", // Correo electrónico del propietario
-  
-      // PROPIEDADES DEL PROPIETARIO
-      typeOfVehicle: "", // TIPO DE VEHICULO
+
       make: "", // MARCA DEL VEHICULO
       subMake: "", // SUB-MARCA DEL VEHICULO
       model: "",
@@ -474,28 +432,39 @@ export const ButtonAdd = ({
       frontImageTraffic: "", // Imagen de la tarjeta de circulación de frente
       backImageTraffic: "", // Imagen de la tarjeta de circulación por atrás
       driver: "" || null, //* RELACION CONDUCTOR
-      driverIsOwner: 0, // Chofer es el propietario
+      driverIsOwner: "", // Chofer es el propietario
       owner: "" || null, //* RELACION CHOFER
     });
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
+    await axiosPostCars(formCar, headers);
+    await axiosGetCars(1, limit, headers, setTCar, setTotalPages)
+    // setTCar([...tCar, newCar]);
+
+    // await axiosGetDrivers(setTDriver, setTotalPages, headers, 1, limit);
+
+    // Cierra el modal después de guardar
+    setModalIsOpen(false);
+    closeModal();
+
+    // Establece la página en 1 después de agregar un elemento
+    setPage(1);
 
     if (
       formCar.typeOfVehicle &&
       formCar.make &&
       formCar.subMake &&
       formCar.model &&
-      formCar.color &&
+      formCar.colors &&
       formCar.plates &&
       formCar.numberMotor &&
       // formCar.trafficCardNumber &&
       // formCar.frontImageTraffic &&
       // formCar.backImageTraffic &&
-      (formCar.driver || "Sin asignar")
+      formCar.driver
     ) {
-      console.log("ENTRO:")
       if (
         formCar.driverIsOwner === 0 &&
         (errorFormCar.name &&
@@ -527,7 +496,6 @@ export const ButtonAdd = ({
         }
       }
     } else {
-      console.log("ENTRO - 2:")
       errorRegister(formCar, errorFormCar);
     }
   }
@@ -555,6 +523,7 @@ export const ButtonAdd = ({
           <ContainerScroll>
             <TituloSeccion>
               {/* Tarjeta de circulacion */}
+              Datos del Vehiculo
               <hr />
             </TituloSeccion>
 
@@ -754,24 +723,18 @@ export const ButtonAdd = ({
               <SelectContainer>
                 <Select
                   name={"driver"}
-                  onChange={(e) => handleDriverChange(e.target.value)}
+                  // value={formCar.driver}
+                  onChange={handleChange}
                 >
                   <option>Selecciona</option>
-                  {!conductores.length ? (
-                      <option key={"Sin_conductores"} value={"Sin conductores"}>
-                        {"Sin conductores"}
-                      </option>
+
+                  {!conductoresDisponibles.length ? (
+                      <option key={"Sin_conductores"} value={"Sin conductores"}>{"Sin conductores"}</option>
                     ) : (
                       <>
-                        <option key={null} value={null}>
-                          {"Sin asignar"}
-                        </option>
-                        {conductores.map((conductor, idx) => {
-                          return (
-                            <option key={idx} value={conductor._id}>
-                              {`${conductor.name} ${conductor.lastName}`}
-                            </option>
-                          )
+                        <option key={"Sin_asignar"} value={"Sin asignar"}>{"Sin asignar"}</option>
+                        {conductoresDisponibles.map((conductor, idx) => {
+                          return <option key={idx} value={conductor._id}>{`${conductor.name} ${conductor.lastName}`}</option>;
                         })}
                       </>
                     )}
@@ -795,7 +758,6 @@ export const ButtonAdd = ({
                 name="driverIsOwner"
                 value={"1"}
                 checked={formCar.driverIsOwner === 1}
-                disabled={formCar.driver === null}
                 onChange={handleChange}
               />
               SI
@@ -1172,6 +1134,8 @@ export const ButtonAdd = ({
                 </GrupoInput>
               </>
             )}
+            <br />
+            <br />
           </ContainerScroll>
 
           <ButtonContainer>
